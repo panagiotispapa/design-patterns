@@ -7,6 +7,9 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.jamesmurty.utils.XMLBuilder;
+import org.apache.batik.dom.svg.SVGDOMImplementation;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -126,6 +129,7 @@ public final class Shapes {
                 return null;
             }
         }
+
     }
 
     private static class CircleImpl implements Circle {
@@ -161,6 +165,20 @@ public final class Shapes {
             } catch (ParserConfigurationException e) {
                 return null;
             }
+        }
+
+
+        @Override
+        public Element buildFrom(Document doc) {
+
+            Element circle = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "circle");
+            circle.setAttributeNS(null, "cx", String.valueOf(this.centre.getX()));
+            circle.setAttributeNS(null, "cy", String.valueOf(this.centre.getY()));
+            circle.setAttributeNS(null, "r", String.valueOf(this.r));
+            circle.setAttributeNS(null, "style", style.toString());
+
+            return circle;
+
         }
     }
 }
