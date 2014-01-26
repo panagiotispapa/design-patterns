@@ -2,22 +2,23 @@ package com.design.islamic.model.tiles;
 
 
 import com.design.islamic.model.Centre;
-import com.design.islamic.model.tiles.shapes.Shapes;
 import com.design.islamic.model.tiles.svg.Style;
-import org.apache.batik.dom.svg.SVGDOMImplementation;
+import com.design.islamic.model.tiles.svg.SvgFactory;
+import com.google.common.base.Function;
+import com.jamesmurty.utils.XMLBuilder;
 import org.apache.batik.swing.JSVGCanvas;
-import org.w3c.dom.DOMImplementation;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.svg.SVGDocument;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.Point2D;
+import java.util.List;
+import java.util.Set;
 
-import static org.apache.batik.dom.svg.SVGDOMImplementation.SVG_NAMESPACE_URI;
+import static com.design.islamic.model.PolygonTools.calculateNewCellCentres;
+import static com.design.islamic.model.tiles.svg.SvgFactory.*;
 
 public class TestBed2 {
 
@@ -25,38 +26,36 @@ public class TestBed2 {
     private JSVGCanvas jsvgCanvas;
     private JPanel jPanel;
 
-    public TestBed2() {
+    public TestBed2(int width, int height, final double r) {
 
         jPanel = new JPanel();
-        jPanel.setLayout(new FlowLayout());
+        jPanel.setLayout(new BorderLayout());
         jsvgCanvas = new JSVGCanvas();
 
-        jPanel.add(jsvgCanvas);
+        jPanel.add("Center", jsvgCanvas);
 
-        DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
-        Document doc = impl.createDocument(SVG_NAMESPACE_URI, "svg", null);
+        jsvgCanvas.setSize(width, height);
+        jPanel.setSize(width, height);
 
-// Get the root element (the 'svg' element).
-        Element svgRoot = doc.getDocumentElement();
+//        jsvgCanvas.setLocation(0,0);
 
-// Set the width and height attributes on the root 'svg' element.
-        svgRoot.setAttributeNS(null, "width", "400");
-        svgRoot.setAttributeNS(null, "height", "450");
+        Set<Point2D> newCentres = calculateNewCellCentres(calculateNewCellCentres(Centre.newCentre(width/2.0, height/2.0), r), r, 16) ;
 
-// Create the rectangle.
-        Element rectangle = doc.createElementNS(SVG_NAMESPACE_URI, "rect");
-        rectangle.setAttributeNS(null, "x", "10");
-        rectangle.setAttributeNS(null, "y", "20");
-        rectangle.setAttributeNS(null, "width", "100");
-        rectangle.setAttributeNS(null, "height", "50");
-        rectangle.setAttributeNS(null, "fill", "red");
-
-        svgRoot.appendChild(rectangle);
-
-        svgRoot.appendChild(Shapes.newCircle(new Centre(50, 50), 20, new Style("yellow", "green", 2, 1, 1)).buildFrom(doc));
+        final Style style = new Style("yellow", "green", 2, 1, 1);
+        List<XMLBuilder> shapes = newShapes(newCentres, r, new Function<Point2D, XMLBuilder>() {
+            @Override
+            public XMLBuilder apply(Point2D centre) {
+                return newHexagon(centre, r, style);
+            }
+        });
 
 
-        jsvgCanvas.setSVGDocument((SVGDocument) doc);
+        XMLBuilder mySVG = buildSvg(width, height, shapes);
+
+
+        jsvgCanvas.setSVGDocument(SvgFactory.fromXMLBuilder(mySVG));
+
+        System.out.println(jsvgCanvas.getSize());
 
     }
 
@@ -81,7 +80,7 @@ public class TestBed2 {
             }
         });
         Container contentPane = frame.getContentPane();
-        contentPane.add(new TestBed2().getComponent());
+        contentPane.add(new TestBed2(1024, 768, 40).getComponent());
         frame.setVisible(true);
 
         frame.invalidate();

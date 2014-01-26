@@ -217,7 +217,7 @@ public class PolygonTools {
         return new Centre(in.getX(), in.getY());
     }
 
-    public static List<Point2D> calculateNewCellCentres(Point2D centre, int r) {
+    public static List<Point2D> calculateNewCellCentres(Point2D centre, double r) {
 
         List<Point2D> newPoints = clonePoints(Shapes.hexPointsAlt);
 
@@ -230,7 +230,7 @@ public class PolygonTools {
     }
 
 
-    public static Set<Point2D> calculateNewCellCentres(Iterable<Point2D> centres, int r, int level) {
+    public static Set<Point2D> calculateNewCellCentres(Iterable<Point2D> centres, double r, int level) {
 
         if (level == 1) {
             return Sets.newHashSet(centres);
@@ -240,7 +240,7 @@ public class PolygonTools {
 
     }
 
-    private static Set<Point2D> calculateNewCellCentres(Iterable<Point2D> centres, int r) {
+    private static Set<Point2D> calculateNewCellCentres(Iterable<Point2D> centres, double r) {
 
 
         ImmutableSet.Builder<Point2D> builder = ImmutableSet.builder();

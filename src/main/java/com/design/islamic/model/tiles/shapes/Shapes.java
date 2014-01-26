@@ -18,6 +18,7 @@ import java.util.List;
 
 import static com.google.common.collect.Iterables.transform;
 import static java.lang.Math.*;
+import static org.apache.batik.dom.svg.SVGDOMImplementation.SVG_NAMESPACE_URI;
 
 public final class Shapes {
 
@@ -171,7 +172,9 @@ public final class Shapes {
         @Override
         public Element buildFrom(Document doc) {
 
-            Element circle = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "circle");
+
+
+            Element circle = doc.createElementNS(SVG_NAMESPACE_URI, "circle");
             circle.setAttributeNS(null, "cx", String.valueOf(this.centre.getX()));
             circle.setAttributeNS(null, "cy", String.valueOf(this.centre.getY()));
             circle.setAttributeNS(null, "r", String.valueOf(this.r));
