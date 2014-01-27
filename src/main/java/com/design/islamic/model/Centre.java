@@ -1,12 +1,10 @@
 package com.design.islamic.model;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
-
 import java.awt.geom.Point2D;
 
 public class Centre extends Point2D.Double {
 
-    public Centre() {
+    private Centre() {
 
     }
 

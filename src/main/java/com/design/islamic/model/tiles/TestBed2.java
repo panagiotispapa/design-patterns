@@ -1,10 +1,8 @@
 package com.design.islamic.model.tiles;
 
 
-import com.design.islamic.model.Centre;
-import com.design.islamic.model.tiles.svg.Style;
+import com.design.islamic.Patterns;
 import com.design.islamic.model.tiles.svg.SvgFactory;
-import com.google.common.base.Function;
 import com.jamesmurty.utils.XMLBuilder;
 import org.apache.batik.swing.JSVGCanvas;
 import org.w3c.dom.Node;
@@ -14,11 +12,13 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
-import java.util.List;
 import java.util.Set;
 
-import static com.design.islamic.model.PolygonTools.calculateNewCellCentres;
-import static com.design.islamic.model.tiles.svg.SvgFactory.*;
+import static com.design.islamic.Patterns.calculateHexEdges;
+import static com.design.islamic.model.Centre.newCentre;
+import static com.design.islamic.Patterns.calculateNewCellCentres;
+import static com.design.islamic.model.tiles.svg.SvgFactory.buildSvg;
+import static com.design.islamic.model.tiles.svg.SvgFactory.highlightPoints;
 
 public class TestBed2 {
 
@@ -37,21 +37,12 @@ public class TestBed2 {
         jsvgCanvas.setSize(width, height);
         jPanel.setSize(width, height);
 
-//        jsvgCanvas.setLocation(0,0);
+//        Set<Point2D> newCentres = calculateNewCellCentres(calculateNewCellCentres(newCentre(width / 2.0, height / 2.0), r), r, 16);
+        Set<Point2D> newCentres = calculateNewCellCentres(newCentre(width / 2.0, height / 2.0), r, 17);
 
-        Set<Point2D> newCentres = calculateNewCellCentres(calculateNewCellCentres(Centre.newCentre(width/2.0, height/2.0), r), r, 16) ;
+        XMLBuilder mySVG = Patterns.buildHexPattern3(newCentres, r, width, height);
 
-        final Style style = new Style("yellow", "green", 2, 1, 1);
-        List<XMLBuilder> shapes = newShapes(newCentres, r, new Function<Point2D, XMLBuilder>() {
-            @Override
-            public XMLBuilder apply(Point2D centre) {
-                return newHexagon(centre, r, style);
-            }
-        });
-
-
-        XMLBuilder mySVG = buildSvg(width, height, shapes);
-
+//        XMLBuilder mySVG = buildSvg(width, height, highlightPoints(calculateHexEdges(newCentres, r)) );
 
         jsvgCanvas.setSVGDocument(SvgFactory.fromXMLBuilder(mySVG));
 
@@ -61,11 +52,12 @@ public class TestBed2 {
 
 
     public static void removeChildren(Node node) {
-        while (node.hasChildNodes()){
+        while (node.hasChildNodes()) {
             node.removeChild(node.getFirstChild());
         }
 
     }
+
     public JPanel getComponent() {
         return jPanel;
     }
@@ -80,7 +72,7 @@ public class TestBed2 {
             }
         });
         Container contentPane = frame.getContentPane();
-        contentPane.add(new TestBed2(1024, 768, 40).getComponent());
+        contentPane.add(new TestBed2(1024, 768, 50).getComponent());
         frame.setVisible(true);
 
         frame.invalidate();
