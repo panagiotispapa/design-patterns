@@ -34,17 +34,27 @@ public class SvgFactory {
 
 
 
-    public static XMLBuilder newPolygon(String points, String style) {
+    public static XMLBuilder newPolygon(Iterable<Point2D> points, String style) {
 
         try {
             return XMLBuilder.create("polygon")
-                    .a("points", points)
+                    .a("points", toPointsString(points))
                     .a("style", style)
                     ;
         } catch (ParserConfigurationException e) {
             return null;
         }
 
+    }
+
+    private static String toPointsString(Iterable<Point2D> points) {
+        StringBuilder builder = new StringBuilder();
+
+        for (Point2D point : points) {
+            builder.append(format("%s,%s ", point.getX(), point.getY()));
+        }
+
+        return builder.toString();
     }
 
 

@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 import java.io.*;
 
+import static com.design.islamic.model.Centre.newCentre;
 import static java.awt.Color.BLACK;
 
 public class TestBed extends JComponent implements Tile {
@@ -74,7 +75,7 @@ public class TestBed extends JComponent implements Tile {
         });
         Container contentPane = frame.getContentPane();
 
-        TestBed testObject = new TestBed(new Centre(frame.getWidth()/2, frame.getHeight()/2), 50);
+        TestBed testObject = new TestBed(newCentre(frame.getWidth() / 2, frame.getHeight() / 2), 50);
 
         contentPane.add(testObject);
 

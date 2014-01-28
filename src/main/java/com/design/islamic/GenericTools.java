@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import java.awt.geom.Point2D;
 import java.util.List;
 
+import static com.design.islamic.model.Centre.newCentre;
 import static com.google.common.collect.Iterables.transform;
 
 public class GenericTools {
@@ -46,7 +47,7 @@ public class GenericTools {
     }
 
     public static Point2D clonePoint(Point2D in) {
-        return new Centre(in.getX(), in.getY());
+        return newCentre(in.getX(), in.getY());
     }
 
 

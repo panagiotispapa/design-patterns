@@ -11,7 +11,8 @@ public class Centre extends Point2D.Double {
     public static Point2D newCentre(double x, double y) {
         return new Centre(x,y);
     }
-    public Centre(double x, double y) {
+
+    private Centre(double x, double y) {
         super(x, y);
     }
 
