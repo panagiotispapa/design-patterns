@@ -14,11 +14,9 @@ import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 import java.util.Set;
 
-import static com.design.islamic.Patterns.calculateHexEdges;
+import static com.design.islamic.Patterns.calculateNewCellCentresFirstConf;
+import static com.design.islamic.Patterns.calculateNewCellCentresSecondConf;
 import static com.design.islamic.model.Centre.newCentre;
-import static com.design.islamic.Patterns.calculateNewCellCentres;
-import static com.design.islamic.model.tiles.svg.SvgFactory.buildSvg;
-import static com.design.islamic.model.tiles.svg.SvgFactory.highlightPoints;
 
 public class TestBed2 {
 
@@ -37,10 +35,10 @@ public class TestBed2 {
         jsvgCanvas.setSize(width, height);
         jPanel.setSize(width, height);
 
-//        Set<Point2D> newCentres = calculateNewCellCentres(calculateNewCellCentres(newCentre(width / 2.0, height / 2.0), r), r, 16);
-        Set<Point2D> newCentres = calculateNewCellCentres(newCentre(width / 2.0, height / 2.0), r, 17);
+        Set<Point2D> newCentresFirstConf = calculateNewCellCentresFirstConf(newCentre(0, 0), r, 17);
+        Set<Point2D> newCentresSecondConf = calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17);
 
-        XMLBuilder mySVG = Patterns.buildHexPattern3(newCentres, r, width, height);
+        XMLBuilder mySVG = Patterns.buildHexPattern1(newCentresFirstConf, newCentresSecondConf, r, width, height);
 
 //        XMLBuilder mySVG = buildSvg(width, height, highlightPoints(calculateHexEdges(newCentres, r)) );
 
@@ -63,6 +61,8 @@ public class TestBed2 {
     }
 
     public static void main(String[] args) {
+
+
         JFrame frame = new JFrame();
         frame.setTitle("Polygon");
         frame.setSize(1024, 768);
@@ -72,6 +72,7 @@ public class TestBed2 {
             }
         });
         Container contentPane = frame.getContentPane();
+
         contentPane.add(new TestBed2(1024, 768, 50).getComponent());
         frame.setVisible(true);
 

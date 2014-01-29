@@ -1,7 +1,6 @@
 package com.design.islamic.model.tiles;
 
 
-import com.design.islamic.Patterns;
 import com.design.islamic.model.tiles.svg.SvgFactory;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -15,14 +14,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 import java.util.*;
-import java.util.List;
 
 import static com.design.islamic.Patterns.*;
 import static com.design.islamic.model.Centre.newCentre;
-import static com.design.islamic.model.tiles.svg.SvgFactory.buildSvg;
-import static com.design.islamic.model.tiles.svg.SvgFactory.highlightPoints;
-import static com.design.islamic.model.tiles.svg.SvgFactory.newStyle;
-import static java.util.Arrays.asList;
+import static com.design.islamic.model.tiles.svg.SvgFactory.*;
 
 public class TestBed3 {
 
@@ -55,24 +50,26 @@ public class TestBed3 {
 
         XMLBuilder testObject = newHexTile1(centre, r, style);
 
-//        List<Point2D> testPoints = newHexTile1_2(centre, r, style);
-        List<XMLBuilder> testObject2 = newHexTile1_2(centre, r, style);
+        Set<Point2D> testPoints = calculateNewCellCentresSecondConf(newCentre(100, 100), r, 3);
+//        List<Point2D> testPoints = newHexTile1Alt(centre, r);
+//        List<XMLBuilder> testObject2 = newHexTile1_2(centre, r, style);
 
 
         ImmutableList.Builder<XMLBuilder> shapes = ImmutableList.builder();
 
         shapes.add(backObj);
 //        shapes.add(testObject);
-        shapes.addAll(testObject2);
+//        shapes.addAll(testObject2);
 
-        XMLBuilder mySVG = buildSvg(width, height, shapes.build());
+//        XMLBuilder mySVG = buildSvg(width, height, shapes.build());
 
 
-//        XMLBuilder mySVG = buildSvg(width, height, Iterables.concat(
-//                Arrays.asList(backObj),
+        XMLBuilder mySVG = buildSvg(width, height, Iterables.concat(
+                Arrays.asList(backObj),
 //                testObject,
-//                highlightPoints(testPoints)
-//        ));
+//                newPolygon(testPoints, style)
+                highlightPoints(testPoints)
+        ));
 
         jsvgCanvas.setSVGDocument(SvgFactory.fromXMLBuilder(mySVG));
 
