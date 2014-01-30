@@ -1,20 +1,22 @@
 package com.design.islamic;
 
+import com.design.islamic.model.Pattern;
 import com.design.islamic.model.PatternManager;
 import com.design.islamic.model.tiles.svg.SvgFactory;
 import org.apache.batik.swing.JSVGCanvas;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 
-public class Main {
+import static com.design.islamic.model.tiles.svg.SvgFactory.fromXMLBuilder;
+
+public class Main implements ActionListener {
 
     private JSVGCanvas jsvgCanvas;
     private JPanel jPanel;
+    private JMenuBar menuBar;
+    private JMenu patternsMenu;
 
     private PatternManager manager;
 
@@ -28,41 +30,51 @@ public class Main {
 
         jPanel.add("Center", jsvgCanvas);
 
+        menuBar = new JMenuBar();
+        patternsMenu = new JMenu("Patterns");
+        patternsMenu.setMnemonic(KeyEvent.VK_P);
+
+        for (Pattern pattern : Pattern.values()) {
+            patternsMenu.add(newMenuItem(pattern.getDescription(), this));
+        }
+
+        menuBar.add(patternsMenu);
+
         jsvgCanvas.setSize(width, height);
         jPanel.setSize(width, height);
 
-        jPanel.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-//                System.out.println(e.getKeyChar());
-                if (e.getKeyChar() == 'm') {
-                    manager.goToNext();
-                    refreshCanvas();
 
-                } else if (e.getKeyChar() == 'n') {
-                    manager.goToPrevious();
-                    refreshCanvas();
-
-                }
-
-            }
-        });
-
-        jPanel.setFocusable(true);
-
-        refreshCanvas();
+        refreshCanvas(Pattern.ONE);
 
     }
 
-    private void refreshCanvas() {
+    private JMenuItem newMenuItem(String text, ActionListener actionListener) {
+        JMenuItem item = new JMenuItem(text);
+        item.addActionListener(actionListener);
+        return item;
+    }
+
+    public JMenuBar getMenuBar() {
+        return menuBar;
+    }
+
+    private void refreshCanvas(Pattern pattern) {
         System.out.println("in refreshCanvas");
         jsvgCanvas.removeAll();
 //        removeChildren(jsvgCanvas);
-        jsvgCanvas.setSVGDocument(SvgFactory.fromXMLBuilder(manager.getCurrent()));
+        jsvgCanvas.setSVGDocument(fromXMLBuilder(manager.getSvg(pattern)));
     }
 
     public JPanel getComponent() {
         return jPanel;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        System.out.println(e.getActionCommand());
+
+        refreshCanvas(Pattern.fromDescription(e.getActionCommand()));
+
     }
 
     public static void main(String[] args) {
@@ -80,12 +92,14 @@ public class Main {
 
         Main main = new Main(1024, 768, 50);
         contentPane.add(main.getComponent());
+        frame.setJMenuBar(main.getMenuBar());
+
         frame.setVisible(true);
+
 
         frame.invalidate();
 
     }
-
 }
 
 

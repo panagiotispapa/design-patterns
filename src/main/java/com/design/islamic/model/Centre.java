@@ -4,10 +4,6 @@ import java.awt.geom.Point2D;
 
 public class Centre extends Point2D.Double {
 
-    private Centre() {
-
-    }
-
     public static Point2D newCentre(double x, double y) {
         return new Centre(x, y);
     }
@@ -19,8 +15,7 @@ public class Centre extends Point2D.Double {
     @Override
     public int hashCode() {
 
-        int result = (int) (x + y);
-        return result;
+        return (int) (x + y);
 
 //        return HashCodeBuilder.reflectionHashCode(this);
 
