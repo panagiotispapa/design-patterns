@@ -9,7 +9,7 @@ public class Centre extends Point2D.Double {
     }
 
     public static Point2D newCentre(double x, double y) {
-        return new Centre(x,y);
+        return new Centre(x, y);
     }
 
     private Centre(double x, double y) {
@@ -19,8 +19,7 @@ public class Centre extends Point2D.Double {
     @Override
     public int hashCode() {
 
-
-        int result = (int)(x + y);
+        int result = (int) (x + y);
         return result;
 
 //        return HashCodeBuilder.reflectionHashCode(this);
@@ -33,7 +32,6 @@ public class Centre extends Point2D.Double {
             return false;
         } else {
             //            System.out.println("distance " + distance);
-
 
             return ((Point2D) other).distance(this) < 1.0;
         }

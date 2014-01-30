@@ -4,7 +4,6 @@ import com.design.islamic.model.tiles.svg.SvgFactory;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.jamesmurty.utils.XMLBuilder;
 
@@ -28,15 +27,14 @@ public final class Patterns {
     public final static double HEX_DIST = calcDist(HEX_PHI);
     public final static double HEX_DIST_NEW_CENTRE = 2.0 * HEX_DIST;
     public final static double HEX_DIST_1 = HEX_DIST_NEW_CENTRE - 1;
+    public final static double HEX_DIST_2 = 1 - HEX_DIST_NEW_CENTRE;
 
     public static List<Point2D> hexPoints = computePoints(HEX_N, HEX_PHI);
     public static List<Point2D> hexPointsAlt = computePointsAlt(HEX_N, HEX_PHI);
 
-
     private Patterns() {
 
     }
-
 
     private static List<Point2D> computePoints(int n, double phi) {
 
@@ -49,7 +47,6 @@ public final class Patterns {
         }
         return posBuilder.build();
     }
-
 
     private static List<Point2D> computePointsAlt(int n, double phi) {
 
@@ -144,7 +141,6 @@ public final class Patterns {
         return cos(phi / 2.0);
     }
 
-
     private static List<Point2D> calculateNewCellCentres(Point2D centre, double r) {
         List<Point2D> newPoints = clonePoints(Patterns.hexPointsAlt);
 
@@ -157,13 +153,11 @@ public final class Patterns {
 
     private static Set<Point2D> calculateNewCellCentres(Iterable<Point2D> centres, double r) {
 
-
         ImmutableSet.Builder<Point2D> builder = ImmutableSet.builder();
 
         for (Point2D centre : centres) {
             builder.addAll(calculateNewCellCentres(centre, r));
         }
-
 
         return builder.build();
 
@@ -180,14 +174,16 @@ public final class Patterns {
             }
         }));
 
-        return buildSvg(width, height,
+        XMLBuilder svg = buildSvg(width, height,
                 concat(
                         hexagons
 //                        , highlightPoints(centres)
                 )
         );
-    }
 
+        System.out.println("finished building svg!!!");
+        return svg;
+    }
 
     public static XMLBuilder buildHexPattern2(Iterable<Point2D> centresFirstConf, Iterable<Point2D> centresSecondConf, final double r, int width, int height) {
 
@@ -200,7 +196,6 @@ public final class Patterns {
             }
         }));
 
-
         final String style2 = newStyle("blue", "green", 1, 0, 1);
 
         List<XMLBuilder> circles = ImmutableList.copyOf(transform(edgesFromCentres(centresSecondConf, r), new Function<Point2D, XMLBuilder>() {
@@ -210,14 +205,16 @@ public final class Patterns {
             }
         }));
 
-        return buildSvg(width, height,
+        XMLBuilder svg = buildSvg(width, height,
                 concat(
                         hexagons
                         , circles
                 )
         );
-    }
 
+        System.out.println("finished building svg!!!");
+        return svg;
+    }
 
     public static XMLBuilder buildHexPattern3(Iterable<Point2D> centresFirstConf, Iterable<Point2D> centresSecondConf, final double r, int width, int height) {
 
@@ -232,7 +229,7 @@ public final class Patterns {
 
         final String style2 = newStyle("blue", "blue", 1, 1, 1);
 
-        return buildSvg(width, height,
+        XMLBuilder svg = buildSvg(width, height,
                 concat(
                         asList(
                                 newPolygon(
@@ -241,8 +238,10 @@ public final class Patterns {
                         stars
                 )
         );
-    }
 
+        System.out.println("finished building svg!!!");
+        return svg;
+    }
 
     public static XMLBuilder newHexTile1(Point2D centre, double r, String style) {
         List<Point2D> edges = Patterns.calculateHexEdges(centre, r);
@@ -251,7 +250,6 @@ public final class Patterns {
 
         scalePoints(edgesAlt, r * HEX_DIST_1);
         translatePoints(edgesAlt, centre);
-
 
         ImmutableList.Builder<Point2D> points = ImmutableList.builder();
 
@@ -264,79 +262,11 @@ public final class Patterns {
 
     }
 
-
-    public static List<Point2D> newHexTile1Alt(Point2D centre, double r) {
-        List<Point2D> edges = Patterns.calculateHexEdges(centre, r);
-
-        List<Point2D> edgesAlt = clonePoints(Patterns.hexPointsAlt);
-
-        Point2D translatePoint = newCentre(r, 0);
-        scalePoints(edgesAlt, r * HEX_DIST_1);
-        translatePoints(edgesAlt, centre);
-
-
-        translatePoints(edgesAlt, translatePoint);
-        translatePoints(edges, translatePoint);
-
-
-        ImmutableList.Builder<Point2D> points = ImmutableList.builder();
-
-        for (int i = 0; i < edges.size(); i++) {
-            points.add(edges.get(i));
-            points.add(edgesAlt.get(i));
-        }
-
-        return points.build();
-
-    }
-
-    public static List<XMLBuilder> newHexTile1_2(Point2D centre, double r, String style) {
-
-
-        List<Point2D> edges = Patterns.calculateHexEdges(centre, r);
-
-        List<Point2D> edgesAlt = clonePoints(Patterns.hexPointsAlt);
-
-        scalePoints(edgesAlt, r * HEX_DIST_1);
-        translatePoints(edgesAlt, edges.get(0));
-
-        Point2D point1 = clonePoint(edgesAlt.get(3));
-        Point2D point4 = clonePoint(edgesAlt.get(2));
-
-        edgesAlt = clonePoints(Patterns.hexPointsAlt);
-
-        scalePoints(edgesAlt, r * HEX_DIST_1);
-        translatePoints(edgesAlt, edges.get(3));
-        Point2D point2 = clonePoint(edgesAlt.get(5));
-        Point2D point3 = clonePoint(edgesAlt.get(0));
-
-        Point2D edgeUpL = clonePoint(edges.get(4));
-        Point2D edgeUpR = clonePoint(edges.get(5));
-
-        Point2D edgeDownL = clonePoint(edges.get(2));
-        Point2D edgeDownR = clonePoint(edges.get(1));
-
-
-        List<Point2D> groupA = asList(edgeUpL, point2, clonePoint(centre), point1, edgeUpR);
-        List<Point2D> groupB = asList(edgeDownL, point3, clonePoint(centre), point4, edgeDownR);
-
-
-        return Lists.newArrayList(newPolygon(groupA, style), newPolygon(groupB, style));
-
-
-//        return Arrays.asList(point1, point2, point3, point4, edgeUpL, edgeUpR, edgeDownL, edgeDownR);
-
-    }
-
-
     public static XMLBuilder newHexagon(Point2D centre, double r, String style) {
         List<Point2D> edges = Patterns.calculateHexEdges(centre, r);
 
-
         return newPolygon(edges, style);
 
-
     }
-
 
 }

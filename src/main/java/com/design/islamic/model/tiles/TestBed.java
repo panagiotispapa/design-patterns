@@ -1,8 +1,5 @@
 package com.design.islamic.model.tiles;
 
-
-import com.design.islamic.model.Centre;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -13,11 +10,10 @@ import java.io.*;
 import static com.design.islamic.model.Centre.newCentre;
 import static java.awt.Color.BLACK;
 
-public class TestBed extends JComponent implements Tile {
+public class TestBed extends JComponent {
 
     private final Point2D centre;
     private final int r;
-
 
     public TestBed(Point2D centre, int r) {
         this.centre = centre;
@@ -33,8 +29,6 @@ public class TestBed extends JComponent implements Tile {
 
         Writer writer = null;
 
-
-
         try {
 
 //            Set<Point2D> newCentres = calculateNewCellCentres(calculateNewCellCentres(centre, r), r, 16) ;
@@ -48,15 +42,12 @@ public class TestBed extends JComponent implements Tile {
 //            writer.write("<html>" + "\n");
 //            writer.write("<svg height=\"1024\" width=\"1000\">" + "\n");
 
-
 //        Set<Point2D> edges = edgesFromCentres(newCentres, r);
-
 
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-
 
     }
 

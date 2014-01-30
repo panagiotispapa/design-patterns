@@ -1,6 +1,5 @@
 package com.design.islamic.model.tiles;
 
-
 import com.design.islamic.Patterns;
 import com.design.islamic.model.tiles.svg.SvgFactory;
 import com.jamesmurty.utils.XMLBuilder;
@@ -19,7 +18,6 @@ import static com.design.islamic.Patterns.calculateNewCellCentresSecondConf;
 import static com.design.islamic.model.Centre.newCentre;
 
 public class TestBed2 {
-
 
     private JSVGCanvas jsvgCanvas;
     private JPanel jPanel;
@@ -48,7 +46,6 @@ public class TestBed2 {
 
     }
 
-
     public static void removeChildren(Node node) {
         while (node.hasChildNodes()) {
             node.removeChild(node.getFirstChild());
@@ -61,7 +58,6 @@ public class TestBed2 {
     }
 
     public static void main(String[] args) {
-
 
         JFrame frame = new JFrame();
         frame.setTitle("Polygon");
@@ -77,7 +73,6 @@ public class TestBed2 {
         frame.setVisible(true);
 
         frame.invalidate();
-
 
     }
 }

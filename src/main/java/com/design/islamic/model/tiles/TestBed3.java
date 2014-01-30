@@ -1,6 +1,5 @@
 package com.design.islamic.model.tiles;
 
-
 import com.design.islamic.model.tiles.svg.SvgFactory;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -13,14 +12,14 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Set;
 
 import static com.design.islamic.Patterns.*;
 import static com.design.islamic.model.Centre.newCentre;
 import static com.design.islamic.model.tiles.svg.SvgFactory.*;
 
 public class TestBed3 {
-
 
     private JSVGCanvas jsvgCanvas;
     private JPanel jPanel;
@@ -40,11 +39,8 @@ public class TestBed3 {
         Point2D centre = newCentre(width / 2.0, height / 2.0);
         Set<Point2D> newCentres = calculateNewCellCentres(centre, r, 17);
 
-
-
         final String styleBack = newStyle("black", "black", 1, 1, 1);
         final String style = newStyle("yellow", "yellow", 1, 1, 1);
-
 
         XMLBuilder backObj = newHexagon(centre, r, styleBack);
 
@@ -54,7 +50,6 @@ public class TestBed3 {
 //        List<Point2D> testPoints = newHexTile1Alt(centre, r);
 //        List<XMLBuilder> testObject2 = newHexTile1_2(centre, r, style);
 
-
         ImmutableList.Builder<XMLBuilder> shapes = ImmutableList.builder();
 
         shapes.add(backObj);
@@ -62,7 +57,6 @@ public class TestBed3 {
 //        shapes.addAll(testObject2);
 
 //        XMLBuilder mySVG = buildSvg(width, height, shapes.build());
-
 
         XMLBuilder mySVG = buildSvg(width, height, Iterables.concat(
                 Arrays.asList(backObj),
@@ -76,7 +70,6 @@ public class TestBed3 {
         System.out.println(jsvgCanvas.getSize());
 
     }
-
 
     public static void removeChildren(Node node) {
         while (node.hasChildNodes()) {
@@ -103,7 +96,6 @@ public class TestBed3 {
         frame.setVisible(true);
 
         frame.invalidate();
-
 
     }
 }

@@ -1,6 +1,5 @@
 package com.design.islamic.model.tiles.svg;
 
-import com.design.islamic.Patterns;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.jamesmurty.utils.XMLBuilder;
@@ -15,9 +14,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
 
-import static com.design.islamic.GenericTools.*;
 import static com.google.common.collect.Iterables.transform;
-import static java.lang.Math.cos;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
 
@@ -27,12 +24,9 @@ public class SvgFactory {
 
     }
 
-
     public static String newStyle(String fill, String stroke, int strokeWidth, double fillOpacity, double strokeOpcacity) {
         return format("fill:%s;stroke:%s;stroke-width:%d;fill-opacity:%s;stroke-opacity:%s", fill, stroke, strokeWidth, fillOpacity, strokeOpcacity);
     }
-
-
 
     public static XMLBuilder newPolygon(Iterable<Point2D> points, String style) {
 
@@ -56,7 +50,6 @@ public class SvgFactory {
 
         return builder.toString();
     }
-
 
     public static List<XMLBuilder> highlightPoints(Iterable<Point2D> points) {
 
@@ -115,10 +108,8 @@ public class SvgFactory {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-
         return xmlBuilder;
 
     }
-
 
 }

@@ -1,6 +1,5 @@
 package com.design.islamic;
 
-import com.design.islamic.model.Centre;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
@@ -12,7 +11,6 @@ import static com.google.common.collect.Iterables.transform;
 
 public class GenericTools {
 
-
 //    public static List<Point2D> computeFinalPosOfPoints(List<Point2D> point2DList, final Centre centre, final int r) {
 //
 //        return ImmutableList.copyOf(transform(point2DList, new Function<Point2D, Point2D>() {
@@ -23,7 +21,6 @@ public class GenericTools {
 //        }));
 //
 //    }
-
 
     public static void scalePoints(List<Point2D> point2DList, final double r) {
         for (Point2D point2D : point2DList) {
@@ -49,14 +46,5 @@ public class GenericTools {
     public static Point2D clonePoint(Point2D in) {
         return newCentre(in.getX(), in.getY());
     }
-
-
-
-
-
-
-
-
-
 
 }
