@@ -13,8 +13,7 @@ import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 import java.util.Set;
 
-import static com.design.islamic.Patterns.calculateNewCellCentresFirstConf;
-import static com.design.islamic.Patterns.calculateNewCellCentresSecondConf;
+import static com.design.islamic.Patterns.*;
 import static com.design.islamic.model.Centre.newCentre;
 
 public class TestBed2 {
@@ -36,7 +35,7 @@ public class TestBed2 {
         Set<Point2D> newCentresFirstConf = calculateNewCellCentresFirstConf(newCentre(0, 0), r, 17);
         Set<Point2D> newCentresSecondConf = calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17);
 
-        XMLBuilder mySVG = Patterns.buildHexPattern3(newCentresFirstConf, newCentresSecondConf, r, width, height);
+        XMLBuilder mySVG = Patterns.buildHexPatternStar(newCentresFirstConf, newCentresSecondConf, r, width, height, HEX_DIST3);
 
 //        XMLBuilder mySVG = buildSvg(width, height, highlightPoints(calculateHexEdges(newCentres, r)) );
 

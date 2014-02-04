@@ -41,6 +41,19 @@ public class SvgFactory {
 
     }
 
+    public static XMLBuilder newPolyline(Iterable<Point2D> points, String style) {
+
+        try {
+            return XMLBuilder.create("polyline")
+                    .a("points", toPointsString(points))
+                    .a("style", style)
+                    ;
+        } catch (ParserConfigurationException e) {
+            return null;
+        }
+
+    }
+
     private static String toPointsString(Iterable<Point2D> points) {
         StringBuilder builder = new StringBuilder();
 

@@ -12,20 +12,19 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
 
 import static com.design.islamic.Patterns.*;
 import static com.design.islamic.model.Centre.newCentre;
-import static com.design.islamic.model.tiles.svg.SvgFactory.buildSvg;
-import static com.design.islamic.model.tiles.svg.SvgFactory.newStyle;
-import static java.util.Arrays.asList;
+import static com.design.islamic.model.tiles.svg.SvgFactory.*;
 
-public class TestBed3 {
+public class TestBed4 {
 
     private JSVGCanvas jsvgCanvas;
     private JPanel jPanel;
 
-    public TestBed3(int width, int height, final double r) {
+    public TestBed4(int width, int height, final double r) {
 
         jPanel = new JPanel();
         jPanel.setLayout(new BorderLayout());
@@ -45,10 +44,10 @@ public class TestBed3 {
 
         XMLBuilder backObj = newHexagon(centre, r, styleBack);
 
-        XMLBuilder testObject = newHexStarTile(centre, r, style, HEX_DIST3);
+//        XMLBuilder testObject = newHexStarTile(centre, r, style);
 
 //        Set<Point2D> testPoints = calculateNewCellCentresSecondConf(newCentre(100, 100), r, 3);
-        java.util.List<Point2D> testPoints = newHexTile2(centre, r, style);
+        List<XMLBuilder> testObject = newStarDesign1(centre, r);
 //        List<XMLBuilder> testObject2 = newHexTile1_2(centre, r, style);
 
         ImmutableList.Builder<XMLBuilder> shapes = ImmutableList.builder();
@@ -59,13 +58,7 @@ public class TestBed3 {
 
 //        XMLBuilder mySVG = buildSvg(width, height, shapes.build());
 
-        XMLBuilder mySVG = buildSvg(width, height,
-                Iterables.concat(
-                        asList(backObj),
-                        asList(testObject)
-//                newPolygon(testPoints, style)
-//                highlightPoints(testPoints)
-                )
+        XMLBuilder mySVG = buildSvg(width, height, (testObject)
         );
 
         jsvgCanvas.setSVGDocument(SvgFactory.fromXMLBuilder(mySVG));
@@ -95,7 +88,7 @@ public class TestBed3 {
             }
         });
         Container contentPane = frame.getContentPane();
-        contentPane.add(new TestBed3(1024, 768, 50).getComponent());
+        contentPane.add(new TestBed4(1024, 768, 200).getComponent());
         frame.setVisible(true);
 
         frame.invalidate();

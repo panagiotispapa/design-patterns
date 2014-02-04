@@ -1,6 +1,7 @@
 package com.design.islamic;
 
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 import java.awt.geom.Point2D;
@@ -45,6 +46,17 @@ public class GenericTools {
 
     public static Point2D clonePoint(Point2D in) {
         return newCentre(in.getX(), in.getY());
+    }
+
+    public static List<Point2D> concatEdges(List<Point2D> edges1, List<Point2D> edges2) {
+        ImmutableList.Builder<Point2D> builder = ImmutableList.builder();
+
+        for (int i = 0; i < edges1.size(); i++) {
+            builder.add(edges1.get(i));
+            builder.add(edges2.get(i));
+        }
+
+        return builder.build();
     }
 
 }
