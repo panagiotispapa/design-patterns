@@ -2,14 +2,13 @@ package com.design.islamic;
 
 import com.design.islamic.model.Pattern;
 import com.design.islamic.model.PatternManager;
-import com.design.islamic.model.tiles.svg.SvgFactory;
 import org.apache.batik.swing.JSVGCanvas;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import static com.design.islamic.model.tiles.svg.SvgFactory.fromXMLBuilder;
+import static com.design.common.view.SvgFactory.fromXMLBuilder;
 
 public class Main implements ActionListener {
 

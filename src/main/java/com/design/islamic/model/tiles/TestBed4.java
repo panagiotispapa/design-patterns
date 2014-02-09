@@ -1,8 +1,7 @@
 package com.design.islamic.model.tiles;
 
-import com.design.islamic.model.tiles.svg.SvgFactory;
+import com.design.common.view.SvgFactory;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.jamesmurty.utils.XMLBuilder;
 import org.apache.batik.swing.JSVGCanvas;
 import org.w3c.dom.Node;
@@ -17,7 +16,7 @@ import java.util.List;
 
 import static com.design.islamic.Patterns.*;
 import static com.design.islamic.model.Centre.newCentre;
-import static com.design.islamic.model.tiles.svg.SvgFactory.*;
+import static com.design.common.view.SvgFactory.*;
 
 public class TestBed4 {
 

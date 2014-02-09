@@ -3,8 +3,8 @@ package com.design.islamic.model.tiles.svg;
 import org.junit.Test;
 
 import static com.design.islamic.model.Centre.newCentre;
-import static com.design.islamic.model.tiles.svg.SvgFactory.newCircle;
-import static com.design.islamic.model.tiles.svg.SvgFactory.newStyle;
+import static com.design.common.view.SvgFactory.newCircle;
+import static com.design.common.view.SvgFactory.newStyle;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 public class SvgFactoryTest {

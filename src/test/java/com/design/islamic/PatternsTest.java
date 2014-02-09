@@ -8,7 +8,7 @@ import static com.design.islamic.Patterns.calculateHexEdges;
 import static com.design.islamic.Patterns.calculateNewCellCentres;
 import static com.design.islamic.Patterns.newHexagon;
 import static com.design.islamic.model.Centre.newCentre;
-import static com.design.islamic.model.tiles.svg.SvgFactory.newStyle;
+import static com.design.common.view.SvgFactory.newStyle;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 public class PatternsTest {

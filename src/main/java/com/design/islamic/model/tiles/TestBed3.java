@@ -1,6 +1,6 @@
 package com.design.islamic.model.tiles;
 
-import com.design.islamic.model.tiles.svg.SvgFactory;
+import com.design.common.view.SvgFactory;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.jamesmurty.utils.XMLBuilder;
@@ -16,8 +16,8 @@ import java.util.Set;
 
 import static com.design.islamic.Patterns.*;
 import static com.design.islamic.model.Centre.newCentre;
-import static com.design.islamic.model.tiles.svg.SvgFactory.buildSvg;
-import static com.design.islamic.model.tiles.svg.SvgFactory.newStyle;
+import static com.design.common.view.SvgFactory.buildSvg;
+import static com.design.common.view.SvgFactory.newStyle;
 import static java.util.Arrays.asList;
 
 public class TestBed3 {

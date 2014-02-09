@@ -1,6 +1,6 @@
 package com.design.islamic;
 
-import com.design.islamic.model.tiles.svg.SvgFactory;
+import com.design.common.view.SvgFactory;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -13,7 +13,7 @@ import java.util.Set;
 
 import static com.design.islamic.GenericTools.*;
 import static com.design.islamic.model.Centre.newCentre;
-import static com.design.islamic.model.tiles.svg.SvgFactory.*;
+import static com.design.common.view.SvgFactory.*;
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.transform;
 import static java.lang.Math.*;

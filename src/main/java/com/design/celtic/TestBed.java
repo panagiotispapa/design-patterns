@@ -1,27 +1,19 @@
-package com.design.islamic.model.tiles;
+package com.design.celtic;
 
-import com.design.islamic.Patterns;
 import com.design.common.view.SvgFactory;
 import com.jamesmurty.utils.XMLBuilder;
 import org.apache.batik.swing.JSVGCanvas;
-import org.w3c.dom.Node;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.geom.Point2D;
-import java.util.Set;
 
-import static com.design.islamic.Patterns.*;
-import static com.design.islamic.model.Centre.newCentre;
-
-public class TestBed2 {
-
+public class TestBed {
     private JSVGCanvas jsvgCanvas;
     private JPanel jPanel;
 
-    public TestBed2(int width, int height, final double r) {
+    public TestBed(int width, int height, final double r) {
 
         jPanel = new JPanel();
         jPanel.setLayout(new BorderLayout());
@@ -32,23 +24,18 @@ public class TestBed2 {
         jsvgCanvas.setSize(width, height);
         jPanel.setSize(width, height);
 
-        Set<Point2D> newCentresFirstConf = calculateNewCellCentresFirstConf(newCentre(0, 0), r, 17);
-        Set<Point2D> newCentresSecondConf = calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17);
+//        Set<Point2D> newCentresFirstConf = calculateNewCellCentresFirstConf(newCentre(0, 0), r, 17);
+//        Set<Point2D> newCentresSecondConf = calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17);
 
-        XMLBuilder mySVG = Patterns.buildHexPatternStar(newCentresFirstConf, newCentresSecondConf, r, width, height, HEX_DIST3);
+//        XMLBuilder mySVG = com.design.islamic.Patterns.buildHexPatternStar(newCentresFirstConf, newCentresSecondConf, r, width, height, HEX_DIST3);
 
 //        XMLBuilder mySVG = buildSvg(width, height, highlightPoints(calculateHexEdges(newCentres, r)) );
 
-        jsvgCanvas.setSVGDocument(SvgFactory.fromXMLBuilder(mySVG));
+        XMLBuilder mySvg = Patterns.buildPattern1(width, height, r);
+
+        jsvgCanvas.setSVGDocument(SvgFactory.fromXMLBuilder(mySvg));
 
         System.out.println(jsvgCanvas.getSize());
-
-    }
-
-    public static void removeChildren(Node node) {
-        while (node.hasChildNodes()) {
-            node.removeChild(node.getFirstChild());
-        }
 
     }
 
@@ -68,10 +55,12 @@ public class TestBed2 {
         });
         Container contentPane = frame.getContentPane();
 
-        contentPane.add(new TestBed2(1024, 768, 50).getComponent());
+        contentPane.add(new TestBed(1024, 768, 256).getComponent());
         frame.setVisible(true);
 
         frame.invalidate();
 
     }
+
+
 }
