@@ -12,12 +12,12 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
 
+import static com.design.common.view.SvgFactory.*;
 import static com.design.islamic.Patterns.*;
 import static com.design.islamic.model.Centre.newCentre;
-import static com.design.common.view.SvgFactory.buildSvg;
-import static com.design.common.view.SvgFactory.newStyle;
 import static java.util.Arrays.asList;
 
 public class TestBed3 {
@@ -41,14 +41,16 @@ public class TestBed3 {
         Set<Point2D> newCentres = calculateNewCellCentres(centre, r, 17);
 
         final String styleBack = newStyle("black", "black", 1, 1, 1);
-        final String style = newStyle("yellow", "yellow", 1, 1, 1);
+        final String styleYellow = newStyle("yellow", "yellow", 1, 1, 1);
+        final String styleBlue = newStyle(BLUE, BLUE, 1, 1, 1);
 
         XMLBuilder backObj = newHexagon(centre, r, styleBack);
 
-        XMLBuilder testObject = newHexStarTile(centre, r, style, HEX_DIST3);
+//        XMLBuilder testObject = newHexStarTileRotated(centre, r, styleYellow, HEX_DIST2);
+        List<XMLBuilder> testObject = newHexStarInnerWithRectangles(centre, r, styleYellow, styleBlue, HEX_DIST2);
 
 //        Set<Point2D> testPoints = calculateNewCellCentresSecondConf(newCentre(100, 100), r, 3);
-        java.util.List<Point2D> testPoints = newHexTile2(centre, r, style);
+        java.util.List<Point2D> testPoints = newHexTile2(centre, r, styleYellow);
 //        List<XMLBuilder> testObject2 = newHexTile1_2(centre, r, style);
 
         ImmutableList.Builder<XMLBuilder> shapes = ImmutableList.builder();
@@ -62,8 +64,13 @@ public class TestBed3 {
         XMLBuilder mySVG = buildSvg(width, height,
                 Iterables.concat(
                         asList(backObj),
-                        asList(testObject)
-//                newPolygon(testPoints, style)
+//                        asList(testObject)
+                        testObject
+
+
+
+
+//                drawPolygon(testPoints, style)
 //                highlightPoints(testPoints)
                 )
         );

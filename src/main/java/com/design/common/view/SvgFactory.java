@@ -25,6 +25,8 @@ import static java.lang.String.valueOf;
 public class SvgFactory {
 
     public static String BLACK = "black";
+    public static String BLUE = "blue";
+    public static String ORANGE = "orange";
     public static String GREEN = "green";
     public static String GRAY = "gray";
     public static String WHITE = "white";
@@ -41,11 +43,31 @@ public class SvgFactory {
         return format("fill:%s;stroke:%s;stroke-width:%d;fill-opacity:%s;stroke-opacity:%s", fill, stroke, strokeWidth, fillOpacity, strokeOpcacity);
     }
 
-    public static XMLBuilder newPolygon(Points points, String style) {
-        return newPolygon(points.getPoints(), style);
+    public static List<XMLBuilder> drawPolygons(Iterable<Points> pointsList, final String style) {
+
+        return newArrayList(transform(pointsList, new Function<Points, XMLBuilder>() {
+            @Override
+            public XMLBuilder apply(Points points) {
+                return drawPolygon(points, style);
+            }
+        }));
     }
 
-    public static XMLBuilder newPolygon(Iterable<Point2D> points, String style) {
+    public static XMLBuilder drawPolygon(Points points, String style) {
+        return drawPolygon(points.getPoints(), style);
+    }
+
+    public static List<XMLBuilder> drawPolygons(List<List<Point2D>> pointsList, final String style) {
+        return newArrayList(transform(pointsList,new Function<List<Point2D>, XMLBuilder>() {
+            @Override
+            public XMLBuilder apply(List<Point2D> point2DList) {
+                return drawPolygon(point2DList, style);
+            }
+        }));
+
+    }
+
+    public static XMLBuilder drawPolygon(Iterable<Point2D> points, String style) {
 
         try {
             return XMLBuilder.create("polygon")
@@ -58,10 +80,19 @@ public class SvgFactory {
 
     }
 
-    public static XMLBuilder newPolyline(Points points, String style) {
+    public static List<XMLBuilder> drawPolylines(Iterable<List<Point2D>> pointsList, final String style) {
 
-        return newPolyline(points.getPoints(), style);
+        return newArrayList(transform(pointsList, new Function<Iterable<Point2D>, XMLBuilder>() {
+            @Override
+            public XMLBuilder apply(Iterable<Point2D> points) {
+                return newPolyline(points, style);
+            }
+        }));
     }
+//    public static XMLBuilder drawPolyline(Points points, String style) {
+//
+//        return newPolyline(points.getPoints(), style);
+//    }
 
     public static XMLBuilder newPolyline(Iterable<Point2D> points, String style) {
 

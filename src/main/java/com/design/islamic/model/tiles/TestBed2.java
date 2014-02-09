@@ -35,7 +35,7 @@ public class TestBed2 {
         Set<Point2D> newCentresFirstConf = calculateNewCellCentresFirstConf(newCentre(0, 0), r, 17);
         Set<Point2D> newCentresSecondConf = calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17);
 
-        XMLBuilder mySVG = Patterns.buildHexPatternStar(newCentresFirstConf, newCentresSecondConf, r, width, height, HEX_DIST3);
+        XMLBuilder mySVG = Patterns.buildHexStarInnerWithRectangles(newCentresFirstConf, newCentresSecondConf, r, width, height, HEX_DIST2);
 
 //        XMLBuilder mySVG = buildSvg(width, height, highlightPoints(calculateHexEdges(newCentres, r)) );
 

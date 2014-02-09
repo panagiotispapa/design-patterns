@@ -6,7 +6,8 @@ public enum Pattern {
     TWO("Pattern2"),
     STAR1("Pattern Star 1"),
     STAR2("Pattern Star 2"),
-    STAR3("Pattern Star 3")
+    STAR3("Pattern Star 3"),
+    STAR4("Pattern Star 4")
     ;
 
     private final String description;
@@ -31,6 +32,8 @@ public enum Pattern {
             return STAR2;
         } else if (description.equalsIgnoreCase(STAR3.getDescription())) {
             return STAR3;
+        } else if (description.equalsIgnoreCase(STAR4.getDescription())) {
+            return STAR4;
         } else {
             throw new IllegalArgumentException();
         }

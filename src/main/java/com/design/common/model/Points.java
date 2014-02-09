@@ -7,4 +7,5 @@ public interface Points {
 
     List<Point2D> getPoints();
 
+
 }

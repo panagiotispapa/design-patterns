@@ -43,19 +43,11 @@ public class TestBed4 {
 
         XMLBuilder backObj = newHexagon(centre, r, styleBack);
 
-//        XMLBuilder testObject = newHexStarTile(centre, r, style);
-
-//        Set<Point2D> testPoints = calculateNewCellCentresSecondConf(newCentre(100, 100), r, 3);
-        List<XMLBuilder> testObject = newStarDesign1(centre, r);
-//        List<XMLBuilder> testObject2 = newHexTile1_2(centre, r, style);
+        List<XMLBuilder> testObject = newStarDesign3(centre, r);
 
         ImmutableList.Builder<XMLBuilder> shapes = ImmutableList.builder();
 
         shapes.add(backObj);
-//        shapes.add(testObject);
-//        shapes.addAll(testObject2);
-
-//        XMLBuilder mySVG = buildSvg(width, height, shapes.build());
 
         XMLBuilder mySVG = buildSvg(width, height, (testObject)
         );
