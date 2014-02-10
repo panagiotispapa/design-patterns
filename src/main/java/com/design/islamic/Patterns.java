@@ -34,6 +34,7 @@ public final class Patterns {
     public final static double HEX_DIST_HEIGHT2 = calcDistHeight2(HEX_PHI);
     public final static double HEX_DIST2 = calcDist2(HEX_PHI);
     public final static double HEX_DIST3 = calcDist3(HEX_PHI);
+    public final static double HEX_DIST_EQ1 = calcDistEq1(HEX_PHI);
     public final static double HEX_DIST_NEW_CENTRE = 2.0 * HEX_DIST_HEIGHT;
     public final static double HEX_DIST_1 = HEX_DIST_NEW_CENTRE - 1;
 
@@ -177,6 +178,10 @@ public final class Patterns {
         return (1.0 - 2.0 * sin(phiHalf) * sin(phiHalf)) * cos(phiHalf);
     }
 
+    private static double calcDistEq1(double phi) {
+        return 1.0 / (1.0 + tan(phi / 2.0));
+    }
+
     private static double calcRFromHeight(double height, double phi) {
         return height / cos(phi / 2.0);
     }
@@ -283,7 +288,7 @@ public final class Patterns {
         return svg;
     }
 
-    public static XMLBuilder buildHexStarInnerWithRectangles(Iterable<Point2D> centresFirstConf, Iterable<Point2D> centresSecondConf, final double r, int width, int height, double dist) {
+    public static XMLBuilder buildHexStarInnerWithRectangles(Iterable<Point2D> centresFirstConf, Iterable<Point2D> centresSecondConf, final double r, int width, int height) {
 
         double opacity = 1;
 
@@ -294,7 +299,7 @@ public final class Patterns {
 
         List<XMLBuilder> stars = newArrayList();
         for (Point2D centre : centresSecondConf) {
-            stars.addAll(newHexStarInnerWithRectangles(centre, r, styleOrange, styleBlue, dist));
+            stars.addAll(newHexStarInnerWithRectangles(centre, r, styleOrange, styleBlue));
         }
 
         List<Point2D> backGroundRect = asList(newCentre(0, 0), newCentre(width, 0), newCentre(width, height), newCentre(0, height));
@@ -374,7 +379,7 @@ public final class Patterns {
 
     }
 
-    public static List<XMLBuilder> newHexStarInnerWithRectangles(Point2D centre, double r, String style, String styleRect, double dist) {
+    public static List<XMLBuilder> newHexStarInnerWithRectangles(Point2D centre, double r, String style, String styleRect) {
 
         String styleWhite = newStyle(WHITE, 1, 1);
 
@@ -382,9 +387,13 @@ public final class Patterns {
 
         List<Point2D> edges = Patterns.calculateHexEdges(centre, r);
 
-        double newHeight = dist;
+//        double newHeight = HEX_DIST_EQ1;
+//
+//        final double newR = calcRFromHeight(r * newHeight, HEX_PHI);
 
-        final double newR = calcRFromHeight(r * newHeight, HEX_PHI);
+        final double newR = r*HEX_DIST_EQ1;
+        double newHeight = HEX_DIST_EQ1*HEX_DIST_HEIGHT;
+
 
         List<Point2D> innerHexEdges = clonePoints(Patterns.hexPoints);
         scalePoints(innerHexEdges, newR);
@@ -563,9 +572,10 @@ public final class Patterns {
         final String green = newStyle(GREEN, 2, 1);
 
 //        double newHeight = HEX_DIST_HEIGHT * 0.5;
-        double newHeight = HEX_DIST2;
+//        double newHeight = HEX_DIST_EQ1*cos(HEX_PHI/2.0);
 
-        final double newR = calcRFromHeight(r * newHeight, HEX_PHI);
+        final double newR = r*HEX_DIST_EQ1;
+        double newHeight = HEX_DIST_EQ1*HEX_DIST_HEIGHT;
         List<Point2D> edges = Patterns.calculateHexEdges(centre, r);
 
         List<Point2D> edgesAltLayer2 = clonePoints(Patterns.hexPointsAlt);

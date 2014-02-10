@@ -47,7 +47,7 @@ public class TestBed3 {
         XMLBuilder backObj = newHexagon(centre, r, styleBack);
 
 //        XMLBuilder testObject = newHexStarTileRotated(centre, r, styleYellow, HEX_DIST2);
-        List<XMLBuilder> testObject = newHexStarInnerWithRectangles(centre, r, styleYellow, styleBlue, HEX_DIST2);
+        List<XMLBuilder> testObject = newHexStarInnerWithRectangles(centre, r, styleYellow, styleBlue);
 
 //        Set<Point2D> testPoints = calculateNewCellCentresSecondConf(newCentre(100, 100), r, 3);
         java.util.List<Point2D> testPoints = newHexTile2(centre, r, styleYellow);

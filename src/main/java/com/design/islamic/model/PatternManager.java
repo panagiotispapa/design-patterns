@@ -70,7 +70,7 @@ public class PatternManager {
         providerMap.put(Pattern.STAR4, new PatternProvider() {
             @Override
             public XMLBuilder provideSVG(Iterable<Point2D> newCentresFirstConf, Iterable<Point2D> newCentresSecondConf, double r, int width, int height) {
-                return buildHexStarInnerWithRectangles(newCentresFirstConf, newCentresSecondConf, r, width, height, HEX_DIST2);
+                return buildHexStarInnerWithRectangles(newCentresFirstConf, newCentresSecondConf, r, width, height);
             }
         });
 
