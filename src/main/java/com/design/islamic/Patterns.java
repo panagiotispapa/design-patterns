@@ -1,6 +1,10 @@
 package com.design.islamic;
 
 import com.design.common.view.SvgFactory;
+import com.design.islamic.model.hex.Tile1;
+import com.design.islamic.model.hex.Tile3;
+import com.design.islamic.model.hex.TileStar;
+import com.design.islamic.model.hex.Tiles;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -17,6 +21,7 @@ import java.util.Set;
 import static com.design.common.view.SvgFactory.*;
 import static com.design.islamic.GenericTools.*;
 import static com.design.islamic.model.Centre.newCentre;
+import static com.design.islamic.model.hex.Tiles.*;
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
@@ -45,7 +50,7 @@ public final class Patterns {
 
     }
 
-    private static List<Point2D> computePoints(int n, double phi, double offset) {
+    public static List<Point2D> computePoints(int n, double phi, double offset) {
 
         ImmutableList.Builder<Point2D> posBuilder = ImmutableList.builder();
         for (int k = 0; k < n; k++) {
@@ -182,10 +187,6 @@ public final class Patterns {
         return 1.0 / (1.0 + tan(phi / 2.0));
     }
 
-    private static double calcRFromHeight(double height, double phi) {
-        return height / cos(phi / 2.0);
-    }
-
     private static List<Point2D> calculateNewCellCentres(Point2D centre, double r) {
         List<Point2D> newPoints = clonePoints(Patterns.hexPointsAlt);
 
@@ -210,20 +211,21 @@ public final class Patterns {
 
     public static XMLBuilder buildHexPattern1(Iterable<Point2D> centresFirstConf, Iterable<Point2D> centresSecondConf, final double r, int width, int height) {
 
-        final String style = newStyle("yellow", "green", 2, 1, 1);
+        final String styleColoured = newStyle("yellow", "green", 2, 1, 1);
 
-        List<XMLBuilder> hexagons = ImmutableList.copyOf(transform(centresSecondConf, new Function<Point2D, XMLBuilder>() {
+//        List<Point2D> backGroundRect = asList(newCentre(0, 0), newCentre(width, 0), newCentre(width, height), newCentre(0, height));
+
+        List<Tile1> hexagons = Tiles.newTiles1(centresSecondConf, r);
+
+        List<XMLBuilder> tiles = newArrayList(transform(hexagons, new Function<Tile1, XMLBuilder>() {
             @Override
-            public XMLBuilder apply(Point2D centre) {
-                return newHexagon(centre, r, style);
+            public XMLBuilder apply(Tile1 tile) {
+                return draw(tile, styleColoured);
             }
         }));
 
         XMLBuilder svg = buildSvg(width, height,
-                concat(
-                        hexagons
-//                        , highlightPoints(centres)
-                )
+                tiles
         );
 
         System.out.println("finished building svg!!!");
@@ -265,30 +267,34 @@ public final class Patterns {
 
         final String style = newStyle("yellow", "yellow", 1, 1, 1);
 
-        List<XMLBuilder> stars = ImmutableList.copyOf(transform(centresFirstConf, new Function<Point2D, XMLBuilder>() {
+        List<TileStar> stars = newArrayList(transform(centresFirstConf, new Function<Point2D, TileStar>() {
             @Override
-            public XMLBuilder apply(Point2D centre) {
-                return newHexStarTile(centre, r, style, dist);
+            public TileStar apply(Point2D centre) {
+                return newTileStar(centre, r, dist);
             }
         }));
 
         final String style2 = newStyle("blue", "blue", 1, 1, 1);
 
-        XMLBuilder svg = buildSvg(width, height,
-                concat(
-                        asList(
-                                drawPolygon(
-                                        asList(newCentre(0, 0), newCentre(width, 0), newCentre(width, height), newCentre(0, height)),
-                                        style2)),
-                        stars
-                )
-        );
+        List<Point2D> backGroundRect = asList(newCentre(0, 0), newCentre(width, 0), newCentre(width, height), newCentre(0, height));
+
+        List<XMLBuilder> allShapes = newArrayList();
+
+        allShapes.add(drawPolygon(backGroundRect, style2));
+        allShapes.addAll(newArrayList(transform(stars, new Function<TileStar, XMLBuilder>() {
+            @Override
+            public XMLBuilder apply(TileStar tileStar) {
+                return draw(tileStar, style);
+            }
+        })));
+
+        XMLBuilder svg = buildSvg(width, height, allShapes);
 
         System.out.println("finished building svg!!!");
         return svg;
     }
 
-    public static XMLBuilder buildHexStarInnerWithRectangles(Iterable<Point2D> centresFirstConf, Iterable<Point2D> centresSecondConf, final double r, int width, int height) {
+    public static XMLBuilder buildHexPattern3(Iterable<Point2D> centresFirstConf, Iterable<Point2D> centresSecondConf, final double r, int width, int height) {
 
         double opacity = 1;
 
@@ -297,17 +303,23 @@ public final class Patterns {
         final String styleOrange = newStyle(ORANGE, ORANGE, 1, opacity, opacity);
         final String styleWhite = newStyle(WHITE, WHITE, 1, 0.4, 0.4);
 
-        List<XMLBuilder> stars = newArrayList();
-        for (Point2D centre : centresSecondConf) {
-            stars.addAll(newHexStarInnerWithRectangles(centre, r, styleOrange, styleBlue));
-        }
+        List<Tile3> tiles = newArrayList(transform(centresSecondConf, new Function<Point2D, Tile3>() {
+            @Override
+            public Tile3 apply(Point2D centre) {
+                return newTile3(centre, r);
+            }
+        }));
 
         List<Point2D> backGroundRect = asList(newCentre(0, 0), newCentre(width, 0), newCentre(width, height), newCentre(0, height));
-        List<Point2D> forGroundRect = asList(newCentre(0, 0), newCentre(width, 0), newCentre(width, height), newCentre(0, height));
+//        List<Point2D> forGroundRect = asList(newCentre(0, 0), newCentre(width, 0), newCentre(width, height), newCentre(0, height));
 
         List<XMLBuilder> total = newArrayList();
-        total.add(drawPolygon(backGroundRect, styleGreen));
-        total.addAll(stars);
+        total.add(drawPolygon(backGroundRect, styleBlue));
+        for (Tile3 tile : tiles) {
+            total.addAll(draw(tile, styleOrange, styleGreen));
+        }
+
+
 //        total.add(drawPolygon(forGroundRect, styleWhite));
 
         XMLBuilder svg = buildSvg(width, height,
@@ -318,42 +330,39 @@ public final class Patterns {
 
     }
 
-    public static XMLBuilder buildHexPatternStarRotated(Iterable<Point2D> centresFirstConf, Iterable<Point2D> centresSecondConf, final double r, int width, int height, final double dist) {
+//    public static XMLBuilder buildHexPatternStarRotated(Iterable<Point2D> centresFirstConf, Iterable<Point2D> centresSecondConf, final double r, int width, int height, final double dist) {
+//
+//        final String style = newStyle("yellow", "yellow", 1, 1, 1);
+//
+//        List<XMLBuilder> stars = ImmutableList.copyOf(transform(centresSecondConf, new Function<Point2D, XMLBuilder>() {
+//            @Override
+//            public XMLBuilder apply(Point2D centre) {
+//                return newHexStarTileRotated(centre, r, style, dist);
+//            }
+//        }));
+//
+//        final String style2 = newStyle("blue", "blue", 1, 1, 1);
+//
+//        XMLBuilder svg = buildSvg(width, height,
+//                concat(
+//                        asList(
+//                                drawPolygon(
+//                                        asList(newCentre(0, 0), newCentre(width, 0), newCentre(width, height), newCentre(0, height)),
+//                                        style2)),
+//                        stars
+//                )
+//        );
+//
+//        System.out.println("finished building svg!!!");
+//        return svg;
+//    }
 
-        final String style = newStyle("yellow", "yellow", 1, 1, 1);
+    public static List<Point2D> newHexStarTile(Point2D centre, double r, double dist) {
 
-        List<XMLBuilder> stars = ImmutableList.copyOf(transform(centresSecondConf, new Function<Point2D, XMLBuilder>() {
-            @Override
-            public XMLBuilder apply(Point2D centre) {
-                return newHexStarTileRotated(centre, r, style, dist);
-            }
-        }));
-
-        final String style2 = newStyle("blue", "blue", 1, 1, 1);
-
-        XMLBuilder svg = buildSvg(width, height,
-                concat(
-                        asList(
-                                drawPolygon(
-                                        asList(newCentre(0, 0), newCentre(width, 0), newCentre(width, height), newCentre(0, height)),
-                                        style2)),
-                        stars
-                )
+        return concatEdges(
+                buildHexPoints(centre, r),
+                buildHexAltPoints(centre, r * dist)
         );
-
-        System.out.println("finished building svg!!!");
-        return svg;
-    }
-
-    public static XMLBuilder newHexStarTile(Point2D centre, double r, String style, double dist) {
-        List<Point2D> edges = Patterns.calculateHexEdges(centre, r);
-
-        List<Point2D> edgesAlt = clonePoints(Patterns.hexPointsAlt);
-
-        scalePoints(edgesAlt, r * dist);
-        translatePoints(edgesAlt, centre);
-
-        return drawPolygon(concatEdges(edges, edgesAlt), style);
 
     }
 
@@ -379,284 +388,40 @@ public final class Patterns {
 
     }
 
-    public static List<XMLBuilder> newHexStarInnerWithRectangles(Point2D centre, double r, String style, String styleRect) {
+    public static List<Point2D> buildHexPoints(final Point2D centre, final double r) {
 
-        String styleWhite = newStyle(WHITE, 1, 1);
+        List<Point2D> edges = clonePoints(hexPoints);
+        scalePoints(edges, r);
+        translatePoints(edges, centre);
 
-        List<XMLBuilder> out = newArrayList();
+        return edges;
+    }
 
-        List<Point2D> edges = Patterns.calculateHexEdges(centre, r);
+    public static List<Point2D> buildHexAltPoints(final Point2D centre, final double r) {
 
-//        double newHeight = HEX_DIST_EQ1;
-//
-//        final double newR = calcRFromHeight(r * newHeight, HEX_PHI);
+        List<Point2D> edges = clonePoints(hexPointsAlt);
+        scalePoints(edges, r);
+        translatePoints(edges, centre);
 
-        final double newR = r*HEX_DIST_EQ1;
-        double newHeight = HEX_DIST_EQ1*HEX_DIST_HEIGHT;
+        return edges;
+    }
 
+    public static List<Point2D> buildHeightEdges(final Point2D centre, final double r) {
+        List<Point2D> heights = clonePoints(hexPointsAlt);
+        scalePoints(heights, r * HEX_DIST_HEIGHT);
+        translatePoints(heights, centre);
 
-        List<Point2D> innerHexEdges = clonePoints(Patterns.hexPoints);
-        scalePoints(innerHexEdges, newR);
-        translatePoints(innerHexEdges, centre);
+        return heights;
+    }
 
-        List<Point2D> edgesInnerHeights = clonePoints(Patterns.hexPointsAlt);
+    public static List<List<Point2D>> buildHeights(final Point2D centre, final double r) {
 
-        scalePoints(edgesInnerHeights, newR * HEX_DIST_HEIGHT);
-        translatePoints(edgesInnerHeights, centre);
-
-        double offsetPhi = atan((newR * 0.5) / (r * HEX_DIST_HEIGHT));
-        double newR2 = (r * HEX_DIST_HEIGHT) / cos(offsetPhi);
-        double newR3 = (r * newHeight + ((r * HEX_DIST_HEIGHT - r * newHeight) / 2.0)) / cos(offsetPhi / 2.0);
-
-        List<Point2D> outerEdges1 = computePoints(HEX_N, HEX_PHI, HEX_PHI / 2.0 - offsetPhi);
-        scalePoints(outerEdges1, newR2);
-        translatePoints(outerEdges1, centre);
-
-        List<Point2D> outerEdges2 = computePoints(HEX_N, HEX_PHI, HEX_PHI / 2.0 + offsetPhi);
-        scalePoints(outerEdges2, newR2);
-        translatePoints(outerEdges2, centre);
-
-        List<Point2D> outerEdges3 = computePoints(HEX_N, HEX_PHI, HEX_PHI / 2.0 - offsetPhi / 2.0);
-        scalePoints(outerEdges3, newR3);
-        translatePoints(outerEdges3, centre);
-
-        List<Point2D> outerEdges4 = computePoints(HEX_N, HEX_PHI, HEX_PHI / 2.0 + offsetPhi / 2.0);
-        scalePoints(outerEdges4, newR3);
-        translatePoints(outerEdges4, centre);
-
-        List<List<Point2D>> layerExt = newArrayList();
-
-        for (int i = 0; i < edgesInnerHeights.size(); i++) {
-            layerExt.add(asList(edgesInnerHeights.get(i), outerEdges3.get(i), outerEdges1.get(i), outerEdges2.get((i + 5) % 6)));
-            layerExt.add(asList(edgesInnerHeights.get(i), outerEdges4.get(i), outerEdges2.get(i)));
-//            layerExt.add(asList(outerEdges1.get(i), outerEdges2.get((i + 5) % 6)));
+        List<List<Point2D>> heights = newArrayList();
+        for (Point2D point2D : buildHeightEdges(centre, r)) {
+            heights.add(asList(centre, point2D));
         }
 
-        List<List<Point2D>> extPolygons = generateExtPolygonsForStar(innerHexEdges, outerEdges1, outerEdges2);
-
-        List<Point2D> insideStar = buildStarRotatedEdges(centre, newR, HEX_DIST2);
-
-        out.add(drawPolygon(innerHexEdges, style));
-        out.addAll(drawPolygons(extPolygons, styleRect));
-
-//        out.add(drawPolygon(insideStar, styleWhite));
-//        out.addAll(drawPolylines(layerExt, styleWhite));
-
-        return out;
-
-    }
-
-    public static List<XMLBuilder> newStarDesign1(final Point2D centre, final double r) {
-        ImmutableList.Builder<XMLBuilder> builder = ImmutableList.builder();
-
-        List<Point2D> edges = Patterns.calculateHexEdges(centre, r);
-
-        final List<Point2D> outsideCentres = clonePoints(Patterns.hexPointsAlt);
-        scalePoints(outsideCentres, r * HEX_DIST_NEW_CENTRE);
-        translatePoints(outsideCentres, centre);
-
-        List<Point2D> pointsLayerMiddle = clonePoints(Patterns.hexPoints);
-        scalePoints(pointsLayerMiddle, 0.5 * r);
-        translatePoints(pointsLayerMiddle, centre);
-
-//        List<Point2D> pointsLayerMiddle = clonePoints(Patterns.hexPoints);
-//        scalePoints(pointsLayerMiddle, 0.5 * r);
-//        translatePoints(pointsLayerMiddle, centre);
-
-        List<Point2D> edgesAltLayer1 = clonePoints(Patterns.hexPointsAlt);
-
-        scalePoints(edgesAltLayer1, r * HEX_DIST_1);
-        translatePoints(edgesAltLayer1, centre);
-
-        List<Point2D> edgesAltLayer2 = clonePoints(Patterns.hexPointsAlt);
-
-        scalePoints(edgesAltLayer2, r * HEX_DIST2);
-        translatePoints(edgesAltLayer2, centre);
-
-        List<Point2D> edgesAltLayer3 = clonePoints(Patterns.hexPointsAlt);
-
-        scalePoints(edgesAltLayer3, r * HEX_DIST3);
-        translatePoints(edgesAltLayer3, centre);
-
-        String black = newStyle("black", 2, 1);
-        String blue = newStyle("blue", 1, 1);
-        final String gray = newStyle("gray", 1, 1);
-        final String green = newStyle("green", 1, 1);
-        builder.add(newCircle(centre, r, black));
-//        builder.add(drawPolygon(edges, blue));
-        builder.addAll(highlightPoints(outsideCentres));
-        builder.add(drawPolygon(outsideCentres, gray));
-
-        builder.addAll(transform(outsideCentres, new Function<Point2D, XMLBuilder>() {
-            @Override
-            public XMLBuilder apply(Point2D centre) {
-                return newCircle(centre, r, gray);
-            }
-        }));
-
-        builder.addAll(transform(outsideCentres, new Function<Point2D, XMLBuilder>() {
-            @Override
-            public XMLBuilder apply(Point2D endPoint) {
-                return newPolyline(asList(centre, endPoint), gray);
-            }
-        }));
-
-//
-
-        builder.addAll(drawPolylines(generateCombsOfPoints(edges), gray));
-
-        builder.add(drawPolygon(edgesAltLayer1, gray));
-        builder.add(drawPolygon(pointsLayerMiddle, gray));
-
-        builder.add(drawPolygon(GenericTools.concatEdges(edges, edgesAltLayer1), green));
-        builder.add(drawPolygon(GenericTools.concatEdges(edges, edgesAltLayer2), green));
-        builder.add(drawPolygon(GenericTools.concatEdges(edges, edgesAltLayer3), green));
-
-        builder.addAll(highlightPoints(edgesAltLayer1));
-        builder.addAll(highlightPoints(edgesAltLayer2));
-        builder.addAll(highlightPoints(edgesAltLayer3));
-
-        return builder.build();
-
-    }
-
-    public static List<XMLBuilder> newStarDesign2(final Point2D centre, final double r) {
-
-        List<XMLBuilder> out = newArrayList();
-
-        final String gray = newStyle(GRAY, 1, 1);
-        final String green = newStyle(GREEN, 2, 1);
-
-        final double newR = r * cos(HEX_PHI / 2);
-
-        List<Point2D> edges = Patterns.calculateHexEdges(centre, r);
-
-        List<Point2D> edgesAltLayer2 = clonePoints(Patterns.hexPointsAlt);
-
-        scalePoints(edgesAltLayer2, r * HEX_DIST_HEIGHT);
-        translatePoints(edgesAltLayer2, centre);
-
-        List<List<Point2D>> layer2 = generateCombsOfPoints(edgesAltLayer2);
-
-        List<List<Point2D>> layer3 = asList(
-                asList(edges.get(0), edges.get(3)),
-                asList(edges.get(1), edges.get(4)),
-                asList(edges.get(2), edges.get(5))
-        );
-
-        List<Point2D> edgesAltLayer4 = clonePoints(Patterns.hexPoints);
-
-        scalePoints(edgesAltLayer4, newR * HEX_DIST2);
-        translatePoints(edgesAltLayer4, centre);
-
-        List<Point2D> edgesLayer5 = concatEdges(edgesAltLayer4, edgesAltLayer2);
-
-        out.add(drawPolygon(edges, gray));
-        out.addAll(drawPolylines(layer2, gray));
-        out.addAll(drawPolylines(layer3, gray));
-        out.add(drawPolygon(edgesLayer5, green));
-
-        out.addAll(highlightPoints(edges));
-        out.addAll(highlightPoints(edgesAltLayer2));
-        out.addAll(highlightPoints(edgesAltLayer4));
-
-        return out;
-
-    }
-
-    public static List<XMLBuilder> newStarDesign3(final Point2D centre, final double r) {
-
-        List<XMLBuilder> out = newArrayList();
-
-        final String gray = newStyle(GRAY, 1, 1);
-        final String green = newStyle(GREEN, 2, 1);
-
-//        double newHeight = HEX_DIST_HEIGHT * 0.5;
-//        double newHeight = HEX_DIST_EQ1*cos(HEX_PHI/2.0);
-
-        final double newR = r*HEX_DIST_EQ1;
-        double newHeight = HEX_DIST_EQ1*HEX_DIST_HEIGHT;
-        List<Point2D> edges = Patterns.calculateHexEdges(centre, r);
-
-        List<Point2D> edgesAltLayer2 = clonePoints(Patterns.hexPointsAlt);
-
-        scalePoints(edgesAltLayer2, r * newHeight);
-        translatePoints(edgesAltLayer2, centre);
-
-        List<Point2D> edgesLayer3 = clonePoints(Patterns.hexPoints);
-        scalePoints(edgesLayer3, newR);
-        translatePoints(edgesLayer3, centre);
-
-        List<Point2D> insideStar = buildStarRotatedEdges(centre, newR, HEX_DIST2);
-
-        List<Point2D> edgesInnerHeights = clonePoints(Patterns.hexPointsAlt);
-
-        scalePoints(edgesInnerHeights, newR * HEX_DIST_HEIGHT);
-        translatePoints(edgesInnerHeights, centre);
-
-        double offsetPhi = atan((newR * 0.5) / (r * HEX_DIST_HEIGHT));
-        double newR2 = (r * HEX_DIST_HEIGHT) / cos(offsetPhi);
-        double newR3 = (r * newHeight + ((r * HEX_DIST_HEIGHT - r * newHeight) / 2.0)) / cos(offsetPhi / 2.0);
-
-        List<Point2D> edgesLayer4 = computePoints(HEX_N, HEX_PHI, HEX_PHI / 2.0 - offsetPhi);
-        scalePoints(edgesLayer4, newR2);
-        translatePoints(edgesLayer4, centre);
-
-        List<Point2D> edgesLayer5 = computePoints(HEX_N, HEX_PHI, HEX_PHI / 2.0 + offsetPhi);
-        scalePoints(edgesLayer5, newR2);
-        translatePoints(edgesLayer5, centre);
-
-        List<Point2D> edgesLayer6 = computePoints(HEX_N, HEX_PHI, HEX_PHI / 2.0 - offsetPhi / 2.0);
-        scalePoints(edgesLayer6, newR3);
-        translatePoints(edgesLayer6, centre);
-
-        List<Point2D> edgesLayer7 = computePoints(HEX_N, HEX_PHI, HEX_PHI / 2.0 + offsetPhi / 2.0);
-        scalePoints(edgesLayer7, newR3);
-        translatePoints(edgesLayer7, centre);
-
-        List<List<Point2D>> extPolygons = generateExtPolygonsForStar(edgesLayer3, edgesLayer4, edgesLayer5);
-
-        List<List<Point2D>> layerExt = newArrayList();
-
-        for (int i = 0; i < edgesInnerHeights.size(); i++) {
-            layerExt.add(asList(edgesInnerHeights.get(i), edgesLayer6.get(i), edgesLayer4.get(i)));
-            layerExt.add(asList(edgesInnerHeights.get(i), edgesLayer7.get(i), edgesLayer5.get(i)));
-            layerExt.add(asList(edgesLayer4.get(i), edgesLayer5.get((i + 5) % 6)));
-        }
-
-        out.add(drawPolygon(edges, gray));
-        out.add(drawPolygon(edgesLayer3, gray));
-
-        out.add(drawPolygon(insideStar, gray));
-//        out.add(drawPolygon(polygon1, gray));
-//        out.add(drawPolygon(polygon2, gray));
-
-        out.addAll(drawPolygons(
-                extPolygons,
-                gray));
-
-        System.out.println(5 % 6);
-        System.out.println(6 % 6);
-        System.out.println(7 % 6);
-        System.out.println(8 % 6);
-
-//        out.add(newPolyline(asList(edgesLayer4.get(0), edgesLayer5.get(5)), gray));
-//        out.add(newPolyline(asList(edgesLayer4.get(1), edgesLayer5.get(0)), gray));
-//        out.add(newPolyline(asList(layerInnerHeights.get(0), edgesLayer6.get(0), edgesLayer4.get(0)), gray));
-//        out.add(newPolyline(asList(layerInnerHeights.get(0), edgesLayer7.get(0), edgesLayer5.get(0)), gray));
-        out.addAll(drawPolylines(layerExt, gray));
-
-        out.addAll(highlightPoints(edges));
-//        out.addAll(highlightPoints(edgesAltLayer2));
-        out.addAll(highlightPoints(edgesLayer3));
-        out.addAll(highlightPoints(edgesLayer4));
-        out.addAll(highlightPoints(edgesLayer5));
-        out.addAll(highlightPoints(edgesLayer6));
-        out.addAll(highlightPoints(edgesLayer7));
-        out.addAll(highlightPoints(edgesInnerHeights));
-
-        return out;
-
+        return heights;
     }
 
     private static List<Point2D> buildStarRotatedEdges(final Point2D centre, final double r, double dist) {

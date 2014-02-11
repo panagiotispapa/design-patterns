@@ -1,6 +1,7 @@
 package com.design.islamic.model.tiles;
 
 import com.design.common.view.SvgFactory;
+import com.design.islamic.DesignHelper;
 import com.google.common.collect.ImmutableList;
 import com.jamesmurty.utils.XMLBuilder;
 import org.apache.batik.swing.JSVGCanvas;
@@ -11,12 +12,14 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
-import java.util.*;
 import java.util.List;
+import java.util.Set;
 
-import static com.design.islamic.Patterns.*;
+import static com.design.common.view.SvgFactory.buildSvg;
+import static com.design.common.view.SvgFactory.newStyle;
+import static com.design.islamic.Patterns.calculateNewCellCentres;
+import static com.design.islamic.Patterns.newHexagon;
 import static com.design.islamic.model.Centre.newCentre;
-import static com.design.common.view.SvgFactory.*;
 
 public class TestBed4 {
 
@@ -43,7 +46,7 @@ public class TestBed4 {
 
         XMLBuilder backObj = newHexagon(centre, r, styleBack);
 
-        List<XMLBuilder> testObject = newStarDesign3(centre, r);
+        List<XMLBuilder> testObject = DesignHelper.newStarDesign1(centre, r);
 
         ImmutableList.Builder<XMLBuilder> shapes = ImmutableList.builder();
 
