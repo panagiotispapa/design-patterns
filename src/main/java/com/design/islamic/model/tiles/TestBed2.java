@@ -60,7 +60,7 @@ public class TestBed2 {
 
         JFrame frame = new JFrame();
         frame.setTitle("Polygon");
-        frame.setSize(1024, 768);
+        frame.setSize(1024+2*64, 768);
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
@@ -68,7 +68,7 @@ public class TestBed2 {
         });
         Container contentPane = frame.getContentPane();
 
-        contentPane.add(new TestBed2(1024, 768, 70).getComponent());
+        contentPane.add(new TestBed2(1024+2*64, 768, 64).getComponent());
         frame.setVisible(true);
 
         frame.invalidate();

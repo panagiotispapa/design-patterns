@@ -48,7 +48,7 @@ public class TestBed4 {
 
         XMLBuilder backObj = drawPolygon(cloneAndTranslateScalePoints(centre, r, hexPoints), styleBack);
 
-        List<XMLBuilder> testObject = DesignHelper.newStarDesign4(centre, r);
+        List<XMLBuilder> testObject = DesignHelper.newStarDesign3(centre, r);
 
         ImmutableList.Builder<XMLBuilder> shapes = ImmutableList.builder();
 

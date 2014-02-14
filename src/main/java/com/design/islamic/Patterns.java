@@ -237,6 +237,7 @@ public final class Patterns {
 
         double opacity = 1;
 
+        final String styleBlack = newStyle(BLACK, BLACK, 1, opacity, opacity);
         final String styleGreen = newStyle(GREEN, GREEN, 1, opacity, opacity);
         final String styleBlue = newStyle(BLUE, BLUE, 1, opacity, opacity);
         final String styleOrange = newStyle(ORANGE, ORANGE, 1, opacity, opacity);
@@ -253,9 +254,9 @@ public final class Patterns {
 //        List<Point2D> forGroundRect = asList(newCentre(0, 0), newCentre(width, 0), newCentre(width, height), newCentre(0, height));
 
         List<XMLBuilder> total = newArrayList();
-        total.add(drawPolygon(backGroundRect, styleBlue));
+        total.add(drawPolygon(backGroundRect, styleBlack));
         for (Tile3 tile : tiles) {
-            total.addAll(tile.drawMe(styleOrange, styleGreen));
+            total.addAll(tile.drawMe());
         }
 
 
@@ -356,25 +357,18 @@ public final class Patterns {
         return lines;
     }
 
-    public static XMLBuilder newHexStarTileRotated(Point2D centre, double r, String style, double dist) {
+    public static List<Point2D> newHexStarTileRotated(Point2D centre, double r, double dist) {
 
         final double newR = r * cos(HEX_PHI / 2);
 
-        List<Point2D> edges = Patterns.cloneAndTranslateScalePoints(centre, r, hexPoints);
+//        List<Point2D> edges = Patterns.cloneAndTranslateScalePoints(centre, r, hexPoints);
 
-        List<Point2D> edgesAlt = clonePoints(hexPointsAlt);
+        //        List<Point2D> edgesLayer5 = concatEdges(edgesAlt2, edgesAlt);
 
-        scalePoints(edgesAlt, r * HEX_DIST_HEIGHT);
-        translatePoints(edgesAlt, centre);
-
-        List<Point2D> edgesAlt2 = clonePoints(hexPoints);
-
-        scalePoints(edgesAlt2, newR * dist);
-        translatePoints(edgesAlt2, centre);
-
-//        List<Point2D> edgesLayer5 = concatEdges(edgesAlt2, edgesAlt);
-
-        return drawPolygon(concatEdges(edgesAlt2, edgesAlt), style);
+        return concatEdges(
+                cloneAndTranslateScalePoints(centre, newR * dist, hexPoints),
+                cloneAndTranslateScalePoints(centre, r * HEX_DIST_HEIGHT, hexPointsAlt)
+        );
 
     }
 

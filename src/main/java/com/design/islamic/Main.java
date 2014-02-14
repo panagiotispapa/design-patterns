@@ -80,7 +80,7 @@ public class Main implements ActionListener {
 
         JFrame frame = new JFrame();
         frame.setTitle("Islamic patterns");
-        frame.setSize(1024, 768);
+        frame.setSize(1024+2*64, 768);
 
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -89,7 +89,7 @@ public class Main implements ActionListener {
         });
         Container contentPane = frame.getContentPane();
 
-        Main main = new Main(1024, 768, 70);
+        Main main = new Main(1024+2*64, 768, 70);
         contentPane.add(main.getComponent());
         frame.setJMenuBar(main.getMenuBar());
 

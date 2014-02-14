@@ -1,5 +1,6 @@
 package com.design.islamic;
 
+import com.design.islamic.model.hex.Tile3;
 import com.design.islamic.model.hex.Tile4;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
@@ -125,19 +126,13 @@ public class DesignHelper {
         List<XMLBuilder> out = newArrayList();
 
         final String gray = newStyle(GRAY, 1, 1);
+        final String blue = newStyle(BLUE, 1, 1);
         final String green = newStyle(GREEN, 2, 1);
-
-//        double newHeight = HEX_DIST_HEIGHT * 0.5;
-//        double newHeight = HEX_DIST_EQ1*cos(HEX_PHI/2.0);
+        final String red = newStyle(RED, 2, 1);
 
         final double newR = r * HEX_DIST_EQ1;
         double newHeight = HEX_DIST_EQ1 * HEX_DIST_HEIGHT;
         List<Point2D> edges = Patterns.cloneAndTranslateScalePoints(centre, r, hexPoints);
-
-        List<Point2D> edgesAltLayer2 = clonePoints(hexPointsAlt);
-
-        scalePoints(edgesAltLayer2, r * newHeight);
-        translatePoints(edgesAltLayer2, centre);
 
         List<Point2D> innerEdges = cloneAndTranslateScalePoints(centre, newR, hexPoints);
 
@@ -145,21 +140,28 @@ public class DesignHelper {
 
         List<Point2D> edgesInnerHeights = cloneAndTranslateScalePoints(centre, newR * HEX_DIST_HEIGHT, hexPointsAlt);
 
+        List<Point2D> innerStar = newHexStarTileRotated(centre, newR, HEX_DIST_DIAGONAL);
+
         double extConfR = r - newR;
 
-        List<Point2D> edgesLayer8 = cloneAndTranslateScalePoints(innerEdges.get(0), extConfR, hexPoints);
+        List<List<Point2D>> extConfigs = buildExtConfigForDesign3(innerEdges, extConfR);
 
-        List<Point2D> heightsEdgesLayer8 = cloneAndTranslateScalePoints(innerEdges.get(0), extConfR * HEX_DIST_HEIGHT, hexPointsAlt);
+        List<List<Point2D>> layerExt0 = generateCombsOfPoints(cloneAndTranslateScalePoints(innerEdges.get(0), extConfR, hexPoints));
+        List<Point2D> layerExt0_1 = cloneAndTranslateScalePoints(innerEdges.get(0), extConfR * HEX_DIST_DIAGONAL, hexPointsAlt);
+        List<Point2D> layerExt0_2 = cloneAndTranslateScalePoints(edgesInnerHeights.get(0), newR * HEX_DIST_DIAGONAL * 0.5, hexPointsAlt);
+        List<Point2D> layerExt0_3 = cloneAndTranslateScalePoints(edgesInnerHeights.get(5), newR * HEX_DIST_DIAGONAL * 0.5, hexPointsAlt);
 
-        List<List<Point2D>> heightsLayer8 = buildLines(innerEdges.get(0),
-                heightsEdgesLayer8);
-
-        List<List<Point2D>> extConfigs = newArrayList();
-        for (int i = 0; i < innerEdges.size(); i++) {
-            extConfigs.add(buildExtConfigForDesign3(innerEdges.get(i), extConfR, i));
-        }
+        List<List<Point2D>> layerOuter2 = Tile3.buildSecondExtConfig(centre, r);
 
         out.add(drawPolygon(edges, gray));
+        out.addAll(drawPolylines(layerExt0, gray));
+
+        out.add(drawPolygon(layerExt0_1, blue));
+        out.add(drawPolygon(layerExt0_2, blue));
+        out.add(drawPolygon(layerExt0_3, blue));
+        out.add(drawPolygon(innerStar, blue));
+        out.addAll(drawPolylines(layerOuter2, red));
+
 //        out.add(drawPolygon(innerEdges, gray));
 
 //        out.add(drawPolygon(insideStar, gray));
@@ -171,13 +173,13 @@ public class DesignHelper {
 //                gray));
 
         out.add(drawPolygon(
-                innerEdges, gray));
+                innerEdges, green));
 
 //        out.add(drawPolygon(
 //                edgesLayer8,gray));
 
-        out.addAll(drawPolygons(
-                extConfigs, gray));
+        out.addAll(drawPolylines(
+                extConfigs, red));
 
         System.out.println(5 % 6);
         System.out.println(6 % 6);
@@ -197,17 +199,63 @@ public class DesignHelper {
 
     }
 
-    private static List<Point2D> buildExtConfigForDesign3(final Point2D centre, final double r, int index) {
+    private static List<List<Point2D>> buildSecondExtConfigForDesign3(final List<Point2D> centres, final double r1, final double r2) {
 
-        List<Point2D> edges = cloneAndTranslateScalePoints(centre, r, hexPoints);
-        List<Point2D> heights = cloneAndTranslateScalePoints(centre, r * HEX_DIST_HEIGHT, hexPointsAlt);
+        List<List<Point2D>> out = newArrayList();
+        int index = 0;
 
-        return asList(
-                centre,
-                heights.get(index),
-                edges.get(index),
-                heights.get((index + 5) % 6)
-        );
+        for (Point2D centre : centres) {
+
+            List<Point2D> layer1 = cloneAndTranslateScalePoints(centre, r1, hexPoints);
+            List<Point2D> layer2 = cloneAndTranslateScalePoints(centre, r1 * HEX_DIST_DIAGONAL, hexPointsAlt);
+            List<Point2D> layer3 = cloneAndTranslateScalePoints(centre, r2 * HEX_DIST_HEIGHT, hexPointsAlt);
+            List<Point2D> layer4 = cloneAndTranslateScalePoints(centre, r2, hexPoints);
+            out.add(asList(
+                    layer1.get((4 + index) % 6),
+                    layer2.get((4 + index) % 6),
+                    layer3.get((5 + index) % 6),
+                    layer4.get((index) % 6)
+            ));
+
+            out.add(asList(
+                    layer1.get((2 + index) % 6),
+                    layer2.get((1 + index) % 6),
+                    layer3.get((index) % 6),
+                    layer4.get((index) % 6)
+            ));
+
+            index++;
+        }
+
+        return out;
+
+    }
+
+    private static List<List<Point2D>> buildExtConfigForDesign3(final List<Point2D> centres, final double r) {
+
+        List<List<Point2D>> out = newArrayList();
+        //List<Point2D> edges = cloneAndTranslateScalePoints(centre, r, hexPoints);
+
+        int index = 0;
+        for (Point2D centre : centres) {
+            List<Point2D> heights = cloneAndTranslateScalePoints(centre, r * HEX_DIST_HEIGHT, hexPointsAlt);
+            out.add(
+                    asList(
+                            heights.get(index),
+                            centre,
+                            heights.get((index + 5) % 6)
+                    )
+            );
+            index++;
+        }
+
+        return out;
+
+//        return asList(
+//                heights.get(index),
+//                centre,
+//                heights.get((index + 5) % 6)
+//        );
 
     }
 
@@ -255,11 +303,9 @@ public class DesignHelper {
                 drawPolylines(generateCombsOfPoints(layerExtPol1Edges), gray)
         );
 
-
         out.addAll(
                 drawPolylines(Tile4.buildExtConf(centre, layer3r), red)
         );
-
 
         out.addAll(highlightPoints(layerExtEdges));
 
@@ -268,13 +314,11 @@ public class DesignHelper {
 
     private static List<List<Point2D>> buildExtConfForDesign4(Point2D centre, double r) {
 
-
         List<Point2D> layerExtEdges = cloneAndTranslateScalePoints(centre, r * HEX_DIST_NEW_CENTRE, hexPointsAlt);
 
         List<List<Point2D>> out = newArrayList();
 
         int k = 0;
-
 
         for (Point2D layerExtEdge : layerExtEdges) {
             List<Point2D> layerExtPolEdges = cloneAndTranslateScalePoints(layerExtEdge, r, hexPoints);
