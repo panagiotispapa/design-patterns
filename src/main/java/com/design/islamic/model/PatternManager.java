@@ -1,5 +1,6 @@
 package com.design.islamic.model;
 
+import com.design.common.PolygonTools;
 import com.google.common.collect.Maps;
 import com.jamesmurty.utils.XMLBuilder;
 
@@ -7,6 +8,9 @@ import java.awt.geom.Point2D;
 import java.util.Map;
 import java.util.Set;
 
+import static com.design.common.PolygonTools.HEX_DIST3;
+import static com.design.common.PolygonTools.HEX_DIST_DIAGONAL;
+import static com.design.common.PolygonTools.HEX_DIST_OUTER_CIRCLE;
 import static com.design.islamic.Patterns.*;
 import static com.design.islamic.model.Centre.newCentre;
 
@@ -50,14 +54,14 @@ public class PatternManager {
         providerMap.put(Pattern.STAR1, new PatternProvider() {
             @Override
             public XMLBuilder provideSVG(Iterable<Point2D> newCentresFirstConf, Iterable<Point2D> newCentresSecondConf, double r, int width, int height) {
-                return buildHexPatternStar(newCentresFirstConf, newCentresSecondConf, r, width, height, HEX_DIST_1);
+                return buildHexPatternStar(newCentresFirstConf, newCentresSecondConf, r, width, height, HEX_DIST_OUTER_CIRCLE);
             }
         });
 
         providerMap.put(Pattern.STAR2, new PatternProvider() {
             @Override
             public XMLBuilder provideSVG(Iterable<Point2D> newCentresFirstConf, Iterable<Point2D> newCentresSecondConf, double r, int width, int height) {
-                return buildHexPatternStar(newCentresFirstConf, newCentresSecondConf, r, width, height, HEX_DIST2);
+                return buildHexPatternStar(newCentresFirstConf, newCentresSecondConf, r, width, height, HEX_DIST_DIAGONAL);
             }
         });
 
@@ -71,6 +75,12 @@ public class PatternManager {
             @Override
             public XMLBuilder provideSVG(Iterable<Point2D> newCentresFirstConf, Iterable<Point2D> newCentresSecondConf, double r, int width, int height) {
                 return buildHexPattern3(newCentresFirstConf, newCentresSecondConf, r, width, height);
+            }
+        });
+        providerMap.put(Pattern.FOUR, new PatternProvider() {
+            @Override
+            public XMLBuilder provideSVG(Iterable<Point2D> newCentresFirstConf, Iterable<Point2D> newCentresSecondConf, double r, int width, int height) {
+                return buildHexPattern4(newCentresFirstConf, newCentresSecondConf, r, width, height);
             }
         });
 

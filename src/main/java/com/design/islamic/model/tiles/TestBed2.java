@@ -35,7 +35,7 @@ public class TestBed2 {
         Set<Point2D> newCentresFirstConf = calculateNewCellCentresFirstConf(newCentre(0, 0), r, 17);
         Set<Point2D> newCentresSecondConf = calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17);
 
-        XMLBuilder mySVG = Patterns.buildHexPattern3(newCentresFirstConf, newCentresSecondConf, r, width, height);
+        XMLBuilder mySVG = Patterns.buildHexPattern4(newCentresFirstConf, newCentresSecondConf, r, width, height);
 
 //        XMLBuilder mySVG = buildSvg(width, height, highlightPoints(calculateHexEdges(newCentres, r)) );
 
@@ -68,7 +68,7 @@ public class TestBed2 {
         });
         Container contentPane = frame.getContentPane();
 
-        contentPane.add(new TestBed2(1024, 768, 50).getComponent());
+        contentPane.add(new TestBed2(1024, 768, 70).getComponent());
         frame.setVisible(true);
 
         frame.invalidate();

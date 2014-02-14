@@ -1,5 +1,6 @@
 package com.design.islamic.model.tiles;
 
+import com.design.common.PolygonTools;
 import com.design.common.view.SvgFactory;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -15,6 +16,7 @@ import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.List;
 
+import static com.design.common.PolygonTools.hexPoints;
 import static com.design.common.view.SvgFactory.*;
 import static com.design.islamic.Patterns.*;
 import static com.design.islamic.model.Centre.newCentre;
@@ -44,9 +46,9 @@ public class TestBed3 {
         final String styleYellow = newStyle("yellow", "yellow", 1, 1, 1);
         final String styleBlue = newStyle(BLUE, BLUE, 1, 1, 1);
 
-        XMLBuilder backObj = newHexagon(centre, r, styleBack);
+        XMLBuilder backObj = drawPolygon(cloneAndTranslateScalePoints(centre, r, hexPoints), styleBack);
 
-//        XMLBuilder testObject = newHexStarTileRotated(centre, r, styleYellow, HEX_DIST2);
+//        XMLBuilder testObject = newHexStarTileRotated(centre, r, styleYellow, HEX_DIST_DIAGONAL);
 //        List<XMLBuilder> testObject = newHexStarInnerWithRectangles(centre, r, styleYellow, styleBlue);
 
 //        Set<Point2D> testPoints = calculateNewCellCentresSecondConf(newCentre(100, 100), r, 3);

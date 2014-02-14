@@ -1,5 +1,6 @@
 package com.design.islamic.model.tiles;
 
+import com.design.common.PolygonTools;
 import com.design.common.view.SvgFactory;
 import com.design.islamic.DesignHelper;
 import com.google.common.collect.ImmutableList;
@@ -15,10 +16,11 @@ import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Set;
 
+import static com.design.common.PolygonTools.hexPoints;
 import static com.design.common.view.SvgFactory.buildSvg;
+import static com.design.common.view.SvgFactory.drawPolygon;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.Patterns.calculateNewCellCentres;
-import static com.design.islamic.Patterns.newHexagon;
+import static com.design.islamic.Patterns.*;
 import static com.design.islamic.model.Centre.newCentre;
 
 public class TestBed4 {
@@ -44,9 +46,9 @@ public class TestBed4 {
         final String styleBack = newStyle("black", "black", 1, 1, 1);
         final String style = newStyle("yellow", "yellow", 1, 1, 1);
 
-        XMLBuilder backObj = newHexagon(centre, r, styleBack);
+        XMLBuilder backObj = drawPolygon(cloneAndTranslateScalePoints(centre, r, hexPoints), styleBack);
 
-        List<XMLBuilder> testObject = DesignHelper.newStarDesign1(centre, r);
+        List<XMLBuilder> testObject = DesignHelper.newStarDesign4(centre, r);
 
         ImmutableList.Builder<XMLBuilder> shapes = ImmutableList.builder();
 

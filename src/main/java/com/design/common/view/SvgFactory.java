@@ -28,6 +28,7 @@ public class SvgFactory {
     public static String BLUE = "blue";
     public static String ORANGE = "orange";
     public static String GREEN = "green";
+    public static String RED = "red";
     public static String GRAY = "gray";
     public static String WHITE = "white";
 

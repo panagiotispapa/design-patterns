@@ -89,7 +89,7 @@ public class Main implements ActionListener {
         });
         Container contentPane = frame.getContentPane();
 
-        Main main = new Main(1024, 768, 50);
+        Main main = new Main(1024, 768, 70);
         contentPane.add(main.getComponent());
         frame.setJMenuBar(main.getMenuBar());
 
