@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.awt.geom.Point2D;
 
+import static com.design.common.PolygonTools.cloneAndTranslateScalePoints;
 import static com.design.common.PolygonTools.hexPoints;
 import static com.design.islamic.Patterns.*;
 import static com.design.islamic.model.Centre.newCentre;

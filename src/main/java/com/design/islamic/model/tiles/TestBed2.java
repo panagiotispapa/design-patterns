@@ -1,7 +1,12 @@
 package com.design.islamic.model.tiles;
 
+import com.design.islamic.CentreConfiguration;
 import com.design.islamic.Patterns;
 import com.design.common.view.SvgFactory;
+import com.design.islamic.model.Tile;
+import com.design.islamic.model.hex.Tile3;
+import com.design.islamic.model.hex.Tile5;
+import com.google.common.base.Function;
 import com.jamesmurty.utils.XMLBuilder;
 import org.apache.batik.swing.JSVGCanvas;
 import org.w3c.dom.Node;
@@ -32,10 +37,21 @@ public class TestBed2 {
         jsvgCanvas.setSize(width, height);
         jPanel.setSize(width, height);
 
-        Set<Point2D> newCentresFirstConf = calculateNewCellCentresFirstConf(newCentre(0, 0), r, 17);
-        Set<Point2D> newCentresSecondConf = calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17);
+//        Set<Point2D> newCentresFirstConf = calculateNewCellCentresFirstConf(newCentre(0, 0), r, 17);
+//        Set<Point2D> newCentresSecondConf = calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17);
 
-        XMLBuilder mySVG = Patterns.buildHexPattern4(newCentresFirstConf, newCentresSecondConf, r, width, height);
+        CentreConfiguration centreConfiguration = new CentreConfiguration(
+                calculateNewCellCentresFirstConf(newCentre(0, 0), r, 17),
+                calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17));
+
+        XMLBuilder mySVG = Patterns.buildHexPatternBlackAndWhite(centreConfiguration, r, width, height,
+                new Function<Point2D, Tile>() {
+                    @Override
+                    public Tile apply(Point2D centre) {
+                        return new Tile5(centre, r);
+                    }
+                }
+        );
 
 //        XMLBuilder mySVG = buildSvg(width, height, highlightPoints(calculateHexEdges(newCentres, r)) );
 

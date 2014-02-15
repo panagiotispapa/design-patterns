@@ -1,6 +1,11 @@
 package com.design.islamic.model;
 
 import com.design.common.PolygonTools;
+import com.design.islamic.CentreConfiguration;
+import com.design.islamic.model.hex.Tile3;
+import com.design.islamic.model.hex.Tile4;
+import com.design.islamic.model.hex.Tile5;
+import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 import com.jamesmurty.utils.XMLBuilder;
 
@@ -18,8 +23,8 @@ public class PatternManager {
 
     private final Map<Pattern, PatternProvider> providerMap;
 
-    private final Set<Point2D> newCentresFirstConf;
-    private final Set<Point2D> newCentresSecondConf;
+    private final CentreConfiguration centreConfiguration;
+
 
     private final double r;
     private final int width;
@@ -32,55 +37,84 @@ public class PatternManager {
         this.width = width;
         this.height = height;
 
-        newCentresFirstConf = calculateNewCellCentresFirstConf(newCentre(0, 0), r, 17);
-        newCentresSecondConf = calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17);
+        centreConfiguration = new CentreConfiguration(
+                calculateNewCellCentresFirstConf(newCentre(0, 0), r, 17),
+                calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17)
+        );
 
         providerMap = Maps.newHashMap();
 
         providerMap.put(Pattern.ONE, new PatternProvider() {
             @Override
-            public XMLBuilder provideSVG(Iterable<Point2D> newCentresFirstConf, Iterable<Point2D> newCentresSecondConf, double r, int width, int height) {
-                return buildHexPattern1(newCentresFirstConf, newCentresSecondConf, r, width, height);
+            public XMLBuilder provideSVG(CentreConfiguration centreConfiguration, double r, int width, int height) {
+                return buildHexPattern1(centreConfiguration, r, width, height);
             }
         });
 
         providerMap.put(Pattern.TWO, new PatternProvider() {
             @Override
-            public XMLBuilder provideSVG(Iterable<Point2D> newCentresFirstConf, Iterable<Point2D> newCentresSecondConf, double r, int width, int height) {
-                return buildHexPattern2(newCentresFirstConf, newCentresSecondConf, r, width, height);
+            public XMLBuilder provideSVG(CentreConfiguration centreConfiguration, double r, int width, int height) {
+                return buildHexPattern2(centreConfiguration, r, width, height);
             }
         });
 
         providerMap.put(Pattern.STAR1, new PatternProvider() {
             @Override
-            public XMLBuilder provideSVG(Iterable<Point2D> newCentresFirstConf, Iterable<Point2D> newCentresSecondConf, double r, int width, int height) {
-                return buildHexPatternStar(newCentresFirstConf, newCentresSecondConf, r, width, height, HEX_DIST_OUTER_CIRCLE);
+            public XMLBuilder provideSVG(CentreConfiguration centreConfiguration, double r, int width, int height) {
+                return buildHexPatternStar(centreConfiguration, r, width, height, HEX_DIST_OUTER_CIRCLE);
             }
         });
 
         providerMap.put(Pattern.STAR2, new PatternProvider() {
             @Override
-            public XMLBuilder provideSVG(Iterable<Point2D> newCentresFirstConf, Iterable<Point2D> newCentresSecondConf, double r, int width, int height) {
-                return buildHexPatternStar(newCentresFirstConf, newCentresSecondConf, r, width, height, HEX_DIST_DIAGONAL);
+            public XMLBuilder provideSVG(CentreConfiguration centreConfiguration, double r, int width, int height) {
+                return buildHexPatternStar(centreConfiguration, r, width, height, HEX_DIST_DIAGONAL);
             }
         });
 
         providerMap.put(Pattern.STAR3, new PatternProvider() {
             @Override
-            public XMLBuilder provideSVG(Iterable<Point2D> newCentresFirstConf, Iterable<Point2D> newCentresSecondConf, double r, int width, int height) {
-                return buildHexPatternStar(newCentresFirstConf, newCentresSecondConf, r, width, height, HEX_DIST3);
+            public XMLBuilder provideSVG(CentreConfiguration centreConfiguration, double r, int width, int height) {
+                return buildHexPatternStar(centreConfiguration, r, width, height, HEX_DIST3);
             }
         });
+
         providerMap.put(Pattern.THREE, new PatternProvider() {
             @Override
-            public XMLBuilder provideSVG(Iterable<Point2D> newCentresFirstConf, Iterable<Point2D> newCentresSecondConf, double r, int width, int height) {
-                return buildHexPattern3(newCentresFirstConf, newCentresSecondConf, r, width, height);
+            public XMLBuilder provideSVG(CentreConfiguration centreConfiguration, final double r, int width, int height) {
+                return buildHexPatternBlackAndWhite(centreConfiguration, r, width, height,
+                        new Function<Point2D, Tile>() {
+                            @Override
+                            public Tile apply(Point2D centre) {
+                                return new Tile3(centre, r);
+                            }
+                        });
             }
         });
+
         providerMap.put(Pattern.FOUR, new PatternProvider() {
             @Override
-            public XMLBuilder provideSVG(Iterable<Point2D> newCentresFirstConf, Iterable<Point2D> newCentresSecondConf, double r, int width, int height) {
-                return buildHexPattern4(newCentresFirstConf, newCentresSecondConf, r, width, height);
+            public XMLBuilder provideSVG(CentreConfiguration centreConfiguration, final double r, int width, int height) {
+                return buildHexPatternBlackAndWhite(centreConfiguration, r, width, height,
+                        new Function<Point2D, Tile>() {
+                            @Override
+                            public Tile apply(Point2D centre) {
+                                return new Tile4(centre, r);
+                            }
+                        });
+            }
+        });
+
+        providerMap.put(Pattern.FIVE, new PatternProvider() {
+            @Override
+            public XMLBuilder provideSVG(CentreConfiguration centreConfiguration, final double r, int width, int height) {
+                return buildHexPatternBlackAndWhite(centreConfiguration, r, width, height,
+                        new Function<Point2D, Tile>() {
+                            @Override
+                            public Tile apply(Point2D centre) {
+                                return new Tile5(centre, r);
+                            }
+                        });
             }
         });
 
@@ -88,7 +122,7 @@ public class PatternManager {
 
 
     public XMLBuilder getSvg(Pattern pattern) {
-        return providerMap.get(pattern).provideSVG(newCentresFirstConf, newCentresSecondConf, r, width, height);
+        return providerMap.get(pattern).provideSVG(centreConfiguration, r, width, height);
     }
 
 }

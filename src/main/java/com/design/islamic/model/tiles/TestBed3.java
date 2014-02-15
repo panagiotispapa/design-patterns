@@ -16,6 +16,7 @@ import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.List;
 
+import static com.design.common.PolygonTools.cloneAndTranslateScalePoints;
 import static com.design.common.PolygonTools.hexPoints;
 import static com.design.common.view.SvgFactory.*;
 import static com.design.islamic.Patterns.*;

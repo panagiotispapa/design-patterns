@@ -16,6 +16,7 @@ import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Set;
 
+import static com.design.common.PolygonTools.cloneAndTranslateScalePoints;
 import static com.design.common.PolygonTools.hexPoints;
 import static com.design.common.view.SvgFactory.buildSvg;
 import static com.design.common.view.SvgFactory.drawPolygon;
@@ -48,7 +49,7 @@ public class TestBed4 {
 
         XMLBuilder backObj = drawPolygon(cloneAndTranslateScalePoints(centre, r, hexPoints), styleBack);
 
-        List<XMLBuilder> testObject = DesignHelper.newStarDesign3(centre, r);
+        List<XMLBuilder> testObject = DesignHelper.newStarDesign5(centre, r);
 
         ImmutableList.Builder<XMLBuilder> shapes = ImmutableList.builder();
 

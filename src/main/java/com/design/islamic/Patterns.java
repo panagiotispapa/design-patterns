@@ -1,6 +1,7 @@
 package com.design.islamic;
 
 import com.design.common.view.SvgFactory;
+import com.design.islamic.model.Tile;
 import com.design.islamic.model.hex.*;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
@@ -12,7 +13,6 @@ import org.paukov.combinatorics.Generator;
 import org.paukov.combinatorics.ICombinatoricsVector;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -145,13 +145,13 @@ public final class Patterns {
 
     }
 
-    public static XMLBuilder buildHexPattern1(Iterable<Point2D> centresFirstConf, Iterable<Point2D> centresSecondConf, final double r, int width, int height) {
+    public static XMLBuilder buildHexPattern1(CentreConfiguration centreConfiguration, final double r, int width, int height) {
 
         final String styleColoured = newStyle("yellow", "green", 2, 1, 1);
 
 //        List<Point2D> backGroundRect = asList(newCentre(0, 0), newCentre(width, 0), newCentre(width, height), newCentre(0, height));
 
-        List<Tile1> hexagons = Tile1.fromCentres(centresSecondConf, r);
+        List<Tile1> hexagons = Tile1.fromCentres(centreConfiguration.getCentresSecondConf(), r);
 
         List<XMLBuilder> tiles = newArrayList(transform(hexagons, new Function<Tile1, XMLBuilder>() {
             @Override
@@ -168,11 +168,11 @@ public final class Patterns {
         return svg;
     }
 
-    public static XMLBuilder buildHexPattern2(Iterable<Point2D> centresFirstConf, Iterable<Point2D> centresSecondConf, final double r, int width, int height) {
+    public static XMLBuilder buildHexPattern2(CentreConfiguration centreConfiguration, final double r, int width, int height) {
 
         final String style = newStyle("yellow", "green", 1, 1, 0);
 
-        List<XMLBuilder> hexagons = ImmutableList.copyOf(transform(centresSecondConf, new Function<Point2D, XMLBuilder>() {
+        List<XMLBuilder> hexagons = ImmutableList.copyOf(transform(centreConfiguration.getCentresSecondConf(), new Function<Point2D, XMLBuilder>() {
             @Override
             public XMLBuilder apply(Point2D centre) {
                 return drawPolygon(cloneAndTranslateScalePoints(centre, r, hexPoints), style);
@@ -183,7 +183,7 @@ public final class Patterns {
 
         List<XMLBuilder> circles = ImmutableList.copyOf(
                 transform(
-                        edgesFromCentres(centresSecondConf, r),
+                        edgesFromCentres(centreConfiguration.getCentresSecondConf(), r),
                         new Function<Point2D, XMLBuilder>() {
             @Override
             public XMLBuilder apply(Point2D edge) {
@@ -202,11 +202,11 @@ public final class Patterns {
         return svg;
     }
 
-    public static XMLBuilder buildHexPatternStar(Iterable<Point2D> centresFirstConf, Iterable<Point2D> centresSecondConf, final double r, int width, int height, final double dist) {
+    public static XMLBuilder buildHexPatternStar(CentreConfiguration centreConfiguration, final double r, int width, int height, final double dist) {
 
         final String style = newStyle("yellow", "yellow", 1, 1, 1);
 
-        List<TileStar> stars = newArrayList(transform(centresFirstConf, new Function<Point2D, TileStar>() {
+        List<TileStar> stars = newArrayList(transform(centreConfiguration.getCentresFirstConf(), new Function<Point2D, TileStar>() {
             @Override
             public TileStar apply(Point2D centre) {
                 return new TileStar(centre, r, dist);
@@ -233,6 +233,32 @@ public final class Patterns {
         return svg;
     }
 
+    public static XMLBuilder buildHexPatternBlackAndWhite(CentreConfiguration centreConfiguration, final double r, int width, int height, Function<Point2D, Tile> transformation) {
+
+        final String styleBlack = newStyle(BLACK, BLACK, 1, 1, 1);
+
+
+
+        List<Tile> tiles = newArrayList(transform(centreConfiguration.getCentresSecondConf(), transformation));
+
+        List<Point2D> backGroundRect = asList(newCentre(0, 0), newCentre(width, 0), newCentre(width, height), newCentre(0, height));
+
+        List<XMLBuilder> total = newArrayList();
+        total.add(drawPolygon(backGroundRect, styleBlack));
+        for (Tile tile : tiles) {
+            total.addAll(tile.drawMe());
+        }
+
+
+//        total.add(drawPolygon(forGroundRect, styleWhite));
+
+        XMLBuilder svg = buildSvg(width, height,
+                total);
+
+        System.out.println("finished building svg!!!");
+        return svg;
+
+    }
     public static XMLBuilder buildHexPattern3(Iterable<Point2D> centresFirstConf, Iterable<Point2D> centresSecondConf, final double r, int width, int height) {
 
         double opacity = 1;
@@ -276,8 +302,6 @@ public final class Patterns {
         double opacity = 1;
 
         final String styleBlack = newStyle(BLACK, BLACK, 1, opacity, opacity);
-        final String styleWhite = newStyle(WHITE, 2, opacity);
-        final String styleWhite2 = newStyle(WHITE, 1, opacity);
 
 
         List<Tile4> tiles = Tile4.fromCentres(centresSecondConf, r);
@@ -287,7 +311,7 @@ public final class Patterns {
         List<XMLBuilder> total = newArrayList();
         total.add(drawPolygon(backGroundRect, styleBlack));
         for (Tile4 tile : tiles) {
-            total.addAll(tile.drawMe(styleWhite, styleWhite2));
+            total.addAll(tile.drawMe());
         }
 
 
@@ -334,16 +358,6 @@ public final class Patterns {
                 cloneAndTranslateScalePoints(centre, r, hexPoints),
                 cloneAndTranslateScalePoints(centre, r * dist, hexPointsAlt)
         );
-
-    }
-
-    public static List<Point2D> cloneAndTranslateScalePoints(final Point2D centre, final double r, Iterable<Point2D> points) {
-
-        List<Point2D> edges = clonePoints(points);
-        scalePoints(edges, r);
-        translatePoints(edges, centre);
-
-        return edges;
 
     }
 
@@ -417,7 +431,7 @@ public final class Patterns {
     }
 
     public static List<Point2D> newHexTile2(Point2D centre, double r, String style) {
-        List<Point2D> edges = Patterns.cloneAndTranslateScalePoints(centre, r, hexPoints);
+        List<Point2D> edges = cloneAndTranslateScalePoints(centre, r, hexPoints);
 
         List<Point2D> edgesAlt = clonePoints(hexPointsAlt);
 

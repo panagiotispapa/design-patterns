@@ -8,7 +8,8 @@ public enum Pattern {
     STAR2("Pattern Star 2"),
     STAR3("Pattern Star 3"),
     THREE("Pattern 3"),
-    FOUR("Pattern 4")
+    FOUR("Pattern 4"),
+    FIVE("Pattern 5")
     ;
 
     private final String description;
@@ -37,6 +38,8 @@ public enum Pattern {
             return THREE;
         } else if (description.equalsIgnoreCase(FOUR.getDescription())) {
             return FOUR;
+        } else if (description.equalsIgnoreCase(FIVE.getDescription())) {
+            return FIVE;
         } else {
             throw new IllegalArgumentException();
         }

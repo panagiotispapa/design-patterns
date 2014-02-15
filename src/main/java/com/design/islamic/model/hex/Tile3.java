@@ -1,5 +1,6 @@
 package com.design.islamic.model.hex;
 
+import com.design.islamic.model.Tile;
 import com.jamesmurty.utils.XMLBuilder;
 
 import java.awt.geom.Point2D;
@@ -7,12 +8,11 @@ import java.util.List;
 
 import static com.design.common.PolygonTools.*;
 import static com.design.common.view.SvgFactory.*;
-import static com.design.islamic.Patterns.cloneAndTranslateScalePoints;
 import static com.design.islamic.Patterns.newHexStarTileRotated;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 
-public class Tile3 {
+public class Tile3 implements Tile {
 
     private final List<Point2D> innerEdges;
     private final List<Point2D> innerStar;
@@ -44,6 +44,7 @@ public class Tile3 {
         return outerRectangles;
     }
 
+    @Override
     public List<XMLBuilder> drawMe() {
 
         List<XMLBuilder> out = newArrayList();

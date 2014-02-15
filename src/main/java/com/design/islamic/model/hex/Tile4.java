@@ -1,5 +1,6 @@
 package com.design.islamic.model.hex;
 
+import com.design.islamic.model.Tile;
 import com.google.common.base.Function;
 import com.jamesmurty.utils.XMLBuilder;
 
@@ -7,17 +8,20 @@ import java.awt.geom.Point2D;
 import java.util.List;
 
 import static com.design.common.PolygonTools.*;
-import static com.design.common.view.SvgFactory.drawPolygon;
-import static com.design.common.view.SvgFactory.drawPolylines;
-import static com.design.islamic.Patterns.cloneAndTranslateScalePoints;
+import static com.design.common.view.SvgFactory.*;
+import static com.design.common.view.SvgFactory.WHITE;
+import static com.design.common.view.SvgFactory.newStyle;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 
-public class Tile4 {
+public class Tile4 implements Tile {
 
     private final List<Point2D> mainRect;
     private final List<List<Point2D>> outerRectangles;
+
+    private final String styleWhiteBold = newStyle(WHITE, 2, 1);
+    private final String styleWhite = newStyle(WHITE, 1, 1);
 
     public static List<Tile4> fromCentres(final Iterable<Point2D> centres, final double r) {
         return newArrayList(transform(centres, new Function<Point2D, Tile4>() {
@@ -47,13 +51,14 @@ public class Tile4 {
         return outerRectangles;
     }
 
-    public List<XMLBuilder> drawMe(String style, String mainStyle) {
+    @Override
+    public List<XMLBuilder> drawMe() {
 
         List<XMLBuilder> out = newArrayList();
-        out.add(drawPolygon(mainRect, mainStyle));
+        out.add(drawPolygon(mainRect, styleWhiteBold));
 
 //        out.add(drawPolygon(getInnerEdges(), style));
-        out.addAll(drawPolylines(getOuterRectangles(), style));
+        out.addAll(drawPolylines(getOuterRectangles(), styleWhite));
 
         return out;
     }
@@ -73,7 +78,7 @@ public class Tile4 {
                     layerExtPolEdges.get((1 + k) % 6),
                     layerExtPolEdges.get((2 + k) % 6),
                     layerExtPolEdges.get((5 + k) % 6),
-                    layerExtPolEdges.get((0 + k) % 6)
+                    layerExtPolEdges.get((k) % 6)
 
             ));
 

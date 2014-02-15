@@ -5,10 +5,11 @@ import com.google.common.collect.ImmutableList;
 import java.awt.geom.Point2D;
 import java.util.List;
 
+import static com.design.islamic.GenericTools.clonePoints;
+import static com.design.islamic.GenericTools.scalePoints;
+import static com.design.islamic.GenericTools.translatePoints;
 import static com.design.islamic.model.Centre.newCentre;
 import static java.lang.Math.*;
-import static java.lang.Math.sin;
-import static java.lang.Math.tan;
 
 public class PolygonTools {
     public final static int HEX_N = 6;
@@ -29,8 +30,6 @@ public class PolygonTools {
     public static List<Point2D> hexPoints = computePoints(HEX_N, HEX_PHI);
     public static List<Point2D> hexPointsAlt = computePointsAlt(HEX_N, HEX_PHI);
 
-
-
     private static double calcDistHeight(double phi) {
         return cos(phi / 2.0);
     }
@@ -40,8 +39,6 @@ public class PolygonTools {
         final double cos = cos(phi / 2.0);
         return cos * cos;
     }
-
-
 
     private static double calcDistDiagonal(double phi) {
         return calcDistHeight(phi) - sin(phi / 2.0) * tan(phi / 2.0);
@@ -56,7 +53,6 @@ public class PolygonTools {
     private static double calcDistEq1(double phi) {
         return 1.0 / (1.0 + tan(phi / 2.0));
     }
-
 
     private static List<Point2D> computePoints(int n, double phi) {
 
@@ -77,13 +73,27 @@ public class PolygonTools {
         }
         return posBuilder.build();
     }
-    public static Point2D newEdgeAt(double phi){
+
+    public static Point2D newEdgeAt(double phi) {
         return newCentre(
                 cos(phi),
                 sin(phi)
         );
     }
 
+    public static List<Point2D> cloneAndTranslateScalePoints(final Point2D centre, final double r, Iterable<Point2D> points) {
 
+        List<Point2D> edges = clonePoints(points);
+        scalePoints(edges, r);
+        translatePoints(edges, centre);
+
+        return edges;
+
+    }
+
+
+    public static int toHexIndex(int i) {
+        return i % HEX_N;
+    }
 
 }
