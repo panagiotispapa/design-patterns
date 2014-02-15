@@ -19,9 +19,9 @@ public class Main implements ActionListener {
 
     private PatternManager manager;
 
-    public Main(int width, int height, final double r) {
+    public Main(Dimension dim, final double r) {
 
-        manager = new PatternManager(r, width, height);
+        manager = new PatternManager(r, dim);
 
         jPanel = new JPanel();
         jPanel.setLayout(new BorderLayout());
@@ -39,8 +39,8 @@ public class Main implements ActionListener {
 
         menuBar.add(patternsMenu);
 
-        jsvgCanvas.setSize(width, height);
-        jPanel.setSize(width, height);
+        jsvgCanvas.setSize(dim);
+        jPanel.setSize(dim);
 
 
         refreshCanvas(Pattern.ONE);
@@ -78,9 +78,13 @@ public class Main implements ActionListener {
 
     public static void main(String[] args) {
 
+
+
+        Dimension dim = new Dimension(1024+2*64, 768);
+
         JFrame frame = new JFrame();
         frame.setTitle("Islamic patterns");
-        frame.setSize(1024+2*64, 768);
+        frame.setSize(dim);
 
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -89,7 +93,7 @@ public class Main implements ActionListener {
         });
         Container contentPane = frame.getContentPane();
 
-        Main main = new Main(1024+2*64, 768, 70);
+        Main main = new Main(dim, 64);
         contentPane.add(main.getComponent());
         frame.setJMenuBar(main.getMenuBar());
 

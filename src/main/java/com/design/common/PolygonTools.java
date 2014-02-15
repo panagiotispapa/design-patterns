@@ -1,6 +1,8 @@
 package com.design.common;
 
 import com.google.common.collect.ImmutableList;
+import org.paukov.combinatorics.Generator;
+import org.paukov.combinatorics.ICombinatoricsVector;
 
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -9,7 +11,11 @@ import static com.design.islamic.GenericTools.clonePoints;
 import static com.design.islamic.GenericTools.scalePoints;
 import static com.design.islamic.GenericTools.translatePoints;
 import static com.design.islamic.model.Centre.newCentre;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Math.*;
+import static java.util.Arrays.asList;
+import static org.paukov.combinatorics.Factory.createSimpleCombinationGenerator;
+import static org.paukov.combinatorics.Factory.createVector;
 
 public class PolygonTools {
     public final static int HEX_N = 6;
@@ -22,6 +28,7 @@ public class PolygonTools {
     public final static double HEX_DIST_HEIGHT = calcDistHeight(HEX_PHI);
     public final static double HEX_DIST_HEIGHT2 = calcDistHeight2(HEX_PHI);
     public final static double HEX_DIST_DIAGONAL = calcDistDiagonal(HEX_PHI);
+    public final static double HEX_DIST_DIAGONAL_ROTATED = HEX_DIST_DIAGONAL*HEX_DIST_HEIGHT;
     public final static double HEX_DIST3 = calcDist3(HEX_PHI);
     public final static double HEX_DIST_EQ1 = calcDistEq1(HEX_PHI);
     public final static double HEX_DIST_NEW_CENTRE = 2.0 * HEX_DIST_HEIGHT;
@@ -91,6 +98,30 @@ public class PolygonTools {
 
     }
 
+    public static List<List<Point2D>> generateCombsOfPoints(List<Point2D> edges) {
+
+        List<List<Point2D>> combinations = newArrayList();
+
+        Generator<Point2D> edgesLines = createSimpleCombinationGenerator(createVector(
+                edges), 2);
+
+        for (ICombinatoricsVector<Point2D> edgesLine : edgesLines) {
+            combinations.add(edgesLine.getVector());
+        }
+
+        return combinations;
+    }
+
+
+    public static List<List<Point2D>> buildLines(final Point2D centre, List<Point2D> points) {
+
+        List<List<Point2D>> lines = newArrayList();
+        for (Point2D point2D : points) {
+            lines.add(asList(centre, point2D));
+        }
+
+        return lines;
+    }
 
     public static int toHexIndex(int i) {
         return i % HEX_N;

@@ -29,7 +29,7 @@ public class TestBed4 {
     private JSVGCanvas jsvgCanvas;
     private JPanel jPanel;
 
-    public TestBed4(int width, int height, final double r) {
+    public TestBed4(Dimension dim, final double r) {
 
         jPanel = new JPanel();
         jPanel.setLayout(new BorderLayout());
@@ -37,11 +37,11 @@ public class TestBed4 {
 
         jPanel.add("Center", jsvgCanvas);
 
-        jsvgCanvas.setSize(width, height);
-        jPanel.setSize(width, height);
+        jsvgCanvas.setSize(dim);
+        jPanel.setSize(dim);
 
 //        Set<Point2D> newCentres = calculateNewCellCentres(calculateNewCellCentres(newCentre(width / 2.0, height / 2.0), r), r, 16);
-        Point2D centre = newCentre(width / 2.0, height / 2.0);
+        Point2D centre = newCentre(dim.getWidth() / 2.0, dim.getHeight() / 2.0);
         Set<Point2D> newCentres = calculateNewCellCentres(centre, r, 17);
 
         final String styleBack = newStyle("black", "black", 1, 1, 1);
@@ -49,13 +49,13 @@ public class TestBed4 {
 
         XMLBuilder backObj = drawPolygon(cloneAndTranslateScalePoints(centre, r, hexPoints), styleBack);
 
-        List<XMLBuilder> testObject = DesignHelper.newStarDesign5(centre, r);
+        List<XMLBuilder> testObject = DesignHelper.newStarDesign6(centre, r);
 
         ImmutableList.Builder<XMLBuilder> shapes = ImmutableList.builder();
 
         shapes.add(backObj);
 
-        XMLBuilder mySVG = buildSvg(width, height, (testObject)
+        XMLBuilder mySVG = buildSvg(dim, (testObject)
         );
 
         jsvgCanvas.setSVGDocument(SvgFactory.fromXMLBuilder(mySVG));
@@ -76,16 +76,18 @@ public class TestBed4 {
     }
 
     public static void main(String[] args) {
+        Dimension dim = new Dimension(1024+2*64, 768);
+
         JFrame frame = new JFrame();
         frame.setTitle("Polygon");
-        frame.setSize(1024, 768);
+        frame.setSize(dim);
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
             }
         });
         Container contentPane = frame.getContentPane();
-        contentPane.add(new TestBed4(1024, 768, 200).getComponent());
+        contentPane.add(new TestBed4(dim, 200).getComponent());
         frame.setVisible(true);
 
         frame.invalidate();

@@ -5,6 +5,7 @@ import com.design.common.model.Circle;
 import com.google.common.collect.Sets;
 import com.jamesmurty.utils.XMLBuilder;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Set;
 
@@ -19,7 +20,7 @@ import static java.util.Arrays.asList;
 
 public class Patterns {
 
-    public static XMLBuilder buildPattern1(int width, int height, double r) {
+    public static XMLBuilder buildPattern1(Dimension dim, double r) {
 
         final double N1 = 18.0;
         final double step = 1.0 / N1;
@@ -31,7 +32,7 @@ public class Patterns {
         final String styleFrontGray = newStyle(GRAY, BLACK, 2, 0.8, 1);
         final String styleFrontWhite = newStyle(WHITE, BLACK, 2, 1, 1);
 
-        Circle mainCircle = newCircle(newCentre(width / 2, height / 2), r);
+        Circle mainCircle = newCircle(newCentre(dim.getWidth() / 2, dim.getHeight() / 2), r);
 
         Set<Circle> layer1 = Sets.newHashSet(concat(
                 Helper.putInARow(mainCircle, 18, 0),
@@ -80,7 +81,7 @@ public class Patterns {
         shapes.addAll(drawArcList(layer3, styleBackStrong));
         shapes.add(drawCircle(mainCircle, styleBackStrong));
 
-        return buildSvg(width, height, shapes);
+        return buildSvg(dim, shapes);
 
     }
 

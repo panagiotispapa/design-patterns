@@ -3,6 +3,7 @@ package com.design.islamic;
 import com.design.islamic.model.hex.Tile3;
 import com.design.islamic.model.hex.Tile4;
 import com.design.islamic.model.hex.Tile5;
+import com.design.islamic.model.hex.Tile6;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.jamesmurty.utils.XMLBuilder;
@@ -325,6 +326,48 @@ public class DesignHelper {
         out.addAll(drawPolylines(lines, red));
 
         return out;
+    }
+
+    public static List<XMLBuilder> newStarDesign6(final Point2D centre, final double r) {
+
+
+
+        List<XMLBuilder> out = newArrayList();
+
+        final String gray = newStyle(GRAY, 1, 1);
+        final String green = newStyle(GREEN, 2, 1);
+        final String red = newStyle(RED, 2, 1);
+        final String blue = newStyle(BLUE, 2, 1);
+
+        List<Point2D> layer1Edges = cloneAndTranslateScalePoints(centre, r, hexPoints);
+
+        double newR = r* HEX_DIST_DIAGONAL_ROTATED;
+
+        List<Point2D> layer2Edges = cloneAndTranslateScalePoints(centre, newR, hexPoints);
+        List<Point2D> outerEdges = cloneAndTranslateScalePoints(centre, newR*HEX_DIST_NEW_CENTRE, hexPointsAlt);
+
+
+        List<Point2D> outerInnerHex = cloneAndTranslateScalePoints(outerEdges.get(0), newR*HEX_DIST_DIAGONAL_ROTATED, hexPoints);
+
+
+        out.addAll(
+                drawPolylines(generateCombsOfPoints(layer1Edges), gray)
+        );
+
+        out.addAll(
+                drawPolygons(newHexInnerTriangles(centre, r), gray)
+        );
+
+        out.add(drawPolygon(outerInnerHex, gray));
+
+        out.addAll(highlightPoints(layer2Edges));
+        out.addAll(highlightPoints(outerEdges));
+
+
+        out.addAll(drawPolylines(Tile6.buildOuterLines(outerEdges, newR), red));
+
+        return out;
+
     }
 
 }

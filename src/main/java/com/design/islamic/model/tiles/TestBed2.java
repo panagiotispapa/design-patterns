@@ -4,8 +4,9 @@ import com.design.islamic.CentreConfiguration;
 import com.design.islamic.Patterns;
 import com.design.common.view.SvgFactory;
 import com.design.islamic.model.Tile;
-import com.design.islamic.model.hex.Tile3;
 import com.design.islamic.model.hex.Tile5;
+import com.design.islamic.model.hex.Tile6;
+import com.design.islamic.model.hex.TileStar;
 import com.google.common.base.Function;
 import com.jamesmurty.utils.XMLBuilder;
 import org.apache.batik.swing.JSVGCanvas;
@@ -16,8 +17,8 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
-import java.util.Set;
 
+import static com.design.common.PolygonTools.HEX_DIST_DIAGONAL;
 import static com.design.islamic.Patterns.*;
 import static com.design.islamic.model.Centre.newCentre;
 
@@ -26,7 +27,7 @@ public class TestBed2 {
     private JSVGCanvas jsvgCanvas;
     private JPanel jPanel;
 
-    public TestBed2(int width, int height, final double r) {
+    public TestBed2(Dimension dim, final double r) {
 
         jPanel = new JPanel();
         jPanel.setLayout(new BorderLayout());
@@ -34,8 +35,8 @@ public class TestBed2 {
 
         jPanel.add("Center", jsvgCanvas);
 
-        jsvgCanvas.setSize(width, height);
-        jPanel.setSize(width, height);
+        jsvgCanvas.setSize(dim);
+        jPanel.setSize(dim);
 
 //        Set<Point2D> newCentresFirstConf = calculateNewCellCentresFirstConf(newCentre(0, 0), r, 17);
 //        Set<Point2D> newCentresSecondConf = calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17);
@@ -44,7 +45,7 @@ public class TestBed2 {
                 calculateNewCellCentresFirstConf(newCentre(0, 0), r, 17),
                 calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17));
 
-        XMLBuilder mySVG = Patterns.buildHexPatternBlackAndWhite(centreConfiguration, r, width, height,
+        XMLBuilder mySVG = Patterns.buildHexPatternBlackAndWhite(centreConfiguration, dim,
                 new Function<Point2D, Tile>() {
                     @Override
                     public Tile apply(Point2D centre) {
@@ -74,9 +75,11 @@ public class TestBed2 {
 
     public static void main(String[] args) {
 
+        Dimension dim = new Dimension(1024+2*64, 768);
+
         JFrame frame = new JFrame();
         frame.setTitle("Polygon");
-        frame.setSize(1024+2*64, 768);
+        frame.setSize(dim);
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
@@ -84,7 +87,7 @@ public class TestBed2 {
         });
         Container contentPane = frame.getContentPane();
 
-        contentPane.add(new TestBed2(1024+2*64, 768, 64).getComponent());
+        contentPane.add(new TestBed2(dim, 64).getComponent());
         frame.setVisible(true);
 
         frame.invalidate();

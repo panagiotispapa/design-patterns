@@ -13,7 +13,7 @@ public class TestBed {
     private JSVGCanvas jsvgCanvas;
     private JPanel jPanel;
 
-    public TestBed(int width, int height, final double r) {
+    public TestBed(Dimension dim, final double r) {
 
         jPanel = new JPanel();
         jPanel.setLayout(new BorderLayout());
@@ -21,8 +21,8 @@ public class TestBed {
 
         jPanel.add("Center", jsvgCanvas);
 
-        jsvgCanvas.setSize(width, height);
-        jPanel.setSize(width, height);
+        jsvgCanvas.setSize(dim);
+        jPanel.setSize(dim);
 
 //        Set<Point2D> newCentresFirstConf = calculateNewCellCentresFirstConf(newCentre(0, 0), r, 17);
 //        Set<Point2D> newCentresSecondConf = calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17);
@@ -31,7 +31,7 @@ public class TestBed {
 
 //        XMLBuilder mySVG = buildSvg(width, height, highlightPoints(calculateHexEdges(newCentres, r)) );
 
-        XMLBuilder mySvg = Patterns.buildPattern1(width, height, r);
+        XMLBuilder mySvg = Patterns.buildPattern1(dim, r);
 
         jsvgCanvas.setSVGDocument(SvgFactory.fromXMLBuilder(mySvg));
 
@@ -45,9 +45,11 @@ public class TestBed {
 
     public static void main(String[] args) {
 
+        Dimension dim = new Dimension(1024, 768);
+
         JFrame frame = new JFrame();
         frame.setTitle("Polygon");
-        frame.setSize(1024, 768);
+        frame.setSize(dim);
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
@@ -55,7 +57,7 @@ public class TestBed {
         });
         Container contentPane = frame.getContentPane();
 
-        contentPane.add(new TestBed(1024, 768, 256).getComponent());
+        contentPane.add(new TestBed(dim, 256).getComponent());
         frame.setVisible(true);
 
         frame.invalidate();

@@ -12,6 +12,7 @@ import org.w3c.dom.svg.SVGDocument;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.StringReader;
@@ -190,12 +191,12 @@ public class SvgFactory {
         return null;
     }
 
-    public static XMLBuilder buildSvg(int width, int height, Iterable<XMLBuilder> shapes) {
+    public static XMLBuilder buildSvg(Dimension dim, Iterable<XMLBuilder> shapes) {
 
         XMLBuilder xmlBuilder = null;
         try {
             xmlBuilder = XMLBuilder.create("svg")
-                    .a("width", valueOf(width)).a("height", valueOf(height));
+                    .a("width", valueOf(dim.getWidth())).a("height", valueOf(dim.getHeight()));
 
             for (XMLBuilder shape : shapes) {
                 xmlBuilder.importXMLBuilder(shape);

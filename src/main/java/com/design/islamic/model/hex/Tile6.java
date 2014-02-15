@@ -4,31 +4,32 @@ import com.design.islamic.model.Tile;
 import com.jamesmurty.utils.XMLBuilder;
 
 import java.awt.geom.Point2D;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.design.common.PolygonTools.*;
 import static com.design.common.view.SvgFactory.*;
 import static com.google.common.collect.Lists.newArrayList;
-import static java.util.Arrays.asList;
 
-public class Tile5 implements Tile {
+public class Tile6 implements Tile {
+    private final List<Point2D> mainHex;
+    private final List<List<Point2D>> outerEdges;
 
     private final String styleWhiteBold = newStyle(WHITE, 2, 1);
     private final String styleWhite = newStyle(WHITE, 1, 1);
 
-    private final List<Point2D> mainHex;
-    private final List<List<Point2D>> outerEdges;
 
-    public Tile5(Point2D centre, double r) {
+    public Tile6(Point2D centre, double r) {
+
         mainHex = cloneAndTranslateScalePoints(centre, r, hexPoints);
 
-        double newR = r*HEX_DIST_DIAGONAL*HEX_DIST_DIAGONAL;
-
+        double newR = r * HEX_DIST_DIAGONAL_ROTATED;
         outerEdges = buildOuterLines(
-                cloneAndTranslateScalePoints(centre, newR*HEX_DIST_NEW_CENTRE, hexPointsAlt),
+                cloneAndTranslateScalePoints(centre, newR * HEX_DIST_NEW_CENTRE, hexPointsAlt),
                 newR
 
         );
+
     }
 
     public static List<List<Point2D>> buildOuterLines(List<Point2D> outerEdges, double r) {
@@ -36,21 +37,18 @@ public class Tile5 implements Tile {
 
         int index = 0;
         for (Point2D outerEdge : outerEdges) {
-
             List<Point2D> edges = cloneAndTranslateScalePoints(outerEdge, r, hexPoints);
-
-            out.add(
-                    asList(
-                            edges.get(toHexIndex(1 + index)),
-                            edges.get(toHexIndex(4 + index))
-                    )
-            );
+            List<Point2D> innerEdges = cloneAndTranslateScalePoints(outerEdge, r*HEX_DIST_DIAGONAL_ROTATED, hexPoints);
 
 
             out.add(
-                    asList(
+                    Arrays.asList(
+                            edges.get(toHexIndex(2 + index)),
+                            innerEdges.get(toHexIndex(3 + index)),
                             edges.get(toHexIndex(3 + index)),
-                            edges.get(toHexIndex(0 + index))
+                            edges.get(toHexIndex(4 + index)),
+                            innerEdges.get(toHexIndex(4 + index)),
+                            edges.get(toHexIndex(5 + index))
                     )
             );
 
@@ -59,6 +57,7 @@ public class Tile5 implements Tile {
 
         return out;
     }
+
 
     @Override
     public List<XMLBuilder> drawMe() {
