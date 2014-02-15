@@ -20,12 +20,12 @@ public class Tile5 implements Tile {
     private final List<List<Point2D>> outerEdges;
 
     public Tile5(Point2D centre, double r) {
-        mainHex = cloneAndTranslateScalePoints(centre, r, hexPoints);
+        mainHex = cloneAndTranslateScalePoints(centre, r, hexPointsAlt);
 
         double newR = r*HEX_DIST_DIAGONAL*HEX_DIST_DIAGONAL;
 
         outerEdges = buildOuterLines(
-                cloneAndTranslateScalePoints(centre, newR*HEX_DIST_NEW_CENTRE, hexPointsAlt),
+                cloneAndTranslateScalePoints(centre, newR*HEX_DIST_NEW_CENTRE, hexPoints),
                 newR
 
         );
@@ -37,12 +37,12 @@ public class Tile5 implements Tile {
         int index = 0;
         for (Point2D outerEdge : outerEdges) {
 
-            List<Point2D> edges = cloneAndTranslateScalePoints(outerEdge, r, hexPoints);
+            List<Point2D> edges = cloneAndTranslateScalePoints(outerEdge, r, hexPointsAlt);
 
             out.add(
                     asList(
-                            edges.get(toHexIndex(1 + index)),
-                            edges.get(toHexIndex(4 + index))
+                            edges.get(toHexIndex(2 + index)),
+                            edges.get(toHexIndex(5 + index))
                     )
             );
 

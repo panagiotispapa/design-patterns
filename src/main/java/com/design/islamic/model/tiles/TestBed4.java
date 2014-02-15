@@ -49,7 +49,7 @@ public class TestBed4 {
 
         XMLBuilder backObj = drawPolygon(cloneAndTranslateScalePoints(centre, r, hexPoints), styleBack);
 
-        List<XMLBuilder> testObject = DesignHelper.newStarDesign6(centre, r);
+        List<XMLBuilder> testObject = DesignHelper.newStarDesign2(centre, r);
 
         ImmutableList.Builder<XMLBuilder> shapes = ImmutableList.builder();
 
@@ -87,7 +87,7 @@ public class TestBed4 {
             }
         });
         Container contentPane = frame.getContentPane();
-        contentPane.add(new TestBed4(dim, 200).getComponent());
+        contentPane.add(new TestBed4(dim, 300).getComponent());
         frame.setVisible(true);
 
         frame.invalidate();

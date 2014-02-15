@@ -7,9 +7,8 @@ import org.paukov.combinatorics.ICombinatoricsVector;
 import java.awt.geom.Point2D;
 import java.util.List;
 
-import static com.design.islamic.GenericTools.clonePoints;
-import static com.design.islamic.GenericTools.scalePoints;
-import static com.design.islamic.GenericTools.translatePoints;
+import static com.design.islamic.GenericTools.*;
+import static com.design.islamic.GenericTools.concatEdges;
 import static com.design.islamic.model.Centre.newCentre;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Math.*;
@@ -122,6 +121,70 @@ public class PolygonTools {
 
         return lines;
     }
+
+
+
+    public static List<Point2D> newHexagon(Point2D centre, double r) {
+        return cloneAndTranslateScalePoints(centre, r, hexPoints);
+    }
+
+    public static List<Point2D> newHexagonRot(Point2D centre, double r) {
+        return cloneAndTranslateScalePoints(centre, r, hexPointsAlt);
+    }
+
+
+    public static List<List<Point2D>> newHexHeights(Point2D centre, double r) {
+        return buildLines(centre, newHexagonRot(centre, r*HEX_DIST_HEIGHT));
+    }
+
+    public static List<List<Point2D>> newHexHeightsRot(Point2D centre, double r) {
+        return buildLines(centre, newHexagon(centre, r * HEX_DIST_HEIGHT));
+    }
+
+    public static List<Point2D> newHexStarTile(Point2D centre, double r, double dist) {
+
+        return concatEdges(
+
+                cloneAndTranslateScalePoints(centre, r * dist, hexPoints),
+                cloneAndTranslateScalePoints(centre, r, hexPointsAlt)
+        );
+
+    }
+
+    public static List<Point2D> newHexStarTileRotated(Point2D centre, double r, double dist) {
+
+        final double newR = r * HEX_DIST_HEIGHT;
+
+        return concatEdges(
+                cloneAndTranslateScalePoints(centre, r * HEX_DIST_HEIGHT, hexPoints),
+                cloneAndTranslateScalePoints(centre, newR * dist, hexPointsAlt)
+        );
+
+    }
+
+
+    public static List<List<Point2D>> newHexInnerTriangles(Point2D centre, double r) {
+        List<Point2D> heights = newHexagonRot(centre, r * HEX_DIST_HEIGHT);
+
+        return asList(
+                asList(heights.get(0), heights.get(2), heights.get(4)),
+                asList(heights.get(1), heights.get(3), heights.get(5))
+
+        );
+
+    }
+
+    public static List<List<Point2D>> newHexInnerTrianglesRot(Point2D centre, double r) {
+        List<Point2D> heights = newHexagon(centre, r * HEX_DIST_HEIGHT);
+
+        return asList(
+                asList(heights.get(0), heights.get(2), heights.get(4)),
+                asList(heights.get(1), heights.get(3), heights.get(5))
+
+        );
+
+    }
+
 
     public static int toHexIndex(int i) {
         return i % HEX_N;

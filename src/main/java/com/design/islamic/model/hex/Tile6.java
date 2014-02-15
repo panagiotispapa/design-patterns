@@ -21,11 +21,11 @@ public class Tile6 implements Tile {
 
     public Tile6(Point2D centre, double r) {
 
-        mainHex = cloneAndTranslateScalePoints(centre, r, hexPoints);
+        mainHex = newHexagonRot(centre, r);
 
         double newR = r * HEX_DIST_DIAGONAL_ROTATED;
         outerEdges = buildOuterLines(
-                cloneAndTranslateScalePoints(centre, newR * HEX_DIST_NEW_CENTRE, hexPointsAlt),
+                newHexagon(centre, newR * HEX_DIST_NEW_CENTRE),
                 newR
 
         );
@@ -37,18 +37,18 @@ public class Tile6 implements Tile {
 
         int index = 0;
         for (Point2D outerEdge : outerEdges) {
-            List<Point2D> edges = cloneAndTranslateScalePoints(outerEdge, r, hexPoints);
-            List<Point2D> innerEdges = cloneAndTranslateScalePoints(outerEdge, r*HEX_DIST_DIAGONAL_ROTATED, hexPoints);
+            List<Point2D> edges = newHexagonRot(outerEdge, r);
+            List<Point2D> innerEdges = newHexagonRot(outerEdge, r*HEX_DIST_DIAGONAL_ROTATED);
 
 
             out.add(
                     Arrays.asList(
+                            edges.get(toHexIndex(1 + index)),
+                            innerEdges.get(toHexIndex(2 + index)),
                             edges.get(toHexIndex(2 + index)),
-                            innerEdges.get(toHexIndex(3 + index)),
                             edges.get(toHexIndex(3 + index)),
-                            edges.get(toHexIndex(4 + index)),
-                            innerEdges.get(toHexIndex(4 + index)),
-                            edges.get(toHexIndex(5 + index))
+                            innerEdges.get(toHexIndex(3 + index)),
+                            edges.get(toHexIndex(4 + index))
                     )
             );
 

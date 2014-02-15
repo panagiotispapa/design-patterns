@@ -1,6 +1,6 @@
 package com.design.islamic;
 
-import com.design.islamic.model.Pattern;
+import com.design.islamic.model.HexPattern;
 import com.design.islamic.model.PatternManager;
 import org.apache.batik.swing.JSVGCanvas;
 
@@ -30,11 +30,11 @@ public class Main implements ActionListener {
         jPanel.add("Center", jsvgCanvas);
 
         menuBar = new JMenuBar();
-        patternsMenu = new JMenu("Patterns");
+        patternsMenu = new JMenu("Hex Patterns");
         patternsMenu.setMnemonic(KeyEvent.VK_P);
 
-        for (Pattern pattern : Pattern.values()) {
-            patternsMenu.add(newMenuItem(pattern.getDescription(), this));
+        for (HexPattern hexPattern : HexPattern.values()) {
+            patternsMenu.add(newMenuItem(hexPattern.getDescription(), this));
         }
 
         menuBar.add(patternsMenu);
@@ -43,7 +43,7 @@ public class Main implements ActionListener {
         jPanel.setSize(dim);
 
 
-        refreshCanvas(Pattern.ONE);
+        refreshCanvas(HexPattern.ONE);
 
     }
 
@@ -57,11 +57,11 @@ public class Main implements ActionListener {
         return menuBar;
     }
 
-    private void refreshCanvas(Pattern pattern) {
+    private void refreshCanvas(HexPattern hexPattern) {
         System.out.println("in refreshCanvas");
         jsvgCanvas.removeAll();
 //        removeChildren(jsvgCanvas);
-        jsvgCanvas.setSVGDocument(fromXMLBuilder(manager.getSvg(pattern)));
+        jsvgCanvas.setSVGDocument(fromXMLBuilder(manager.getSvg(hexPattern)));
     }
 
     public JPanel getComponent() {
@@ -72,7 +72,7 @@ public class Main implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         System.out.println(e.getActionCommand());
 
-        refreshCanvas(Pattern.fromDescription(e.getActionCommand()));
+        refreshCanvas(HexPattern.fromDescription(e.getActionCommand()));
 
     }
 

@@ -82,14 +82,18 @@ public final class Patterns {
         final double dist1 = r + r * 0.5;
         final double dist2 = r * HEX_DIST_NEW_CENTRE;
 
+
         for (int i = 0; i < level; i++) {
             for (int j = 0; j < level; j++) {
-                final double dist = i % 2 == 0 ? j * dist2 : j * dist2 - r * HEX_DIST_HEIGHT;
-                builder.add(newCentre(startPoint.getX() + i * dist1, startPoint.getY() + dist));
+//                final double dist = i % 2 == 0 ? j * dist2 : j * dist2 - r * HEX_DIST_HEIGHT;
+                final double dist_ = j % 2 == 0 ? i * dist2 : i * dist2 - r * HEX_DIST_HEIGHT;
+//                builder.add(newCentre(startPoint.getX() + i * dist1, startPoint.getY() + dist));
+                builder.add(newCentre(startPoint.getX() + dist_, startPoint.getY() + j*dist1));
 
             }
         }
 
+        builder.add(newCentre(startPoint.getX() + 2 * dist2, startPoint.getY() ));
         return builder.build();
     }
 
@@ -185,7 +189,7 @@ public final class Patterns {
 
         final String style = newStyle("yellow", "yellow", 1, 1, 1);
 
-        List<TileStar> stars = newArrayList(transform(centreConfiguration.getCentresFirstConf(), new Function<Point2D, TileStar>() {
+        List<TileStar> stars = newArrayList(transform(centreConfiguration.getCentresSecondConf(), new Function<Point2D, TileStar>() {
             @Override
             public TileStar apply(Point2D centre) {
                 return new TileStar(centre, r, dist);
@@ -245,38 +249,6 @@ public final class Patterns {
 
     }
 
-
-    public static List<Point2D> newHexStarTile(Point2D centre, double r, double dist) {
-
-        return concatEdges(
-                cloneAndTranslateScalePoints(centre, r, hexPoints),
-                cloneAndTranslateScalePoints(centre, r * dist, hexPointsAlt)
-        );
-
-    }
-
-    public static List<Point2D> newHexStarTileRotated(Point2D centre, double r, double dist) {
-
-        final double newR = r * HEX_DIST_HEIGHT;
-
-        return concatEdges(
-                cloneAndTranslateScalePoints(centre, newR * dist, hexPoints),
-                cloneAndTranslateScalePoints(centre, r * HEX_DIST_HEIGHT, hexPointsAlt)
-        );
-
-    }
-
-
-    public static List<List<Point2D>> newHexInnerTriangles(Point2D centre, double r) {
-        List<Point2D> heights = cloneAndTranslateScalePoints(centre, r * HEX_DIST_HEIGHT, hexPointsAlt);
-
-        return asList(
-                asList(heights.get(0), heights.get(2), heights.get(4)),
-                asList(heights.get(1), heights.get(3), heights.get(5))
-
-        );
-
-    }
 
 
 

@@ -4,9 +4,7 @@ import com.design.islamic.CentreConfiguration;
 import com.design.islamic.Patterns;
 import com.design.common.view.SvgFactory;
 import com.design.islamic.model.Tile;
-import com.design.islamic.model.hex.Tile5;
-import com.design.islamic.model.hex.Tile6;
-import com.design.islamic.model.hex.TileStar;
+import com.design.islamic.model.hex.*;
 import com.google.common.base.Function;
 import com.jamesmurty.utils.XMLBuilder;
 import org.apache.batik.swing.JSVGCanvas;
@@ -49,7 +47,7 @@ public class TestBed2 {
                 new Function<Point2D, Tile>() {
                     @Override
                     public Tile apply(Point2D centre) {
-                        return new Tile5(centre, r);
+                        return new TileStar(centre, r, HEX_DIST_DIAGONAL);
                     }
                 }
         );
@@ -75,7 +73,7 @@ public class TestBed2 {
 
     public static void main(String[] args) {
 
-        Dimension dim = new Dimension(1024+2*64, 768);
+        Dimension dim = new Dimension(1024+2*64 + 32, 768);
 
         JFrame frame = new JFrame();
         frame.setTitle("Polygon");

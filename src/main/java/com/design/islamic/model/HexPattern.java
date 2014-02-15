@@ -1,21 +1,22 @@
 package com.design.islamic.model;
 
-public enum Pattern {
+public enum HexPattern {
 
     ONE("Pattern1"),
-    TWO("Pattern2"),
+//    TWO("Pattern2"),
     STAR1("Pattern Star 1"),
     STAR2("Pattern Star 2"),
     STAR3("Pattern Star 3"),
     THREE("Pattern 3"),
     FOUR("Pattern 4"),
     FIVE("Pattern 5"),
-    SIX("Pattern 6")
+    SIX("Pattern 6"),
+    SEVEN("Pattern 7")
     ;
 
     private final String description;
 
-    private Pattern(String description) {
+    private HexPattern(String description) {
         this.description = description;
     }
 
@@ -23,12 +24,12 @@ public enum Pattern {
         return description;
     }
 
-    public static Pattern fromDescription(String description) {
+    public static HexPattern fromDescription(String description) {
 
         if (description.equalsIgnoreCase(ONE.getDescription())) {
             return ONE;
-        } else if (description.equalsIgnoreCase(TWO.getDescription())) {
-            return TWO;
+//        } else if (description.equalsIgnoreCase(TWO.getDescription())) {
+//            return TWO;
         } else if (description.equalsIgnoreCase(STAR1.getDescription())) {
             return STAR1;
         } else if (description.equalsIgnoreCase(STAR2.getDescription())) {
@@ -43,6 +44,8 @@ public enum Pattern {
             return FIVE;
         } else if (description.equalsIgnoreCase(SIX.getDescription())) {
             return SIX;
+        } else if (description.equalsIgnoreCase(SEVEN.getDescription())) {
+            return SEVEN;
         } else {
             throw new IllegalArgumentException();
         }

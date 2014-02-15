@@ -1,20 +1,15 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.PolygonTools;
-import com.design.islamic.Patterns;
 import com.design.islamic.model.Tile;
 import com.jamesmurty.utils.XMLBuilder;
 
 import java.awt.geom.Point2D;
-import java.util.Arrays;
 import java.util.List;
 
-import static com.design.common.PolygonTools.cloneAndTranslateScalePoints;
-import static com.design.common.PolygonTools.hexPoints;
-import static com.design.common.PolygonTools.hexPointsAlt;
+import static com.design.common.PolygonTools.newHexStarTile;
+import static com.design.common.PolygonTools.newHexStarTileRotated;
 import static com.design.common.view.SvgFactory.*;
-import static com.design.islamic.GenericTools.concatEdges;
-import static com.design.islamic.Patterns.newHexStarTile;
 import static java.util.Arrays.asList;
 
 public class TileStar implements Tile{
@@ -28,7 +23,7 @@ public class TileStar implements Tile{
 
     public TileStar(final Point2D centre, final double r, final double dist) {
 
-        edges = newHexStarTile(centre, r, dist);
+        edges = newHexStarTileRotated(centre, r, dist);
 
     }
 

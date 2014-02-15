@@ -8,7 +8,6 @@ import java.util.List;
 
 import static com.design.common.PolygonTools.*;
 import static com.design.common.view.SvgFactory.*;
-import static com.design.islamic.Patterns.newHexStarTileRotated;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 
@@ -26,7 +25,7 @@ public class Tile3 implements Tile {
 
         final double newR = r * HEX_DIST_EQ1;
 
-        innerEdges = cloneAndTranslateScalePoints(centre, newR, hexPoints);
+        innerEdges = cloneAndTranslateScalePoints(centre, newR, hexPointsAlt);
         innerStar = newHexStarTileRotated(centre, newR, HEX_DIST_DIAGONAL);
 
         final double extConfR = r - newR;
@@ -63,12 +62,12 @@ public class Tile3 implements Tile {
 
         int index = 0;
         for (Point2D centre : centres) {
-            List<Point2D> heights = cloneAndTranslateScalePoints(centre, r * HEX_DIST_HEIGHT, hexPointsAlt);
+            List<Point2D> heights = cloneAndTranslateScalePoints(centre, r * HEX_DIST_HEIGHT, hexPoints);
             out.add(
                     asList(
-                            heights.get(index),
+                            heights.get(toHexIndex(1+index) ),
                             centre,
-                            heights.get((index + 5) % 6)
+                            heights.get(toHexIndex(0+index) )
                     )
             );
             index++;
@@ -83,29 +82,39 @@ public class Tile3 implements Tile {
         double extConfR = r - newR;
         final double newRHalf = newR * 0.5;
 
-        List<Point2D> innerEdges = cloneAndTranslateScalePoints(centreMain, newR, hexPoints);
-        List<Point2D> edgesInnerHeights = cloneAndTranslateScalePoints(centreMain, newR * HEX_DIST_HEIGHT, hexPointsAlt);
+        List<Point2D> innerEdges = cloneAndTranslateScalePoints(centreMain, newR, hexPointsAlt);
+        List<Point2D> edgesInnerHeights = cloneAndTranslateScalePoints(centreMain, newR * HEX_DIST_HEIGHT, hexPoints);
 
         List<List<Point2D>> out = newArrayList();
         int index = 0;
 
         for (Point2D centre : innerEdges) {
 
-            List<Point2D> layer1 = cloneAndTranslateScalePoints(centre, newRHalf, hexPoints);
+            List<Point2D> layer1 = cloneAndTranslateScalePoints(centre, newRHalf, hexPointsAlt);
 
-            List<Point2D> layer3 = cloneAndTranslateScalePoints(centre, extConfR * HEX_DIST_HEIGHT, hexPointsAlt);
+            List<Point2D> layer3 = cloneAndTranslateScalePoints(centre, extConfR * HEX_DIST_HEIGHT, hexPoints);
+            List<Point2D> layer5 = cloneAndTranslateScalePoints(innerEdges.get(toHexIndex(5 + index)), extConfR * HEX_DIST_HEIGHT, hexPoints);
 
-            List<Point2D> layer4 = cloneAndTranslateScalePoints(edgesInnerHeights.get((5 + index) % 6),  extConfR*HEX_DIST_DIAGONAL, hexPoints);
-            List<Point2D> layer5 = cloneAndTranslateScalePoints(edgesInnerHeights.get(index), extConfR*HEX_DIST_DIAGONAL, hexPoints);
+            List<Point2D> layer4 = cloneAndTranslateScalePoints(edgesInnerHeights.get(toHexIndex(0 + index)),  extConfR*HEX_DIST_DIAGONAL, hexPointsAlt);
+
             out.add(asList(
+                    layer5.get(toHexIndex(0+index)),
+                    layer4.get(toHexIndex(5+index)),
+
                     layer1.get((4 + index) % 6),
-                    layer4.get((0 + index) % 6),
-                    layer3.get((5 + index) % 6),
-                    layer3.get((index) % 6),
-                    layer5.get((index) % 6),
-                    layer1.get((2 + index) % 6)
+                    layer4.get(toHexIndex(index)),
+                    layer3.get(toHexIndex(0+index)),
+                    layer3.get(toHexIndex(1+index))
+
+
+//                    layer5.get((index) % 6),
+//                    layer1.get((2 + index) % 6)
 
             ));
+//            out.add(asList(
+//                    layer1.get((4 + index) % 6),
+//                    layer4.get(toHexIndex(5+index))
+//                    ));
 
             index++;
         }
