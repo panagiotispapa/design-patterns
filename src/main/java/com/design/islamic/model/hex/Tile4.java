@@ -34,7 +34,7 @@ public class Tile4 implements Tile {
 
     public Tile4(Point2D centre, double r) {
 
-        mainRect = cloneAndTranslateScalePoints(centre, r, hexPointsAlt);
+        mainRect = newHexagonRot(centre, r);
 
         final double newR = r * HEX_DIST_DIAGONAL;
 
@@ -65,14 +65,14 @@ public class Tile4 implements Tile {
 
     public static List<List<Point2D>> buildExtConf(Point2D centre, double r) {
 
-        List<Point2D> layerExtEdges = cloneAndTranslateScalePoints(centre, r * HEX_DIST_NEW_CENTRE, hexPoints);
+        List<Point2D> layerExtEdges = newHexagon(centre, r * HEX_DIST_NEW_CENTRE);
 
         List<List<Point2D>> out = newArrayList();
 
         int k = 0;
 
         for (Point2D layerExtEdge : layerExtEdges) {
-            List<Point2D> layerExtPolEdges = cloneAndTranslateScalePoints(layerExtEdge, r, hexPointsAlt);
+            List<Point2D> layerExtPolEdges = newHexagonRot(layerExtEdge, r);
 
             out.add(asList(
                     layerExtPolEdges.get((k) % 6),

@@ -8,7 +8,6 @@ import java.awt.geom.Point2D;
 import java.util.List;
 
 import static com.design.islamic.GenericTools.*;
-import static com.design.islamic.GenericTools.concatEdges;
 import static com.design.islamic.model.Centre.newCentre;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Math.*;
@@ -24,10 +23,11 @@ public class PolygonTools {
     public final static double HEX_PHI = (2.0 * PI) / HEX_N;
     public final static double HEX_THETA = (2.0 * PI - HEX_PHI);
 
+    public final static double HEX_DIST_PROJ = calcDistProj(HEX_PHI);
     public final static double HEX_DIST_HEIGHT = calcDistHeight(HEX_PHI);
     public final static double HEX_DIST_HEIGHT2 = calcDistHeight2(HEX_PHI);
     public final static double HEX_DIST_DIAGONAL = calcDistDiagonal(HEX_PHI);
-    public final static double HEX_DIST_DIAGONAL_ROTATED = HEX_DIST_DIAGONAL*HEX_DIST_HEIGHT;
+    public final static double HEX_DIST_DIAGONAL_ROTATED = HEX_DIST_DIAGONAL * HEX_DIST_HEIGHT;
     public final static double HEX_DIST3 = calcDist3(HEX_PHI);
     public final static double HEX_DIST_EQ1 = calcDistEq1(HEX_PHI);
     public final static double HEX_DIST_NEW_CENTRE = 2.0 * HEX_DIST_HEIGHT;
@@ -35,6 +35,10 @@ public class PolygonTools {
 
     public static List<Point2D> hexPoints = computePoints(HEX_N, HEX_PHI);
     public static List<Point2D> hexPointsAlt = computePointsAlt(HEX_N, HEX_PHI);
+
+    private static double calcDistProj(double phi) {
+        return sin(phi / 2.0);
+    }
 
     private static double calcDistHeight(double phi) {
         return cos(phi / 2.0);
@@ -111,7 +115,6 @@ public class PolygonTools {
         return combinations;
     }
 
-
     public static List<List<Point2D>> buildLines(final Point2D centre, List<Point2D> points) {
 
         List<List<Point2D>> lines = newArrayList();
@@ -122,8 +125,6 @@ public class PolygonTools {
         return lines;
     }
 
-
-
     public static List<Point2D> newHexagon(Point2D centre, double r) {
         return cloneAndTranslateScalePoints(centre, r, hexPoints);
     }
@@ -132,9 +133,16 @@ public class PolygonTools {
         return cloneAndTranslateScalePoints(centre, r, hexPointsAlt);
     }
 
+    public static List<List<Point2D>> newHexDiag(Point2D centre, double r) {
+        return buildLines(centre, newHexagon(centre, r));
+    }
+
+    public static List<List<Point2D>> newHexDiagRot(Point2D centre, double r) {
+        return buildLines(centre, newHexagonRot(centre, r));
+    }
 
     public static List<List<Point2D>> newHexHeights(Point2D centre, double r) {
-        return buildLines(centre, newHexagonRot(centre, r*HEX_DIST_HEIGHT));
+        return buildLines(centre, newHexagonRot(centre, r * HEX_DIST_HEIGHT));
     }
 
     public static List<List<Point2D>> newHexHeightsRot(Point2D centre, double r) {
@@ -162,7 +170,6 @@ public class PolygonTools {
 
     }
 
-
     public static List<List<Point2D>> newHexInnerTriangles(Point2D centre, double r) {
         List<Point2D> heights = newHexagonRot(centre, r * HEX_DIST_HEIGHT);
 
@@ -184,7 +191,6 @@ public class PolygonTools {
         );
 
     }
-
 
     public static int toHexIndex(int i) {
         return i % HEX_N;

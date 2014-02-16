@@ -176,6 +176,30 @@ public class SvgFactory {
 
     }
 
+
+    public static XMLBuilder drawArc(Point2D start, Point2D end, boolean up, double r, String style) {
+        final String path = up ? "M %f %f a 1 1 0 0 1 %f 0" : "M %f %f a 1 1 0 0 0 %f 0";
+
+        try {
+            XMLBuilder arc = XMLBuilder.create("path")
+                    .a("d", format(path,
+                            start.getX(),
+                            start.getY(),
+                            2.0 * r
+                    ))
+                    .a("style", style);
+            System.out.println(arc.asString());
+            return arc;
+        } catch (ParserConfigurationException e) {
+            return null;
+        } catch (TransformerException e) {
+            return null;
+        }
+
+    }
+
+
+
     public static SVGDocument fromXMLBuilder(XMLBuilder xmlBuilder) {
 
         SAXSVGDocumentFactory f = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName());

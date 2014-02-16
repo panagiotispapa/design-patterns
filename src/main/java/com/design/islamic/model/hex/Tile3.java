@@ -82,20 +82,20 @@ public class Tile3 implements Tile {
         double extConfR = r - newR;
         final double newRHalf = newR * 0.5;
 
-        List<Point2D> innerEdges = cloneAndTranslateScalePoints(centreMain, newR, hexPointsAlt);
-        List<Point2D> edgesInnerHeights = cloneAndTranslateScalePoints(centreMain, newR * HEX_DIST_HEIGHT, hexPoints);
+        List<Point2D> innerEdges = newHexagonRot(centreMain, newR);
+        List<Point2D> edgesInnerHeights = newHexagon(centreMain, newR * HEX_DIST_HEIGHT);
 
         List<List<Point2D>> out = newArrayList();
         int index = 0;
 
         for (Point2D centre : innerEdges) {
 
-            List<Point2D> layer1 = cloneAndTranslateScalePoints(centre, newRHalf, hexPointsAlt);
+            List<Point2D> layer1 = newHexagonRot(centre, newRHalf);
 
-            List<Point2D> layer3 = cloneAndTranslateScalePoints(centre, extConfR * HEX_DIST_HEIGHT, hexPoints);
-            List<Point2D> layer5 = cloneAndTranslateScalePoints(innerEdges.get(toHexIndex(5 + index)), extConfR * HEX_DIST_HEIGHT, hexPoints);
+            List<Point2D> layer3 = newHexagon(centre, extConfR * HEX_DIST_HEIGHT);
+            List<Point2D> layer5 = newHexagon(innerEdges.get(toHexIndex(5 + index)), extConfR * HEX_DIST_HEIGHT);
 
-            List<Point2D> layer4 = cloneAndTranslateScalePoints(edgesInnerHeights.get(toHexIndex(0 + index)),  extConfR*HEX_DIST_DIAGONAL, hexPointsAlt);
+            List<Point2D> layer4 = newHexagonRot(edgesInnerHeights.get(toHexIndex(0 + index)),  extConfR*HEX_DIST_DIAGONAL);
 
             out.add(asList(
                     layer5.get(toHexIndex(0+index)),

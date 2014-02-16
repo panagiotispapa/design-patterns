@@ -47,7 +47,7 @@ public class TestBed2 {
                 new Function<Point2D, Tile>() {
                     @Override
                     public Tile apply(Point2D centre) {
-                        return new TileStar(centre, r, HEX_DIST_DIAGONAL);
+                        return new Tile8(centre, r);
                     }
                 }
         );

@@ -140,6 +140,19 @@ public class PatternManager {
             }
         });
 
+        providerMap.put(HexPattern.HEIGHT, new PatternProvider() {
+            @Override
+            public XMLBuilder provideSVG(CentreConfiguration centreConfiguration, final double r, Dimension dim) {
+                return buildHexPatternBlackAndWhite(centreConfiguration, dim,
+                        new Function<Point2D, Tile>() {
+                            @Override
+                            public Tile apply(Point2D centre) {
+                                return new Tile8(centre, r);
+                            }
+                        });
+            }
+        });
+
     }
 
 
