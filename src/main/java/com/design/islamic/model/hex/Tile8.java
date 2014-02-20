@@ -4,7 +4,6 @@ import com.design.islamic.model.Tile;
 import com.jamesmurty.utils.XMLBuilder;
 
 import java.awt.geom.Point2D;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.design.common.PolygonTools.*;
@@ -23,8 +22,8 @@ public class Tile8 implements Tile {
     public static final double OUTER_R1 = 1.0 - HEX_DIST_DIAGONAL;
     public static final double OUTER_R2 = OUTER_R1 * HEX_DIST_PROJ;
     public static final double OUTER_R3 = OUTER_R1 - OUTER_R2;
-    public static final double OUTER_R4 = OUTER_R1*HEX_DIST_HEIGHT;
-    public static final double OUTER_R5 = 1-Tile8.OUTER_R4 * HEX_DIST_NEW_CENTRE;
+    public static final double OUTER_R4 = OUTER_R1 * HEX_DIST_HEIGHT;
+    public static final double OUTER_R5 = 1 - Tile8.OUTER_R4 * HEX_DIST_NEW_CENTRE;
 
     public Tile8(Point2D centre, double r) {
 
@@ -38,7 +37,6 @@ public class Tile8 implements Tile {
 //        lines.addAll(calcOuterLines4(centre, r));
 
     }
-
 
     public static List<Point2D> calcOuterPoints1(Point2D centre, double r) {
 
@@ -84,7 +82,7 @@ public class Tile8 implements Tile {
 
         List<Point2D> outerHexRotEdges = newHexagonRot(centre, r);
 
-        int index =0;
+        int index = 0;
         for (Point2D outerHexRotEdge : outerHexRotEdges) {
             List<Point2D> edges = newHexagonRot(outerHexRotEdge, r * Tile8.OUTER_R3);
             List<Point2D> outerEdges = newHexagon(outerHexRotEdge, r * Tile8.OUTER_R3 * HEX_DIST_NEW_CENTRE);
@@ -98,11 +96,8 @@ public class Tile8 implements Tile {
 
             ));
 
-
             index++;
-                    
-                            
-                            
+
         }
 
         return out;
@@ -119,21 +114,22 @@ public class Tile8 implements Tile {
 
         int index = 0;
 
+        double newR = r * Tile8.OUTER_R2 * HEX_DIST_HEIGHT * 0.73;
         for (Point2D height : heights) {
 
-            List<Point2D> heights_1 = newHexagon(outerPoints.get(2*index), r*Tile8.OUTER_R2*HEX_DIST_HEIGHT*0.73);
-            List<Point2D> heights_2 = newHexagon(outerPoints.get(2*index + 1), r*Tile8.OUTER_R2*HEX_DIST_HEIGHT*0.73);
+            List<Point2D> heights_1 = newHexagon(outerPoints.get(2 * index), newR);
+            List<Point2D> heights_2 = newHexagon(outerPoints.get(2 * index + 1), newR);
 
             out.add(asList(
                     height,
-                    heights_1.get(toHexIndex(0+index)),
-                    outerPoints.get(2*index)
+                    heights_1.get(toHexIndex(0 + index)),
+                    outerPoints.get(2 * index)
             ));
 
-           out.add(asList(
+            out.add(asList(
                     height,
-                    heights_2.get(toHexIndex(0+index)),
-                    outerPoints.get(2*index+1)
+                    heights_2.get(toHexIndex(0 + index)),
+                    outerPoints.get(2 * index + 1)
             ));
 
             index++;
@@ -149,16 +145,17 @@ public class Tile8 implements Tile {
         List<Point2D> outerHexEdges = newHexagon(centre, r);
 
         int index = 0;
+        double newR = r * OUTER_R4 * HEX_DIST_NEW_CENTRE;
+
         for (Point2D outerHexEdge : outerHexEdges) {
 
-            List<Point2D> points = newHexagon(outerHexEdge, r * OUTER_R4 * HEX_DIST_NEW_CENTRE);
+            List<Point2D> points = newHexagon(outerHexEdge, newR);
 
-            out.add(points.get(toHexIndex(3+index)));
+            out.add(points.get(toHexIndex(3 + index)));
 
-                    index++;
+            index++;
 
         }
-
 
         return out;
     }
@@ -167,11 +164,12 @@ public class Tile8 implements Tile {
 
         List<List<Point2D>> out = newArrayList();
 
-        List<Point2D> edges = newHexagon(centre, r*Tile8.OUTER_R5);
-        List<Point2D> edgesRot = newHexagonRot(centre, r*Tile8.OUTER_R5);
+        double r5 = r * Tile8.OUTER_R5;
+        List<Point2D> edges = newHexagon(centre, r5);
+        List<Point2D> edgesRot = newHexagonRot(centre, r5);
 
         double newR = r * OUTER_R4;
-        double newR2 = r*Tile8.OUTER_R5 * Tile8.OUTER_R1*HEX_DIST_HEIGHT;
+        double newR2 = r5 * Tile8.OUTER_R1 * HEX_DIST_HEIGHT;
 
         int index = 0;
         for (Point2D edge : edges) {
@@ -181,26 +179,24 @@ public class Tile8 implements Tile {
 
             out.add(asList(
 
-                    layer1.get(toHexIndex(0+index)),
+                    layer1.get(toHexIndex(0 + index)),
                     edge,
-                    layer1.get(toHexIndex(5+index))
+                    layer1.get(toHexIndex(5 + index))
 
             ));
 
             out.add(asList(
-                    layer1.get(toHexIndex(0+index)),
-                    edgesRot.get(toHexIndex(0+index)),
-                    layer2.get(toHexIndex(2+index)),
+                    layer1.get(toHexIndex(0 + index)),
+                    edgesRot.get(toHexIndex(0 + index)),
+                    layer2.get(toHexIndex(2 + index)),
                     edge
             ));
             out.add(asList(
-                    layer1.get(toHexIndex(5+index)),
-                    edgesRot.get(toHexIndex(5+index)),
-                    layer2.get(toHexIndex(3+index)),
+                    layer1.get(toHexIndex(5 + index)),
+                    edgesRot.get(toHexIndex(5 + index)),
+                    layer2.get(toHexIndex(3 + index)),
                     edge
             ));
-
-
 
             index++;
         }
@@ -208,13 +204,9 @@ public class Tile8 implements Tile {
         return out;
     }
 
-
     @Override
     public List<XMLBuilder> drawMe() {
         List<XMLBuilder> out = newArrayList();
-
-
-
 
 //        out.add(drawPolygon(mainHex, styleWhite));
         out.addAll(drawPolylines(lines, styleWhiteBold));

@@ -19,6 +19,7 @@ import java.awt.geom.Point2D;
 import static com.design.common.PolygonTools.HEX_DIST_DIAGONAL;
 import static com.design.islamic.Patterns.*;
 import static com.design.islamic.model.Centre.newCentre;
+import static java.lang.System.currentTimeMillis;
 
 public class TestBed2 {
 
@@ -43,14 +44,18 @@ public class TestBed2 {
                 calculateNewCellCentresFirstConf(newCentre(0, 0), r, 17),
                 calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17));
 
+        long now = currentTimeMillis();
+
         XMLBuilder mySVG = Patterns.buildHexPatternBlackAndWhite(centreConfiguration, dim,
                 new Function<Point2D, Tile>() {
                     @Override
                     public Tile apply(Point2D centre) {
-                        return new Tile8(centre, r);
+                        return new Tile3(centre, r);
                     }
                 }
         );
+
+        System.out.println("Finished in " + (currentTimeMillis()-now)/1000.0);
 
 //        XMLBuilder mySVG = buildSvg(width, height, highlightPoints(calculateHexEdges(newCentres, r)) );
 

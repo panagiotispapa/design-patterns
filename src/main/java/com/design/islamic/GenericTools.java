@@ -24,15 +24,21 @@ public class GenericTools {
 //    }
 
     public static void scalePoints(List<Point2D> point2DList, final double r) {
-        for (Point2D point2D : point2DList) {
-            point2D.setLocation(point2D.getX() * r, point2D.getY() * r);
+        for (Point2D edge : point2DList) {
+            scalePoint(edge, r);
         }
+    }
+    public static void scalePoint(Point2D edge, final double r) {
+        edge.setLocation(edge.getX() * r, edge.getY() * r);
     }
 
     public static void translatePoints(List<Point2D> point2DList, final Point2D centre) {
-        for (Point2D point2D : point2DList) {
-            point2D.setLocation(point2D.getX() + centre.getX(), point2D.getY() + centre.getY());
+        for (Point2D edge : point2DList) {
+            translatePoint(edge, centre);
         }
+    }
+    public static void translatePoint(Point2D edge, final Point2D centre) {
+        edge.setLocation(edge.getX() + centre.getX(), edge.getY() + centre.getY());
     }
 
     public static List<Point2D> clonePoints(Iterable<Point2D> points) {

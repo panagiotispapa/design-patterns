@@ -16,9 +16,12 @@ import static org.paukov.combinatorics.Factory.createSimpleCombinationGenerator;
 import static org.paukov.combinatorics.Factory.createVector;
 
 public class PolygonTools {
+
     public final static int HEX_N = 6;
     public final static int RECT_N = 4;
     public final static int OCT_N = 8;
+
+    public final static double RECT_PHI = (2.0 * PI) / RECT_N;
 
     public final static double HEX_PHI = (2.0 * PI) / HEX_N;
     public final static double HEX_THETA = (2.0 * PI - HEX_PHI);
@@ -84,6 +87,46 @@ public class PolygonTools {
         return posBuilder.build();
     }
 
+    public static Point2D newRectEdge(Point2D centre, double r, int index) {
+        Point2D edge = newEdgeAt(RECT_PHI * (index % RECT_N));
+        scalePoint(edge, r);
+        translatePoint(edge, centre);
+
+        return edge;
+    }
+
+    public static Point2D newRectEdgeRot(Point2D centre, double r, int index) {
+        Point2D edge = newEdgeAt(RECT_PHI * (index % RECT_N) + 0.5);
+        scalePoint(edge, r);
+        translatePoint(edge, centre);
+
+        return edge;
+    }
+
+    public static Point2D newHexEdge(Point2D centre, double r, int index) {
+        Point2D edge = newEdgeAt(HEX_PHI * index);
+        scalePoint(edge, r);
+        translatePoint(edge, centre);
+
+        return edge;
+    }
+
+    public static Point2D newHexEdgeRot(Point2D centre, double r, int index) {
+        Point2D edge = newEdgeAt(HEX_PHI * (index + 0.5));
+        scalePoint(edge, r);
+        translatePoint(edge, centre);
+
+        return edge;
+    }
+
+    public static Point2D newEdgeAt(Point2D centre, double r, double phi) {
+
+        Point2D edge = newEdgeAt(phi);
+        scalePoint(edge, r);
+        translatePoint(edge, centre);
+
+        return edge;
+    }
     public static Point2D newEdgeAt(double phi) {
         return newCentre(
                 cos(phi),
@@ -189,6 +232,45 @@ public class PolygonTools {
                 asList(heights.get(1), heights.get(3), heights.get(5))
 
         );
+
+    }
+
+
+    public static List<List<Point2D>> newHexInnerTrianglesFull(Point2D centre, double r) {
+        List<Point2D> hex = newHexagon(centre, r);
+
+        return asList(
+                asList(hex.get(0), hex.get(2), hex.get(4)),
+                asList(hex.get(1), hex.get(3), hex.get(5))
+        );
+
+    }
+
+    public static List<List<Point2D>> newHexInnerTrianglesFullRot(Point2D centre, double r) {
+        List<Point2D> hex = newHexagonRot(centre, r);
+
+        return asList(
+                asList(hex.get(0), hex.get(2), hex.get(4)),
+                asList(hex.get(1), hex.get(3), hex.get(5))
+        );
+
+    }
+
+    public static List<List<Point2D>> concateOuterHexagons(List<Point2D> outer,List<Point2D> outerRot) {
+
+        List<List<Point2D>> out = newArrayList();
+
+        int index = 0;
+        for (Point2D edge : outer) {
+
+            out.add(asList(edge, outerRot.get(toHexIndex(1+index))));
+            out.add(asList(outerRot.get(toHexIndex(index)), outer.get(toHexIndex(2+index))));
+
+//            out.add(asList(outer.get(toHexIndex(1+index)), outerRot.get(index)));
+            index++;
+        }
+
+        return out;
 
     }
 

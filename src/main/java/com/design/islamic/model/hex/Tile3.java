@@ -60,14 +60,16 @@ public class Tile3 implements Tile {
         List<List<Point2D>> out = newArrayList();
         //List<Point2D> edges = cloneAndTranslateScalePoints(centre, r, hexPoints);
 
+        double newR = r * HEX_DIST_HEIGHT;
+
         int index = 0;
         for (Point2D centre : centres) {
-            List<Point2D> heights = cloneAndTranslateScalePoints(centre, r * HEX_DIST_HEIGHT, hexPoints);
+
             out.add(
                     asList(
-                            heights.get(toHexIndex(1+index) ),
+                            newHexEdge(centre, newR, (1 + index)),
                             centre,
-                            heights.get(toHexIndex(0+index) )
+                            newHexEdge(centre, newR, (index))
                     )
             );
             index++;
@@ -82,6 +84,9 @@ public class Tile3 implements Tile {
         double extConfR = r - newR;
         final double newRHalf = newR * 0.5;
 
+        double extConfRHeight = extConfR * HEX_DIST_HEIGHT;
+        double extConfRDiag = extConfR * HEX_DIST_DIAGONAL;
+
         List<Point2D> innerEdges = newHexagonRot(centreMain, newR);
         List<Point2D> edgesInnerHeights = newHexagon(centreMain, newR * HEX_DIST_HEIGHT);
 
@@ -90,22 +95,17 @@ public class Tile3 implements Tile {
 
         for (Point2D centre : innerEdges) {
 
-            List<Point2D> layer1 = newHexagonRot(centre, newRHalf);
-
-            List<Point2D> layer3 = newHexagon(centre, extConfR * HEX_DIST_HEIGHT);
-            List<Point2D> layer5 = newHexagon(innerEdges.get(toHexIndex(5 + index)), extConfR * HEX_DIST_HEIGHT);
-
-            List<Point2D> layer4 = newHexagonRot(edgesInnerHeights.get(toHexIndex(0 + index)),  extConfR*HEX_DIST_DIAGONAL);
+            Point2D centre1 = innerEdges.get(toHexIndex(5 + index));
+            Point2D centre2 = edgesInnerHeights.get(toHexIndex(index));
 
             out.add(asList(
-                    layer5.get(toHexIndex(0+index)),
-                    layer4.get(toHexIndex(5+index)),
+                    newHexEdge(centre1, extConfRHeight, index),
+                    newHexEdgeRot(centre2, extConfRDiag, (5 + index)),
 
-                    layer1.get((4 + index) % 6),
-                    layer4.get(toHexIndex(index)),
-                    layer3.get(toHexIndex(0+index)),
-                    layer3.get(toHexIndex(1+index))
-
+                    newHexEdgeRot(centre, newRHalf, (4 + index)),
+                    newHexEdgeRot(centre2, extConfRDiag, (index)),
+                    newHexEdge(centre, extConfRHeight, (0 + index)),
+                    newHexEdge(centre, extConfRHeight, (1 + index))
 
 //                    layer5.get((index) % 6),
 //                    layer1.get((2 + index) % 6)

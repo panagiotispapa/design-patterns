@@ -36,18 +36,20 @@ public class Tile6 implements Tile {
         List<List<Point2D>> out = newArrayList();
 
         int index = 0;
+        double newRDiag = r * HEX_DIST_DIAGONAL_ROTATED;
         for (Point2D outerEdge : outerEdges) {
             List<Point2D> edges = newHexagonRot(outerEdge, r);
-            List<Point2D> innerEdges = newHexagonRot(outerEdge, r*HEX_DIST_DIAGONAL_ROTATED);
+
+//            List<Point2D> innerEdges = newHexagonRot(outerEdge, newRDiag);
 
 
             out.add(
                     Arrays.asList(
                             edges.get(toHexIndex(1 + index)),
-                            innerEdges.get(toHexIndex(2 + index)),
+                            newHexEdgeRot(outerEdge, newRDiag, toHexIndex(2 + index)),
                             edges.get(toHexIndex(2 + index)),
                             edges.get(toHexIndex(3 + index)),
-                            innerEdges.get(toHexIndex(3 + index)),
+                            newHexEdgeRot(outerEdge, newRDiag, toHexIndex(3 + index)),
                             edges.get(toHexIndex(4 + index))
                     )
             );
