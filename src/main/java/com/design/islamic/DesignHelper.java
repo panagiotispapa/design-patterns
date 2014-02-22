@@ -13,7 +13,6 @@ import static com.design.common.view.SvgFactory.*;
 import static com.design.islamic.GenericTools.concatEdges;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
-import static java.lang.Math.PI;
 import static java.lang.Math.cos;
 import static java.util.Arrays.asList;
 
@@ -159,7 +158,6 @@ public class DesignHelper {
 
         out.addAll(drawPolylines(tile3.getLines(), red));
         out.addAll(drawPolylines(tile3.getLines2(), red));
-
 
 //        out.add(drawPolygon(innerEdges, gray));
 
@@ -363,7 +361,7 @@ public class DesignHelper {
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
 
-        Tile7 tile7 = new Tile7(centre,r);
+        Tile7 tile7 = new Tile7(centre, r);
 
         List<Point2D> outerHex = newHexagon(centre, r);
         List<Point2D> outerHexRotated = newHexagonRot(centre, r);
@@ -420,85 +418,39 @@ public class DesignHelper {
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
 
-        List<Point2D> outerHex = newHexagon(centre, r);
-        List<Point2D> outerHexRot = newHexagonRot(centre, r);
+        Tile8 tile8 = new Tile8(centre, r);
 
-        List<Point2D> outerHeights = newHexagonRot(centre, r * HEX_DIST_HEIGHT);
-        List<Point2D> outerHeightsRot = newHexagon(centre, r * HEX_DIST_HEIGHT);
+        List<Point2D> mainHex = newHexagon(centre, r);
+        List<Point2D> mainHexRot = newHexagonRot(centre, r);
 
-        List<Point2D> outerHeightsConcat = concatEdges(outerHeightsRot, outerHeights);
+        List<Point2D> mainHeights = newHexagonRot(centre, r * HEX_DIST_HEIGHT);
+        List<Point2D> mainHeightsRot = newHexagon(centre, r * HEX_DIST_HEIGHT);
 
-        double newR = r * HEX_DIST_DIAGONAL;
+        List<Point2D> mainHeightsConcat = concatEdges(mainHeightsRot, mainHeights);
 
-        List<Point2D> innerHex = newHexagon(centre, newR);
-        List<Point2D> innerHexRot = newHexagonRot(centre, newR);
-
-        List<Point2D> layerOut1 = newHexagon(outerHex.get(0), r * Tile8.OUTER_R1);
-        List<Point2D> layerOut1Heights = newHexagonRot(outerHex.get(0), r * Tile8.OUTER_R1 * HEX_DIST_HEIGHT);
-
-        List<Point2D> layerOut2 = newHexagonRot(outerHex.get(0), r * Tile8.OUTER_R1 * HEX_DIST_HEIGHT);
-
-        List<Point2D> outerPoints1 = Tile8.calcOuterPoints1(centre, r);
-        List<Point2D> outerPoints2 = newHexagon(centre, r * Tile8.OUTER_R5);
-        List<Point2D> outerPoints2Rot = newHexagonRot(centre, r * Tile8.OUTER_R5);
-
-//        List<Point2D> innerHex2 = newHexagon(centre, newR*HEX_DIST_DIAGONAL);
-//        List<Point2D> innerHexRot2 = newHexagonRot(centre, newR*HEX_DIST_DIAGONAL);
-
-//        out.add(drawPolygon(outerHex, gray));
-//        out.add(drawPolygon(outerHexRot, gray));
-        out.addAll(drawPolylines(generateCombsOfPoints(outerHex), gray));
-        out.addAll(drawPolylines(generateCombsOfPoints(outerHexRot), gray));
-//        out.addAll(drawPolygons(newHexInnerTriangles(centre, r), gray));
-//        out.addAll(drawPolygons(newHexInnerTrianglesRot(centre, r), gray));
+        out.add(drawPolygon(mainHex, gray));
+        out.add(drawPolygon(mainHexRot, gray));
+        out.add(drawPolygon(mainHeights, gray));
+        out.add(drawPolygon(mainHeightsRot, gray));
+        out.add(drawPolygon(mainHeightsConcat, gray));
+//        out.addAll(drawPolygons(newHexHeights(centre,r), gray));
         out.addAll(drawPolylines(newHexDiag(centre, r), gray));
         out.addAll(drawPolylines(newHexDiagRot(centre, r), gray));
+        out.add(drawPolygon(newHexagon(centre, tile8.getInnerR()), gray));
+        out.add(drawPolygon(newHexagonRot(centre, tile8.getInnerR()), gray));
 
-//        out.add(drawPolygon(innerHex, blue));
-//        out.add(drawPolygon(innerHexRot, blue));
-        out.add(drawPolygon(outerHeightsConcat, blue));
-        out.add(drawPolygon(layerOut1, blue));
-        out.add(drawPolygon(layerOut2, gray));
-//        out.add(drawPolygon(newHexagonRot(layerOut2.get(0), r*Tile8.OUTER_R4), gray));
-
-        out.add(drawPolygon(newHexagonRot(centre, r * (1 - Tile8.OUTER_R3)), gray));
-
-//        out.addAll(drawPolygons(Tile8.calcOuterHex1(centre, r), gray));
-
-        out.add(drawPolygon(newHexagonRot(outerPoints1.get(6), r * Tile8.OUTER_R2), blue));
-        out.addAll(drawPolylines(newHexHeightsRot(outerPoints1.get(6), r * Tile8.OUTER_R2), gray));
-        out.addAll(drawPolylines(newHexDiagRot(outerPoints1.get(6), r * Tile8.OUTER_R2), gray));
-        out.add(drawPolygon(newHexagon(outerPoints1.get(6), r * Tile8.OUTER_R2 * HEX_DIST_HEIGHT * 0.72), gray));
-//        out.add(drawPolygon(newHexagonRot(outerPoints2.get(0), r*Tile8.OUTER_R4), gray));
-//        out.addAll(drawPolylines(newHexDiagRot(outerPoints2.get(0), r*Tile8.OUTER_R4), gray));
-        out.addAll(drawPolylines(generateCombsOfPoints(newHexagonRot(outerPoints2.get(0), r * Tile8.OUTER_R4)), gray));
-
-//        out.add(drawPolygon(innerHex2, blue));
-//        out.add(drawPolygon(innerHexRot2, blue));
-
-//        out.addAll(highlightPoints(layerOut1Heights));
-
-//        out.add(drawPolygon(outerPoints2, gray));
-//        out.add(drawPolygon(outerPoints2Rot, gray));
-        out.addAll(drawPolylines(generateCombsOfPoints(outerPoints2), gray));
-        out.addAll(drawPolylines(generateCombsOfPoints(outerPoints2Rot), gray));
-
-        out.add(drawPolygon(newHexagon(outerPoints2.get(0), r * Tile8.OUTER_R5 * Tile8.OUTER_R1), gray));
-        out.add(drawPolygon(newHexagonRot(outerPoints2.get(0), r * Tile8.OUTER_R5 * Tile8.OUTER_R1 * HEX_DIST_HEIGHT), gray));
-
-//        out.add(drawPolygon(newHexagon(centre, r*Tile8.OUTER_R5),gray));
-
-        out.addAll(highlightPoints(outerPoints1));
-        out.addAll(highlightPoints(outerPoints2));
-
-        out.add(drawPolygon(newHexagonRot(outerHexRot.get(3), r * Tile8.OUTER_R3), blue));
-
-        out.addAll(drawPolylines(Tile8.calcOuterLines1(centre, r), red));
-        out.addAll(drawPolylines(Tile8.calcOuterLines2(centre, r), red));
-        out.addAll(drawPolylines(Tile8.calcOuterLines3(centre, r), red));
+//        out.addAll(highlightPoints(tile8.getPointsA()));
+//        out.addAll(highlightPoints(tile8.getPointsB()));
+//        out.addAll(highlightPoints(tile8.getPointsC()));
+//        out.addAll(highlightPoints(tile8.getHeights()));
+//        out.addAll(highlightPoints(tile8.getPointsD()));
+//        out.addAll(highlightPoints(tile8.getPointsE()));
+//        out.addAll(highlightPoints(tile8.getPointsF()));
+        out.addAll(highlightPoints(tile8.getPointsG()));
+//        out.addAll(highlightPoints(tile8.getPointsH()));
+        out.addAll(drawPolylines(tile8.getLines(), red));
 
         return out;
-
     }
 
     public static List<XMLBuilder> newStarDesign9(final Point2D centre, final double r) {
@@ -536,25 +488,21 @@ public class DesignHelper {
         out.add(drawPolygon(tile9.getInnerLayer1(), gray));
         out.add(drawPolygon(tile9.getInnerLayer1Rot(), gray));
 
-
         out.addAll(drawPolylines(buildLines(
-                newHexEdge(centre, r * Tile9.INNER_R2,0),
-                asList(newHexEdgeRot(outerRot.get(5),r * Tile9.INNER_R1,1))),gray));
+                newHexEdge(centre, r * Tile9.INNER_R2, 0),
+                asList(newHexEdgeRot(outerRot.get(5), r * Tile9.INNER_R1, 1))), gray));
 
         out.addAll(drawPolylines(buildLines(
                 newHexEdge(centre, r * Tile9.INNER_R2, 5),
                 asList(newHexEdgeRot(outerRot.get(5), r * Tile9.INNER_R1, 3))), gray));
 
-
         out.addAll(drawPolylines(buildLines(
                 newHexEdgeRot(centre, r * Tile9.INNER_R2, 0),
-                asList(newHexEdge(outer.get(0), r * Tile9.INNER_R1, 1))),gray));
-
+                asList(newHexEdge(outer.get(0), r * Tile9.INNER_R1, 1))), gray));
 
         out.addAll(drawPolylines(buildLines(
                 newHexEdgeRot(centre, r * Tile9.INNER_R2, 5),
-                asList(newHexEdge(outer.get(0), r * Tile9.INNER_R1, 5))),gray));
-
+                asList(newHexEdge(outer.get(0), r * Tile9.INNER_R1, 5))), gray));
 
         out.addAll(drawPolygons(newHexInnerTrianglesFull(centre, r * Tile9.INNER_R2), gray));
         out.addAll(drawPolygons(newHexInnerTrianglesFullRot(centre, r * Tile9.INNER_R2), gray));
@@ -580,14 +528,11 @@ public class DesignHelper {
 
 //        out.addAll(drawPolylines(Tile9.calcOuterLines1(centre, r), red));
 
-
         out.add(drawPolygon(newHexagonRot(centre, r), red));
         out.addAll(drawPolylines(tile9.getLines(), red));
 
-
         out.addAll(highlightPoints(newHexagon(centre, r * Tile9.OUTER_R4)));
         out.addAll(highlightPoints(newHexagonRot(centre, r * Tile9.OUTER_R4)));
-
 
 //        out.addAll(highlightPoints(tile9.getPointsA()));
 //        out.addAll(highlightPoints(tile9.getPointsB()));
@@ -617,6 +562,50 @@ public class DesignHelper {
 
         return out;
 
+    }
+
+    public static List<XMLBuilder> newStarDesign11(final Point2D centre, final double r) {
+
+        Tile11 tile = new Tile11(centre, r);
+
+        List<XMLBuilder> out = newArrayList();
+
+        final String gray = newStyle(GRAY, 1, 1);
+        final String green = newStyle(GREEN, 2, 1);
+        final String red = newStyle(RED, 2, 1);
+        final String blue = newStyle(BLUE, 2, 1);
+
+
+        out.add(drawPolygon(newHexagonRot(centre, r),gray));
+
+
+
+        for (Point2D edge : tile.getMainHexRot()) {
+            out.add(drawPolygon(newHexagon(edge, tile.getInnerR()), gray));
+        }
+
+        out.add((newCircle(centre,tile.getInnerR(), gray)));
+        for (Point2D edge : tile.getMainHeights()) {
+            out.add((newCircle(edge,r/2.0, gray)));
+        }
+
+        out.addAll(drawPolylines(newHexHeightsRot(centre,r),gray));
+        out.addAll(drawPolylines(newHexDiagRot(centre,r),gray));
+
+        out.addAll(highlightPoints(tile.getMainHeights()));
+        out.addAll(highlightPoints(tile.getPointsA()));
+        out.addAll(highlightPoints(tile.getPointsB()));
+        out.addAll(highlightPoints(tile.getPointsC()));
+        out.addAll(highlightPoints(tile.getPointsD()));
+//        out.addAll(highlightPoints(newHexagon(centre,tile.getInnerR2())));
+
+
+
+        out.addAll(drawPolylines(tile.getLines(), red));
+
+
+
+        return out;
     }
 
 }

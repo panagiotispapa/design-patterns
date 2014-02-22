@@ -50,7 +50,7 @@ public class TestBed2 {
                 new Function<Point2D, Tile>() {
                     @Override
                     public Tile apply(Point2D centre) {
-                        return new Tile3(centre, r);
+                        return new Tile9(centre, r);
                     }
                 }
         );
@@ -78,7 +78,7 @@ public class TestBed2 {
 
     public static void main(String[] args) {
 
-        Dimension dim = new Dimension(1024+2*64 + 32, 768);
+        Dimension dim = new Dimension(1024+2*128 + 32, 768);
 
         JFrame frame = new JFrame();
         frame.setTitle("Polygon");
@@ -90,7 +90,7 @@ public class TestBed2 {
         });
         Container contentPane = frame.getContentPane();
 
-        contentPane.add(new TestBed2(dim, 128).getComponent());
+        contentPane.add(new TestBed2(dim, 100).getComponent());
         frame.setVisible(true);
 
         frame.invalidate();

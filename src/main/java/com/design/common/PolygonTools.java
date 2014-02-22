@@ -29,8 +29,13 @@ public class PolygonTools {
 
     public final static double RECT_PHI = (2.0 * PI) / RECT_N;
 
+
+    public static List<Double> RECT_RADIANS = computeDegrees(RECT_N, RECT_PHI);
+    public static List<Double> RECT_RADIANS_ROT = computeDegreesRot(RECT_N, RECT_PHI);
+
     public final static double HEX_PHI = (2.0 * PI) / HEX_N;
     public final static double HEX_PHI_HALF = HEX_PHI / 2.0;
+    public final static double HEX_PHI_QUARTER = HEX_PHI / 4.0;
     public final static double HEX_THETA = (2.0 * PI - HEX_PHI);
 
     public final static double HEX_DIST_PROJ = calcDistProj(HEX_PHI);

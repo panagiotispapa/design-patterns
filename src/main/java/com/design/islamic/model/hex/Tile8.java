@@ -9,200 +9,255 @@ import java.util.List;
 import static com.design.common.PolygonTools.*;
 import static com.design.common.view.SvgFactory.*;
 import static com.google.common.collect.Lists.newArrayList;
+import static java.lang.Math.*;
 import static java.util.Arrays.asList;
 
 public class Tile8 implements Tile {
 
     private final List<Point2D> mainHex;
-    private final List<List<Point2D>> lines;
 
     private final String styleWhiteBold = newStyle(WHITE, 2, 1);
     private final String styleWhite = newStyle(WHITE, 1, 1);
 
-    public static final double OUTER_R1 = 1.0 - HEX_DIST_DIAGONAL;
-    public static final double OUTER_R2 = OUTER_R1 * HEX_DIST_PROJ;
-    public static final double OUTER_R3 = OUTER_R1 - OUTER_R2;
-    public static final double OUTER_R4 = OUTER_R1 * HEX_DIST_HEIGHT;
-    public static final double OUTER_R5 = 1 - Tile8.OUTER_R4 * HEX_DIST_NEW_CENTRE;
+
+
+
+
+
+
+    private List<List<Point2D>> lines;
+
+    private final double height;
+    private final double innerHeight;
+    private final double innerR;
+    private final double innerR2;
+
+    private final double outerR;
+    private final double outerPhi;
+
+    private final Point2D centre;
+    private final double r;
+
+    private List<Point2D> heights;
+
+    private List<Point2D> pointsA;
+    private List<Point2D> pointsB;
+    private List<Point2D> pointsC;
+
+    private List<Point2D> pointsD;
+    private List<Point2D> pointsE;
+
+    private List<Point2D> pointsF;
+    private List<Point2D> pointsG;
+    private List<Point2D> pointsH;
 
     public Tile8(Point2D centre, double r) {
 
+        this.centre = centre;
+        this.r = r;
+
+        height = r * HEX_DIST_HEIGHT;
+
+        innerHeight = r * (sin(HEX_PHI) - 0.5) * cos(HEX_PHI);
+        innerR = innerHeight / HEX_DIST_HEIGHT;
+
+        double sin = sin(HEX_PHI_QUARTER);
+
+        outerR = 2.0 * height * sin - 2.0 * (height - 2.0 * innerHeight) * sin;
+        outerPhi = PI - (PI_HALF - HEX_PHI_QUARTER);
+
+        innerR2 = innerHeight / sin(PI_QUARTER);
+
         mainHex = newHexagonRot(centre, r);
 
+        heights = newHexagon(centre, height);
+
+
+        buildPoints();
+        buildLines();
+    }
+
+    private void buildPoints() {
+        pointsA = newArrayList();
+        pointsB = newArrayList();
+        pointsC = newArrayList();
+
+        pointsD = newArrayList();
+        pointsE = newArrayList();
+
+        pointsF = newArrayList();
+        pointsG = newArrayList();
+        pointsH = newArrayList();
+
+        for (int i = 0; i < HEX_N; i++) {
+            pointsA.add(newEdgeAt(mainHex.get(i), innerR, HEX_RADIANS_ROT.get(toHexIndex(i + 4))));
+            pointsB.add(newEdgeAt(mainHex.get(i), innerR, HEX_RADIANS_ROT.get(toHexIndex(i + 3))));
+            pointsC.add(newEdgeAt(mainHex.get(i), innerR, HEX_RADIANS_ROT.get(toHexIndex(i + 2))));
+
+            pointsD.add(newEdgeAt(heights.get(i), outerR, HEX_RADIANS.get(i) - outerPhi));
+            pointsE.add(newEdgeAt(heights.get(i), outerR, HEX_RADIANS.get(i) + outerPhi));
+        }
+
+        for (int i = 0; i < RECT_N; i++) {
+            pointsF.add(newEdgeAt(centre, innerR2, RECT_RADIANS_ROT.get(i)));
+            pointsG.add(newEdgeAt(centre, innerR2, RECT_RADIANS_ROT.get(i) - HEX_PHI_HALF));
+            pointsH.add(newEdgeAt(centre, innerR2, RECT_RADIANS_ROT.get(i) - HEX_PHI));
+        }
+
+    }
+
+    private void buildLines() {
         lines = newArrayList();
 
-        lines.addAll(calcOuterLines1(centre, r));
-        lines.addAll(calcOuterLines2(centre, r));
-        lines.addAll(calcOuterLines3(centre, r));
-//        lines.addAll(calcOuterLines4(centre, r));
-
-    }
-
-    public static List<Point2D> calcOuterPoints1(Point2D centre, double r) {
-
-        List<Point2D> out = newArrayList();
-
-        List<Point2D> outerHexPoints = newHexagon(centre, r);
-
-        double newR = r * OUTER_R1;
-
-        int index = 0;
-        for (Point2D outerHexPoint : outerHexPoints) {
-
-//            List<Point2D> layerOut = newHexagon(outerHexPoint, newR);
-            List<Point2D> layerOutHeights = newHexagonRot(outerHexPoint, newR * HEX_DIST_HEIGHT);
-
-            out.add(layerOutHeights.get(toHexIndex(2 + index)));
-            out.add(layerOutHeights.get(toHexIndex(3 + index)));
-            index++;
-        }
-
-        return out;
-
-    }
-
-    public static List<List<Point2D>> calcOuterHex1(Point2D centre, double r) {
-        List<Point2D> newCentres = calcOuterPoints1(centre, r);
-
-        List<List<Point2D>> out = newArrayList();
-
-        double newR = r * OUTER_R2;
-
-        for (Point2D newCentre : newCentres) {
-            out.add(newHexagonRot(newCentre, newR));
-        }
-
-        return out;
-
-    }
-
-    public static List<List<Point2D>> calcOuterLines1(Point2D centre, double r) {
-
-        List<List<Point2D>> out = newArrayList();
-
-        List<Point2D> outerHexRotEdges = newHexagonRot(centre, r);
-
-        int index = 0;
-        for (Point2D outerHexRotEdge : outerHexRotEdges) {
-            List<Point2D> edges = newHexagonRot(outerHexRotEdge, r * Tile8.OUTER_R3);
-            List<Point2D> outerEdges = newHexagon(outerHexRotEdge, r * Tile8.OUTER_R3 * HEX_DIST_NEW_CENTRE);
-
-            out.add(asList(
-                    outerEdges.get(toHexIndex(4 + index)),
-                    edges.get(toHexIndex(4 + index)),
-                    edges.get(toHexIndex(3 + index)),
-                    edges.get(toHexIndex(2 + index)),
-                    outerEdges.get(toHexIndex(3 + index))
-
+        for (int i = 0; i < HEX_N; i++) {
+            lines.add(asList(
+                    pointsA.get(i),
+                    pointsB.get(i),
+                    pointsC.get(i)
             ));
 
-            index++;
+            lines.add(asList(
+                    pointsD.get(i),
+                    heights.get(i),
+                    pointsE.get(i)
+            ));
 
         }
 
-        return out;
+        lines.add(asList(
+                pointsA.get(1),
+                pointsF.get(0),
+                pointsE.get(0)
+
+        ));
+
+        lines.add(asList(
+                pointsC.get(1),
+                pointsF.get(1),
+                pointsD.get(3)
+
+        ));
+
+        lines.add(asList(
+                pointsA.get(4),
+                pointsF.get(2),
+                pointsE.get(3)
+
+        ));
+
+        lines.add(asList(
+                pointsC.get(4),
+                pointsF.get(3),
+                pointsD.get(0)
+
+        ));
+
+        lines.add(asList(
+                pointsA.get(0),
+                pointsH.get(0),
+                pointsE.get(5)
+
+        ));
+
+        lines.add(asList(
+                pointsC.get(0),
+                pointsH.get(1),
+                pointsD.get(2)
+
+        ));
+
+        lines.add(asList(
+                pointsA.get(3),
+                pointsH.get(2),
+                pointsE.get(2)
+
+        ));
+
+        lines.add(asList(
+                pointsC.get(3),
+                pointsH.get(3),
+                pointsD.get(5)
+
+        ));
+
+        lines.add(asList(
+                pointsA.get(5),
+                pointsG.get(3),
+                pointsE.get(4)
+
+        ));
+
+        lines.add(asList(
+                pointsC.get(5),
+                pointsG.get(0),
+                pointsD.get(1)
+
+        ));
+
+        lines.add(asList(
+                pointsA.get(2),
+                pointsG.get(1),
+                pointsE.get(1)
+
+        ));
+
+        lines.add(asList(
+                pointsC.get(2),
+                pointsG.get(2),
+                pointsD.get(4)
+
+        ));
 
     }
 
-    public static List<List<Point2D>> calcOuterLines2(Point2D centre, double r) {
-
-        List<List<Point2D>> out = newArrayList();
-
-        List<Point2D> heights = newHexagon(centre, r * HEX_DIST_HEIGHT);
-
-        List<Point2D> outerPoints = calcOuterPoints1(centre, r);
-
-        int index = 0;
-
-        double newR = r * Tile8.OUTER_R2 * HEX_DIST_HEIGHT * 0.73;
-        for (Point2D height : heights) {
-
-            List<Point2D> heights_1 = newHexagon(outerPoints.get(2 * index), newR);
-            List<Point2D> heights_2 = newHexagon(outerPoints.get(2 * index + 1), newR);
-
-            out.add(asList(
-                    height,
-                    heights_1.get(toHexIndex(0 + index)),
-                    outerPoints.get(2 * index)
-            ));
-
-            out.add(asList(
-                    height,
-                    heights_2.get(toHexIndex(0 + index)),
-                    outerPoints.get(2 * index + 1)
-            ));
-
-            index++;
-        }
-
-        return out;
+    public double getInnerR() {
+        return innerR;
     }
 
-//    public static List<Point2D> calcOuterPoints2(Point2D centre, double r) {
-//
-//        List<Point2D> out = newArrayList();
-//
-//        List<Point2D> outerHexEdges = newHexagon(centre, r);
-//
-//        int index = 0;
-//        double newR = r * OUTER_R4 * HEX_DIST_NEW_CENTRE;
-//
-//        for (Point2D outerHexEdge : outerHexEdges) {
-//
-//            List<Point2D> points = newHexagon(outerHexEdge, newR);
-//
-//            out.add(points.get(toHexIndex(3 + index)));
-//
-//            index++;
-//
-//        }
-//
-//        return out;
-//    }
-
-    public static List<List<Point2D>> calcOuterLines3(Point2D centre, double r) {
-
-        List<List<Point2D>> out = newArrayList();
-
-        double r5 = r * Tile8.OUTER_R5;
-        List<Point2D> edges = newHexagon(centre, r5);
-        List<Point2D> edgesRot = newHexagonRot(centre, r5);
-
-        double newR = r * OUTER_R4;
-        double newR2 = r5 * Tile8.OUTER_R1 * HEX_DIST_HEIGHT;
-
-        int index = 0;
-        for (Point2D edge : edges) {
-
-            List<Point2D> layer1 = newHexagonRot(edge, newR);
-            List<Point2D> layer2 = newHexagonRot(edge, newR2);
-
-            out.add(asList(
-
-                    layer1.get(toHexIndex(0 + index)),
-                    edge,
-                    layer1.get(toHexIndex(5 + index))
-
-            ));
-
-            out.add(asList(
-                    layer1.get(toHexIndex(0 + index)),
-                    edgesRot.get(toHexIndex(0 + index)),
-                    layer2.get(toHexIndex(2 + index)),
-                    edge
-            ));
-            out.add(asList(
-                    layer1.get(toHexIndex(5 + index)),
-                    edgesRot.get(toHexIndex(5 + index)),
-                    layer2.get(toHexIndex(3 + index)),
-                    edge
-            ));
-
-            index++;
-        }
-
-        return out;
+    public List<Point2D> getPointsA() {
+        return pointsA;
     }
+
+    public List<Point2D> getPointsB() {
+        return pointsB;
+    }
+
+    public List<Point2D> getPointsC() {
+        return pointsC;
+    }
+
+    public List<Point2D> getHeights() {
+        return heights;
+    }
+
+    public List<Point2D> getPointsE() {
+        return pointsE;
+    }
+
+    public List<Point2D> getPointsD() {
+        return pointsD;
+    }
+
+    public List<Point2D> getPointsH() {
+        return pointsH;
+    }
+
+    public List<Point2D> getPointsG() {
+        return pointsG;
+    }
+
+    public List<Point2D> getPointsF() {
+        return pointsF;
+    }
+
+    public List<List<Point2D>> getLines() {
+        return lines;
+    }
+
+
+
+
+
 
     @Override
     public List<XMLBuilder> drawMe() {
