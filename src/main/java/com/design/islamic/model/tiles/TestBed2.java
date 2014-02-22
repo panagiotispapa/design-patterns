@@ -90,7 +90,7 @@ public class TestBed2 {
         });
         Container contentPane = frame.getContentPane();
 
-        contentPane.add(new TestBed2(dim, 64).getComponent());
+        contentPane.add(new TestBed2(dim, 128).getComponent());
         frame.setVisible(true);
 
         frame.invalidate();

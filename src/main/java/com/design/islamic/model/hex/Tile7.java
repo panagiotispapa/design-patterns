@@ -4,88 +4,80 @@ import com.design.islamic.model.Tile;
 import com.jamesmurty.utils.XMLBuilder;
 
 import java.awt.geom.Point2D;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.design.common.PolygonTools.*;
-import static com.design.common.view.SvgFactory.WHITE;
-import static com.design.common.view.SvgFactory.drawPolylines;
-import static com.design.common.view.SvgFactory.newStyle;
+import static com.design.common.view.SvgFactory.*;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 
-public class Tile7 implements Tile{
+public class Tile7 implements Tile {
     private final List<Point2D> mainHex;
-    private final List<List<Point2D>> lines;
+    private List<List<Point2D>> lines;
 
     private final String styleWhiteBold = newStyle(WHITE, 2, 1);
     private final String styleWhite = newStyle(WHITE, 1, 1);
 
+    private List<Point2D> outerLayerRot;
+    private List<Point2D> outerLayer;
+
+    private final Point2D centre;
+    private final double r;
+
     public Tile7(Point2D centre, double r) {
+
+        this.centre = centre;
+        this.r = r;
 
         mainHex = newHexagonRot(centre, r);
 
+        buildPoints();
 
-
-        lines = buildOuterLines(centre,r);
-
+        buildLines();
 
     }
-    public static List<List<Point2D>> buildOuterLines(Point2D centre, double r) {
 
-        List<Point2D> outerEdges = newHexagonRot(centre, r * HEX_DIST_HEIGHT);
-        double rSmall = r * (1 - HEX_DIST_HEIGHT);
+    private void buildPoints() {
+        outerLayerRot = newHexagonRot(centre, r * HEX_DIST_HEIGHT);
+        outerLayer = newHexagon(centre, r * HEX_DIST_HEIGHT);
 
+    }
 
+    private void buildLines() {
+        lines = newArrayList();
+
+        final double rSmall = r * (1 - HEX_DIST_HEIGHT);
+        final double distH = rSmall * HEX_DIST_HEIGHT;
         double newR = r * HEX_DIST_DIAGONAL_ROTATED;
 
+        for (int i = 0; i < HEX_N; i++) {
+            Point2D edgeRot = outerLayerRot.get(i);
+            lines.add(asList(
+                    newEdgeAt(edgeRot, distH, HEX_RADIANS.get(i)),
+                    edgeRot,
+                    newEdgeAt(edgeRot, distH, HEX_RADIANS.get(toHexIndex(i + 1)))
 
-
-        List<List<Point2D>> out = newArrayList();
-        int index = 0;
-
-        for (Point2D outerEdge : outerEdges) {
-
-            List<Point2D> heights = newHexagon(outerEdge, rSmall*HEX_DIST_HEIGHT);
-            List<Point2D> bigHex = newHexagon(outerEdge, newR);
-
-            out.add(
-                    asList(
-                            heights.get(toHexIndex(0 + index)),
-                            outerEdge,
-                            heights.get(toHexIndex(1 + index))
-                    )
-            );
-
-            out.add(
-                    asList(
-                            bigHex.get(toHexIndex(4 + index)),
-                            outerEdge,
-                            bigHex.get(toHexIndex(3 + index))
-                    )
-            );
-
-            index++;
-        }
-
-        List<Point2D> outerEdgesRot = newHexagon(centre, r * HEX_DIST_HEIGHT);
-
-        index = 0;
-        for (Point2D outerEdge : outerEdgesRot) {
-            List<Point2D> bigHex = newHexagonRot(outerEdge, newR);
-
-            out.add(asList(
-                    bigHex.get(toHexIndex(3 + index)),
-                    outerEdge,
-                    bigHex.get(toHexIndex(2 + index))
             ));
 
-            index++;
+            lines.add(asList(
+                    newEdgeAt(edgeRot, newR, HEX_RADIANS.get(toHexIndex(i + 4))),
+                    edgeRot,
+                    newEdgeAt(edgeRot, newR, HEX_RADIANS.get(toHexIndex(i + 3)))
+            ));
+
+            Point2D edge = outerLayer.get(i);
+            lines.add(asList(
+                    newEdgeAt(edge, newR, HEX_RADIANS_ROT.get(toHexIndex(i + 3))),
+                    edge,
+                    newEdgeAt(edge, newR, HEX_RADIANS_ROT.get(toHexIndex(i + 2)))
+            ));
+
         }
 
-        return out;
+    }
 
-
+    public List<List<Point2D>> getLines() {
+        return lines;
     }
 
     @Override
@@ -94,7 +86,6 @@ public class Tile7 implements Tile{
 
 //        out.add(drawPolygon(mainHex, styleWhite));
         out.addAll(drawPolylines(lines, styleWhiteBold));
-
 
         return out;
 

@@ -1,6 +1,9 @@
 package com.design.common;
 
+import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import org.paukov.combinatorics.Generator;
 import org.paukov.combinatorics.ICombinatoricsVector;
 
@@ -17,6 +20,9 @@ import static org.paukov.combinatorics.Factory.createVector;
 
 public class PolygonTools {
 
+    public final static double PI_HALF = PI / 2.0;
+    public final static double PI_QUARTER = PI / 4.0;
+
     public final static int HEX_N = 6;
     public final static int RECT_N = 4;
     public final static int OCT_N = 8;
@@ -24,6 +30,7 @@ public class PolygonTools {
     public final static double RECT_PHI = (2.0 * PI) / RECT_N;
 
     public final static double HEX_PHI = (2.0 * PI) / HEX_N;
+    public final static double HEX_PHI_HALF = HEX_PHI / 2.0;
     public final static double HEX_THETA = (2.0 * PI - HEX_PHI);
 
     public final static double HEX_DIST_PROJ = calcDistProj(HEX_PHI);
@@ -36,8 +43,10 @@ public class PolygonTools {
     public final static double HEX_DIST_NEW_CENTRE = 2.0 * HEX_DIST_HEIGHT;
     public final static double HEX_DIST_OUTER_CIRCLE = HEX_DIST_NEW_CENTRE - 1;
 
-    public static List<Point2D> hexPoints = computePoints(HEX_N, HEX_PHI);
-    public static List<Point2D> hexPointsAlt = computePointsAlt(HEX_N, HEX_PHI);
+    public static List<Double> HEX_RADIANS = computeDegrees(HEX_N, HEX_PHI);
+    public static List<Double> HEX_RADIANS_ROT = computeDegreesRot(HEX_N, HEX_PHI);
+    public static List<Point2D> hexPoints = newEdgesAt(HEX_RADIANS);
+    public static List<Point2D> hexPointsAlt = newEdgesAt(HEX_RADIANS_ROT);
 
     private static double calcDistProj(double phi) {
         return sin(phi / 2.0);
@@ -65,6 +74,28 @@ public class PolygonTools {
 
     private static double calcDistEq1(double phi) {
         return 1.0 / (1.0 + tan(phi / 2.0));
+    }
+
+    private static List<Double> computeDegrees(int n, double phi) {
+        ImmutableList.Builder<Double> builder = ImmutableList.builder();
+
+        for (int k = 0; k < n; k++) {
+            builder.add(phi * k);
+        }
+
+        return builder.build();
+
+    }
+
+    private static List<Double> computeDegreesRot(int n, double phi) {
+        ImmutableList.Builder<Double> builder = ImmutableList.builder();
+
+        for (int k = 0; k < n; k++) {
+            builder.add(phi * (k + 0.5));
+        }
+
+        return builder.build();
+
     }
 
     private static List<Point2D> computePoints(int n, double phi) {
@@ -127,6 +158,16 @@ public class PolygonTools {
 
         return edge;
     }
+
+    private static List<Point2D> newEdgesAt(Iterable<Double> radians) {
+        return Lists.newArrayList(Iterables.transform(radians, new Function<Double, Point2D>() {
+            @Override
+            public Point2D apply(Double radian) {
+                return newEdgeAt(radian);
+            }
+        }));
+    }
+
     public static Point2D newEdgeAt(double phi) {
         return newCentre(
                 cos(phi),
@@ -235,7 +276,6 @@ public class PolygonTools {
 
     }
 
-
     public static List<List<Point2D>> newHexInnerTrianglesFull(Point2D centre, double r) {
         List<Point2D> hex = newHexagon(centre, r);
 
@@ -256,15 +296,15 @@ public class PolygonTools {
 
     }
 
-    public static List<List<Point2D>> concateOuterHexagons(List<Point2D> outer,List<Point2D> outerRot) {
+    public static List<List<Point2D>> concateOuterHexagons(List<Point2D> outer, List<Point2D> outerRot) {
 
         List<List<Point2D>> out = newArrayList();
 
         int index = 0;
         for (Point2D edge : outer) {
 
-            out.add(asList(edge, outerRot.get(toHexIndex(1+index))));
-            out.add(asList(outerRot.get(toHexIndex(index)), outer.get(toHexIndex(2+index))));
+            out.add(asList(edge, outerRot.get(toHexIndex(1 + index))));
+            out.add(asList(outerRot.get(toHexIndex(index)), outer.get(toHexIndex(2 + index))));
 
 //            out.add(asList(outer.get(toHexIndex(1+index)), outerRot.get(index)));
             index++;

@@ -138,27 +138,27 @@ public class Tile8 implements Tile {
         return out;
     }
 
-    public static List<Point2D> calcOuterPoints2(Point2D centre, double r) {
-
-        List<Point2D> out = newArrayList();
-
-        List<Point2D> outerHexEdges = newHexagon(centre, r);
-
-        int index = 0;
-        double newR = r * OUTER_R4 * HEX_DIST_NEW_CENTRE;
-
-        for (Point2D outerHexEdge : outerHexEdges) {
-
-            List<Point2D> points = newHexagon(outerHexEdge, newR);
-
-            out.add(points.get(toHexIndex(3 + index)));
-
-            index++;
-
-        }
-
-        return out;
-    }
+//    public static List<Point2D> calcOuterPoints2(Point2D centre, double r) {
+//
+//        List<Point2D> out = newArrayList();
+//
+//        List<Point2D> outerHexEdges = newHexagon(centre, r);
+//
+//        int index = 0;
+//        double newR = r * OUTER_R4 * HEX_DIST_NEW_CENTRE;
+//
+//        for (Point2D outerHexEdge : outerHexEdges) {
+//
+//            List<Point2D> points = newHexagon(outerHexEdge, newR);
+//
+//            out.add(points.get(toHexIndex(3 + index)));
+//
+//            index++;
+//
+//        }
+//
+//        return out;
+//    }
 
     public static List<List<Point2D>> calcOuterLines3(Point2D centre, double r) {
 

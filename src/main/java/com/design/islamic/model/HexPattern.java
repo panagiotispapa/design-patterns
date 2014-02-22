@@ -12,7 +12,8 @@ public enum HexPattern {
     FIVE("Pattern 5"),
     SIX("Pattern 6"),
     SEVEN("Pattern 7"),
-    HEIGHT("Pattern 8")
+    HEIGHT("Pattern 8"),
+    NINE("Pattern 9")
     ;
 
     private final String description;
@@ -49,6 +50,8 @@ public enum HexPattern {
             return SEVEN;
         } else if (description.equalsIgnoreCase(HEIGHT.getDescription())) {
             return HEIGHT;
+        } else if (description.equalsIgnoreCase(NINE.getDescription())) {
+            return NINE;
         } else {
             throw new IllegalArgumentException();
         }

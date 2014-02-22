@@ -37,20 +37,18 @@ public class Tile5 implements Tile {
         int index = 0;
         for (Point2D outerEdge : outerEdges) {
 
-            List<Point2D> edges = cloneAndTranslateScalePoints(outerEdge, r, hexPointsAlt);
-
             out.add(
                     asList(
-                            edges.get(toHexIndex(2 + index)),
-                            edges.get(toHexIndex(5 + index))
+                            newEdgeAt(outerEdge, r, HEX_RADIANS_ROT.get(toHexIndex(2 + index))),
+                            newEdgeAt(outerEdge, r, HEX_RADIANS_ROT.get(toHexIndex(5 + index)))
                     )
             );
 
 
             out.add(
                     asList(
-                            edges.get(toHexIndex(3 + index)),
-                            edges.get(toHexIndex(0 + index))
+                            newEdgeAt(outerEdge, r, HEX_RADIANS_ROT.get(toHexIndex(3 + index))),
+                            newEdgeAt(outerEdge, r, HEX_RADIANS_ROT.get(toHexIndex(index)))
                     )
             );
 
