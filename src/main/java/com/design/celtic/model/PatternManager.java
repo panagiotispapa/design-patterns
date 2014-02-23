@@ -1,9 +1,5 @@
 package com.design.celtic.model;
 
-import com.design.celtic.Patterns;
-import com.google.common.collect.Maps;
-import com.jamesmurty.utils.XMLBuilder;
-
 import java.awt.*;
 import java.util.Map;
 
@@ -29,7 +25,7 @@ public class PatternManager {
         providerMap = newHashMap();
         providerMap.put(ONE, new PatternProvider() {
             @Override
-            public XMLBuilder provideSVG(Dimension dim, double r) {
+            public String provideSVG(Dimension dim, double r) {
                 return buildPattern1(dim, r);
             }
         });
@@ -37,7 +33,7 @@ public class PatternManager {
     }
 
 
-    public XMLBuilder getSvg(Pattern pattern) {
+    public String getSvg(Pattern pattern) {
         return providerMap.get(pattern).provideSVG(dim, r);
     }
 

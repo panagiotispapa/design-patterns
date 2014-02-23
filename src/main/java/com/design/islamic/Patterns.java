@@ -1,34 +1,19 @@
 package com.design.islamic;
 
-import com.design.common.view.SvgFactory;
-import com.design.islamic.model.Tile;
-import com.design.islamic.model.hex.*;
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableList;
+import com.design.islamic.model.Payload;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.jamesmurty.utils.XMLBuilder;
-import org.paukov.combinatorics.Generator;
-import org.paukov.combinatorics.ICombinatoricsVector;
 
 import java.awt.*;
-import java.awt.geom.Dimension2D;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import static com.design.common.PolygonTools.*;
 import static com.design.common.view.SvgFactory.*;
-import static com.design.islamic.GenericTools.*;
 import static com.design.islamic.model.Centre.newCentre;
-import static com.google.common.collect.Iterables.concat;
-import static com.google.common.collect.Iterables.transform;
-import static com.google.common.collect.Lists.newArrayList;
-import static java.lang.Math.*;
 import static java.util.Arrays.asList;
-import static org.paukov.combinatorics.Factory.createSimpleCombinationGenerator;
-import static org.paukov.combinatorics.Factory.createVector;
 
 public final class Patterns {
 
@@ -128,126 +113,80 @@ public final class Patterns {
 
     }
 
-    public static XMLBuilder buildHexPattern1(CentreConfiguration centreConfiguration, final double r, Dimension dim) {
+    public static List<Payload> buildHexPatterns(Set<Point2D> centres, Payload payload) {
 
-        final String styleColoured = newStyle("yellow", "green", 2, 1, 1);
 
-//        List<Point2D> backGroundRect = asList(newCentre(0, 0), newCentre(width, 0), newCentre(width, height), newCentre(0, height));
+        List<Payload> payloads = new ArrayList<Payload>(centres.size());
 
-        List<Tile1> hexagons = Tile1.fromCentres(centreConfiguration.getCentresSecondConf(), r);
-
-        List<XMLBuilder> tiles = newArrayList(transform(hexagons, new Function<Tile1, XMLBuilder>() {
-            @Override
-            public XMLBuilder apply(Tile1 tile) {
-                return tile.drawMe(styleColoured);
-            }
-        }));
-
-        XMLBuilder svg = buildSvg(dim,
-                tiles
-        );
-
-        System.out.println("finished building svg!!!");
-        return svg;
-    }
-
-    public static XMLBuilder buildHexPattern2(CentreConfiguration centreConfiguration, final double r, Dimension dim) {
-
-        final String style = newStyle("yellow", "green", 1, 1, 0);
-
-        List<XMLBuilder> hexagons = ImmutableList.copyOf(transform(centreConfiguration.getCentresSecondConf(), new Function<Point2D, XMLBuilder>() {
-            @Override
-            public XMLBuilder apply(Point2D centre) {
-                return drawPolygon(cloneAndTranslateScalePoints(centre, r, hexPoints), style);
-            }
-        }));
-
-        final String style2 = newStyle("blue", "green", 1, 0, 1);
-
-        List<XMLBuilder> circles = ImmutableList.copyOf(
-                transform(
-                        edgesFromCentres(centreConfiguration.getCentresSecondConf(), r),
-                        new Function<Point2D, XMLBuilder>() {
-            @Override
-            public XMLBuilder apply(Point2D edge) {
-                return SvgFactory.newCircle(edge, r, style2);
-            }
-        }));
-
-        XMLBuilder svg = buildSvg(dim,
-                concat(
-                        hexagons
-                        , circles
-                )
-        );
-
-        System.out.println("finished building svg!!!");
-        return svg;
-    }
-
-    public static XMLBuilder buildHexPatternStar(CentreConfiguration centreConfiguration, final double r, Dimension dim, final double dist) {
-
-        final String style = newStyle("yellow", "yellow", 1, 1, 1);
-
-        List<TileStar> stars = newArrayList(transform(centreConfiguration.getCentresSecondConf(), new Function<Point2D, TileStar>() {
-            @Override
-            public TileStar apply(Point2D centre) {
-                return new TileStar(centre, r, dist);
-            }
-        }));
-
-        final String style2 = newStyle("blue", "blue", 1, 1, 1);
-
-        List<Point2D> backGroundRect = asList(
-                newCentre(0, 0),
-                newCentre(dim.getWidth(), 0),
-                newCentre(dim.getWidth(), dim.getHeight()),
-                newCentre(0, dim.getHeight()));
-
-        List<XMLBuilder> allShapes = newArrayList();
-
-        allShapes.add(drawPolygon(backGroundRect, style2));
-        allShapes.addAll(newArrayList(transform(stars, new Function<TileStar, XMLBuilder>() {
-            @Override
-            public XMLBuilder apply(TileStar tileStar) {
-                return tileStar.drawMe(style);
-            }
-        })));
-
-        XMLBuilder svg = buildSvg(dim, allShapes);
-
-        System.out.println("finished building svg!!!");
-        return svg;
-    }
-
-    public static XMLBuilder buildHexPatternBlackAndWhite(CentreConfiguration centreConfiguration, Dimension dim, Function<Point2D, Tile> transformation) {
-
-        final String styleBlack = newStyle(BLACK, BLACK, 1, 1, 1);
-
-        List<Tile> tiles = newArrayList(transform(centreConfiguration.getCentresSecondConf(), transformation));
-
-        List<Point2D> backGroundRect = asList(
-                newCentre(0, 0),
-                newCentre(dim.getWidth(), 0),
-                newCentre(dim.getWidth(), dim.getHeight()),
-                newCentre(0, dim.getHeight()));
-
-        List<XMLBuilder> total = newArrayList();
-        total.add(drawPolygon(backGroundRect, styleBlack));
-        for (Tile tile : tiles) {
-            total.addAll(tile.drawMe());
+        for (Point2D centre : centres) {
+            payloads.add(payload.translate(centre));
         }
 
+        return payloads;
 
-//        total.add(drawPolygon(forGroundRect, styleWhite));
+    }
 
-        XMLBuilder svg = buildSvg(dim,
-                total);
+
+
+    public static String buildHexPatternBlackAndWhite(List<Payload> payloads, Dimension dim) {
+
+        final String styleBlack = newStyle(BLACK, BLACK, 1, 1, 1);
+        List<Point2D> backGroundRect = asList(
+                newCentre(0, 0),
+                newCentre(dim.getWidth(), 0),
+                newCentre(dim.getWidth(), dim.getHeight()),
+                newCentre(0, dim.getHeight()));
+
+        StringBuilder shapes = new StringBuilder();
+        shapes.append(drawPolygon(backGroundRect, styleBlack));
+
+
+
+        for (Payload payload1 : payloads) {
+            shapes.append(drawPayload(payload1));
+//            total.addAll(drawPayload(payload1));
+        }
+
+        String svg = buildSvg(dim,
+                shapes.toString());
+
+
+
 
         System.out.println("finished building svg!!!");
         return svg;
 
     }
+
+
+//    public static XMLBuilder buildHexPatternBlackAndWhite(CentreConfiguration centreConfiguration, Dimension dim, Function<Point2D, Tile> transformation) {
+//
+//        final String styleBlack = newStyle(BLACK, BLACK, 1, 1, 1);
+//
+//        List<Tile> tiles = newArrayList(transform(centreConfiguration.getCentresSecondConf(), transformation));
+//
+//        List<Point2D> backGroundRect = asList(
+//                newCentre(0, 0),
+//                newCentre(dim.getWidth(), 0),
+//                newCentre(dim.getWidth(), dim.getHeight()),
+//                newCentre(0, dim.getHeight()));
+//
+//        List<XMLBuilder> total = newArrayList();
+//        total.add(drawPolygon(backGroundRect, styleBlack));
+//        for (Tile tile : tiles) {
+//            total.addAll(tile.drawMe());
+//        }
+//
+//
+////        total.add(drawPolygon(forGroundRect, styleWhite));
+//
+//        XMLBuilder svg = buildSvg(dim,
+//                total);
+//
+//        System.out.println("finished building svg!!!");
+//        return svg;
+//
+//    }
 
 
 

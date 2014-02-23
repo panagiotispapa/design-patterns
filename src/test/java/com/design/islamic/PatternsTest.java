@@ -1,6 +1,5 @@
 package com.design.islamic;
 
-import com.design.common.PolygonTools;
 import org.junit.Test;
 
 import java.awt.geom.Point2D;
@@ -9,7 +8,6 @@ import static com.design.common.PolygonTools.cloneAndTranslateScalePoints;
 import static com.design.common.PolygonTools.hexPoints;
 import static com.design.islamic.Patterns.*;
 import static com.design.islamic.model.Centre.newCentre;
-import static com.design.common.view.SvgFactory.newStyle;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 public class PatternsTest {

@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import static com.design.common.view.SvgFactory.fromXMLBuilder;
+import static com.design.common.view.SvgFactory.fromSvgDoc;
 
 public class Main implements ActionListener {
 
@@ -61,7 +61,7 @@ public class Main implements ActionListener {
         System.out.println("in refreshCanvas");
         jsvgCanvas.removeAll();
 //        removeChildren(jsvgCanvas);
-        jsvgCanvas.setSVGDocument(fromXMLBuilder(manager.getSvg(pattern)));
+        jsvgCanvas.setSVGDocument(fromSvgDoc(manager.getSvg(pattern)));
     }
 
     public JPanel getComponent() {

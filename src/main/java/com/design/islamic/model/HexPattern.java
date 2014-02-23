@@ -12,8 +12,10 @@ public enum HexPattern {
     FIVE("Pattern 5"),
     SIX("Pattern 6"),
     SEVEN("Pattern 7"),
-    HEIGHT("Pattern 8"),
-    NINE("Pattern 9")
+    EIGHT("Pattern 8"),
+    NINE("Pattern 9"),
+    TEN("Pattern 10"),
+    ELEVEN("Pattern 11")
     ;
 
     private final String description;
@@ -48,10 +50,14 @@ public enum HexPattern {
             return SIX;
         } else if (description.equalsIgnoreCase(SEVEN.getDescription())) {
             return SEVEN;
-        } else if (description.equalsIgnoreCase(HEIGHT.getDescription())) {
-            return HEIGHT;
+        } else if (description.equalsIgnoreCase(EIGHT.getDescription())) {
+            return EIGHT;
         } else if (description.equalsIgnoreCase(NINE.getDescription())) {
             return NINE;
+        } else if (description.equalsIgnoreCase(TEN.getDescription())) {
+            return TEN;
+        } else if (description.equalsIgnoreCase(ELEVEN.getDescription())) {
+            return ELEVEN;
         } else {
             throw new IllegalArgumentException();
         }

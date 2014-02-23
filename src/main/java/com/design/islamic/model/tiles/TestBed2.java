@@ -3,10 +3,7 @@ package com.design.islamic.model.tiles;
 import com.design.islamic.CentreConfiguration;
 import com.design.islamic.Patterns;
 import com.design.common.view.SvgFactory;
-import com.design.islamic.model.Tile;
 import com.design.islamic.model.hex.*;
-import com.google.common.base.Function;
-import com.jamesmurty.utils.XMLBuilder;
 import org.apache.batik.swing.JSVGCanvas;
 import org.w3c.dom.Node;
 
@@ -14,9 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.geom.Point2D;
 
-import static com.design.common.PolygonTools.HEX_DIST_DIAGONAL;
 import static com.design.islamic.Patterns.*;
 import static com.design.islamic.model.Centre.newCentre;
 import static java.lang.System.currentTimeMillis;
@@ -37,29 +32,22 @@ public class TestBed2 {
         jsvgCanvas.setSize(dim);
         jPanel.setSize(dim);
 
-//        Set<Point2D> newCentresFirstConf = calculateNewCellCentresFirstConf(newCentre(0, 0), r, 17);
-//        Set<Point2D> newCentresSecondConf = calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17);
-
         CentreConfiguration centreConfiguration = new CentreConfiguration(
                 calculateNewCellCentresFirstConf(newCentre(0, 0), r, 17),
                 calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17));
 
         long now = currentTimeMillis();
 
-        XMLBuilder mySVG = Patterns.buildHexPatternBlackAndWhite(centreConfiguration, dim,
-                new Function<Point2D, Tile>() {
-                    @Override
-                    public Tile apply(Point2D centre) {
-                        return new Tile9(centre, r);
-                    }
-                }
+        String mySVG = Patterns.buildHexPatternBlackAndWhite(
+                buildHexPatterns(centreConfiguration.getCentresSecondConf(), new Tile11(newCentre(0,0),r).getPayload())
+                , dim
+
         );
 
         System.out.println("Finished in " + (currentTimeMillis()-now)/1000.0);
 
-//        XMLBuilder mySVG = buildSvg(width, height, highlightPoints(calculateHexEdges(newCentres, r)) );
 
-        jsvgCanvas.setSVGDocument(SvgFactory.fromXMLBuilder(mySVG));
+        jsvgCanvas.setSVGDocument(SvgFactory.fromSvgDoc(mySVG));
 
         System.out.println(jsvgCanvas.getSize());
 

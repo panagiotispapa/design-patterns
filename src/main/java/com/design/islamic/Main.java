@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import static com.design.common.view.SvgFactory.fromXMLBuilder;
+import static com.design.common.view.SvgFactory.fromSvgDoc;
 
 public class Main implements ActionListener {
 
@@ -42,7 +42,6 @@ public class Main implements ActionListener {
         jsvgCanvas.setSize(dim);
         jPanel.setSize(dim);
 
-
         refreshCanvas(HexPattern.ONE);
 
     }
@@ -61,7 +60,8 @@ public class Main implements ActionListener {
         System.out.println("in refreshCanvas");
         jsvgCanvas.removeAll();
 //        removeChildren(jsvgCanvas);
-        jsvgCanvas.setSVGDocument(fromXMLBuilder(manager.getSvg(hexPattern)));
+
+        jsvgCanvas.setSVGDocument(fromSvgDoc(manager.getSvg(hexPattern)));
     }
 
     public JPanel getComponent() {
@@ -78,9 +78,7 @@ public class Main implements ActionListener {
 
     public static void main(String[] args) {
 
-
-
-        Dimension dim = new Dimension(1024+2*64, 768);
+        Dimension dim = new Dimension(1024 + 2 * 64, 768);
 
         JFrame frame = new JFrame();
         frame.setTitle("Islamic patterns");
@@ -98,7 +96,6 @@ public class Main implements ActionListener {
         frame.setJMenuBar(main.getMenuBar());
 
         frame.setVisible(true);
-
 
         frame.invalidate();
 

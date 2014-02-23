@@ -1,14 +1,20 @@
 package com.design.islamic.model.tiles;
 
+import com.design.common.PolygonTools;
+import com.design.common.view.SvgFactory;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 import java.io.*;
+import java.util.*;
+import java.util.List;
 
 import static com.design.islamic.model.Centre.newCentre;
 import static java.awt.Color.BLACK;
+import static java.lang.System.currentTimeMillis;
 
 public class TestBed extends JComponent {
 
@@ -19,6 +25,37 @@ public class TestBed extends JComponent {
         this.centre = centre;
         this.r = r;
 
+
+        List<Point2D> hex = PolygonTools.newHexagon(newCentre(0, 0), 30);
+
+        String style = SvgFactory.newStyle("black", 2, 1);
+
+
+        int limit = 20000;
+        List<List<Point2D>> shapes = new ArrayList<List<Point2D>>(limit);
+
+        for (int i = 0; i < limit; i++) {
+            shapes.add(hex);
+        }
+
+        long start = currentTimeMillis();
+//        SvgFactory.drawPolylines(shapes, style);
+
+        System.out.println((currentTimeMillis()-start)/1000);
+
+
+        start = currentTimeMillis();
+
+//        System.out.println(SvgFactory.drawPolylines(shapes, style));
+        SvgFactory.drawPolylines(shapes, style);
+
+
+
+        System.out.println((currentTimeMillis()-start)/1000);
+
+
+
+
         this.setVisible(true);
     }
 
@@ -28,6 +65,9 @@ public class TestBed extends JComponent {
         g.setColor(BLACK);
 
         Writer writer = null;
+
+
+
 
         try {
 

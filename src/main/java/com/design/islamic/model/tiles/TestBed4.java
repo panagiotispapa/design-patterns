@@ -1,10 +1,7 @@
 package com.design.islamic.model.tiles;
 
-import com.design.common.PolygonTools;
 import com.design.common.view.SvgFactory;
 import com.design.islamic.DesignHelper;
-import com.google.common.collect.ImmutableList;
-import com.jamesmurty.utils.XMLBuilder;
 import org.apache.batik.swing.JSVGCanvas;
 import org.w3c.dom.Node;
 
@@ -13,14 +10,11 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
-import java.util.List;
 import java.util.Set;
 
 import static com.design.common.PolygonTools.cloneAndTranslateScalePoints;
 import static com.design.common.PolygonTools.hexPoints;
-import static com.design.common.view.SvgFactory.buildSvg;
-import static com.design.common.view.SvgFactory.drawPolygon;
-import static com.design.common.view.SvgFactory.newStyle;
+import static com.design.common.view.SvgFactory.*;
 import static com.design.islamic.Patterns.*;
 import static com.design.islamic.model.Centre.newCentre;
 
@@ -47,18 +41,19 @@ public class TestBed4 {
         final String styleBack = newStyle("black", "black", 1, 1, 1);
         final String style = newStyle("yellow", "yellow", 1, 1, 1);
 
-        XMLBuilder backObj = drawPolygon(cloneAndTranslateScalePoints(centre, r, hexPoints), styleBack);
+        String backObj = drawPolygon(cloneAndTranslateScalePoints(centre, r, hexPoints), styleBack);
 
-        List<XMLBuilder> testObject = DesignHelper.newStarDesign11(centre, r);
+        String testObject = DesignHelper.newStarDesign11(centre, r);
 
-        ImmutableList.Builder<XMLBuilder> shapes = ImmutableList.builder();
 
-        shapes.add(backObj);
+        StringBuilder shapes = new StringBuilder();
 
-        XMLBuilder mySVG = buildSvg(dim, (testObject)
+        shapes.append(backObj);
+
+        String mySVG = buildSvg(dim, (testObject)
         );
 
-        jsvgCanvas.setSVGDocument(SvgFactory.fromXMLBuilder(mySVG));
+        jsvgCanvas.setSVGDocument(SvgFactory.fromSvgDoc(mySVG));
 
         System.out.println(jsvgCanvas.getSize());
 

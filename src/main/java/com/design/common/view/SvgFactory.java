@@ -2,24 +2,18 @@ package com.design.common.view;
 
 import com.design.common.model.Arc;
 import com.design.common.model.Circle;
-import com.design.common.model.Points;
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableList;
-import com.jamesmurty.utils.XMLBuilder;
+import com.design.islamic.model.Payload;
+
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.svg.SVGDocument;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
 
-import static com.google.common.collect.Iterables.transform;
-import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
 
@@ -33,6 +27,9 @@ public class SvgFactory {
     public static String GRAY = "gray";
     public static String WHITE = "white";
 
+    private static final String styleWhiteBold = newStyle(WHITE, 2, 1);
+    private static final String styleWhite = newStyle(WHITE, 1, 1);
+
     private SvgFactory() {
 
     }
@@ -45,210 +42,184 @@ public class SvgFactory {
         return format("fill:%s;stroke:%s;stroke-width:%d;fill-opacity:%s;stroke-opacity:%s", fill, stroke, strokeWidth, fillOpacity, strokeOpcacity);
     }
 
-    public static List<XMLBuilder> drawPolygons(Iterable<Points> pointsList, final String style) {
 
-        return newArrayList(transform(pointsList, new Function<Points, XMLBuilder>() {
-            @Override
-            public XMLBuilder apply(Points points) {
-                return drawPolygon(points, style);
-            }
-        }));
-    }
 
-    public static XMLBuilder drawPolygon(Points points, String style) {
-        return drawPolygon(points.getPoints(), style);
-    }
 
-    public static List<XMLBuilder> drawPolygons(List<List<Point2D>> pointsList, final String style) {
-        return newArrayList(transform(pointsList,new Function<List<Point2D>, XMLBuilder>() {
-            @Override
-            public XMLBuilder apply(List<Point2D> point2DList) {
-                return drawPolygon(point2DList, style);
-            }
-        }));
 
-    }
 
-    public static XMLBuilder drawPolygon(Iterable<Point2D> points, String style) {
 
-        try {
-            return XMLBuilder.create("polygon")
-                    .a("points", toPointsString(points))
-                    .a("style", style)
-                    ;
-        } catch (ParserConfigurationException e) {
-            return null;
+    public static String drawPolygons(List<List<Point2D>> pointsList, final String style) {
+        StringBuilder builder = new StringBuilder(pointsList.size());
+
+        for (List<Point2D> point2Ds : pointsList) {
+            builder.append(drawPolygon(point2Ds, style));
         }
 
+        return builder.toString();
+
     }
 
-    public static List<XMLBuilder> drawPolylines(Iterable<List<Point2D>> pointsList, final String style) {
 
-        return newArrayList(transform(pointsList, new Function<Iterable<Point2D>, XMLBuilder>() {
-            @Override
-            public XMLBuilder apply(Iterable<Point2D> points) {
-                return newPolyline(points, style);
-            }
-        }));
+
+    public static String drawPolygon(Iterable<Point2D> points, String style) {
+
+        return format("<polygon points=\"%s\" style=\"%s\" />",toPointsString(points),style);
+
+//        try {
+//            return XMLBuilder.create("polygon")
+//                    .a("points", toPointsString(points))
+//                    .a("style", style)
+//                    ;
+//        } catch (ParserConfigurationException e) {
+//            return null;
+//        }
+
     }
-//    public static XMLBuilder drawPolyline(Points points, String style) {
-//
-//        return newPolyline(points.getPoints(), style);
-//    }
 
-    public static XMLBuilder newPolyline(Iterable<Point2D> points, String style) {
 
-        try {
-            return XMLBuilder.create("polyline")
-                    .a("points", toPointsString(points))
-                    .a("style", style)
-                    ;
-        } catch (ParserConfigurationException e) {
-            return null;
+
+    public static String drawPolylines(List<List<Point2D>> pointsList, final String style) {
+
+
+        StringBuilder builder = new StringBuilder(pointsList.size());
+
+//        List<String> out = new ArrayList<String>(pointsList.size());
+        for (List<Point2D> point2Ds : pointsList) {
+            builder.append(newPolyline(point2Ds, style));
+//            out.add(newPolyline(point2Ds, style));
         }
 
+        return builder.toString();
     }
 
-    public static List<XMLBuilder> highlightPoints(Points points) {
-        return highlightPoints(points.getPoints());
+
+
+    public static String newPolyline(Iterable<Point2D> points, String style) {
+
+        return format("<polyline points=\"%s\" style=\"%s\"/>", toPointsString(points), style);
+
     }
 
-    public static List<XMLBuilder> highlightPoints(Iterable<Point2D> points) {
+
+    public static String drawPayload(Payload payload) {
+
+        StringBuilder builder =new StringBuilder();
+
+        builder.append(drawPolygons(payload.getPolygons(), styleWhiteBold));
+        builder.append(drawPolygons(payload.getPolygonsSecondary(), styleWhite));
+
+        builder.append(drawPolylines(payload.getPolylines(), styleWhiteBold));
+        builder.append(drawPolylines(payload.getPolylinesSecondary(), styleWhite));
+
+        return builder.toString();
+    }
+
+
+
+
+    public static String highlightPoints(List<Point2D> points) {
 
         final String style = newStyle("red", "black", 1, 1, 1);
-        return ImmutableList.copyOf(transform(points, new Function<Point2D, XMLBuilder>() {
-            @Override
-            public XMLBuilder apply(Point2D point) {
-                return newCircle(point, 3, style);
-            }
-        }));
+        StringBuilder builder = new StringBuilder(points.size());
+        for (Point2D centre : points) {
+            builder.append(newCircle(centre, 3, style));
+        }
+
+        return builder.toString();
+
     }
 
-    public static List<XMLBuilder> drawCircles(Iterable<Circle> circles, final String style) {
-        return newArrayList(transform(circles, new Function<Circle, XMLBuilder>() {
-            @Override
-            public XMLBuilder apply(Circle circle) {
-                return drawCircle(circle, style);
-            }
-        }));
+
+
+    public static String drawCircles(List<Circle> circles, final String style) {
+
+        StringBuilder builder = new StringBuilder(circles.size());
+
+        for (Circle circle : circles) {
+            builder.append(drawCircle(circle, style));
+        }
+
+        return builder.toString();
     }
 
-    public static XMLBuilder drawCircle(Circle circle, String style) {
+
+
+    public static String drawCircle(Circle circle, String style) {
         return newCircle(circle.getCentre(), circle.getR(), style);
     }
 
-    public static XMLBuilder newCircle(Point2D centre, double r, String style) {
-        try {
-            return XMLBuilder.create("circle")
-                    .a("cx", String.valueOf(centre.getX()))
-                    .a("cy", String.valueOf(centre.getY()))
-                    .a("r", String.valueOf(r))
-                    .a("style", style);
-        } catch (ParserConfigurationException e) {
-            return null;
+
+
+    public static String newCircle(Point2D centre, double r, String style) {
+        return format("<circle cx=\"%f\" cy=\"%f\" r=\"%f\" style=\"%s\" />",
+                centre.getX(),
+                centre.getY(),
+                r,
+                style
+                );
+
+    }
+
+
+    public static String drawArcList(List<Arc> arcList, final String style) {
+        StringBuilder builder = new StringBuilder(arcList.size());
+
+        for (Arc arc : arcList) {
+            builder.append(drawArc(arc, style));
         }
+        return builder.toString();
 
     }
 
-    public static List<XMLBuilder> drawArcList(Iterable<Arc> arcList, final String style) {
-        return newArrayList(transform(arcList, new Function<Arc, XMLBuilder>() {
-            @Override
-            public XMLBuilder apply(Arc arc) {
-                return drawArc(arc, style);
-            }
-        }));
-    }
 
-    public static XMLBuilder drawArc(Arc arc, String style) {
+
+    public static String drawArc(Arc arc, String style) {
         final String path = arc.isUp() ? "M %f %f a 1 1 0 0 1 %f 0" : "M %f %f a 1 1 0 0 0 %f 0";
 
-        try {
-            return XMLBuilder.create("path")
-                    .a("d", format(path,
-                            arc.getCircle().getCentre().getX() - arc.getCircle().getR(),
-                            arc.getCircle().getCentre().getY(),
-                            2 * arc.getCircle().getR()
-                    ))
-                    .a("style", style);
-        } catch (ParserConfigurationException e) {
-            return null;
-        }
+        return format("<path d=\"%s\" style=\"%s\"/>",
+                format(path,
+                        arc.getCircle().getCentre().getX() - arc.getCircle().getR(),
+                        arc.getCircle().getCentre().getY(),
+                        2 * arc.getCircle().getR()
+                ),
+                style);
 
-    }
-
-
-    public static XMLBuilder drawArc(Point2D start, Point2D end, boolean up, double r, String style) {
-        final String path = up ? "M %f %f a 1 1 0 0 1 %f 0" : "M %f %f a 1 1 0 0 0 %f 0";
-
-        try {
-            XMLBuilder arc = XMLBuilder.create("path")
-                    .a("d", format(path,
-                            start.getX(),
-                            start.getY(),
-                            2.0 * r
-                    ))
-                    .a("style", style);
-            System.out.println(arc.asString());
-            return arc;
-        } catch (ParserConfigurationException e) {
-            return null;
-        } catch (TransformerException e) {
-            return null;
-        }
 
     }
 
 
 
-    public static SVGDocument fromXMLBuilder(XMLBuilder xmlBuilder) {
+    public static SVGDocument fromSvgDoc(String svgDoc) {
 
         SAXSVGDocumentFactory f = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName());
         try {
-            return f.createSVGDocument("http://www.test.com", new StringReader(xmlBuilder.asString()));
+            return f.createSVGDocument("http://www.test.com", new StringReader(svgDoc));
 
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (TransformerException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-
         return null;
     }
 
-    public static XMLBuilder buildSvg(Dimension dim, Iterable<XMLBuilder> shapes) {
-
-        XMLBuilder xmlBuilder = null;
-        try {
-            xmlBuilder = XMLBuilder.create("svg")
-                    .a("width", valueOf(dim.getWidth())).a("height", valueOf(dim.getHeight()));
-
-            for (XMLBuilder shape : shapes) {
-                xmlBuilder.importXMLBuilder(shape);
-            }
-
-            return xmlBuilder;
-
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-
-        return xmlBuilder;
-
+    public static String buildSvg(Dimension dim, String shapes) {
+        return format("<svg width=\"%s\" height=\"%s\">%s</svg>", valueOf(dim.getWidth()), valueOf(dim.getHeight()),shapes);
     }
 
-    private static String toPointsString(Points points) {
-        return toPointsString(points.getPoints());
 
-    }
+
+
 
     private static String toPointsString(Iterable<Point2D> points) {
+
         StringBuilder builder = new StringBuilder();
 
         for (Point2D point : points) {
             builder.append(format("%s,%s ", point.getX(), point.getY()));
         }
 
-        return builder.toString();
+        String toR = builder.toString();
+
+        return toR;
     }
 
 }

@@ -1,13 +1,12 @@
 package com.design.islamic.model.hex;
 
-import com.design.common.PolygonTools;
+import com.design.islamic.model.Payload;
+import com.design.islamic.model.Payloads;
 import com.design.islamic.model.Tile;
-import com.jamesmurty.utils.XMLBuilder;
 
 import java.awt.geom.Point2D;
 import java.util.List;
 
-import static com.design.common.PolygonTools.newHexStarTile;
 import static com.design.common.PolygonTools.newHexStarTileRotated;
 import static com.design.common.view.SvgFactory.*;
 import static java.util.Arrays.asList;
@@ -31,15 +30,12 @@ public class TileStar implements Tile{
         return edges;
     }
 
+
     @Override
-    public List<XMLBuilder> drawMe() {
-        return asList(drawPolygon(edges, styleWhiteBold))
-
-                ;
+    public Payload getPayload() {
+        return Payloads.newPayloadFromPolygons(asList(edges));
     }
 
-    public XMLBuilder drawMe(String style) {
-        return drawPolygon(edges, style);
-    }
+
 
 }

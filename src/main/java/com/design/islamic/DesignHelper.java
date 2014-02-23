@@ -2,8 +2,6 @@ package com.design.islamic;
 
 import com.design.islamic.model.hex.*;
 import com.google.common.base.Function;
-import com.google.common.collect.ImmutableList;
-import com.jamesmurty.utils.XMLBuilder;
 
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -18,8 +16,10 @@ import static java.util.Arrays.asList;
 
 public class DesignHelper {
 
-    public static List<XMLBuilder> newStarDesign1(final Point2D centre, final double r) {
-        ImmutableList.Builder<XMLBuilder> builder = ImmutableList.builder();
+    public static String newStarDesign1(final Point2D centre, final double r) {
+
+        StringBuilder builder = new StringBuilder();
+
 
         List<Point2D> edges = cloneAndTranslateScalePoints(centre, r, hexPoints);
 
@@ -37,47 +37,47 @@ public class DesignHelper {
         String blue = newStyle("blue", 1, 1);
         final String gray = newStyle("gray", 1, 1);
         final String green = newStyle("green", 1, 1);
-        builder.add(newCircle(centre, r, black));
+        builder.append(newCircle(centre, r, black));
 //        builder.add(drawPolygon(edges, blue));
-        builder.addAll(highlightPoints(outsideCentres));
-        builder.add(drawPolygon(outsideCentres, gray));
+        builder.append(highlightPoints(outsideCentres));
+        builder.append(drawPolygon(outsideCentres, gray));
 
-        builder.addAll(transform(outsideCentres, new Function<Point2D, XMLBuilder>() {
+        builder.append(transform(outsideCentres, new Function<Point2D, String>() {
             @Override
-            public XMLBuilder apply(Point2D centre) {
+            public String apply(Point2D centre) {
                 return newCircle(centre, r, gray);
             }
         }));
 
-        builder.addAll(transform(outsideCentres, new Function<Point2D, XMLBuilder>() {
+        builder.append(transform(outsideCentres, new Function<Point2D, String>() {
             @Override
-            public XMLBuilder apply(Point2D endPoint) {
+            public String apply(Point2D endPoint) {
                 return newPolyline(asList(centre, endPoint), gray);
             }
         }));
 
 //
 
-        builder.addAll(drawPolylines(generateCombsOfPoints(edges), gray));
+        builder.append(drawPolylines(generateCombsOfPoints(edges), gray));
 
-        builder.add(drawPolygon(edgesAltLayer1, gray));
-        builder.add(drawPolygon(pointsLayerMiddle, gray));
+        builder.append(drawPolygon(edgesAltLayer1, gray));
+        builder.append(drawPolygon(pointsLayerMiddle, gray));
 
-        builder.add(drawPolygon(newHexStarTile(centre, r, HEX_DIST_OUTER_CIRCLE), green));
-        builder.add(drawPolygon(newHexStarTile(centre, r, HEX_DIST_DIAGONAL), green));
-        builder.add(drawPolygon(newHexStarTile(centre, r, HEX_DIST3), green));
+        builder.append(drawPolygon(newHexStarTile(centre, r, HEX_DIST_OUTER_CIRCLE), green));
+        builder.append(drawPolygon(newHexStarTile(centre, r, HEX_DIST_DIAGONAL), green));
+        builder.append(drawPolygon(newHexStarTile(centre, r, HEX_DIST3), green));
 
-        builder.addAll(highlightPoints(edgesAltLayer1));
-        builder.addAll(highlightPoints(edgesAltLayer2));
-        builder.addAll(highlightPoints(edgesAltLayer3));
+        builder.append(highlightPoints(edgesAltLayer1));
+        builder.append(highlightPoints(edgesAltLayer2));
+        builder.append(highlightPoints(edgesAltLayer3));
 
-        return builder.build();
+        return builder.toString();
 
     }
 
-    public static List<XMLBuilder> newStarDesign2(final Point2D centre, final double r) {
+    public static String newStarDesign2(final Point2D centre, final double r) {
 
-        List<XMLBuilder> out = newArrayList();
+        StringBuilder builder = new StringBuilder();
 
         final String gray = newStyle(GRAY, 1, 1);
         final String green = newStyle(GREEN, 2, 1);
@@ -101,26 +101,26 @@ public class DesignHelper {
 
         List<Point2D> edgesLayer5 = concatEdges(edgesAltLayer2, edgesAltLayer4);
 
-        out.add(drawPolygon(edges, gray));
-        out.addAll(drawPolylines(layer2, gray));
-        out.addAll(drawPolylines(layer3, gray));
-        out.add(drawPolygon(edgesLayer5, green));
+        builder.append(drawPolygon(edges, gray));
+        builder.append(drawPolylines(layer2, gray));
+        builder.append(drawPolylines(layer3, gray));
+        builder.append(drawPolygon(edgesLayer5, green));
 
-        out.addAll(highlightPoints(edges));
-        out.addAll(highlightPoints(edgesAltLayer2));
-        out.addAll(highlightPoints(edgesAltLayer4));
+        builder.append(highlightPoints(edges));
+        builder.append(highlightPoints(edgesAltLayer2));
+        builder.append(highlightPoints(edgesAltLayer4));
 
 //        out.add(drawPolygon(newHexStarTileRotated(centre, r, HEX_DIST_DIAGONAL), red));
 
-        return out;
+        return builder.toString();
 
     }
 
-    public static List<XMLBuilder> newStarDesign3(final Point2D centre, final double r) {
+    public static String newStarDesign3(final Point2D centre, final double r) {
 
         Tile3 tile3 = new Tile3(centre, r);
 
-        List<XMLBuilder> out = newArrayList();
+        StringBuilder builder = new StringBuilder();
 
         final String gray = newStyle(GRAY, 1, 1);
         final String blue = newStyle(BLUE, 1, 1);
@@ -148,16 +148,16 @@ public class DesignHelper {
         List<Point2D> layerExt0_2 = newHexagonRot(edgesInnerHeights.get(0), newR * HEX_DIST_DIAGONAL_ROTATED * 0.5);
         List<Point2D> layerExt0_3 = newHexagonRot(edgesInnerHeights.get(5), newR * HEX_DIST_DIAGONAL_ROTATED * 0.5);
 
-        out.add(drawPolygon(edges, gray));
-        out.addAll(drawPolylines(layerExt0, gray));
+        builder.append(drawPolygon(edges, gray));
+        builder.append(drawPolylines(layerExt0, gray));
 
-        out.add(drawPolygon(layerExt0_1, blue));
-        out.add(drawPolygon(layerExt0_2, blue));
-        out.add(drawPolygon(layerExt0_3, blue));
-        out.add(drawPolygon(innerStar, blue));
+        builder.append(drawPolygon(layerExt0_1, blue));
+        builder.append(drawPolygon(layerExt0_2, blue));
+        builder.append(drawPolygon(layerExt0_3, blue));
+        builder.append(drawPolygon(innerStar, blue));
 
-        out.addAll(drawPolylines(tile3.getLines(), red));
-        out.addAll(drawPolylines(tile3.getLines2(), red));
+        builder.append(drawPolylines(tile3.getLines(), red));
+        builder.append(drawPolylines(tile3.getLines2(), red));
 
 //        out.add(drawPolygon(innerEdges, gray));
 
@@ -165,29 +165,29 @@ public class DesignHelper {
 //        out.add(drawPolygon(polygon1, gray));
 //        out.add(drawPolygon(polygon2, gray));
 
-//        out.addAll(drawPolygons(
+//        builder.append(drawPolygons(
 //                extPolygons,
 //                gray));
 
-        out.add(drawPolygon(
+        builder.append(drawPolygon(
                 innerEdges, green));
 
 //        out.add(drawPolygon(
 //                edgesLayer8,gray));
 
-        out.addAll(drawPolylines(
+        builder.append(drawPolylines(
                 extConfigs, red));
 
-//        out.addAll(drawPolylines(layerExt, gray));
+//        builder.append(drawPolylines(layerExt, gray));
 
-//        out.addAll(highlightPoints(edges));
-//        out.addAll(highlightPoints(edgesAltLayer2));
-        out.addAll(highlightPoints(innerEdges));
-        out.addAll(highlightPoints(edgesInnerHeights));
-        out.addAll(highlightPoints(extConfigs.get(0)));
-//        out.addAll(highlightPoints(heightsEdgesLayer8));
+//        builder.append(highlightPoints(edges));
+//        builder.append(highlightPoints(edgesAltLayer2));
+        builder.append(highlightPoints(innerEdges));
+        builder.append(highlightPoints(edgesInnerHeights));
+        builder.append(highlightPoints(extConfigs.get(0)));
+//        builder.append(highlightPoints(heightsEdgesLayer8));
 
-        return out;
+        return builder.toString();
 
     }
 
@@ -219,9 +219,9 @@ public class DesignHelper {
 
     }
 
-    public static List<XMLBuilder> newStarDesign4(final Point2D centre, final double r) {
+    public static String newStarDesign4(final Point2D centre, final double r) {
 
-        List<XMLBuilder> out = newArrayList();
+        StringBuilder builder = new StringBuilder();
 
         final String gray = newStyle(GRAY, 1, 1);
         final String green = newStyle(GREEN, 2, 1);
@@ -238,42 +238,42 @@ public class DesignHelper {
 
         List<Point2D> layerExtPol1Edges = newHexagonRot(layerExtEdges.get(0), layer3r);
 
-        out.addAll(
+        builder.append(
                 drawPolylines(
                         generateCombsOfPoints(layer1Edges),
                         gray)
         );
 
-        out.addAll(drawPolylines(newHexHeightsRot(centre, r),
+        builder.append(drawPolylines(newHexHeightsRot(centre, r),
                 gray)
         );
 
-        out.addAll(
+        builder.append(
                 drawPolylines(
                         generateCombsOfPoints(layer2Edges),
                         gray)
         );
 //
-        out.add(
+        builder.append(
                 drawPolygon(layer3Edges, green)
         );
 //
-        out.addAll(
+        builder.append(
                 drawPolylines(generateCombsOfPoints(layerExtPol1Edges), gray)
         );
 //
-        out.addAll(
+        builder.append(
                 drawPolylines(Tile4.buildExtConf(centre, layer3r), red)
         );
 
-        out.addAll(highlightPoints(layerExtEdges));
+        builder.append(highlightPoints(layerExtEdges));
 
-        return out;
+        return builder.toString();
     }
 
-    public static List<XMLBuilder> newStarDesign5(final Point2D centre, final double r) {
+    public static String newStarDesign5(final Point2D centre, final double r) {
 
-        List<XMLBuilder> out = newArrayList();
+        StringBuilder builder = new StringBuilder();
 
         final String gray = newStyle(GRAY, 1, 1);
         final String green = newStyle(GREEN, 2, 1);
@@ -286,7 +286,7 @@ public class DesignHelper {
 
         List<Point2D> layer2Edges = newHexagon(centre, layer2R);
 
-        out.addAll(
+        builder.append(
                 drawPolylines(generateCombsOfPoints(layer1Edges), gray)
         );
 
@@ -298,26 +298,26 @@ public class DesignHelper {
 
         List<List<Point2D>> lines = Tile5.buildOuterLines(outerEdges, layer3R);
 
-        out.addAll(
+        builder.append(
                 drawPolylines(generateCombsOfPoints(layer2Edges), gray)
         );
-        out.add(
+        builder.append(
                 drawPolygon(layer2Edges, blue)
         );
 
-        out.add(
+        builder.append(
                 drawPolygon(layer3Edges, green)
         );
 
-        out.addAll(highlightPoints(outerEdges));
-        out.addAll(drawPolylines(lines, red));
+        builder.append(highlightPoints(outerEdges));
+        builder.append(drawPolylines(lines, red));
 
-        return out;
+        return builder.toString();
     }
 
-    public static List<XMLBuilder> newStarDesign6(final Point2D centre, final double r) {
+    public static String newStarDesign6(final Point2D centre, final double r) {
 
-        List<XMLBuilder> out = newArrayList();
+        StringBuilder builder = new StringBuilder();
 
         final String gray = newStyle(GRAY, 1, 1);
         final String green = newStyle(GREEN, 2, 1);
@@ -333,28 +333,28 @@ public class DesignHelper {
 
         List<Point2D> outerInnerHex = newHexagonRot(outerEdges.get(0), newR * HEX_DIST_DIAGONAL_ROTATED);
 
-        out.addAll(
+        builder.append(
                 drawPolylines(generateCombsOfPoints(layer1Edges), gray)
         );
 
-        out.addAll(
+        builder.append(
                 drawPolygons(newHexInnerTrianglesRot(centre, r), gray)
         );
 
-        out.add(drawPolygon(outerInnerHex, gray));
+        builder.append(drawPolygon(outerInnerHex, gray));
 
-        out.addAll(highlightPoints(layer2Edges));
-        out.addAll(highlightPoints(outerEdges));
+        builder.append(highlightPoints(layer2Edges));
+        builder.append(highlightPoints(outerEdges));
 
-        out.addAll(drawPolylines(Tile6.buildOuterLines(outerEdges, newR), red));
+        builder.append(drawPolylines(Tile6.buildOuterLines(outerEdges, newR), red));
 
-        return out;
+        return builder.toString();
 
     }
 
-    public static List<XMLBuilder> newStarDesign7(final Point2D centre, final double r) {
+    public static String newStarDesign7(final Point2D centre, final double r) {
 
-        List<XMLBuilder> out = newArrayList();
+        StringBuilder builder = new StringBuilder();
 
         final String gray = newStyle(GRAY, 1, 1);
         final String green = newStyle(GREEN, 2, 1);
@@ -380,38 +380,38 @@ public class DesignHelper {
 
         List<Point2D> outerHexSmall = newHexagonRot(heightPoints.get(0), rSmall);
 
-        out.add(drawPolygon(outerHex, gray));
-        out.add(drawPolygon(outerHexRotated, gray));
+        builder.append(drawPolygon(outerHex, gray));
+        builder.append(drawPolygon(outerHexRotated, gray));
 
-        out.addAll(drawPolylines(newHexHeights(centre, r), gray));
-        out.addAll(drawPolylines(newHexHeightsRot(centre, r), gray));
+        builder.append(drawPolylines(newHexHeights(centre, r), gray));
+        builder.append(drawPolylines(newHexHeightsRot(centre, r), gray));
 
-        out.addAll(drawPolygons(newHexInnerTriangles(centre, r), gray));
-        out.addAll(drawPolygons(newHexInnerTrianglesRot(centre, r), gray));
+        builder.append(drawPolygons(newHexInnerTriangles(centre, r), gray));
+        builder.append(drawPolygons(newHexInnerTrianglesRot(centre, r), gray));
 
-        out.addAll(drawPolygons(newHexInnerTriangles(centre, newR), gray));
-        out.addAll(drawPolygons(newHexInnerTrianglesRot(centre, newR), gray));
+        builder.append(drawPolygons(newHexInnerTriangles(centre, newR), gray));
+        builder.append(drawPolygons(newHexInnerTrianglesRot(centre, newR), gray));
 
-        out.add(drawPolygon(innerHex, blue));
-        out.add(drawPolygon(innerHexRot, blue));
+        builder.append(drawPolygon(innerHex, blue));
+        builder.append(drawPolygon(innerHexRot, blue));
 
-        out.add(drawPolygon(innerHex2, blue));
-        out.add(drawPolygon(innerHexRot2, blue));
+        builder.append(drawPolygon(innerHex2, blue));
+        builder.append(drawPolygon(innerHexRot2, blue));
 
-        out.add(drawPolygon(outerHexSmall, blue));
-        out.addAll(drawPolylines(newHexHeightsRot(heightPoints.get(0), rSmall), gray));
+        builder.append(drawPolygon(outerHexSmall, blue));
+        builder.append(drawPolylines(newHexHeightsRot(heightPoints.get(0), rSmall), gray));
 
-        out.addAll(highlightPoints(heightPoints));
+        builder.append(highlightPoints(heightPoints));
 
-        out.addAll(drawPolylines(tile7.getLines(), red));
+        builder.append(drawPolylines(tile7.getLines(), red));
 
-        return out;
+        return builder.toString();
 
     }
 
-    public static List<XMLBuilder> newStarDesign8(final Point2D centre, final double r) {
+    public static String newStarDesign8(final Point2D centre, final double r) {
 
-        List<XMLBuilder> out = newArrayList();
+        StringBuilder builder = new StringBuilder();
 
         final String gray = newStyle(GRAY, 1, 1);
         final String green = newStyle(GREEN, 2, 1);
@@ -428,36 +428,37 @@ public class DesignHelper {
 
         List<Point2D> mainHeightsConcat = concatEdges(mainHeightsRot, mainHeights);
 
-        out.add(drawPolygon(mainHex, gray));
-        out.add(drawPolygon(mainHexRot, gray));
-        out.add(drawPolygon(mainHeights, gray));
-        out.add(drawPolygon(mainHeightsRot, gray));
-        out.add(drawPolygon(mainHeightsConcat, gray));
-//        out.addAll(drawPolygons(newHexHeights(centre,r), gray));
-        out.addAll(drawPolylines(newHexDiag(centre, r), gray));
-        out.addAll(drawPolylines(newHexDiagRot(centre, r), gray));
-        out.add(drawPolygon(newHexagon(centre, tile8.getInnerR()), gray));
-        out.add(drawPolygon(newHexagonRot(centre, tile8.getInnerR()), gray));
+        builder.append(drawPolygon(mainHex, gray));
+        builder.append(drawPolygon(mainHexRot, gray));
+        builder.append(drawPolygon(mainHeights, gray));
+        builder.append(drawPolygon(mainHeightsRot, gray));
+        builder.append(drawPolygon(mainHeightsConcat, gray));
+//        builder.append(drawPolygons(newHexHeights(centre,r), gray));
+        builder.append(drawPolylines(newHexDiag(centre, r), gray));
+        builder.append(drawPolylines(newHexDiagRot(centre, r), gray));
+        builder.append(drawPolygon(newHexagon(centre, tile8.getInnerR()), gray));
+        builder.append(drawPolygon(newHexagonRot(centre, tile8.getInnerR()), gray));
 
-//        out.addAll(highlightPoints(tile8.getPointsA()));
-//        out.addAll(highlightPoints(tile8.getPointsB()));
-//        out.addAll(highlightPoints(tile8.getPointsC()));
-//        out.addAll(highlightPoints(tile8.getHeights()));
-//        out.addAll(highlightPoints(tile8.getPointsD()));
-//        out.addAll(highlightPoints(tile8.getPointsE()));
-//        out.addAll(highlightPoints(tile8.getPointsF()));
-        out.addAll(highlightPoints(tile8.getPointsG()));
-//        out.addAll(highlightPoints(tile8.getPointsH()));
-        out.addAll(drawPolylines(tile8.getLines(), red));
+//        builder.append(highlightPoints(tile8.getPointsA()));
+//        builder.append(highlightPoints(tile8.getPointsB()));
+//        builder.append(highlightPoints(tile8.getPointsC()));
+//        builder.append(highlightPoints(tile8.getHeights()));
+//        builder.append(highlightPoints(tile8.getPointsD()));
+//        builder.append(highlightPoints(tile8.getPointsE()));
+//        builder.append(highlightPoints(tile8.getPointsF()));
+        builder.append(highlightPoints(tile8.getPointsG()));
+//        builder.append(highlightPoints(tile8.getPointsH()));
+        builder.append(drawPolylines(tile8.getLines(), red));
 
-        return out;
+        return builder.toString();
     }
 
-    public static List<XMLBuilder> newStarDesign9(final Point2D centre, final double r) {
+    public static String newStarDesign9(final Point2D centre, final double r) {
+
+
+        StringBuilder builder = new StringBuilder();
 
         Tile9 tile9 = new Tile9(centre, r);
-
-        List<XMLBuilder> out = newArrayList();
 
         final String gray = newStyle(GRAY, 1, 1);
         final String green = newStyle(GREEN, 2, 1);
@@ -469,106 +470,106 @@ public class DesignHelper {
 
         double rH = r * HEX_DIST_HEIGHT;
 
-        out.add(drawPolygon(outer, gray));
-        out.add(drawPolygon(outerRot, gray));
-//        out.addAll(drawPolylines(newHexHeightsRot(centre, r), gray));
-//        out.addAll(drawPolygons(newHexInnerTrianglesRot(centre, r), gray));
-        out.addAll(drawPolylines(newHexDiagRot(centre, r), gray));
-        out.addAll(drawPolylines(newHexDiag(centre, r), gray));
+        builder.append(drawPolygon(outer, gray));
+        builder.append(drawPolygon(outerRot, gray));
+//        builder.append(drawPolylines(newHexHeightsRot(centre, r), gray));
+//        builder.append(drawPolygons(newHexInnerTrianglesRot(centre, r), gray));
+        builder.append(drawPolylines(newHexDiagRot(centre, r), gray));
+        builder.append(drawPolylines(newHexDiag(centre, r), gray));
 
-        out.addAll(drawPolylines(concateOuterHexagons(outer, outerRot), gray));
+        builder.append(drawPolylines(concateOuterHexagons(outer, outerRot), gray));
 
 //        out.add(drawPolygon(outerLayer2, gray));
 //        out.add(drawPolygon(outerLayer2Rot, gray));
 
-        out.addAll(drawPolylines(concateOuterHexagons(tile9.getOuterLayer1(), tile9.getOuterLayer1Rot()), gray));
-        out.addAll(drawPolylines(concateOuterHexagons(tile9.getOuterLayer2(), tile9.getOuterLayer2Rot()), gray));
-//        out.addAll(highlightPoints(heightPoints));
+        builder.append(drawPolylines(concateOuterHexagons(tile9.getOuterLayer1(), tile9.getOuterLayer1Rot()), gray));
+        builder.append(drawPolylines(concateOuterHexagons(tile9.getOuterLayer2(), tile9.getOuterLayer2Rot()), gray));
+//        builder.append(highlightPoints(heightPoints));
 
-        out.add(drawPolygon(tile9.getInnerLayer1(), gray));
-        out.add(drawPolygon(tile9.getInnerLayer1Rot(), gray));
+        builder.append(drawPolygon(tile9.getInnerLayer1(), gray));
+        builder.append(drawPolygon(tile9.getInnerLayer1Rot(), gray));
 
-        out.addAll(drawPolylines(buildLines(
+        builder.append(drawPolylines(buildLines(
                 newHexEdge(centre, r * Tile9.INNER_R2, 0),
                 asList(newHexEdgeRot(outerRot.get(5), r * Tile9.INNER_R1, 1))), gray));
 
-        out.addAll(drawPolylines(buildLines(
+        builder.append(drawPolylines(buildLines(
                 newHexEdge(centre, r * Tile9.INNER_R2, 5),
                 asList(newHexEdgeRot(outerRot.get(5), r * Tile9.INNER_R1, 3))), gray));
 
-        out.addAll(drawPolylines(buildLines(
+        builder.append(drawPolylines(buildLines(
                 newHexEdgeRot(centre, r * Tile9.INNER_R2, 0),
                 asList(newHexEdge(outer.get(0), r * Tile9.INNER_R1, 1))), gray));
 
-        out.addAll(drawPolylines(buildLines(
+        builder.append(drawPolylines(buildLines(
                 newHexEdgeRot(centre, r * Tile9.INNER_R2, 5),
                 asList(newHexEdge(outer.get(0), r * Tile9.INNER_R1, 5))), gray));
 
-        out.addAll(drawPolygons(newHexInnerTrianglesFull(centre, r * Tile9.INNER_R2), gray));
-        out.addAll(drawPolygons(newHexInnerTrianglesFullRot(centre, r * Tile9.INNER_R2), gray));
+        builder.append(drawPolygons(newHexInnerTrianglesFull(centre, r * Tile9.INNER_R2), gray));
+        builder.append(drawPolygons(newHexInnerTrianglesFullRot(centre, r * Tile9.INNER_R2), gray));
 
-        out.addAll(drawPolylines(concateOuterHexagons(
+        builder.append(drawPolylines(concateOuterHexagons(
                 newHexagon(outer.get(0), r * (1.0 - Tile9.OUTER_R1)),
                 newHexagonRot(outer.get(0), r * (1.0 - Tile9.OUTER_R1))
         ), gray));
 
-        out.addAll(drawPolylines(concateOuterHexagons(
+        builder.append(drawPolylines(concateOuterHexagons(
                 newHexagon(outer.get(0), r * (1.0 - Tile9.OUTER_R2)),
                 newHexagonRot(outer.get(0), r * (1.0 - Tile9.OUTER_R2))
         ), gray));
 
         for (Point2D edge : outerRot) {
-            out.add(drawPolygon(newHexagonRot(edge, r * Tile9.INNER_R1), blue));
+            builder.append(drawPolygon(newHexagonRot(edge, r * Tile9.INNER_R1), blue));
         }
 
 //        out.add(drawPolygon(newHexagonRot(outerRot.get(2), r * Tile9.INNER_R1), blue));
 //        out.add(drawPolygon(newHexagonRot(outerRot.get(3), r * Tile9.INNER_R1), blue));
 //        out.add(drawPolygon(newHexagonRot(outerRot.get(4), r * Tile9.INNER_R1), blue));
-        out.add(drawPolygon(newHexagonRot(centre, r * (1.0 - Tile9.INNER_R1)), gray));
+        builder.append(drawPolygon(newHexagonRot(centre, r * (1.0 - Tile9.INNER_R1)), gray));
 
-//        out.addAll(drawPolylines(Tile9.calcOuterLines1(centre, r), red));
+//        builder.append(drawPolylines(Tile9.calcOuterLines1(centre, r), red));
 
-        out.add(drawPolygon(newHexagonRot(centre, r), red));
-        out.addAll(drawPolylines(tile9.getLines(), red));
+        builder.append(drawPolygon(newHexagonRot(centre, r), red));
+        builder.append(drawPolylines(tile9.getLines(), red));
 
-        out.addAll(highlightPoints(newHexagon(centre, r * Tile9.OUTER_R4)));
-        out.addAll(highlightPoints(newHexagonRot(centre, r * Tile9.OUTER_R4)));
+        builder.append(highlightPoints(newHexagon(centre, r * Tile9.OUTER_R4)));
+        builder.append(highlightPoints(newHexagonRot(centre, r * Tile9.OUTER_R4)));
 
-//        out.addAll(highlightPoints(tile9.getPointsA()));
-//        out.addAll(highlightPoints(tile9.getPointsB()));
-//        out.addAll(highlightPoints(tile9.getPointsC()));
-//        out.addAll(highlightPoints(tile9.getPointsD()));
-//        out.addAll(highlightPoints(tile9.getPointsE()));
-//        out.addAll(highlightPoints(tile9.getPointsF()));
-//        out.addAll(highlightPoints(tile9.getPointsG()));
-//        out.addAll(highlightPoints(tile9.getPointsH()));
-//        out.addAll(highlightPoints(tile9.getPointsI()));
-//        out.addAll(highlightPoints(tile9.getPointsJ()));
-//        out.addAll(highlightPoints(tile9.getPointsK()));
-//        out.addAll(highlightPoints(tile9.getPointsL()));
-//        out.addAll(highlightPoints(tile9.getPointsM()));
-//        out.addAll(highlightPoints(tile9.getPointsN()));
-//        out.addAll(highlightPoints(tile9.getPointsO()));
-//        out.addAll(highlightPoints(tile9.getPointsP()));
-//        out.addAll(highlightPoints(tile9.getPointsQ()));
-//        out.addAll(highlightPoints(tile9.getPointsR()));
-//        out.addAll(highlightPoints(tile9.getPointsS()));
-//        out.addAll(highlightPoints(tile9.getInnerLayer1()));
-//        out.addAll(highlightPoints(tile9.getInnerLayer1Rot()));
-        out.addAll(highlightPoints(tile9.getOuterLayer1()));
-        out.addAll(highlightPoints(tile9.getOuterLayer1Rot()));
-        out.addAll(highlightPoints(tile9.getOuterLayer2()));
-        out.addAll(highlightPoints(tile9.getOuterLayer2Rot()));
+//        builder.append(highlightPoints(tile9.getPointsA()));
+//        builder.append(highlightPoints(tile9.getPointsB()));
+//        builder.append(highlightPoints(tile9.getPointsC()));
+//        builder.append(highlightPoints(tile9.getPointsD()));
+//        builder.append(highlightPoints(tile9.getPointsE()));
+//        builder.append(highlightPoints(tile9.getPointsF()));
+//        builder.append(highlightPoints(tile9.getPointsG()));
+//        builder.append(highlightPoints(tile9.getPointsH()));
+//        builder.append(highlightPoints(tile9.getPointsI()));
+//        builder.append(highlightPoints(tile9.getPointsJ()));
+//        builder.append(highlightPoints(tile9.getPointsK()));
+//        builder.append(highlightPoints(tile9.getPointsL()));
+//        builder.append(highlightPoints(tile9.getPointsM()));
+//        builder.append(highlightPoints(tile9.getPointsN()));
+//        builder.append(highlightPoints(tile9.getPointsO()));
+//        builder.append(highlightPoints(tile9.getPointsP()));
+//        builder.append(highlightPoints(tile9.getPointsQ()));
+//        builder.append(highlightPoints(tile9.getPointsR()));
+//        builder.append(highlightPoints(tile9.getPointsS()));
+//        builder.append(highlightPoints(tile9.getInnerLayer1()));
+//        builder.append(highlightPoints(tile9.getInnerLayer1Rot()));
+        builder.append(highlightPoints(tile9.getOuterLayer1()));
+        builder.append(highlightPoints(tile9.getOuterLayer1Rot()));
+        builder.append(highlightPoints(tile9.getOuterLayer2()));
+        builder.append(highlightPoints(tile9.getOuterLayer2Rot()));
 
-        return out;
+        return builder.toString();
 
     }
 
-    public static List<XMLBuilder> newStarDesign11(final Point2D centre, final double r) {
+    public static String newStarDesign11(final Point2D centre, final double r) {
+
+        StringBuilder builder = new StringBuilder();
 
         Tile11 tile = new Tile11(centre, r);
-
-        List<XMLBuilder> out = newArrayList();
 
         final String gray = newStyle(GRAY, 1, 1);
         final String green = newStyle(GREEN, 2, 1);
@@ -576,36 +577,36 @@ public class DesignHelper {
         final String blue = newStyle(BLUE, 2, 1);
 
 
-        out.add(drawPolygon(newHexagonRot(centre, r),gray));
+        builder.append(drawPolygon(newHexagonRot(centre, r), gray));
 
 
 
         for (Point2D edge : tile.getMainHexRot()) {
-            out.add(drawPolygon(newHexagon(edge, tile.getInnerR()), gray));
+            builder.append(drawPolygon(newHexagon(edge, tile.getInnerR()), gray));
         }
 
-        out.add((newCircle(centre,tile.getInnerR(), gray)));
+        builder.append((newCircle(centre, tile.getInnerR(), gray)));
         for (Point2D edge : tile.getMainHeights()) {
-            out.add((newCircle(edge,r/2.0, gray)));
+            builder.append((newCircle(edge, r / 2.0, gray)));
         }
 
-        out.addAll(drawPolylines(newHexHeightsRot(centre,r),gray));
-        out.addAll(drawPolylines(newHexDiagRot(centre,r),gray));
+        builder.append(drawPolylines(newHexHeightsRot(centre, r), gray));
+        builder.append(drawPolylines(newHexDiagRot(centre, r), gray));
 
-        out.addAll(highlightPoints(tile.getMainHeights()));
-        out.addAll(highlightPoints(tile.getPointsA()));
-        out.addAll(highlightPoints(tile.getPointsB()));
-        out.addAll(highlightPoints(tile.getPointsC()));
-        out.addAll(highlightPoints(tile.getPointsD()));
-//        out.addAll(highlightPoints(newHexagon(centre,tile.getInnerR2())));
-
-
-
-        out.addAll(drawPolylines(tile.getLines(), red));
+        builder.append(highlightPoints(tile.getMainHeights()));
+        builder.append(highlightPoints(tile.getPointsA()));
+        builder.append(highlightPoints(tile.getPointsB()));
+        builder.append(highlightPoints(tile.getPointsC()));
+        builder.append(highlightPoints(tile.getPointsD()));
+//        builder.append(highlightPoints(newHexagon(centre,tile.getInnerR2())));
 
 
 
-        return out;
+        builder.append(drawPolylines(tile.getLines(), red));
+
+
+
+        return builder.toString();
     }
 
 }

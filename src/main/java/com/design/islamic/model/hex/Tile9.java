@@ -1,10 +1,10 @@
 package com.design.islamic.model.hex;
 
+import com.design.islamic.model.Payload;
+import com.design.islamic.model.Payloads;
 import com.design.islamic.model.Tile;
-import com.jamesmurty.utils.XMLBuilder;
 
 import java.awt.geom.Point2D;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.design.common.PolygonTools.*;
@@ -368,17 +368,11 @@ public class Tile9 implements Tile {
 
 
 
-    @Override
-    public List<XMLBuilder> drawMe() {
-        List<XMLBuilder> out = newArrayList();
 
-        out.add(drawPolygon(newHexagonRot(centre, r), styleWhiteBold));
-        out.addAll(drawPolylines(lines, styleWhiteBold));
 
-        return out;
-
+    public Payload getPayload(){
+        return Payloads.newPayloadFromPolygonsAndLines(asList(newHexagonRot(centre, r)), lines);
     }
-
 
 
 }

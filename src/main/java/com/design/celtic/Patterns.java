@@ -3,7 +3,6 @@ package com.design.celtic;
 import com.design.common.model.Arc;
 import com.design.common.model.Circle;
 import com.google.common.collect.Sets;
-import com.jamesmurty.utils.XMLBuilder;
 
 import java.awt.*;
 import java.util.List;
@@ -15,17 +14,16 @@ import static com.design.common.model.Shapes.newCircle;
 import static com.design.common.view.SvgFactory.*;
 import static com.design.islamic.model.Centre.newCentre;
 import static com.google.common.collect.Iterables.concat;
-import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 
 public class Patterns {
 
-    public static XMLBuilder buildPattern1(Dimension dim, double r) {
+    public static String buildPattern1(Dimension dim, double r) {
 
         final double N1 = 18.0;
         final double step = 1.0 / N1;
 
-        List<XMLBuilder> shapes = newArrayList();
+        StringBuilder shapes = new StringBuilder();
 
         final String styleBackStrong = newStyle(BLACK, 2, 1);
         final String styleBackLight = newStyle(BLACK, 1, 0.4);
@@ -74,14 +72,14 @@ public class Patterns {
                 newArc(Helper.getCircleFromRow(mainCircle, 10.0 * step, 1, 12 * step * r), true)
         );
 
-        shapes.addAll(drawArcList(layer4, styleFrontGray));
-        shapes.addAll(drawArcList(layer5, styleFrontWhite));
-//        shapes.addAll(drawCircles(layer1, styleBackLight));
-        shapes.addAll(drawCircles(layer2, styleFrontGray));
-        shapes.addAll(drawArcList(layer3, styleBackStrong));
-        shapes.add(drawCircle(mainCircle, styleBackStrong));
+        shapes.append(drawArcList(layer4, styleFrontGray));
+        shapes.append(drawArcList(layer5, styleFrontWhite));
+//        shapes.append(drawCircles(layer1, styleBackLight));
+        shapes.append(drawCircles(layer2, styleFrontGray));
+        shapes.append(drawArcList(layer3, styleBackStrong));
+        shapes.append(drawCircle(mainCircle, styleBackStrong));
 
-        return buildSvg(dim, shapes);
+        return buildSvg(dim, shapes.toString());
 
     }
 

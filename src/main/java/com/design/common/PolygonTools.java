@@ -20,6 +20,8 @@ import static org.paukov.combinatorics.Factory.createVector;
 
 public class PolygonTools {
 
+
+
     public final static double PI_HALF = PI / 2.0;
     public final static double PI_QUARTER = PI / 4.0;
 
@@ -180,7 +182,7 @@ public class PolygonTools {
         );
     }
 
-    public static List<Point2D> cloneAndTranslateScalePoints(final Point2D centre, final double r, Iterable<Point2D> points) {
+    public static List<Point2D> cloneAndTranslateScalePoints(final Point2D centre, final double r, List<Point2D> points) {
 
         List<Point2D> edges = clonePoints(points);
         scalePoints(edges, r);
@@ -323,4 +325,6 @@ public class PolygonTools {
         return i % HEX_N;
     }
 
+
+    public static long TIME;
 }

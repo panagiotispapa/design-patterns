@@ -1,13 +1,13 @@
 package com.design.islamic.model.hex;
 
+import com.design.islamic.model.Payload;
+import com.design.islamic.model.Payloads;
 import com.design.islamic.model.Tile;
-import com.jamesmurty.utils.XMLBuilder;
 
 import java.awt.geom.Point2D;
 import java.util.List;
 
 import static com.design.common.PolygonTools.*;
-import static com.design.common.view.SvgFactory.*;
 import static com.design.common.view.SvgFactory.WHITE;
 import static com.design.common.view.SvgFactory.newStyle;
 import static com.google.common.collect.Lists.newArrayList;
@@ -58,16 +58,12 @@ public class Tile10 implements Tile {
             index++;
         }
     }
+
     @Override
-    public List<XMLBuilder> drawMe() {
-
-        List<XMLBuilder> out = newArrayList();
-
-        out.add(drawPolygon(innerEdges, styleWhiteBold));
-
-        out.addAll(drawPolylines(lines, styleWhiteBold));
-
-        return out;
+    public Payload getPayload() {
+        return Payloads.newPayloadFromPolygonsAndLines(
+                asList(innerEdges),
+                lines
+        );
     }
-
 }

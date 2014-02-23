@@ -1,7 +1,8 @@
 package com.design.islamic.model.hex;
 
+import com.design.islamic.model.Payload;
+import com.design.islamic.model.Payloads;
 import com.design.islamic.model.Tile;
-import com.jamesmurty.utils.XMLBuilder;
 
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -259,14 +260,9 @@ public class Tile8 implements Tile {
 
 
 
+
     @Override
-    public List<XMLBuilder> drawMe() {
-        List<XMLBuilder> out = newArrayList();
-
-//        out.add(drawPolygon(mainHex, styleWhite));
-        out.addAll(drawPolylines(lines, styleWhiteBold));
-
-        return out;
-
+    public Payload getPayload() {
+        return Payloads.newPayloadFromLines(lines);
     }
 }

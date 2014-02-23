@@ -1,15 +1,15 @@
 package com.design.islamic.model.hex;
 
+import com.design.islamic.model.Payload;
+import com.design.islamic.model.Payloads;
 import com.design.islamic.model.Tile;
-import com.jamesmurty.utils.XMLBuilder;
 
 import java.awt.geom.Point2D;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.design.common.PolygonTools.*;
-import static com.design.common.PolygonTools.HEX_RADIANS;
-import static com.design.common.view.SvgFactory.*;
+import static com.design.common.view.SvgFactory.WHITE;
+import static com.design.common.view.SvgFactory.newStyle;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 
@@ -111,22 +111,16 @@ public class Tile3 implements Tile {
         return lines2;
     }
 
+
     @Override
-    public List<XMLBuilder> drawMe() {
+    public Payload getPayload() {
 
-        List<XMLBuilder> out = newArrayList();
+        return Payloads.newPayloadFromPolygonsAndLines(
+                asList(newHexStarTileRotated(centre, r * HEX_DIST_EQ1, HEX_DIST_DIAGONAL)),
+                asList(innerEdges),
+                lines2,
+                lines
+        );
 
-        out.add(drawPolygon(innerEdges, styleWhite));
-        out.add(drawPolygon(newHexStarTileRotated(centre, r * HEX_DIST_EQ1, HEX_DIST_DIAGONAL), styleWhiteBold));
-
-        out.addAll(drawPolylines(lines, styleWhite));
-        out.addAll(drawPolylines(lines2, styleWhiteBold));
-
-        return out;
     }
-
-
-
-
-
 }

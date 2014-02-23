@@ -1,7 +1,6 @@
 package com.design.celtic;
 
 import com.design.common.view.SvgFactory;
-import com.jamesmurty.utils.XMLBuilder;
 import org.apache.batik.swing.JSVGCanvas;
 
 import javax.swing.*;
@@ -31,9 +30,9 @@ public class TestBed {
 
 //        XMLBuilder mySVG = buildSvg(width, height, highlightPoints(calculateHexEdges(newCentres, r)) );
 
-        XMLBuilder mySvg = Patterns.buildPattern1(dim, r);
+        String mySvg = Patterns.buildPattern1(dim, r);
 
-        jsvgCanvas.setSVGDocument(SvgFactory.fromXMLBuilder(mySvg));
+        jsvgCanvas.setSVGDocument(SvgFactory.fromSvgDoc(mySvg));
 
         System.out.println(jsvgCanvas.getSize());
 
