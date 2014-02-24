@@ -4,6 +4,7 @@ import com.design.islamic.CentreConfiguration;
 import com.design.islamic.Patterns;
 import com.design.common.view.SvgFactory;
 import com.design.islamic.model.hex.*;
+import com.design.islamic.model.rect.*;
 import org.apache.batik.swing.JSVGCanvas;
 import org.w3c.dom.Node;
 
@@ -34,15 +35,28 @@ public class TestBed2 {
 
         CentreConfiguration centreConfiguration = new CentreConfiguration(
                 calculateNewCellCentresFirstConf(newCentre(0, 0), r, 17),
-                calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17));
+                calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17),
+                calculateNewRectCentresConf(newCentre(0, 0), r, 17)
+                );
 
         long now = currentTimeMillis();
 
+//        String mySVG = Patterns.buildHexPatternBlackAndWhite(
+//                buildHexPatterns(centreConfiguration.getCentresSecondConf(), new Tile11(newCentre(0,0),r).getPayload())
+//                , dim
+//
+//        );
+
+
         String mySVG = Patterns.buildHexPatternBlackAndWhite(
-                buildHexPatterns(centreConfiguration.getCentresSecondConf(), new Tile11(newCentre(0,0),r).getPayload())
+                buildHexPatterns(centreConfiguration.getCentresRectConf(), new com.design.islamic.model.rect.
+                        Tile2(newCentre(0,0),r).getPayload())
                 , dim
 
         );
+
+
+
 
         System.out.println("Finished in " + (currentTimeMillis()-now)/1000.0);
 

@@ -25,16 +25,34 @@ public class PolygonTools {
     public final static double PI_HALF = PI / 2.0;
     public final static double PI_QUARTER = PI / 4.0;
 
-    public final static int HEX_N = 6;
-    public final static int RECT_N = 4;
-    public final static int OCT_N = 8;
 
+
+
+    public final static int OCT_N = 8;
+    public final static double OCT_PHI = (2.0 * PI) / OCT_N;
+
+
+    public static List<Double> OCT_RADIANS = computeDegrees(OCT_N, OCT_PHI);
+    public static List<Double> OCT_RADIANS_ROT = computeDegreesRot(OCT_N, OCT_PHI);
+
+
+    public static List<Point2D> octPoints = newEdgesAt(OCT_RADIANS);
+    public static List<Point2D> octPointsRot = newEdgesAt(OCT_RADIANS_ROT);
+
+
+    public final static int RECT_N = 4;
     public final static double RECT_PHI = (2.0 * PI) / RECT_N;
 
 
     public static List<Double> RECT_RADIANS = computeDegrees(RECT_N, RECT_PHI);
     public static List<Double> RECT_RADIANS_ROT = computeDegreesRot(RECT_N, RECT_PHI);
 
+    public static List<Point2D> rectPoints = newEdgesAt(RECT_RADIANS);
+    public static List<Point2D> rectPointsRot = newEdgesAt(RECT_RADIANS_ROT);
+
+    public final static double RECT_DIST_HEIGHT = calcDistHeight(RECT_PHI);
+
+    public final static int HEX_N = 6;
     public final static double HEX_PHI = (2.0 * PI) / HEX_N;
     public final static double HEX_PHI_HALF = HEX_PHI / 2.0;
     public final static double HEX_PHI_QUARTER = HEX_PHI / 4.0;
@@ -52,6 +70,7 @@ public class PolygonTools {
 
     public static List<Double> HEX_RADIANS = computeDegrees(HEX_N, HEX_PHI);
     public static List<Double> HEX_RADIANS_ROT = computeDegreesRot(HEX_N, HEX_PHI);
+
     public static List<Point2D> hexPoints = newEdgesAt(HEX_RADIANS);
     public static List<Point2D> hexPointsAlt = newEdgesAt(HEX_RADIANS_ROT);
 
@@ -216,6 +235,21 @@ public class PolygonTools {
         return lines;
     }
 
+    public static List<Point2D> newOct(Point2D centre, double r) {
+        return cloneAndTranslateScalePoints(centre, r, octPoints);
+    }
+
+    public static List<Point2D> newOctRot(Point2D centre, double r) {
+        return cloneAndTranslateScalePoints(centre, r, octPointsRot);
+    }
+
+    public static List<Point2D> newRect(Point2D centre, double r) {
+        return cloneAndTranslateScalePoints(centre, r, rectPoints);
+    }
+
+    public static List<Point2D> newRectRot(Point2D centre, double r) {
+        return cloneAndTranslateScalePoints(centre, r, rectPointsRot);
+    }
     public static List<Point2D> newHexagon(Point2D centre, double r) {
         return cloneAndTranslateScalePoints(centre, r, hexPoints);
     }
@@ -323,6 +357,9 @@ public class PolygonTools {
 
     public static int toHexIndex(int i) {
         return i % HEX_N;
+    }
+    public static int toOctIndex(int i) {
+        return i % OCT_N;
     }
 
 

@@ -14,7 +14,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Math.cos;
 import static java.util.Arrays.asList;
 
-public class DesignHelper {
+public class HexDesignHelper {
 
     public static String newStarDesign1(final Point2D centre, final double r) {
 
@@ -37,6 +37,8 @@ public class DesignHelper {
         String blue = newStyle("blue", 1, 1);
         final String gray = newStyle("gray", 1, 1);
         final String green = newStyle("green", 1, 1);
+
+
         builder.append(newCircle(centre, r, black));
 //        builder.add(drawPolygon(edges, blue));
         builder.append(highlightPoints(outsideCentres));

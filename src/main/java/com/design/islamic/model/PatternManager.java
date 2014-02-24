@@ -11,6 +11,7 @@ import java.util.Map;
 import static com.design.common.PolygonTools.*;
 import static com.design.islamic.Patterns.calculateNewCellCentresFirstConf;
 import static com.design.islamic.Patterns.calculateNewCellCentresSecondConf;
+import static com.design.islamic.Patterns.calculateNewRectCentresConf;
 import static com.design.islamic.model.Centre.newCentre;
 
 public class PatternManager {
@@ -31,7 +32,8 @@ public class PatternManager {
 
         centreConfiguration = new CentreConfiguration(
                 calculateNewCellCentresFirstConf(newCentre(0, 0), r, 17),
-                calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17)
+                calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17),
+                calculateNewRectCentresConf(newCentre(0, 0), r, 17)
         );
 
         providerMap = Maps.newHashMap();
