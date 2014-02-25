@@ -2,6 +2,7 @@ package com.design.islamic;
 
 import com.design.islamic.model.HexPattern;
 import com.design.islamic.model.PatternManager;
+import com.design.islamic.model.RectPattern;
 import org.apache.batik.swing.JSVGCanvas;
 
 import javax.swing.*;
@@ -15,12 +16,14 @@ public class Main implements ActionListener {
     private JSVGCanvas jsvgCanvas;
     private JPanel jPanel;
     private JMenuBar menuBar;
-    private JMenu patternsMenu;
 
     private PatternManager manager;
 
-    public Main(Dimension dim, final double r) {
+    private final JFrame jFrame;
 
+    public Main(Dimension dim, final double r, JFrame jFrame) {
+
+        this.jFrame = jFrame;
         manager = new PatternManager(r, dim);
 
         jPanel = new JPanel();
@@ -30,19 +33,59 @@ public class Main implements ActionListener {
         jPanel.add("Center", jsvgCanvas);
 
         menuBar = new JMenuBar();
-        patternsMenu = new JMenu("Hex Patterns");
-        patternsMenu.setMnemonic(KeyEvent.VK_P);
+        JMenu hexPatternsMenu = new JMenu("Hex Patterns");
+        hexPatternsMenu.setMnemonic(KeyEvent.VK_P);
+
+        JMenu rectPatternsMenu = new JMenu("Rect Patterns");
+        rectPatternsMenu.setMnemonic(KeyEvent.VK_R);
+
+        ActionListener hexListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                menuPressedHex(e.getActionCommand());
+            }
+        };
+
+        ActionListener rectListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                menuPressedRect(e.getActionCommand());
+            }
+        };
 
         for (HexPattern hexPattern : HexPattern.values()) {
-            patternsMenu.add(newMenuItem(hexPattern.getDescription(), this));
+            hexPatternsMenu.add(newMenuItem(hexPattern.getDescription(), hexListener));
         }
 
-        menuBar.add(patternsMenu);
+        for (RectPattern pattern : RectPattern.values()) {
+            rectPatternsMenu.add(newMenuItem(pattern.getDescription(), rectListener));
+        }
+
+        menuBar.add(hexPatternsMenu);
+        menuBar.add(rectPatternsMenu);
 
         jsvgCanvas.setSize(dim);
         jPanel.setSize(dim);
 
         refreshCanvas(HexPattern.ONE);
+
+    }
+
+    private void menuPressedHex(String command) {
+        System.out.println(command);
+
+        jFrame.setTitle(command);
+
+        refreshCanvas(HexPattern.fromDescription(command));
+
+    }
+
+    private void menuPressedRect(String command) {
+        System.out.println(command);
+
+        jFrame.setTitle(command);
+
+        refreshCanvas(RectPattern.fromDescription(command));
 
     }
 
@@ -64,6 +107,14 @@ public class Main implements ActionListener {
         jsvgCanvas.setSVGDocument(fromSvgDoc(manager.getSvg(hexPattern)));
     }
 
+    private void refreshCanvas(RectPattern pattern) {
+        System.out.println("in refreshCanvas rect");
+        jsvgCanvas.removeAll();
+//        removeChildren(jsvgCanvas);
+
+        jsvgCanvas.setSVGDocument(fromSvgDoc(manager.getSvg(pattern)));
+    }
+
     public JPanel getComponent() {
         return jPanel;
     }
@@ -71,6 +122,8 @@ public class Main implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println(e.getActionCommand());
+
+        jFrame.setTitle(e.getActionCommand());
 
         refreshCanvas(HexPattern.fromDescription(e.getActionCommand()));
 
@@ -91,7 +144,7 @@ public class Main implements ActionListener {
         });
         Container contentPane = frame.getContentPane();
 
-        Main main = new Main(dim, 128);
+        Main main = new Main(dim, 128, frame);
         contentPane.add(main.getComponent());
         frame.setJMenuBar(main.getMenuBar());
 

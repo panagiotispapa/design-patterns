@@ -1,5 +1,6 @@
 package com.design.islamic;
 
+import com.design.islamic.model.Tile;
 import com.design.islamic.model.hex.*;
 import com.google.common.base.Function;
 
@@ -611,4 +612,38 @@ public class HexDesignHelper {
         return builder.toString();
     }
 
-}
+    public static String newStarDesign12(final Point2D centre, final double r) {
+
+        StringBuilder builder = new StringBuilder();
+
+        Tile tile = new Tile12(centre, r);
+
+        final String gray = newStyle(GRAY, 1, 1);
+        final String green = newStyle(GREEN, 2, 1);
+        final String red = newStyle(RED, 2, 1);
+        final String blue = newStyle(BLUE, 2, 1);
+
+        final double newR = (r*RECT_DIST_HEIGHT)/5.0;
+
+
+
+        builder.append(drawPolygon(newRectRot(centre, r), gray));
+//        builder.append(drawPolygon(newHexagonRot(centre, r), gray));
+        builder.append(drawPolygon(newHexagonRot(centre, newR), gray));
+        builder.append(drawPolylines(newHexDiagRot(centre, r), gray));
+
+        builder.append(drawPolygon(newHexagonRot(centre, 2*newR), gray));
+//        builder.append(drawPolygon(newHexStarTileRotated(centre, 2 * newR, HEX_DIST_DIAGONAL), blue));
+
+
+//        builder.append(drawPolygon(newHexagonRot(newEdgeAt(centre, 2*newR, HEX_RADIANS_ROT.get(2)), newR), gray));
+
+        builder.append(drawPolygons(tile.getPayload().getPolygons(), red));
+        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
+
+        return builder.toString();
+
+    }
+
+
+    }

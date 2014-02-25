@@ -78,7 +78,24 @@ public final class Patterns {
             }
         }
 
-        builder.add(newCentre(startPoint.getX() + 2 * dist2, startPoint.getY() ));
+//        builder.add(newCentre(startPoint.getX() + 2 * dist2, startPoint.getY() ));
+        return builder.build();
+    }
+
+    public static Set<Point2D> calculateNewCellCentresThirdConf(Point2D startPoint, double r, int level) {
+        ImmutableSet.Builder<Point2D> builder = ImmutableSet.builder();
+
+        final double dist1 = r + r * 0.5;
+        final double dist2 = r * HEX_DIST_NEW_CENTRE;
+
+
+        for (int i = 0; i < level; i++) {
+            for (int j = 0; j < level; j++) {
+                final double dist = i % 2 == 0 ? j * dist2 : j * dist2 - r * HEX_DIST_HEIGHT;
+                builder.add(newCentre(startPoint.getX() + i * dist1, startPoint.getY() + dist));
+            }
+        }
+
         return builder.build();
     }
 

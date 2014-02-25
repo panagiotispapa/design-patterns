@@ -13,6 +13,9 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import static com.design.islamic.CentreConfiguration.Conf.HEX_SECOND;
+import static com.design.islamic.CentreConfiguration.Conf.HEX_THIRD;
+import static com.design.islamic.CentreConfiguration.Conf.RECT;
 import static com.design.islamic.Patterns.*;
 import static com.design.islamic.model.Centre.newCentre;
 import static java.lang.System.currentTimeMillis;
@@ -33,27 +36,24 @@ public class TestBed2 {
         jsvgCanvas.setSize(dim);
         jPanel.setSize(dim);
 
-        CentreConfiguration centreConfiguration = new CentreConfiguration(
-                calculateNewCellCentresFirstConf(newCentre(0, 0), r, 17),
-                calculateNewCellCentresSecondConf(newCentre(0, 0), r, 17),
-                calculateNewRectCentresConf(newCentre(0, 0), r, 17)
-                );
+        CentreConfiguration centreConfiguration = new CentreConfiguration(r,17);
 
         long now = currentTimeMillis();
 
-//        String mySVG = Patterns.buildHexPatternBlackAndWhite(
-//                buildHexPatterns(centreConfiguration.getCentresSecondConf(), new Tile11(newCentre(0,0),r).getPayload())
-//                , dim
-//
-//        );
-
-
         String mySVG = Patterns.buildHexPatternBlackAndWhite(
-                buildHexPatterns(centreConfiguration.getCentresRectConf(), new com.design.islamic.model.rect.
-                        Tile2(newCentre(0,0),r).getPayload())
+                buildHexPatterns(centreConfiguration.getCentresConfig(RECT),
+                        new Tile12(newCentre(0,0),r).getPayload())
                 , dim
 
         );
+
+
+//        String mySVG = Patterns.buildHexPatternBlackAndWhite(
+//                buildHexPatterns(centreConfiguration.getCentresConfig(RECT), new com.design.islamic.model.rect.
+//                        Tile1(newCentre(0,0),r).getPayload())
+//                , dim
+//
+//        );
 
 
 

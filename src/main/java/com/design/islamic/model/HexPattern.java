@@ -1,31 +1,47 @@
 package com.design.islamic.model;
 
+import com.design.islamic.CentreConfiguration;
+import com.google.common.collect.Maps;
+
+import java.util.Map;
+
+import static com.design.islamic.CentreConfiguration.Conf.HEX_SECOND;
+import static com.design.islamic.CentreConfiguration.Conf.HEX_THIRD;
+
 public enum HexPattern {
 
-    ONE("Pattern1"),
+    ONE("Pattern1", HEX_SECOND),
 //    TWO("Pattern2"),
-    STAR1("Pattern Star 1"),
-    STAR2("Pattern Star 2"),
-    STAR3("Pattern Star 3"),
-    THREE("Pattern 3"),
-    FOUR("Pattern 4"),
-    FIVE("Pattern 5"),
-    SIX("Pattern 6"),
-    SEVEN("Pattern 7"),
-    EIGHT("Pattern 8"),
-    NINE("Pattern 9"),
-    TEN("Pattern 10"),
-    ELEVEN("Pattern 11")
+    STAR1("Pattern Star 1", HEX_SECOND),
+    STAR2("Pattern Star 2", HEX_SECOND),
+    STAR3("Pattern Star 3", HEX_SECOND),
+    THREE("Pattern 3", HEX_SECOND),
+    FOUR("Pattern 4", HEX_SECOND),
+    FIVE("Pattern 5", HEX_SECOND),
+    SIX("Pattern 6", HEX_SECOND),
+    SEVEN("Pattern 7", HEX_SECOND),
+    EIGHT("Pattern 8", HEX_SECOND),
+    NINE("Pattern 9", HEX_SECOND),
+    TEN("Pattern 10", HEX_SECOND),
+    ELEVEN("Pattern 11", HEX_SECOND),
+    TWELVE("Pattern 12(h)", HEX_THIRD)
     ;
 
-    private final String description;
 
-    private HexPattern(String description) {
+    private final String description;
+    private final CentreConfiguration.Conf config;
+
+    private HexPattern(String description, CentreConfiguration.Conf config) {
         this.description = description;
+        this.config = config;
     }
 
     public String getDescription() {
         return description;
+    }
+
+    public CentreConfiguration.Conf getConfig() {
+        return config;
     }
 
     public static HexPattern fromDescription(String description) {
@@ -58,6 +74,8 @@ public enum HexPattern {
             return TEN;
         } else if (description.equalsIgnoreCase(ELEVEN.getDescription())) {
             return ELEVEN;
+        } else if (description.equalsIgnoreCase(TWELVE.getDescription())) {
+            return TWELVE;
         } else {
             throw new IllegalArgumentException();
         }

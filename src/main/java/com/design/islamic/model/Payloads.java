@@ -8,7 +8,7 @@ import static com.design.islamic.GenericTools.*;
 
 public class Payloads {
 
-    private static List<List<Point2D>> EMPTY = Collections.emptyList();
+    public static List<List<Point2D>> EMPTY = Collections.emptyList();
 
 
     public static Payload newPayloadFromLines(final List<List<Point2D>> lines){
