@@ -8,7 +8,9 @@ import com.design.islamic.model.rect.*;
 import com.google.common.collect.Maps;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.Map;
+import java.util.Set;
 
 import static com.design.common.PolygonTools.*;
 import static com.design.islamic.model.Centre.newCentre;
@@ -22,6 +24,7 @@ public class PatternManager {
 
 
     private final Dimension dim;
+
 
     public PatternManager(double r, Dimension dim) {
 
@@ -62,15 +65,16 @@ public class PatternManager {
 
     }
 
+
     public String getSvg(RectPattern rectPattern) {
         return Patterns.buildHexPatternBlackAndWhite(
-                Patterns.buildHexPatterns(centreConfiguration.getCentresConfig(rectPattern.getConfig()), rectProviderMap.get(rectPattern))
+                Patterns.buildHexPatterns(centreConfiguration.getCentresConfig(rectPattern.getConfig(), 1.0), rectProviderMap.get(rectPattern))
                 , dim);
 
     }
     public String getSvg(HexPattern hexPattern) {
         return Patterns.buildHexPatternBlackAndWhite(
-                Patterns.buildHexPatterns(centreConfiguration.getCentresConfig(hexPattern.getConfig()), hexProviderMap.get(hexPattern))
+                Patterns.buildHexPatterns(centreConfiguration.getCentresConfig(hexPattern.getConfig(), hexPattern.getRatio()), hexProviderMap.get(hexPattern))
                 , dim);
 
 //        return hexProviderMap.get(hexPattern).provideSVG(centreConfiguration, r, dim);

@@ -1,5 +1,6 @@
 package com.design.islamic.model.tiles;
 
+import com.design.common.PolygonTools;
 import com.design.islamic.CentreConfiguration;
 import com.design.islamic.Patterns;
 import com.design.common.view.SvgFactory;
@@ -12,7 +13,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.Point2D;
+import java.util.Set;
 
+import static com.design.common.PolygonTools.HEX_DIST_HEIGHT;
+import static com.design.common.PolygonTools.HEX_PHI;
 import static com.design.islamic.CentreConfiguration.Conf.HEX_SECOND;
 import static com.design.islamic.CentreConfiguration.Conf.HEX_THIRD;
 import static com.design.islamic.CentreConfiguration.Conf.RECT;
@@ -38,10 +43,14 @@ public class TestBed2 {
 
         CentreConfiguration centreConfiguration = new CentreConfiguration(r,17);
 
+        Set<Point2D> centres = calculateNewRectCentresConf(newCentre(0, 0), r, 17, (6.0 * HEX_DIST_HEIGHT) / 5.0);
+
         long now = currentTimeMillis();
 
         String mySVG = Patterns.buildHexPatternBlackAndWhite(
-                buildHexPatterns(centreConfiguration.getCentresConfig(RECT),
+                buildHexPatterns(
+//                        centreConfiguration.getCentresConfig(RECT),
+                        centres,
                         new Tile12(newCentre(0,0),r).getPayload())
                 , dim
 

@@ -623,7 +623,8 @@ public class HexDesignHelper {
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
 
-        final double newR = (r*RECT_DIST_HEIGHT)/5.0;
+//        final double newR = ((r * RECT_DIST_HEIGHT) / 6.0)/HEX_DIST_HEIGHT;
+        final double newR = ((r * RECT_DIST_HEIGHT) / 5.0);
 
 
 
@@ -633,6 +634,11 @@ public class HexDesignHelper {
         builder.append(drawPolylines(newHexDiagRot(centre, r), gray));
 
         builder.append(drawPolygon(newHexagonRot(centre, 2*newR), gray));
+        builder.append(drawPolygon(newHexagonRot(centre, 3*newR), gray));
+        builder.append(drawPolygon(newHexagonRot(centre, 4*newR), gray));
+        builder.append(drawPolygon(newHexagonRot(centre, 5*newR), gray));
+        builder.append(drawPolygon(newHexagonRot(centre, 6*newR), gray));
+        builder.append(drawPolygon(newHexagonRot(centre, 7*newR), gray));
 //        builder.append(drawPolygon(newHexStarTileRotated(centre, 2 * newR, HEX_DIST_DIAGONAL), blue));
 
 

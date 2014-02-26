@@ -98,20 +98,31 @@ public final class Patterns {
 
         return builder.build();
     }
+//
+//    public static Set<Point2D> calculateNewRectCentresConf(Point2D startPoint, double r, int level) {
+//        ImmutableSet.Builder<Point2D> builder = ImmutableSet.builder();
+//
+//        final double dist1 = 2*r*RECT_DIST_HEIGHT;
+//
+//        for (int i = 0; i < level; i++) {
+//            for (int j = 0; j < level; j++) {
+//                builder.add(newCentre(startPoint.getX() + i*dist1, startPoint.getY() + j*dist1));
+//
+//            }
+//        }
+//
+////        builder.add(newCentre(startPoint.getX() + 2 * dist1, startPoint.getY() ));
+//        return builder.build();
+//    }
 
-    public static Set<Point2D> calculateNewRectCentresConf(Point2D startPoint, double r, int level) {
+    public static Set<Point2D> calculateNewRectCentresConf(Point2D startPoint, double r, int level, double ratio) {
         ImmutableSet.Builder<Point2D> builder = ImmutableSet.builder();
 
         final double dist1 = 2*r*RECT_DIST_HEIGHT;
-//        final double dist2 = r * HEX_DIST_NEW_CENTRE;
-
 
         for (int i = 0; i < level; i++) {
             for (int j = 0; j < level; j++) {
-//                final double dist = i % 2 == 0 ? j * dist2 : j * dist2 - r * HEX_DIST_HEIGHT;
-//                final double dist_ = j % 2 == 0 ? i * dist2 : i * dist2 - r * HEX_DIST_HEIGHT;
-//                builder.add(newCentre(startPoint.getX() + i * dist1, startPoint.getY() + dist));
-                builder.add(newCentre(startPoint.getX() + i*dist1, startPoint.getY() + j*dist1));
+                builder.add(newCentre(startPoint.getX() + i*ratio*dist1, startPoint.getY() + j*dist1));
 
             }
         }
