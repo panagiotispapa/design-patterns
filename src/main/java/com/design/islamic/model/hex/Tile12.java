@@ -2,13 +2,21 @@ package com.design.islamic.model.hex;
 
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.Tile;
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import java.awt.geom.Point2D;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static com.design.common.PolygonTools.*;
 import static com.design.islamic.model.Payloads.newPayloadFromPolygonsAndLines;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Lists.transform;
 import static java.util.Arrays.asList;
 
 public class Tile12 implements Tile {
@@ -26,8 +34,7 @@ public class Tile12 implements Tile {
         this.r = r;
 
 //        newR = ((r * RECT_DIST_HEIGHT) / 6.0)/HEX_DIST_HEIGHT ;
-        newR = ((r * RECT_DIST_HEIGHT) / 5.0) ;
-
+        newR = ((r * RECT_DIST_HEIGHT) / 5.0);
 
         int ur = 5;
         int um = 4;
@@ -40,113 +47,147 @@ public class Tile12 implements Tile {
                 e(centre, 1, um),
                 e(centre, 2, um),
                 e(centre, 3, um),
-                e(centre, 4, um)
+                e(centre, 4, um),
+                e(centre, 5, um)
         };
 
         Point2D[] d = new Point2D[]{
                 e(centre, 1, dm),
                 e(centre, 2, dm),
                 e(centre, 3, dm),
-                e(centre, 4, dm)
+                e(centre, 4, dm),
+                e(centre, 5, dm)
         };
 
         polygons = asList(
-//                newHexagonRot(centre, r),
 //                newHexStarTileRotated(centre, 2 * newR, HEX_DIST_DIAGONAL)
-//                newHexagonRot(centre1, newR),
-//                newHexagonRot(centre2, newR),
-//                newHexagonRot(centreH1, newR),
-//                newHexagonRot(centreH2, newR)
 
         );
 
         lines = newArrayList();
 
-        lines.add(asList(
-                e(u[0], 6, ul),
-                u[0],
-                e(u[0], 6, ur)
-        ));
+        List<int[]> l1 = asList(
+                e(3, 4, ur),
+                e(3, 0, ur),
+                e(3, 1, dr),
+                e(1, 1, dr),
+                e(1, 2, dr),
+                e(5, 6, dr),
+                e(0, 5, ur),
+                e(2, 5, ur),
+                e(3, 4, ur)
+        );
 
-        lines.add(asList(
-                e(d[0], 6, dl),
-                d[0],
-                e(d[0], 6, dr)
-        ));
-
-
-        lines.add(asList(
-                e(d[0], 6, ur),
-                e(centre, 5, ur),
-                e(u[1], 5, ur),
-                e(u[2], 4, ur),
-                e(u[2], 1, dl),
-                e(u[0], 1, dl),
-                e(u[0], 2, dl),
-                e(d[0], 1, ul),
-                e(d[1], 1, dl),
-                e(d[2], 4, dr),
-                e(d[1], 5, dr),
-                e(centre, 5, dr),
-                e(u[0], 6, dr)
-        ));
+        List<int[]> l1_up_left = toSymmetricRot(l1, hexSymmetryToLeftMapRot, 1);
+        List<int[]> l1_down_right = toSymmetricRot(l1, hexSymmetryToDownMapRot, -1);
+        List<int[]> l1_down_left = toSymmetricRot(l1_up_left, hexSymmetryToDownMapRot, -1);
 
 
-        lines.add(asList(
-                e(d[0], 6, ul),
-                e(centre, 5, ul),
-                e(u[1], 5, ul),
-                e(u[2], 4, ul),
-                e(u[2], 1, dr),
-                e(u[0], 1, dr),
-                e(u[0], 2, dr),
-                e(d[0], 1, ur),
-                e(d[1], 1, dr),
-                e(d[2], 4, dl),
-                e(d[1], 5, dl),
-                e(centre, 5, dl),
-                e(u[0], 6, dl)
-        ));
+        List<int[]> l2 = asList(
+                e(1, 0, ur),
+                e(1, 6, ur)
+        );
 
 
-        lines.add(asList(
-                e(d[3], 2, dr),
-                e(d[1], 2, dr),
-                e(centre, 4, dr),
-                e(centre, 4, ur),
-                e(u[1], 2, ur),
-                e(u[3], 2, ur)
-
-                ));
-
-        lines.add(asList(
-                e(d[3], 2, dl),
-                e(d[1], 2, dl),
-                e(centre, 4, dl),
-                e(centre, 4, ul),
-                e(u[1], 2, ul),
-                e(u[3], 2, ul)
-
-                ));
+        List<int[]> l2_up_left = toSymmetricRot(l2, hexSymmetryToLeftMapRot, 1);
+        List<int[]> l2_down_right = toSymmetricRot(l2, hexSymmetryToDownMapRot, -1);
+        List<int[]> l2_down_left = toSymmetricRot(l2_up_left, hexSymmetryToDownMapRot, -1);
 
 
 
-        lines.add(asList(
-                e(d[0], 6, ur),
-                e(d[0], 2, ur),
-                e(u[0], 6, dr)
-        ));
+        List<int[]> l3 = asList(
+                e(4, 2, ur),
+                e(2, 2, ur),
+                e(0, 4, ur),
+                e(0, 4, dr),
+                e(-2, 2, dr),
+                e(-4, 2, dr)
+                );
 
+        List<int[]> l3_up_left = toSymmetricRot(l3, hexSymmetryToLeftMapRot, 1);
 
-        lines.add(asList(
-                e(d[0], 6, ul),
-                e(d[0], 2, ul),
-                e(u[0], 6, dl)
-        ));
+        lines.add(toHexEdgesRot(l1, u, d, newR, centre));
+        lines.add(toHexEdgesRot(l1_up_left, u, d, newR, centre));
+        lines.add(toHexEdgesRot(l1_down_right, u, d, newR, centre));
+        lines.add(toHexEdgesRot(l1_down_left, u, d, newR, centre));
+
+        lines.add(toHexEdgesRot(l2, u, d, newR, centre));
+        lines.add(toHexEdgesRot(l2_up_left, u, d, newR, centre));
+        lines.add(toHexEdgesRot(l2_down_right, u, d, newR, centre));
+        lines.add(toHexEdgesRot(l2_down_left, u, d, newR, centre));
+
+        lines.add(toHexEdgesRot(l3, u, d, newR, centre));
+        lines.add(toHexEdgesRot(l3_up_left, u, d, newR, centre));
+
 
 
     }
 
+    private static List<Point2D> toHexEdgesRot(List<int[]> els, final Point2D[] u, final Point2D[] d, final double newR, final Point2D centre) {
+        return Lists.newArrayList(Iterables.transform(els, new Function<int[], Point2D>() {
+            @Override
+            public Point2D apply(int[] el) {
+                return toHexEdgeRot(el, u, d, newR, centre);
+            }
+        }));
+    }
+
+    private static Point2D toHexEdgeRot(int[] el, Point2D[] u, Point2D[] d, double newR, Point2D centre) {
+        final Point2D newCentre =
+                el[0] == 0
+                ?
+                centre :
+                (el[0] > 0 ? u[el[0] - 1] : d[-(el[0] + 1)]);
+
+        if (el[1] > 0) {
+            return newEdgeAt(newCentre, el[1] * newR, HEX_RADIANS_ROT.get(el[2]));
+        } else {
+            return newCentre;
+        }
+
+    }
+
+    private static final Map<Integer, Integer> hexSymmetryToLeftMapRot = ImmutableMap.of(
+            4, 4
+            , 5, 3
+            , 0, 2
+            , 1, 1
+    );
+
+    private static final Map<Integer, Integer> hexSymmetryToDownMapRot = Maps.newHashMap();
+    static {
+        hexSymmetryToDownMapRot.put(0,5);
+        hexSymmetryToDownMapRot.put(5,0);
+        hexSymmetryToDownMapRot.put(4,1);
+        hexSymmetryToDownMapRot.put(3,2);
+        hexSymmetryToDownMapRot.put(2,3);
+        hexSymmetryToDownMapRot.put(1,1);
+
+    }
+
+
+    private static List<int[]> toSymmetricRot(List<int[]> els, final Map<Integer, Integer> symmetryMap, final int sign) {
+        return newArrayList(transform(els, new Function<int[], int[]>() {
+            @Override
+            public int[] apply(int[] el) {
+                return toSymmetricRot(el, symmetryMap, sign);
+            }
+        }));
+    }
+
+    private static int[] toSymmetricRot(int[] el, Map<Integer, Integer> symmetryMap, int sign) {
+        return new int[]{
+                sign * el[0],
+                el[1],
+                symmetryMap.get(el[2])
+        };
+    }
+
+    private int[] e(int centreIndex, int times, int phiIndex) {
+        return new int[]{
+                centreIndex, times, phiIndex
+        };
+    }
 
     private Point2D e(Point2D newCentre, int times, int index) {
         return newEdgeAt(newCentre, times * newR, HEX_RADIANS_ROT.get(index));
