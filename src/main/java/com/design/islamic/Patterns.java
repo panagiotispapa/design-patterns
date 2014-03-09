@@ -115,14 +115,14 @@ public final class Patterns {
 //        return builder.build();
 //    }
 
-    public static Set<Point2D> calculateNewRectCentresConf(Point2D startPoint, double r, int level, double ratio) {
+    public static Set<Point2D> calculateNewRectCentresConf(Point2D startPoint, double r, int level, double ratioW) {
         ImmutableSet.Builder<Point2D> builder = ImmutableSet.builder();
 
         final double dist1 = 2*r*RECT_DIST_HEIGHT;
 
         for (int i = 0; i < level; i++) {
             for (int j = 0; j < level; j++) {
-                builder.add(newCentre(startPoint.getX() + i*ratio*dist1, startPoint.getY() + j*dist1));
+                builder.add(newCentre(startPoint.getX() + i*ratioW*dist1, startPoint.getY() + j*dist1));
 
             }
         }

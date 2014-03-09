@@ -34,12 +34,12 @@ public class CentreConfiguration {
 
     }
 
-    public Set<Point2D> getCentresConfig(Conf config, double ratio) {
-        if (ratio == 1.0) {
+    public Set<Point2D> getCentresConfig(Conf config, double ratioW) {
+        if (ratioW == 1.0) {
             return centresConf.get(config);
         } else {
             if (config == Conf.RECT) {
-                return calculateNewRectCentresConf(newCentre(0, 0), r, level, ratio);
+                return calculateNewRectCentresConf(newCentre(0, 0), r, level, ratioW);
             } else {
                 return null;
             }

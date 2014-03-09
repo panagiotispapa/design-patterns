@@ -43,15 +43,16 @@ public class TestBed2 {
 
         CentreConfiguration centreConfiguration = new CentreConfiguration(r,17);
 
-        Set<Point2D> centres = calculateNewRectCentresConf(newCentre(0, 0), r, 17, (6.0 * HEX_DIST_HEIGHT) / 5.0);
+
+
 
         long now = currentTimeMillis();
 
         String mySVG = Patterns.buildHexPatternBlackAndWhite(
                 buildHexPatterns(
 //                        centreConfiguration.getCentresConfig(RECT),
-                        centres,
-                        new Tile12(newCentre(0,0),r).getPayload())
+                        centreConfiguration.getCentresConfig(HEX_THIRD, 1.0),
+                        new Tile13(newCentre(0,0),r).getPayload())
                 , dim
 
         );

@@ -1,6 +1,7 @@
 package com.design.islamic.model;
 
 import com.design.islamic.CentreConfiguration;
+import com.design.islamic.model.hex.Tile12;
 import com.google.common.collect.Maps;
 
 import java.util.Map;
@@ -26,7 +27,8 @@ public enum HexPattern {
     NINE("Pattern 9", HEX_SECOND, 1.0),
     TEN("Pattern 10", HEX_SECOND, 1.0),
     ELEVEN("Pattern 11", HEX_SECOND, 1.0),
-    TWELVE("Pattern 12", RECT, (6.0 * HEX_DIST_HEIGHT) / 5.0)
+    TWELVE("Pattern 12", RECT, Tile12.RATIO_W),
+    THIRTEEN("Pattern 13", HEX_THIRD, 1.0)
     ;
 
 
@@ -35,6 +37,17 @@ public enum HexPattern {
 
     private final double ratio;
 
+
+    private static final Map<String, HexPattern> patternMap;
+
+
+    static {
+        patternMap = Maps.newHashMap();
+        for (HexPattern hexPattern : HexPattern.values()) {
+            patternMap.put(hexPattern.getDescription(), hexPattern);
+        }
+
+    }
 
     private HexPattern(String description, CentreConfiguration.Conf config, double ratio) {
         this.description = description;
@@ -56,39 +69,7 @@ public enum HexPattern {
 
     public static HexPattern fromDescription(String description) {
 
-        if (description.equalsIgnoreCase(ONE.getDescription())) {
-            return ONE;
-//        } else if (description.equalsIgnoreCase(TWO.getDescription())) {
-//            return TWO;
-        } else if (description.equalsIgnoreCase(STAR1.getDescription())) {
-            return STAR1;
-        } else if (description.equalsIgnoreCase(STAR2.getDescription())) {
-            return STAR2;
-        } else if (description.equalsIgnoreCase(STAR3.getDescription())) {
-            return STAR3;
-        } else if (description.equalsIgnoreCase(THREE.getDescription())) {
-            return THREE;
-        } else if (description.equalsIgnoreCase(FOUR.getDescription())) {
-            return FOUR;
-        } else if (description.equalsIgnoreCase(FIVE.getDescription())) {
-            return FIVE;
-        } else if (description.equalsIgnoreCase(SIX.getDescription())) {
-            return SIX;
-        } else if (description.equalsIgnoreCase(SEVEN.getDescription())) {
-            return SEVEN;
-        } else if (description.equalsIgnoreCase(EIGHT.getDescription())) {
-            return EIGHT;
-        } else if (description.equalsIgnoreCase(NINE.getDescription())) {
-            return NINE;
-        } else if (description.equalsIgnoreCase(TEN.getDescription())) {
-            return TEN;
-        } else if (description.equalsIgnoreCase(ELEVEN.getDescription())) {
-            return ELEVEN;
-        } else if (description.equalsIgnoreCase(TWELVE.getDescription())) {
-            return TWELVE;
-        } else {
-            throw new IllegalArgumentException();
-        }
+        return patternMap.get(description);
 
     }
 

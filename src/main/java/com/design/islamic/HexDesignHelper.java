@@ -1,5 +1,6 @@
 package com.design.islamic;
 
+import com.design.common.PolygonTools;
 import com.design.islamic.model.Tile;
 import com.design.islamic.model.hex.*;
 import com.google.common.base.Function;
@@ -21,7 +22,6 @@ public class HexDesignHelper {
 
         StringBuilder builder = new StringBuilder();
 
-
         List<Point2D> edges = cloneAndTranslateScalePoints(centre, r, hexPoints);
 
         final List<Point2D> outsideCentres = cloneAndTranslateScalePoints(centre, r * HEX_DIST_NEW_CENTRE, hexPointsAlt);
@@ -38,7 +38,6 @@ public class HexDesignHelper {
         String blue = newStyle("blue", 1, 1);
         final String gray = newStyle("gray", 1, 1);
         final String green = newStyle("green", 1, 1);
-
 
         builder.append(newCircle(centre, r, black));
 //        builder.add(drawPolygon(edges, blue));
@@ -458,7 +457,6 @@ public class HexDesignHelper {
 
     public static String newStarDesign9(final Point2D centre, final double r) {
 
-
         StringBuilder builder = new StringBuilder();
 
         Tile9 tile9 = new Tile9(centre, r);
@@ -579,10 +577,7 @@ public class HexDesignHelper {
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
 
-
         builder.append(drawPolygon(newHexagonRot(centre, r), gray));
-
-
 
         for (Point2D edge : tile.getMainHexRot()) {
             builder.append(drawPolygon(newHexagon(edge, tile.getInnerR()), gray));
@@ -603,11 +598,7 @@ public class HexDesignHelper {
         builder.append(highlightPoints(tile.getPointsD()));
 //        builder.append(highlightPoints(newHexagon(centre,tile.getInnerR2())));
 
-
-
         builder.append(drawPolylines(tile.getLines(), red));
-
-
 
         return builder.toString();
     }
@@ -626,21 +617,19 @@ public class HexDesignHelper {
 //        final double newR = ((r * RECT_DIST_HEIGHT) / 6.0)/HEX_DIST_HEIGHT;
         final double newR = ((r * RECT_DIST_HEIGHT) / 5.0);
 
-
-
         builder.append(drawPolygon(newRectRot(centre, r), gray));
+        builder.append(drawPolygon(newRectRot(centre, r * Tile12.RATIO_W), gray));
 //        builder.append(drawPolygon(newHexagonRot(centre, r), gray));
         builder.append(drawPolygon(newHexagonRot(centre, newR), gray));
         builder.append(drawPolylines(newHexDiagRot(centre, r), gray));
 
-        builder.append(drawPolygon(newHexagonRot(centre, 2*newR), gray));
-        builder.append(drawPolygon(newHexagonRot(centre, 3*newR), gray));
-        builder.append(drawPolygon(newHexagonRot(centre, 4*newR), gray));
-        builder.append(drawPolygon(newHexagonRot(centre, 5*newR), gray));
-        builder.append(drawPolygon(newHexagonRot(centre, 6*newR), gray));
-        builder.append(drawPolygon(newHexagonRot(centre, 7*newR), gray));
+        builder.append(drawPolygon(newHexagonRot(centre, 2 * newR), gray));
+        builder.append(drawPolygon(newHexagonRot(centre, 3 * newR), gray));
+        builder.append(drawPolygon(newHexagonRot(centre, 4 * newR), gray));
+        builder.append(drawPolygon(newHexagonRot(centre, 5 * newR), gray));
+        builder.append(drawPolygon(newHexagonRot(centre, 6 * newR), gray));
+        builder.append(drawPolygon(newHexagonRot(centre, 7 * newR), gray));
 //        builder.append(drawPolygon(newHexStarTileRotated(centre, 2 * newR, HEX_DIST_DIAGONAL), blue));
-
 
 //        builder.append(drawPolygon(newHexagonRot(newEdgeAt(centre, 2*newR, HEX_RADIANS_ROT.get(2)), newR), gray));
 
@@ -651,5 +640,38 @@ public class HexDesignHelper {
 
     }
 
+    public static String newStarDesign13(final Point2D centre, final double r) {
 
+        StringBuilder builder = new StringBuilder();
+
+        Tile tile = new Tile13(centre, r);
+
+        final String gray = newStyle(GRAY, 1, 1);
+        final String green = newStyle(GREEN, 2, 1);
+        final String red = newStyle(RED, 2, 1);
+        final String blue = newStyle(BLUE, 2, 1);
+
+
+        double newR = r / 3.0;
+        double newR2 = newR * PolygonTools.HEX_DIST_NEW_CENTRE;
+
+
+        List<Point2D> layerOut = newHexagon(centre, 2.0 * newR);
+
+        builder.append(drawPolygon(newHexagon(centre, r), gray));
+        builder.append(drawPolygon(newHexagon(centre, newR), gray));
+
+        builder.append(drawPolygon(layerOut, gray));
+        builder.append(drawPolygon(newHexagonRot(centre, newR2), gray));
+
+        builder.append(drawPolygon(newHexagon(layerOut.get(0), newR), gray));
+
+        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
+
+
+
+
+        return builder.toString();
     }
+
+}

@@ -21,6 +21,8 @@ import static java.util.Arrays.asList;
 
 public class Tile12 implements Tile {
 
+    public static final double RATIO_W = (6.0 * HEX_DIST_HEIGHT) / 5.0;
+
     private final Point2D centre;
     private final double r;
 
