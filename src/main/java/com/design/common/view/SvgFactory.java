@@ -129,6 +129,18 @@ public class SvgFactory {
 
     }
 
+    public static String highlightPoints(Point2D[] points) {
+
+        final String style = newStyle("red", "black", 1, 1, 1);
+        StringBuilder builder = new StringBuilder(points.length);
+        for (Point2D centre : points) {
+            builder.append(newCircle(centre, 3, style));
+        }
+
+        return builder.toString();
+
+    }
+
 
 
     public static String drawCircles(List<Circle> circles, final String style) {

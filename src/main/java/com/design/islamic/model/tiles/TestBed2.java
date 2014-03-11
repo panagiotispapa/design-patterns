@@ -52,7 +52,7 @@ public class TestBed2 {
                 buildHexPatterns(
 //                        centreConfiguration.getCentresConfig(RECT),
                         centreConfiguration.getCentresConfig(HEX_THIRD, 1.0),
-                        new Tile13(newCentre(0,0),r).getPayload())
+                        new Tile14(newCentre(0,0),r).getPayload())
                 , dim
 
         );

@@ -354,7 +354,7 @@ public class HexDesignHelper {
 
     }
 
-    public static String newStarDesign7(final Point2D centre, final double r) {
+    public static String newDesign7(final Point2D centre, final double r) {
 
         StringBuilder builder = new StringBuilder();
 
@@ -411,7 +411,7 @@ public class HexDesignHelper {
 
     }
 
-    public static String newStarDesign8(final Point2D centre, final double r) {
+    public static String newDesign8(final Point2D centre, final double r) {
 
         StringBuilder builder = new StringBuilder();
 
@@ -455,7 +455,7 @@ public class HexDesignHelper {
         return builder.toString();
     }
 
-    public static String newStarDesign9(final Point2D centre, final double r) {
+    public static String newDesign9(final Point2D centre, final double r) {
 
         StringBuilder builder = new StringBuilder();
 
@@ -566,7 +566,7 @@ public class HexDesignHelper {
 
     }
 
-    public static String newStarDesign11(final Point2D centre, final double r) {
+    public static String newDesign11(final Point2D centre, final double r) {
 
         StringBuilder builder = new StringBuilder();
 
@@ -603,7 +603,7 @@ public class HexDesignHelper {
         return builder.toString();
     }
 
-    public static String newStarDesign12(final Point2D centre, final double r) {
+    public static String newDesign12(final Point2D centre, final double r) {
 
         StringBuilder builder = new StringBuilder();
 
@@ -640,7 +640,7 @@ public class HexDesignHelper {
 
     }
 
-    public static String newStarDesign13(final Point2D centre, final double r) {
+    public static String newDesign13(final Point2D centre, final double r) {
 
         StringBuilder builder = new StringBuilder();
 
@@ -651,10 +651,8 @@ public class HexDesignHelper {
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
 
-
         double newR = r / 3.0;
         double newR2 = newR * PolygonTools.HEX_DIST_NEW_CENTRE;
-
 
         List<Point2D> layerOut = newHexagon(centre, 2.0 * newR);
 
@@ -668,10 +666,40 @@ public class HexDesignHelper {
 
         builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
 
-
-
-
         return builder.toString();
     }
 
+    public static String newDesign14(final Point2D centre, final double r) {
+
+
+        final String gray = newStyle(GRAY, 1, 1);
+        final String green = newStyle(GREEN, 2, 1);
+        final String red = newStyle(RED, 2, 1);
+        final String blue = newStyle(BLUE, 2, 1);
+
+
+        Tile14 tile = new Tile14(centre, r);
+
+
+        StringBuilder builder = new StringBuilder();
+
+        double newR = r / 4.0;
+
+
+        builder.append(drawPolygon(newHexagon(centre, r),gray));
+        builder.append(drawPolylines(newHexDiag(centre, r), gray));
+
+        for (int i = 1; i < 4; i++) {
+            builder.append(drawPolygon(newHexagon(centre, i*newR),gray));
+        }
+
+
+        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
+
+        builder.append(highlightPoints(tile.getPointsA()));
+        builder.append(highlightPoints(tile.getPointsB()));
+        builder.append(highlightPoints(tile.getPointsC()));
+
+        return builder.toString();
+    }
 }

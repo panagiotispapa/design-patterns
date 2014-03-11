@@ -28,7 +28,8 @@ public enum HexPattern {
     TEN("Pattern 10", HEX_SECOND, 1.0),
     ELEVEN("Pattern 11", HEX_SECOND, 1.0),
     TWELVE("Pattern 12", RECT, Tile12.RATIO_W),
-    THIRTEEN("Pattern 13", HEX_THIRD, 1.0)
+    THIRTEEN("Pattern 13", HEX_THIRD, 1.0),
+    FOURTEEN("Pattern 14", HEX_THIRD, 1.0)
     ;
 
 
