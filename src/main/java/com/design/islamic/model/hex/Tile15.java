@@ -26,13 +26,8 @@ public class Tile15 implements Tile {
 
         lines = newArrayList();
 
-//        this.centre = centre;
-//        this.r = r;
 
         newR = (r * sin(PI_QUARTER)) / 2.5;
-//        newR2 = newR * HEX_DIST_NEW_CENTRE;
-
-//        buildPoints(centre, r);
 
         Point2D urCentre = newEdgeAt(centre, 5 * newR, HEX_RADIANS_ROT.get(5));
         Point2D ulCentre = newEdgeAt(centre, 5 * newR, HEX_RADIANS_ROT.get(3));

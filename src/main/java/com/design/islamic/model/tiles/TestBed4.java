@@ -43,7 +43,7 @@ public class TestBed4 {
 
         String backObj = drawPolygon(cloneAndTranslateScalePoints(centre, r, hexPoints), styleBack);
 
-        String testObject = HexDesignHelper.newDesign15(centre, r);
+        String testObject = HexDesignHelper.newDesign16(centre, r);
 //        String testObject = RectDesignHelper.newRectDesign1(centre, r);
 
 

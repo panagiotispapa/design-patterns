@@ -722,4 +722,31 @@ public class HexDesignHelper {
 
         return builder.toString();
     }
+
+    public static String newDesign16(final Point2D centre, final double r) {
+
+        final String gray = newStyle(GRAY, 1, 1);
+        final String green = newStyle(GREEN, 2, 1);
+        final String red = newStyle(RED, 2, 1);
+        final String blue = newStyle(BLUE, 2, 1);
+
+        Tile tile = new Tile16(centre, r);
+
+        double newR = r / 9.0;
+
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(drawPolygon(newHexagonRot(centre, r), gray));
+        builder.append(drawPolylines(newHexDiagRot(centre, r), gray));
+
+        for (int i = 1; i < 9; i++) {
+            builder.append(drawPolygon(newHexagonRot(centre, i * newR), gray));
+        }
+
+
+        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
+
+
+        return builder.toString();
+    }
 }
