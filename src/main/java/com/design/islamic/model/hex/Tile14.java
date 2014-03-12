@@ -21,9 +21,6 @@ public class Tile14 implements Tile {
     private Point2D[] pointsA;
     private Point2D[] pointsB;
     private Point2D[] pointsC;
-    private Point2D[] pointsD;
-    private Point2D[] pointsE;
-    private Point2D[] pointsF;
 
     private final Point2D centre;
     private final double r;
@@ -45,11 +42,6 @@ public class Tile14 implements Tile {
                     pointsB[i],
                     pointsA[toHexIndex(i+1)],
                     pointsC[toHexIndex(i+2)]
-
-//                    pointsC[i],
-//                    pointsD[i],
-//                    pointsE[i],
-//                    pointsF[i]
             ));
         }
 
@@ -62,20 +54,12 @@ public class Tile14 implements Tile {
         pointsA = new Point2D[HEX_N];
         pointsB = new Point2D[HEX_N];
         pointsC = new Point2D[HEX_N];
-        pointsD = new Point2D[HEX_N];
-        pointsE = new Point2D[HEX_N];
-        pointsF = new Point2D[HEX_N];
 
         for (int i = 0; i < HEX_N; i++) {
 
             pointsA[i] = newEdgeAt(centre, newR, HEX_RADIANS.get(i));
             pointsB[i] = getNewPoint(i, 2);
             pointsC[i] = getNewPoint(i,4);
-//            pointsB[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS.get(toHexIndex(i+2)));
-//            pointsC[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS.get(toHexIndex(i+1)));
-//            pointsD[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS.get(toHexIndex(i+5)));
-//            pointsE[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS.get(toHexIndex(i+4)));
-//            pointsF[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS.get(toHexIndex(i+3)));
 
         }
 

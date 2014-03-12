@@ -51,8 +51,8 @@ public class TestBed2 {
         String mySVG = Patterns.buildHexPatternBlackAndWhite(
                 buildHexPatterns(
 //                        centreConfiguration.getCentresConfig(RECT),
-                        centreConfiguration.getCentresConfig(HEX_THIRD, 1.0),
-                        new Tile14(newCentre(0,0),r).getPayload())
+                        centreConfiguration.getCentresConfig(RECT, Tile15.RATIO_W),
+                        new Tile15(newCentre(0,0),r).getPayload())
                 , dim
 
         );
