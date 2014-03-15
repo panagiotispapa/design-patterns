@@ -749,4 +749,50 @@ public class HexDesignHelper {
 
         return builder.toString();
     }
+
+
+
+
+    public static String newDesign17(final Point2D centre, final double r) {
+
+        final String gray = newStyle(GRAY, 1, 1);
+        final String green = newStyle(GREEN, 2, 1);
+        final String red = newStyle(RED, 2, 1);
+        final String blue = newStyle(BLUE, 2, 1);
+
+        StringBuilder builder = new StringBuilder();
+
+
+        Tile tile = new Tile17(centre, r);
+
+        double newR = r / 3.0;
+
+
+        builder.append(drawPolygon(newHexagon(centre, r), gray));
+        builder.append(drawPolygon(newHexagon(centre, newR), gray));
+        builder.append(highlightPoints(newHexagon(centre, 2*newR)));
+
+
+
+        builder.append(drawPolygons(tile.getPayload().getPolygons(), red));
+
+
+        return builder.toString();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

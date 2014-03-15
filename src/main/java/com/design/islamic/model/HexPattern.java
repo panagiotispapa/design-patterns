@@ -8,9 +8,7 @@ import com.google.common.collect.Maps;
 import java.util.Map;
 
 import static com.design.common.PolygonTools.HEX_DIST_HEIGHT;
-import static com.design.islamic.CentreConfiguration.Conf.HEX_SECOND;
-import static com.design.islamic.CentreConfiguration.Conf.HEX_THIRD;
-import static com.design.islamic.CentreConfiguration.Conf.RECT;
+import static com.design.islamic.CentreConfiguration.Conf.*;
 
 public enum HexPattern {
 
@@ -32,7 +30,9 @@ public enum HexPattern {
     THIRTEEN("Pattern 13", HEX_THIRD, 1.0),
     FOURTEEN("Pattern 14", HEX_THIRD, 1.0),
     FIFTEEN("Pattern 15", RECT, Tile15.RATIO_W),
-    SIXTEEN("Pattern 16", HEX_SECOND, 1.0)
+    SIXTEEN("Pattern 16", HEX_SECOND, 1.0),
+    SEVENTEEN("Pattern 17 m", HEX_FIRST, 1.0),
+    EIGHTEEN("Pattern 18 m", HEX_FIRST, 1.0)
     ;
 
 

@@ -18,9 +18,7 @@ import java.util.Set;
 
 import static com.design.common.PolygonTools.HEX_DIST_HEIGHT;
 import static com.design.common.PolygonTools.HEX_PHI;
-import static com.design.islamic.CentreConfiguration.Conf.HEX_SECOND;
-import static com.design.islamic.CentreConfiguration.Conf.HEX_THIRD;
-import static com.design.islamic.CentreConfiguration.Conf.RECT;
+import static com.design.islamic.CentreConfiguration.Conf.*;
 import static com.design.islamic.Patterns.*;
 import static com.design.islamic.model.Centre.newCentre;
 import static java.lang.System.currentTimeMillis;
@@ -50,9 +48,8 @@ public class TestBed2 {
 
         String mySVG = Patterns.buildHexPatternBlackAndWhite(
                 buildHexPatterns(
-//                        centreConfiguration.getCentresConfig(RECT),
-                        centreConfiguration.getCentresConfig(HEX_SECOND, 1.0),
-                        new Tile16(newCentre(0,0),r).getPayload())
+                        centreConfiguration.getCentresConfig(HEX_FIRST, 1.0),
+                        new Tile18(newCentre(0,0),r).getPayload())
                 , dim
 
         );
