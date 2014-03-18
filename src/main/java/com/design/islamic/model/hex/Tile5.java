@@ -41,16 +41,16 @@ public class Tile5 implements Tile {
 
             out.add(
                     asList(
-                            newEdgeAt(outerEdge, r, HEX_RADIANS_ROT.get(toHexIndex(2 + index))),
-                            newEdgeAt(outerEdge, r, HEX_RADIANS_ROT.get(toHexIndex(5 + index)))
+                            newEdgeAt(outerEdge, r, HEX_RADIANS_ROT[toHexIndex(2 + index)]),
+                            newEdgeAt(outerEdge, r, HEX_RADIANS_ROT[toHexIndex(5 + index)])
                     )
             );
 
 
             out.add(
                     asList(
-                            newEdgeAt(outerEdge, r, HEX_RADIANS_ROT.get(toHexIndex(3 + index))),
-                            newEdgeAt(outerEdge, r, HEX_RADIANS_ROT.get(toHexIndex(index)))
+                            newEdgeAt(outerEdge, r, HEX_RADIANS_ROT[toHexIndex(3 + index)]),
+                            newEdgeAt(outerEdge, r, HEX_RADIANS_ROT[toHexIndex(index)])
                     )
             );
 

@@ -49,8 +49,8 @@ public class Tile2 implements Tile {
         pointsB = newArrayList();
 
         for (int i = 0; i < RECT_N; i++) {
-            pointsA.add(newEdgeAt(mainRectRot.get(i), newHeight, OCT_RADIANS.get(toOctIndex(2 * i + 4))));
-            pointsB.add(newEdgeAt(mainRectRot.get(i), newHeight, OCT_RADIANS.get(toOctIndex(2 * i + 6))));
+            pointsA.add(newEdgeAt(mainRectRot.get(i), newHeight, OCT_RADIANS[toOctIndex(2 * i + 4)]));
+            pointsB.add(newEdgeAt(mainRectRot.get(i), newHeight, OCT_RADIANS[toOctIndex(2 * i + 6)]));
         }
 
     }

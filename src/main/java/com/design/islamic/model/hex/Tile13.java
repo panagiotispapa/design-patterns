@@ -62,12 +62,12 @@ public class Tile13 implements Tile {
 
         for (int i = 0; i < HEX_N; i++) {
 
-            pointsA[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS.get(toHexIndex(i+3)));
-            pointsB[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS.get(toHexIndex(i+2)));
-            pointsC[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS.get(toHexIndex(i+1)));
-            pointsD[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS.get(toHexIndex(i+5)));
-            pointsE[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS.get(toHexIndex(i+4)));
-            pointsF[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS.get(toHexIndex(i+3)));
+            pointsA[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS[toHexIndex(i+3)]);
+            pointsB[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS[toHexIndex(i+2)]);
+            pointsC[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS[toHexIndex(i+1)]);
+            pointsD[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS[toHexIndex(i+5)]);
+            pointsE[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS[toHexIndex(i+4)]);
+            pointsF[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS[toHexIndex(i+3)]);
 
         }
 

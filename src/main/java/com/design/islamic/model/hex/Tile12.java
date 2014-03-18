@@ -142,7 +142,7 @@ public class Tile12 implements Tile {
                 (el[0] > 0 ? u[el[0] - 1] : d[-(el[0] + 1)]);
 
         if (el[1] > 0) {
-            return newEdgeAt(newCentre, el[1] * newR, HEX_RADIANS_ROT.get(el[2]));
+            return newEdgeAt(newCentre, el[1] * newR, HEX_RADIANS_ROT[el[2]]);
         } else {
             return newCentre;
         }
@@ -192,7 +192,7 @@ public class Tile12 implements Tile {
     }
 
     private Point2D e(Point2D newCentre, int times, int index) {
-        return newEdgeAt(newCentre, times * newR, HEX_RADIANS_ROT.get(index));
+        return newEdgeAt(newCentre, times * newR, HEX_RADIANS_ROT[index]);
     }
 
     @Override

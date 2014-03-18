@@ -57,7 +57,7 @@ public class Tile14 implements Tile {
 
         for (int i = 0; i < HEX_N; i++) {
 
-            pointsA[i] = newEdgeAt(centre, newR, HEX_RADIANS.get(i));
+            pointsA[i] = newEdgeAt(centre, newR, HEX_RADIANS[i]);
             pointsB[i] = getNewPoint(i, 2);
             pointsC[i] = getNewPoint(i,4);
 
@@ -66,9 +66,9 @@ public class Tile14 implements Tile {
     }
 
     private Point2D getNewPoint(int index, int offset) {
-        Point2D newCentre = newEdgeAt(centre, r, HEX_RADIANS.get(index));
+        Point2D newCentre = newEdgeAt(centre, r, HEX_RADIANS[index]);
 
-        return newEdgeAt(newCentre, newR, HEX_RADIANS.get(toHexIndex(index + offset)) );
+        return newEdgeAt(newCentre, newR, HEX_RADIANS[toHexIndex(index + offset)]);
     }
 
     public Point2D[] getPointsA() {

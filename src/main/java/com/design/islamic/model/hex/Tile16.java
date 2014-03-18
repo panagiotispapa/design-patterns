@@ -27,12 +27,12 @@ public class Tile16 implements Tile {
 
         newR = r / 9.0;
 
-        double ur = HEX_RADIANS_ROT.get(5);
-        double um = HEX_RADIANS_ROT.get(4);
-        double ul = HEX_RADIANS_ROT.get(3);
-        double dl = HEX_RADIANS_ROT.get(2);
-        double dm = HEX_RADIANS_ROT.get(1);
-        double dr = HEX_RADIANS_ROT.get(0);
+        double ur = HEX_RADIANS_ROT[5];
+        double um = HEX_RADIANS_ROT[4];
+        double ul = HEX_RADIANS_ROT[3];
+        double dl = HEX_RADIANS_ROT[2];
+        double dm = HEX_RADIANS_ROT[1];
+        double dr = HEX_RADIANS_ROT[0];
 
         lines.add(asList(
                 e(centre, 1, ul),

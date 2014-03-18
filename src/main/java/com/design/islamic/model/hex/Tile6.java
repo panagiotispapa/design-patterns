@@ -43,12 +43,12 @@ public class Tile6 implements Tile {
 
             out.add(
                     Arrays.asList(
-                            newEdgeAt(outerEdge, r, HEX_RADIANS_ROT.get(toHexIndex(1 + index))),
-                            newEdgeAt(outerEdge, newRDiag, HEX_RADIANS_ROT.get(toHexIndex(2 + index))),
-                            newEdgeAt(outerEdge, r, HEX_RADIANS_ROT.get(toHexIndex(2 + index))),
-                            newEdgeAt(outerEdge, r, HEX_RADIANS_ROT.get(toHexIndex(3 + index))),
-                            newEdgeAt(outerEdge, newRDiag, HEX_RADIANS_ROT.get(toHexIndex(3 + index))),
-                            newEdgeAt(outerEdge, r, HEX_RADIANS_ROT.get(toHexIndex(4 + index)))
+                            newEdgeAt(outerEdge, r, HEX_RADIANS_ROT[toHexIndex(1 + index)]),
+                            newEdgeAt(outerEdge, newRDiag, HEX_RADIANS_ROT[toHexIndex(2 + index)]),
+                            newEdgeAt(outerEdge, r, HEX_RADIANS_ROT[toHexIndex(2 + index)]),
+                            newEdgeAt(outerEdge, r, HEX_RADIANS_ROT[toHexIndex(3 + index)]),
+                            newEdgeAt(outerEdge, newRDiag, HEX_RADIANS_ROT[toHexIndex(3 + index)]),
+                            newEdgeAt(outerEdge, r, HEX_RADIANS_ROT[toHexIndex(4 + index)])
                     )
             );
 

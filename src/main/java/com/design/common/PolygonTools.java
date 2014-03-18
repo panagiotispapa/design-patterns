@@ -32,8 +32,8 @@ public class PolygonTools {
     public final static double OCT_PHI = (2.0 * PI) / OCT_N;
 
 
-    public static List<Double> OCT_RADIANS = computeDegrees(OCT_N, OCT_PHI);
-    public static List<Double> OCT_RADIANS_ROT = computeDegreesRot(OCT_N, OCT_PHI);
+    public static double[] OCT_RADIANS = computeDegrees(OCT_N, OCT_PHI);
+    public static double[] OCT_RADIANS_ROT = computeDegreesRot(OCT_N, OCT_PHI);
 
 
     public static List<Point2D> octPoints = newEdgesAt(OCT_RADIANS);
@@ -44,8 +44,8 @@ public class PolygonTools {
     public final static double RECT_PHI = (2.0 * PI) / RECT_N;
 
 
-    public static List<Double> RECT_RADIANS = computeDegrees(RECT_N, RECT_PHI);
-    public static List<Double> RECT_RADIANS_ROT = computeDegreesRot(RECT_N, RECT_PHI);
+    public static double[] RECT_RADIANS = computeDegrees(RECT_N, RECT_PHI);
+    public static double[] RECT_RADIANS_ROT = computeDegreesRot(RECT_N, RECT_PHI);
 
     public static List<Point2D> rectPoints = newEdgesAt(RECT_RADIANS);
     public static List<Point2D> rectPointsRot = newEdgesAt(RECT_RADIANS_ROT);
@@ -68,8 +68,8 @@ public class PolygonTools {
     public final static double HEX_DIST_NEW_CENTRE = 2.0 * HEX_DIST_HEIGHT;
     public final static double HEX_DIST_OUTER_CIRCLE = HEX_DIST_NEW_CENTRE - 1;
 
-    public static List<Double> HEX_RADIANS = computeDegrees(HEX_N, HEX_PHI);
-    public static List<Double> HEX_RADIANS_ROT = computeDegreesRot(HEX_N, HEX_PHI);
+    public static double[] HEX_RADIANS = computeDegrees(HEX_N, HEX_PHI);
+    public static double[] HEX_RADIANS_ROT = computeDegreesRot(HEX_N, HEX_PHI);
 
     public static List<Point2D> hexPoints = newEdgesAt(HEX_RADIANS);
     public static List<Point2D> hexPointsAlt = newEdgesAt(HEX_RADIANS_ROT);
@@ -102,25 +102,28 @@ public class PolygonTools {
         return 1.0 / (1.0 + tan(phi / 2.0));
     }
 
-    private static List<Double> computeDegrees(int n, double phi) {
-        ImmutableList.Builder<Double> builder = ImmutableList.builder();
+    private static double[] computeDegrees(int n, double phi) {
+
+        double[] degrees = new double[n];
 
         for (int k = 0; k < n; k++) {
-            builder.add(phi * k);
+            degrees[k] = phi * k;
         }
 
-        return builder.build();
+        return degrees;
 
     }
 
-    private static List<Double> computeDegreesRot(int n, double phi) {
-        ImmutableList.Builder<Double> builder = ImmutableList.builder();
+    private static double[] computeDegreesRot(int n, double phi) {
+
+        double[] degrees = new double[n];
 
         for (int k = 0; k < n; k++) {
-            builder.add(phi * (k + 0.5));
+            degrees[k]= phi * (k + 0.5);
         }
 
-        return builder.build();
+        return degrees;
+
 
     }
 
@@ -185,13 +188,12 @@ public class PolygonTools {
         return edge;
     }
 
-    private static List<Point2D> newEdgesAt(Iterable<Double> radians) {
-        return Lists.newArrayList(Iterables.transform(radians, new Function<Double, Point2D>() {
-            @Override
-            public Point2D apply(Double radian) {
-                return newEdgeAt(radian);
-            }
-        }));
+    private static List<Point2D> newEdgesAt(double[] radians) {
+        List<Point2D> edges = newArrayList();
+        for (double radian : radians) {
+            edges.add(newEdgeAt(radian));
+        }
+        return edges;
     }
 
     public static Point2D newEdgeAt(double phi) {

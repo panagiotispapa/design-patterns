@@ -73,10 +73,10 @@ public class Tile11 implements Tile {
         pointsE = newArrayList();
 
         for (int i = 0; i < HEX_N; i++) {
-            pointsA.add(newEdgeAt(mainHexRot.get(i),innerR*HEX_DIST_HEIGHT,HEX_RADIANS_ROT.get(toHexIndex(i+2))));
-            pointsB.add(newEdgeAt(mainHexRot.get(i),innerR,HEX_RADIANS.get(toHexIndex(i+3))));
-            pointsC.add(newEdgeAt(mainHexRot.get(i),innerR,HEX_RADIANS.get(toHexIndex(i+4))));
-            pointsD.add(newEdgeAt(mainHexRot.get(i),innerR*HEX_DIST_HEIGHT,HEX_RADIANS_ROT.get(toHexIndex(i+4))));
+            pointsA.add(newEdgeAt(mainHexRot.get(i),innerR*HEX_DIST_HEIGHT,HEX_RADIANS_ROT[toHexIndex(i+2)]));
+            pointsB.add(newEdgeAt(mainHexRot.get(i),innerR,HEX_RADIANS[toHexIndex(i+3)]));
+            pointsC.add(newEdgeAt(mainHexRot.get(i),innerR,HEX_RADIANS[toHexIndex(i+4)]));
+            pointsD.add(newEdgeAt(mainHexRot.get(i),innerR*HEX_DIST_HEIGHT,HEX_RADIANS_ROT[toHexIndex(i+4)]));
         }
 
     }

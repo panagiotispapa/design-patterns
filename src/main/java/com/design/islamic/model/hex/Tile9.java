@@ -121,8 +121,8 @@ public class Tile9 implements Tile {
         final double th2 = PI_HALF + HEX_PHI / 4.0;
 
         for (int i = 0; i < HEX_N; i++) {
-            final double newPhi = HEX_RADIANS_ROT.get(i) + th;
-            final double newPhi2 = HEX_RADIANS_ROT.get(i) - th;
+            final double newPhi = HEX_RADIANS_ROT[i] + th;
+            final double newPhi2 = HEX_RADIANS_ROT[i] - th;
             pointsA.add(newEdgeAt(outerLayer2Rot.get(i), dist, newPhi));
             pointsB.add(newEdgeAt(outerLayer1Rot.get(i), dist, newPhi));
             pointsC.add(newEdgeAt(outerLayer2Rot.get(i), dist, newPhi2));
@@ -131,8 +131,8 @@ public class Tile9 implements Tile {
             pointsN.add(newEdgeAt(outerLayer2Rot.get(i), distN, newPhi));
             pointsO.add(newEdgeAt(outerLayer2Rot.get(i), distN, newPhi2));
 
-            pointsV.add(newEdgeAt(outerLayer2Rot.get(i), dist, HEX_RADIANS_ROT.get(i) + th2));
-            pointsU.add(newEdgeAt(outerLayer2Rot.get(i), dist, HEX_RADIANS_ROT.get(i) - th2));
+            pointsV.add(newEdgeAt(outerLayer2Rot.get(i), dist, HEX_RADIANS_ROT[i] + th2));
+            pointsU.add(newEdgeAt(outerLayer2Rot.get(i), dist, HEX_RADIANS_ROT[i] - th2));
 
 
         }
@@ -161,19 +161,19 @@ public class Tile9 implements Tile {
         final double th2 = PI_HALF + HEX_PHI / 4.0;
 
         for (int i = 0; i < HEX_N; i++) {
-            pointsE.add(newEdgeAt(outerLayer1.get(i), dist1, HEX_RADIANS.get(i) + PI_QUARTER));
-            pointsF.add(newEdgeAt(outerLayer1.get(i), dist2, HEX_RADIANS.get(i) + PI_QUARTER));
-            pointsG.add(newEdgeAt(outerLayer1.get(i), dist3, HEX_RADIANS.get(i) + PI_QUARTER));
+            pointsE.add(newEdgeAt(outerLayer1.get(i), dist1, HEX_RADIANS[i] + PI_QUARTER));
+            pointsF.add(newEdgeAt(outerLayer1.get(i), dist2, HEX_RADIANS[i] + PI_QUARTER));
+            pointsG.add(newEdgeAt(outerLayer1.get(i), dist3, HEX_RADIANS[i] + PI_QUARTER));
 
-            pointsH.add(newEdgeAt(outerLayer1.get(i), dist1, HEX_RADIANS.get(i) - PI_QUARTER));
-            pointsI.add(newEdgeAt(outerLayer1.get(i), dist2, HEX_RADIANS.get(i) - PI_QUARTER));
-            pointsJ.add(newEdgeAt(outerLayer1.get(i), dist3, HEX_RADIANS.get(i) - PI_QUARTER));
+            pointsH.add(newEdgeAt(outerLayer1.get(i), dist1, HEX_RADIANS[i] - PI_QUARTER));
+            pointsI.add(newEdgeAt(outerLayer1.get(i), dist2, HEX_RADIANS[i] - PI_QUARTER));
+            pointsJ.add(newEdgeAt(outerLayer1.get(i), dist3, HEX_RADIANS[i] - PI_QUARTER));
 
-            pointsP.add(newEdgeAt(outerLayer2.get(i), dist4, HEX_RADIANS.get(i) + th));
-            pointsQ.add(newEdgeAt(outerLayer2.get(i), dist4, HEX_RADIANS.get(i) - th));
+            pointsP.add(newEdgeAt(outerLayer2.get(i), dist4, HEX_RADIANS[i] + th));
+            pointsQ.add(newEdgeAt(outerLayer2.get(i), dist4, HEX_RADIANS[i] - th));
 
-            pointsR.add(newEdgeAt(outerLayer2.get(i), dist4, HEX_RADIANS.get(i) + th2));
-            pointsS.add(newEdgeAt(outerLayer2.get(i), dist4, HEX_RADIANS.get(i) - th2));
+            pointsR.add(newEdgeAt(outerLayer2.get(i), dist4, HEX_RADIANS[i] + th2));
+            pointsS.add(newEdgeAt(outerLayer2.get(i), dist4, HEX_RADIANS[i] - th2));
 
         }
 
@@ -188,9 +188,9 @@ public class Tile9 implements Tile {
 
         int index = 0;
         for (Point2D edge : outerEdgesRot) {
-            pointsK.add(newEdgeAt(edge, dist, HEX_RADIANS_ROT.get(toHexIndex(2 + index))));
-            pointsL.add(newEdgeAt(edge, dist, HEX_RADIANS_ROT.get(toHexIndex(3 + index))));
-            pointsM.add(newEdgeAt(edge, dist, HEX_RADIANS_ROT.get(toHexIndex(4 + index))));
+            pointsK.add(newEdgeAt(edge, dist, HEX_RADIANS_ROT[toHexIndex(2 + index)]));
+            pointsL.add(newEdgeAt(edge, dist, HEX_RADIANS_ROT[toHexIndex(3 + index)]));
+            pointsM.add(newEdgeAt(edge, dist, HEX_RADIANS_ROT[toHexIndex(4 + index)]));
 
             index++;
         }

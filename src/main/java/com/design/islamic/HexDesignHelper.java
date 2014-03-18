@@ -784,6 +784,38 @@ public class HexDesignHelper {
 
 
 
+    public static String newDesign19(final Point2D centre, final double r) {
+
+        final String gray = newStyle(GRAY, 1, 1);
+        final String green = newStyle(GREEN, 2, 1);
+        final String red = newStyle(RED, 2, 1);
+        final String blue = newStyle(BLUE, 2, 1);
+
+        StringBuilder builder = new StringBuilder();
+
+
+        Tile tile = new Tile19(centre, r);
+
+        double newR = r / 5.0;
+
+        List<Point2D> outerLayer1 = newHexagonRot(centre, 2 * newR);
+        List<Point2D> outerLayer2 = newHexagonRot(centre, 3 * newR);
+        List<Point2D> outerLayer3 = newHexagonRot(centre, 4 * newR);
+
+        builder.append(drawPolygon(newHexagonRot(centre, r), gray));
+        builder.append(drawPolygon(newHexagonRot(centre, newR), gray));
+        builder.append(highlightPoints(outerLayer1));
+        builder.append(highlightPoints(outerLayer2));
+        builder.append(highlightPoints(outerLayer3));
+
+
+
+        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
+
+        return builder.toString();
+    }
+
+
 
 
 

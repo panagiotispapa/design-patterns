@@ -91,18 +91,18 @@ public class Tile8 implements Tile {
         pointsH = newArrayList();
 
         for (int i = 0; i < HEX_N; i++) {
-            pointsA.add(newEdgeAt(mainHex.get(i), innerR, HEX_RADIANS_ROT.get(toHexIndex(i + 4))));
-            pointsB.add(newEdgeAt(mainHex.get(i), innerR, HEX_RADIANS_ROT.get(toHexIndex(i + 3))));
-            pointsC.add(newEdgeAt(mainHex.get(i), innerR, HEX_RADIANS_ROT.get(toHexIndex(i + 2))));
+            pointsA.add(newEdgeAt(mainHex.get(i), innerR, HEX_RADIANS_ROT[toHexIndex(i + 4)]));
+            pointsB.add(newEdgeAt(mainHex.get(i), innerR, HEX_RADIANS_ROT[toHexIndex(i + 3)]));
+            pointsC.add(newEdgeAt(mainHex.get(i), innerR, HEX_RADIANS_ROT[toHexIndex(i + 2)]));
 
-            pointsD.add(newEdgeAt(heights.get(i), outerR, HEX_RADIANS.get(i) - outerPhi));
-            pointsE.add(newEdgeAt(heights.get(i), outerR, HEX_RADIANS.get(i) + outerPhi));
+            pointsD.add(newEdgeAt(heights.get(i), outerR, HEX_RADIANS[i] - outerPhi));
+            pointsE.add(newEdgeAt(heights.get(i), outerR, HEX_RADIANS[i] + outerPhi));
         }
 
         for (int i = 0; i < RECT_N; i++) {
-            pointsF.add(newEdgeAt(centre, innerR2, RECT_RADIANS_ROT.get(i)));
-            pointsG.add(newEdgeAt(centre, innerR2, RECT_RADIANS_ROT.get(i) - HEX_PHI_HALF));
-            pointsH.add(newEdgeAt(centre, innerR2, RECT_RADIANS_ROT.get(i) - HEX_PHI));
+            pointsF.add(newEdgeAt(centre, innerR2, RECT_RADIANS_ROT[i]));
+            pointsG.add(newEdgeAt(centre, innerR2, RECT_RADIANS_ROT[i] - HEX_PHI_HALF));
+            pointsH.add(newEdgeAt(centre, innerR2, RECT_RADIANS_ROT[i] - HEX_PHI));
         }
 
     }

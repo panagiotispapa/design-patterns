@@ -67,10 +67,10 @@ public class Tile4 implements Tile {
         for (Point2D layerExtEdge : layerExtEdges) {
 
             out.add(asList(
-                    newEdgeAt(layerExtEdge, r, HEX_RADIANS_ROT.get(toHexIndex(k))),
-                    newEdgeAt(layerExtEdge, r, HEX_RADIANS_ROT.get(toHexIndex(k + 1))),
-                    newEdgeAt(layerExtEdge, r, HEX_RADIANS_ROT.get(toHexIndex(k + 4))),
-                    newEdgeAt(layerExtEdge, r, HEX_RADIANS_ROT.get(toHexIndex(k + 5)))
+                    newEdgeAt(layerExtEdge, r, HEX_RADIANS_ROT[toHexIndex(k)]),
+                    newEdgeAt(layerExtEdge, r, HEX_RADIANS_ROT[toHexIndex(k + 1)]),
+                    newEdgeAt(layerExtEdge, r, HEX_RADIANS_ROT[toHexIndex(k + 4)]),
+                    newEdgeAt(layerExtEdge, r, HEX_RADIANS_ROT[toHexIndex(k + 5)])
 
             ));
 

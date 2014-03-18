@@ -49,9 +49,9 @@ public class Tile10 implements Tile {
 
             lines.add(
                     asList(
-                            newEdgeAt(innerEdge, height, HEX_RADIANS.get(toHexIndex(1 + index))),
+                            newEdgeAt(innerEdge, height, HEX_RADIANS[toHexIndex(1 + index)]),
                             innerEdge,
-                            newEdgeAt(innerEdge, height, HEX_RADIANS.get(index))
+                            newEdgeAt(innerEdge, height, HEX_RADIANS[index])
                     )
             );
 

@@ -29,10 +29,10 @@ public class Tile15 implements Tile {
 
         newR = (r * sin(PI_QUARTER)) / 2.5;
 
-        Point2D urCentre = newEdgeAt(centre, 5 * newR, HEX_RADIANS_ROT.get(5));
-        Point2D ulCentre = newEdgeAt(centre, 5 * newR, HEX_RADIANS_ROT.get(3));
-        Point2D dlCentre = newEdgeAt(centre, 5 * newR, HEX_RADIANS_ROT.get(2));
-        Point2D drCentre = newEdgeAt(centre, 5 * newR, HEX_RADIANS_ROT.get(0));
+        Point2D urCentre = newEdgeAt(centre, 5 * newR, HEX_RADIANS_ROT[5]);
+        Point2D ulCentre = newEdgeAt(centre, 5 * newR, HEX_RADIANS_ROT[3]);
+        Point2D dlCentre = newEdgeAt(centre, 5 * newR, HEX_RADIANS_ROT[2]);
+        Point2D drCentre = newEdgeAt(centre, 5 * newR, HEX_RADIANS_ROT[0]);
 
         for (int i = 0; i < HEX_N; i++) {
             lines.add(buildLowerPart(centre, i));
@@ -60,26 +60,26 @@ public class Tile15 implements Tile {
 
     private List<Point2D> buildLowerPart(Point2D centre, int index) {
 
-        Point2D newCentre = newEdgeAt(centre, newR * HEX_DIST_NEW_CENTRE, HEX_RADIANS.get(index));
+        Point2D newCentre = newEdgeAt(centre, newR * HEX_DIST_NEW_CENTRE, HEX_RADIANS[index]);
 
         return asList(
-                newEdgeAt(centre, newR * HEX_DIST_DIAGONAL, HEX_RADIANS.get(index)),
-                newEdgeAt(centre, newR, HEX_RADIANS_ROT.get(index)),
-                newEdgeAt(newCentre, newR, HEX_RADIANS_ROT.get(index)),
-                newEdgeAt(newCentre, newR * HEX_DIST_DIAGONAL, HEX_RADIANS.get(index))
+                newEdgeAt(centre, newR * HEX_DIST_DIAGONAL, HEX_RADIANS[index]),
+                newEdgeAt(centre, newR, HEX_RADIANS_ROT[index]),
+                newEdgeAt(newCentre, newR, HEX_RADIANS_ROT[index]),
+                newEdgeAt(newCentre, newR * HEX_DIST_DIAGONAL, HEX_RADIANS[index])
         );
 
     }
 
     private List<Point2D> buildUpperPart(Point2D centre, int index) {
 
-        Point2D newCentre = newEdgeAt(centre, newR * HEX_DIST_NEW_CENTRE, HEX_RADIANS.get(index));
+        Point2D newCentre = newEdgeAt(centre, newR * HEX_DIST_NEW_CENTRE, HEX_RADIANS[index]);
 
         return asList(
-                newEdgeAt(centre, newR * HEX_DIST_DIAGONAL, HEX_RADIANS.get(index)),
-                newEdgeAt(centre, newR, HEX_RADIANS_ROT.get(toHexIndex(index + 5))),
-                newEdgeAt(newCentre, newR, HEX_RADIANS_ROT.get(toHexIndex(index + 5))),
-                newEdgeAt(newCentre, newR * HEX_DIST_DIAGONAL, HEX_RADIANS.get(index))
+                newEdgeAt(centre, newR * HEX_DIST_DIAGONAL, HEX_RADIANS[index]),
+                newEdgeAt(centre, newR, HEX_RADIANS_ROT[toHexIndex(index + 5)]),
+                newEdgeAt(newCentre, newR, HEX_RADIANS_ROT[toHexIndex(index + 5)]),
+                newEdgeAt(newCentre, newR * HEX_DIST_DIAGONAL, HEX_RADIANS[index])
         );
 
     }

@@ -55,23 +55,23 @@ public class Tile7 implements Tile {
         for (int i = 0; i < HEX_N; i++) {
             Point2D edgeRot = outerLayerRot.get(i);
             lines.add(asList(
-                    newEdgeAt(edgeRot, distH, HEX_RADIANS.get(i)),
+                    newEdgeAt(edgeRot, distH, HEX_RADIANS[i]),
                     edgeRot,
-                    newEdgeAt(edgeRot, distH, HEX_RADIANS.get(toHexIndex(i + 1)))
+                    newEdgeAt(edgeRot, distH, HEX_RADIANS[toHexIndex(i + 1)])
 
             ));
 
             lines.add(asList(
-                    newEdgeAt(edgeRot, newR, HEX_RADIANS.get(toHexIndex(i + 4))),
+                    newEdgeAt(edgeRot, newR, HEX_RADIANS[toHexIndex(i + 4)]),
                     edgeRot,
-                    newEdgeAt(edgeRot, newR, HEX_RADIANS.get(toHexIndex(i + 3)))
+                    newEdgeAt(edgeRot, newR, HEX_RADIANS[toHexIndex(i + 3)])
             ));
 
             Point2D edge = outerLayer.get(i);
             lines.add(asList(
-                    newEdgeAt(edge, newR, HEX_RADIANS_ROT.get(toHexIndex(i + 3))),
+                    newEdgeAt(edge, newR, HEX_RADIANS_ROT[toHexIndex(i + 3)]),
                     edge,
-                    newEdgeAt(edge, newR, HEX_RADIANS_ROT.get(toHexIndex(i + 2)))
+                    newEdgeAt(edge, newR, HEX_RADIANS_ROT[toHexIndex(i + 2)])
             ));
 
         }
