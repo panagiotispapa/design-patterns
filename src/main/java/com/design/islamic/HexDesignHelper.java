@@ -818,6 +818,35 @@ public class HexDesignHelper {
 
 
 
+    public static String newDesign20(final Point2D centre, final double r) {
+
+        final String gray = newStyle(GRAY, 1, 1);
+        final String green = newStyle(GREEN, 2, 1);
+        final String red = newStyle(RED, 2, 1);
+        final String blue = newStyle(BLUE, 2, 1);
+
+        StringBuilder builder = new StringBuilder();
+
+        double newR = r / 6.0;
+
+
+        Tile tile = new Tile20(centre, r);
+
+        builder.append(drawPolygon(newHexagon(centre, r), gray));
+        builder.append(drawPolygon(newHexagon(centre, newR), gray));
+        builder.append(drawPolygon(newHexagon(centre, 2*newR), gray));
+        builder.append(drawPolygon(newHexagon(centre, 3*newR), gray));
+        builder.append(drawPolygon(newHexagon(centre, 4*newR), gray));
+        builder.append(drawPolygon(newHexagon(centre, 5*newR), gray));
+
+        builder.append(drawPolylines(newHexDiag(centre,r), gray));
+
+
+
+        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
+
+        return builder.toString();
+    }
 
 
 
@@ -827,4 +856,4 @@ public class HexDesignHelper {
 
 
 
-}
+    }

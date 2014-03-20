@@ -33,54 +33,51 @@ public class Tile19 implements Tile {
         int dm = 1;
         int dr = 0;
 
-        List<Point2D> outerLayer1 = newHexagonRot(centre, 2 * newR);
-        List<Point2D> outerLayer2 = newHexagonRot(centre, 3 * newR);
-        List<Point2D> outerLayer3 = newHexagonRot(centre, 4 * newR);
-
         for (int i = 0; i < HEX_N; i++) {
-            Point2D edge1 = outerLayer1.get(i);
-            Point2D edge2 = outerLayer2.get(i);
-            Point2D edge3 = outerLayer3.get(i);
-            Point2D edge4 = newEdgeAt(edge2, 2 * newR, d(dm, i));
+            Point2D edge1 = p(centre, 2, i);
+            Point2D edge2 = p(centre, 3, i);
+            Point2D edge3 = p(centre, 4, i);
+            Point2D edge4 = p(edge2, 2, dm + i);
 
             lines.add(asList(
-                    newEdgeAt(edge1, newR, d(ur, i)),
+                    p(edge1, 1, ur + i),
                     edge1,
-                    newEdgeAt(edge1, newR, d(dr, i)),
-                    newEdgeAt(edge1, newR, d(dm, i)),
-                    newEdgeAt(edge1, newR, d(dl, i)),
-                    newEdgeAt(edge1, newR, d(ul, i)),
-                    newEdgeAt(edge1, newR, d(um, i))
+                    p(edge1, 1, dr + i),
+                    p(edge1, 1, dm + i),
+                    p(edge1, 1, dl + i),
+                    p(edge1, 1, ul + i),
+                    p(edge1, 1, um + i)
             ));
 
             lines.add(asList(
-                    newEdgeAt(edge2, newR, d(um, i)),
-                    newEdgeAt(edge2, newR, d(ur, i))
+                    p(edge2, 1, um + i),
+                    p(edge2, 1, ur + i)
             ));
 
             lines.add(asList(
-                    newEdgeAt(edge3, newR, d(ur, i)),
-                    newEdgeAt(edge3, newR, d(um, i)),
+                    p(edge3, 1, ur + i),
+                    p(edge3, 1, um + i),
                     edge3,
-                    newEdgeAt(edge3, newR, d(dl, i)),
-                    newEdgeAt(edge3, newR, d(dm, i))
+                    p(edge3, 1, dl + i),
+                    p(edge3, 1, dm + i)
             ));
 
             lines.add(asList(
-                    newEdgeAt(edge4, newR, d(um, i)),
-                    newEdgeAt(edge4, newR, d(ul, i)),
-                    newEdgeAt(edge4, newR, d(dl, i)),
+                    p(edge4, 1, um + i),
+                    p(edge4, 1, ul + i),
+                    p(edge4, 1, dl + i),
                     edge4
-//                    newEdgeAt(edge4, newR, d(dm, i))
             ));
 
         }
 
     }
 
-    private static double d(int phiIndex, int index) {
-        return HEX_RADIANS_ROT[toHexIndex(phiIndex + index)];
+    private Point2D p(Point2D centre, int times, int phiIndex) {
+        return newEdgeAt(centre, times * newR, HEX_RADIANS_ROT[toHexIndex(phiIndex)]);
     }
+
+
 
     @Override
     public Payload getPayload() {

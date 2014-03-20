@@ -70,6 +70,7 @@ public class PatternManager {
         hexProviderMap.put(HexPattern.SEVENTEEN, new Tile17(newCentre(0, 0), r).getPayload());
         hexProviderMap.put(HexPattern.EIGHTEEN, new Tile18(newCentre(0, 0), r).getPayload());
         hexProviderMap.put(HexPattern.NINETEEN, new Tile19(newCentre(0, 0), r).getPayload());
+        hexProviderMap.put(HexPattern.TWENTY, new Tile20(newCentre(0, 0), r).getPayload());
 
     }
 
