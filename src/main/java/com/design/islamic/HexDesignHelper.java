@@ -839,7 +839,7 @@ public class HexDesignHelper {
         builder.append(drawPolygon(newHexagon(centre, 4*newR), gray));
         builder.append(drawPolygon(newHexagon(centre, 5*newR), gray));
 
-        builder.append(drawPolylines(newHexDiag(centre,r), gray));
+        builder.append(drawPolylines(newHexDiag(centre, r), gray));
 
 
 
@@ -850,6 +850,99 @@ public class HexDesignHelper {
 
 
 
+
+
+    public static String newDesign21(final Point2D centre, final double r) {
+
+        final String gray = newStyle(GRAY, 1, 1);
+        final String green = newStyle(GREEN, 2, 1);
+        final String red = newStyle(RED, 2, 1);
+        final String blue = newStyle(BLUE, 2, 1);
+
+        StringBuilder builder = new StringBuilder();
+
+
+
+        Tile tile = new Tile21(centre, r);
+
+        double newR = r / 6.0;
+
+        builder.append(drawPolygon(newHexagon(centre, r), gray));
+        builder.append(drawPolygon(newHexagon(centre, newR), gray));
+        builder.append(drawPolygon(newHexagon(centre, 2*newR), gray));
+        builder.append(drawPolygon(newHexagon(centre, 3*newR), gray));
+        builder.append(drawPolygon(newHexagon(centre, 4*newR), gray));
+        builder.append(drawPolygon(newHexagon(centre, 5*newR), gray));
+
+
+        builder.append(drawPolylines(newHexDiag(centre,r), gray));
+        builder.append(drawPolylines(newHexHeights(centre, r), gray));
+
+        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
+
+        return builder.toString();
+    }
+
+
+    public static String newDesign22(final Point2D centre, final double r) {
+
+        final String gray = newStyle(GRAY, 1, 1);
+        final String green = newStyle(GREEN, 2, 1);
+        final String red = newStyle(RED, 2, 1);
+        final String blue = newStyle(BLUE, 2, 1);
+
+        StringBuilder builder = new StringBuilder();
+
+
+        double newH = r / 16.0;
+        double newR = newH / HEX_DIST_HEIGHT;
+
+
+        Tile tile = new Tile22(centre, r);
+
+
+
+        builder.append(drawPolygon(newHexagon(centre, r), gray));
+
+        builder.append(drawPolylines(newHexDiag(centre,r), gray));
+        builder.append(drawPolylines(newHexHeights(centre,r), gray));
+
+        for (int i = 1; i < 16; i++) {
+            builder.append(drawPolygon(newHexagonRot(centre, i*newR), gray));
+        }
+
+
+
+        builder.append(drawPolygons(tile.getPayload().getPolygons(), blue));
+        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
+
+
+        return builder.toString();
+    }
+
+
+
+    public static String newDesign23(final Point2D centre, final double r) {
+
+        final String gray = newStyle(GRAY, 1, 1);
+        final String green = newStyle(GREEN, 2, 1);
+        final String red = newStyle(RED, 2, 1);
+        final String blue = newStyle(BLUE, 2, 1);
+
+        StringBuilder builder = new StringBuilder();
+
+
+        builder.append(drawPolygon(newHexagonRot(centre, r), gray));
+        builder.append(drawPolygon(newHexagon(centre, r / HEX_DIST_HEIGHT), gray));
+
+//        builder.append(drawPolygon(newHexagon(newEdgeAt(centre, r*HEX_DIST_NEW_CENTRE, HEX_RADIANS[1]),
+//                r*HEX_DIST_HEIGHT), gray));
+
+
+
+
+        return builder.toString();
+    }
 
 
 

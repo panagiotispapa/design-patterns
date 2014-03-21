@@ -35,8 +35,9 @@ public class Tile20 implements Tile {
 
         for (int i = 0; i < HEX_N; i++) {
             lines.add(newArrow(centre, i));
-            lines.add(newArrow(p(centre, 6, i), i + ML));
-            lines.add(newArrow(p(centre, 6, i), i + DL));
+            Point2D edge = p(centre, 6, i);
+            lines.add(newArrow(edge, i + ML));
+            lines.add(newArrow(edge, i + DL));
 
         }
 
