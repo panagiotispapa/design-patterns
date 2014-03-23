@@ -73,6 +73,7 @@ public class PatternManager {
         hexProviderMap.put(HexPattern.TWENTY, new Tile20(newCentre(0, 0), r).getPayload());
         hexProviderMap.put(HexPattern.TWENTY_ONE, new Tile21(newCentre(0, 0), r).getPayload());
         hexProviderMap.put(HexPattern.TWENTY_TWO, new Tile22(newCentre(0, 0), r).getPayload());
+        hexProviderMap.put(HexPattern.TWENTY_THREE, new Tile23(newCentre(0, 0), r).getPayload());
 
     }
 

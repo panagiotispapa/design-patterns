@@ -32,7 +32,7 @@ public class Tile18 implements Tile {
 
 
         List<Point2D> mainLayer = newHexagon(centre, r);
-        polygons.add(mainLayer);
+//        polygons.add(mainLayer);
 
         lines.add(asList(
                 mainLayer.get(1),

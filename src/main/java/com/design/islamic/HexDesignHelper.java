@@ -10,6 +10,7 @@ import java.util.List;
 
 import static com.design.common.PolygonTools.*;
 import static com.design.common.view.SvgFactory.*;
+import static com.design.common.view.SvgFactory.highlightPoints;
 import static com.design.islamic.GenericTools.concatEdges;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
@@ -922,7 +923,57 @@ public class HexDesignHelper {
 
 
 
+
     public static String newDesign23(final Point2D centre, final double r) {
+
+        final String gray = newStyle(GRAY, 1, 1);
+        final String green = newStyle(GREEN, 2, 1);
+        final String red = newStyle(RED, 2, 1);
+        final String blue = newStyle(BLUE, 2, 1);
+
+        StringBuilder builder = new StringBuilder();
+
+        Tile tile = new Tile23(centre, r);
+
+
+        double newH = r / 2.0;
+        double newR = newH / HEX_DIST_HEIGHT;
+
+        List<Point2D> edges = newHexagon(centre, newR);
+
+        builder.append(drawPolygon(newHexagonRot(centre, r), gray));
+//        builder.append(drawPolygon(newHexagon(centre, newR), gray));
+
+        for (Point2D edge : edges) {
+            builder.append(drawPolygon(newHexagon(edge, newR), gray));
+
+        }
+
+        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
+        builder.append(highlightPoints(edges));
+
+
+        return builder.toString();
+    }
+
+
+    public static String newDesignTemplate(final Point2D centre, final double r) {
+
+        final String gray = newStyle(GRAY, 1, 1);
+        final String green = newStyle(GREEN, 2, 1);
+        final String red = newStyle(RED, 2, 1);
+        final String blue = newStyle(BLUE, 2, 1);
+
+        StringBuilder builder = new StringBuilder();
+
+
+
+        return builder.toString();
+    }
+
+
+
+    public static String newDesign29(final Point2D centre, final double r) {
 
         final String gray = newStyle(GRAY, 1, 1);
         final String green = newStyle(GREEN, 2, 1);

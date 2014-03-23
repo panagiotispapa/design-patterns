@@ -131,7 +131,7 @@ public class Main implements ActionListener {
 
     public static void main(String[] args) {
 
-        Dimension dim = new Dimension(1024 + 2 * 64, 768);
+        Dimension dim = new Dimension(1024+2*128 + 32, 768);
 
         JFrame frame = new JFrame();
         frame.setTitle("Islamic patterns");
