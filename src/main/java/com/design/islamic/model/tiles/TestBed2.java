@@ -49,7 +49,7 @@ public class TestBed2 {
         String mySVG = Patterns.buildHexPatternBlackAndWhite(
                 buildHexPatterns(
                         centreConfiguration.getCentresConfig(HEX_SECOND, 1.0),
-                        new Tile24(newCentre(0,0),r).getPayload())
+                        new Tile26(newCentre(0,0),r).getPayload())
                 , dim
 
         );

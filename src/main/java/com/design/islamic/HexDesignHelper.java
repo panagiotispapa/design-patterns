@@ -13,8 +13,7 @@ import static com.design.common.view.SvgFactory.*;
 import static com.design.islamic.GenericTools.concatEdges;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
+import static java.lang.Math.*;
 import static java.util.Arrays.asList;
 
 public class HexDesignHelper {
@@ -929,8 +928,102 @@ public class HexDesignHelper {
 
         builder.append(drawPolygon(newHexagonRot(centre, newR), gray));
         //newHexDiag(newEdgeAt(centre,  1* newR, HEX_RADIANS_ROT[0]))
-        builder.append(drawPolygon(newHexagonRot(newEdgeAt(centre,  1* newR, HEX_RADIANS_ROT[0]), newR), gray));
+        builder.append(drawPolygon(newHexagonRot(newEdgeAt(centre, 1 * newR, HEX_RADIANS_ROT[0]), newR), gray));
 //        builder.append(drawPolygon(newHexagonRot(newEdgeAt(centre, 3 * newR, HEX_RADIANS_ROT[0]), newR), gray));
+
+        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
+
+        return builder.toString();
+    }
+
+    public static String newDesign25(final Point2D centre, final double r) {
+
+        final String gray = newStyle(GRAY, 1, 1);
+        final String green = newStyle(GREEN, 2, 1);
+        final String red = newStyle(RED, 2, 1);
+        final String blue = newStyle(BLUE, 2, 1);
+
+        StringBuilder builder = new StringBuilder();
+
+        Tile tile = new Tile25(centre, r);
+
+        double height = r * HEX_DIST_HEIGHT;
+
+//        double newR = height * HEX_DIST_HEIGHT - (height / 2.0);
+
+        double phi1 = Math.atan((r / 2.0) / (height * 2));
+        double phi2 = HEX_PHI - phi1;
+        double d1 = (height / 2.0) * tan(phi2);
+        double newR = height * HEX_DIST_HEIGHT - d1;
+//        double d2 = (height/2.0)*tan(phi2);
+//
+        List<Point2D> layer1 = newHexagon(centre, r);
+        List<Point2D> layerRot = newHexagonRot(centre, r * HEX_DIST_HEIGHT);
+
+        List<List<Point2D>> lines = asList(
+                asList(
+                        layerRot.get(1),
+                        layer1.get(5)
+                ),
+                asList(
+                        layerRot.get(1),
+                        layer1.get(4)
+                ),
+                asList(
+                        layerRot.get(0),
+                        layerRot.get(3)
+                ),
+                asList(
+                        layerRot.get(2),
+                        layerRot.get(5)
+                ),
+                asList(
+                        layerRot.get(1),
+                        layerRot.get(4)
+                ),
+                asList(
+                        layerRot.get(0),
+                        layer1.get(3)
+                ),
+                asList(
+                        layerRot.get(2),
+                        layer1.get(0)
+                ),
+                asList(
+                        layer1.get(1),
+                        layer1.get(4)
+                )
+        );
+
+        builder.append(drawPolygon(layer1, gray));
+        builder.append(drawPolygon(layerRot, gray));
+        builder.append(drawPolylines(lines, gray));
+
+        builder.append(highlightPoints(newHexagon(centre, newR)));
+        builder.append(highlightPoints(newHexagon(centre, height * HEX_DIST_HEIGHT)));
+//        builder.append(highlightPoints(newHexagon(centre, d1)));
+
+        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
+
+        return builder.toString();
+    }
+
+    public static String newDesign26(final Point2D centre, final double r) {
+
+        final String gray = newStyle(GRAY, 1, 1);
+        final String green = newStyle(GREEN, 2, 1);
+        final String red = newStyle(RED, 2, 1);
+        final String blue = newStyle(BLUE, 2, 1);
+
+        StringBuilder builder = new StringBuilder();
+
+
+        Tile tile = new Tile26(centre, r);
+
+
+        builder.append(drawPolygon(newHexagonRot(centre, r), gray));
+        builder.append(drawPolygon(newHexagonRot(centre, r*HEX_DIST_DAM), gray));
+
 
         builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
 
