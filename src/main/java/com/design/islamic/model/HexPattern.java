@@ -40,7 +40,8 @@ public enum HexPattern {
     TWENTY_THREE("Pattern 23 m", HEX_SECOND, 1.0),
     TWENTY_FOUR("Pattern 24", HEX_SECOND, 1.0),
     TWENTY_FIVE("Pattern 25", HEX_THIRD, 1.0),
-    TWENTY_SIX("Pattern 26", HEX_SECOND, 1.0)
+    TWENTY_SIX("Pattern 26", HEX_SECOND, 1.0),
+    TWENTY_SEVEN("Pattern 27", HEX_SECOND, 1.0)
     ;
 
 

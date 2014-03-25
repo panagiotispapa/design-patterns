@@ -1,9 +1,6 @@
 package com.design.common;
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import org.paukov.combinatorics.Generator;
 import org.paukov.combinatorics.ICombinatoricsVector;
 
@@ -20,29 +17,21 @@ import static org.paukov.combinatorics.Factory.createVector;
 
 public class PolygonTools {
 
-
-
     public final static double PI_HALF = PI / 2.0;
     public final static double PI_QUARTER = PI / 4.0;
-
-
-
 
     public final static int OCT_N = 8;
     public final static double OCT_PHI = (2.0 * PI) / OCT_N;
 
-
     public static double[] OCT_RADIANS = computeDegrees(OCT_N, OCT_PHI);
     public static double[] OCT_RADIANS_ROT = computeDegreesRot(OCT_N, OCT_PHI);
-
 
     public static List<Point2D> octPoints = newEdgesAt(OCT_RADIANS);
     public static List<Point2D> octPointsRot = newEdgesAt(OCT_RADIANS_ROT);
 
-
     public final static int RECT_N = 4;
     public final static double RECT_PHI = (2.0 * PI) / RECT_N;
-
+    public final static double RECT_PHI_HALF = RECT_PHI / 2.0;
 
     public static double[] RECT_RADIANS = computeDegrees(RECT_N, RECT_PHI);
     public static double[] RECT_RADIANS_ROT = computeDegreesRot(RECT_N, RECT_PHI);
@@ -129,11 +118,10 @@ public class PolygonTools {
         double[] degrees = new double[n];
 
         for (int k = 0; k < n; k++) {
-            degrees[k]= phi * (k + 0.5);
+            degrees[k] = phi * (k + 0.5);
         }
 
         return degrees;
-
 
     }
 
@@ -262,6 +250,7 @@ public class PolygonTools {
     public static List<Point2D> newRectRot(Point2D centre, double r) {
         return cloneAndTranslateScalePoints(centre, r, rectPointsRot);
     }
+
     public static List<Point2D> newHexagon(Point2D centre, double r) {
         return cloneAndTranslateScalePoints(centre, r, hexPoints);
     }
@@ -370,10 +359,10 @@ public class PolygonTools {
     public static int toHexIndex(int i) {
         return i % HEX_N;
     }
+
     public static int toOctIndex(int i) {
         return i % OCT_N;
     }
-
 
     public static long TIME;
 }
