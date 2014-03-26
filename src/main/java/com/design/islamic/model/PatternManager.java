@@ -3,16 +3,14 @@ package com.design.islamic.model;
 import com.design.islamic.CentreConfiguration;
 import com.design.islamic.Patterns;
 import com.design.islamic.model.hex.*;
-import com.design.islamic.model.hex.Tile1;
-import com.design.islamic.model.rect.*;
 import com.google.common.collect.Maps;
 
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.util.Map;
-import java.util.Set;
 
 import static com.design.common.PolygonTools.*;
+import static com.design.islamic.Patterns.buildHexPatternBlackAndWhite;
+import static com.design.islamic.Patterns.buildHexPatterns;
 import static com.design.islamic.model.Centre.newCentre;
 
 public class PatternManager {
@@ -22,12 +20,9 @@ public class PatternManager {
 
     private final CentreConfiguration centreConfiguration;
 
-
     private final Dimension dim;
 
-
     public PatternManager(double r, Dimension dim) {
-
 
         this.dim = dim;
 
@@ -40,7 +35,6 @@ public class PatternManager {
 
         rectProviderMap.put(RectPattern.ONE, new com.design.islamic.model.rect.Tile1(newCentre(0, 0), r).getPayload());
         rectProviderMap.put(RectPattern.TWO, new com.design.islamic.model.rect.Tile2(newCentre(0, 0), r).getPayload());
-
 
         hexProviderMap.put(HexPattern.ONE, new Tile1(newCentre(0, 0), r).getPayload());
 //        hexProviderMap.put(HexPattern.TWO, new PatternProvider() {
@@ -78,20 +72,21 @@ public class PatternManager {
         hexProviderMap.put(HexPattern.TWENTY_FIVE, new Tile25(newCentre(0, 0), r).getPayload());
         hexProviderMap.put(HexPattern.TWENTY_SIX, new Tile26(newCentre(0, 0), r).getPayload());
         hexProviderMap.put(HexPattern.TWENTY_SEVEN, new Tile27(newCentre(0, 0), r).getPayload());
-
+        hexProviderMap.put(HexPattern.TWENTY_EIGHT, new Tile28(newCentre(0, 0), r).getPayload());
+        hexProviderMap.put(HexPattern.TWENTY_NINE, new Tile29(newCentre(0, 0), r).getPayload());
 
     }
 
-
     public String getSvg(RectPattern rectPattern) {
-        return Patterns.buildHexPatternBlackAndWhite(
-                Patterns.buildHexPatterns(centreConfiguration.getCentresConfig(rectPattern.getConfig(), 1.0), rectProviderMap.get(rectPattern))
+        return buildHexPatternBlackAndWhite(
+                buildHexPatterns(centreConfiguration.getCentresConfig(rectPattern.getConfig(), 1.0), rectProviderMap.get(rectPattern))
                 , dim);
 
     }
+
     public String getSvg(HexPattern hexPattern) {
-        return Patterns.buildHexPatternBlackAndWhite(
-                Patterns.buildHexPatterns(centreConfiguration.getCentresConfig(hexPattern.getConfig(), hexPattern.getRatio()), hexProviderMap.get(hexPattern))
+        return buildHexPatternBlackAndWhite(
+                buildHexPatterns(centreConfiguration.getCentresConfig(hexPattern.getConfig(), hexPattern.getRatio()), hexProviderMap.get(hexPattern))
                 , dim);
 
 //        return hexProviderMap.get(hexPattern).provideSVG(centreConfiguration, r, dim);

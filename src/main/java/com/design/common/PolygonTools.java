@@ -57,6 +57,7 @@ public class PolygonTools {
     public final static double HEX_DIST_NEW_CENTRE = 2.0 * HEX_DIST_HEIGHT;
     public final static double HEX_DIST_OUTER_CIRCLE = HEX_DIST_NEW_CENTRE - 1;
     public final static double HEX_DIST_DAM = calcDistDam();
+    public final static double HEX_DIST_HEX_TO_RECT = calcDistHexToRect();
 
     public static double[] HEX_RADIANS = computeDegrees(HEX_N, HEX_PHI);
     public static double[] HEX_RADIANS_ROT = computeDegreesRot(HEX_N, HEX_PHI);
@@ -82,6 +83,12 @@ public class PolygonTools {
         return calcDistHeight(phi) - sin(phi / 2.0) * tan(phi / 2.0);
     }
 
+    private static double calcDistHexToRect() {
+
+        double d = (1 / 2.0) * atan(HEX_PHI - RECT_PHI_HALF);
+        return (HEX_DIST_HEIGHT - d);
+
+    }
     private static double calcDistDam() {
 
         double phi1 = Math.atan(1 / (4.0 * sin(HEX_PHI)));
