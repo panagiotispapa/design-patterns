@@ -1133,6 +1133,44 @@ public class HexDesignHelper {
         return builder.toString();
     }
 
+    public static String newDesign30(final Point2D centre, final double r) {
+
+        final String gray = newStyle(GRAY, 1, 1);
+        final String green = newStyle(GREEN, 2, 1);
+        final String red = newStyle(RED, 2, 1);
+        final String blue = newStyle(BLUE, 2, 1);
+
+
+        Tile tile = new Tile30(centre, r);
+
+        StringBuilder builder = new StringBuilder();
+
+        double d1 = HEX_DIST_HEIGHT * HEX_DIST_HEIGHT;
+        double d2 = 1 - d1;
+        double d3 = d2 * cos(PI_QUARTER);
+        double d4 = 2 * d3;
+        double d5 = 0.5 - d4;
+        double d6 = HEX_DIST_HEIGHT - d5;
+
+        List<Point2D> layer1 = newHexagon(centre, r * HEX_DIST_HEIGHT);
+
+        builder.append(drawPolygon(newHexagonRot(centre, r), gray));
+        builder.append(drawPolylines(newHexDiagRot(centre, r), gray));
+        builder.append(drawPolylines(newHexHeightsRot(centre, r), gray));
+        builder.append(newPolyline(asList(
+                layer1.get(0), layer1.get(5)
+        ), gray));
+
+        builder.append(highlightPoints(newHexagonRot(centre, r * d1)));
+        builder.append(highlightPoints(newHexagon(centre, r * d6)));
+        builder.append(highlightPoints(newHexagonRot(centre, r * d6 * HEX_DIST_HEX_TO_RECT)));
+
+
+        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
+
+        return builder.toString();
+    }
+
     public static String newDesignTemplate(final Point2D centre, final double r) {
 
         final String gray = newStyle(GRAY, 1, 1);
