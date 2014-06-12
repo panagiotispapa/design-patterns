@@ -5,12 +5,11 @@ import com.design.islamic.model.Payloads;
 import com.design.islamic.model.Tile;
 
 import java.awt.geom.Point2D;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.design.common.PolygonTools.HEX_RADIANS_ROT;
 import static com.design.common.PolygonTools.newEdgeAt;
-import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 
 public class Tile16 implements Tile {
@@ -23,7 +22,7 @@ public class Tile16 implements Tile {
 
         this.centre = centre;
 
-        lines = newArrayList();
+        lines = new ArrayList<>();
 
         newR = r / 9.0;
 

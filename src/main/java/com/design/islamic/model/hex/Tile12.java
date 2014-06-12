@@ -2,22 +2,18 @@ package com.design.islamic.model.hex;
 
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.Tile;
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import java.awt.geom.Point2D;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static com.design.common.PolygonTools.*;
 import static com.design.islamic.model.Payloads.newPayloadFromPolygonsAndLines;
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Lists.transform;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
 public class Tile12 implements Tile {
 
@@ -66,7 +62,7 @@ public class Tile12 implements Tile {
 
         );
 
-        lines = newArrayList();
+        lines = new ArrayList<>();
 
         List<int[]> l1 = asList(
                 e(3, 4, ur),
@@ -126,12 +122,7 @@ public class Tile12 implements Tile {
     }
 
     private static List<Point2D> toHexEdgesRot(List<int[]> els, final Point2D[] u, final Point2D[] d, final double newR, final Point2D centre) {
-        return Lists.newArrayList(Iterables.transform(els, new Function<int[], Point2D>() {
-            @Override
-            public Point2D apply(int[] el) {
-                return toHexEdgeRot(el, u, d, newR, centre);
-            }
-        }));
+        return els.stream().map((el) -> toHexEdgeRot(el, u, d, newR, centre)).collect(toList());
     }
 
     private static Point2D toHexEdgeRot(int[] el, Point2D[] u, Point2D[] d, double newR, Point2D centre) {
@@ -169,12 +160,7 @@ public class Tile12 implements Tile {
 
 
     private static List<int[]> toSymmetricRot(List<int[]> els, final Map<Integer, Integer> symmetryMap, final int sign) {
-        return newArrayList(transform(els, new Function<int[], int[]>() {
-            @Override
-            public int[] apply(int[] el) {
-                return toSymmetricRot(el, symmetryMap, sign);
-            }
-        }));
+        return els.stream().map((el) -> toSymmetricRot(el, symmetryMap, sign)).collect(toList());
     }
 
     private static int[] toSymmetricRot(int[] el, Map<Integer, Integer> symmetryMap, int sign) {

@@ -3,6 +3,7 @@ package com.design.celtic;
 import com.design.common.model.Circle;
 import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.design.common.model.Shapes.newCircle;
@@ -55,7 +56,7 @@ public class Helper {
         final double step = 1.0 / (double) n;
         final double offset = offsetN * step * 2.0 * bigR.getR();
 
-        List<Circle> output = Lists.newArrayList();
+        List<Circle> output = new ArrayList<>();
 
         output.addAll(putInARowLeftToRight(bigR, 1.0 * step, offset));
         for (int i = 2; i < n; i += 2) {
@@ -68,7 +69,7 @@ public class Helper {
 
     public static List<Circle> putInARowLeftToRight(Circle bigR, double part, double offset) {
 
-        List<Circle> output = Lists.newArrayList();
+        List<Circle> output = new ArrayList<>();
 
         final double newR = bigR.getR() * part;
         final double startPoint = bigR.getCentre().getX() - bigR.getR() + offset + newR;
@@ -82,7 +83,7 @@ public class Helper {
 
     public static List<Circle> putInARowRightToLeft(Circle bigR, double part) {
 
-        List<Circle> output = Lists.newArrayList();
+        List<Circle> output = new ArrayList<>();
 
         final double newR = bigR.getR() * part;
         final double startPoint = bigR.getCentre().getX() + bigR.getR() - newR;
@@ -95,7 +96,7 @@ public class Helper {
     }
 
     public static List<Circle> splitInHalf(Iterable<Circle> bigCircles) {
-        List<Circle> output = Lists.newArrayList();
+        List<Circle> output = new ArrayList<>();
 
         for (Circle bigCircle : bigCircles) {
             output.addAll(splitInHalf(bigCircle));

@@ -2,16 +2,17 @@ package com.design.common;
 
 import com.google.common.collect.ImmutableList;
 import org.paukov.combinatorics.Generator;
-import org.paukov.combinatorics.ICombinatoricsVector;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.design.islamic.GenericTools.*;
 import static com.design.islamic.model.Centre.newCentre;
-import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Math.*;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.StreamSupport.stream;
 import static org.paukov.combinatorics.Factory.createSimpleCombinationGenerator;
 import static org.paukov.combinatorics.Factory.createVector;
 
@@ -194,7 +195,9 @@ public class PolygonTools {
     }
 
     private static List<Point2D> newEdgesAt(double[] radians) {
-        List<Point2D> edges = newArrayList();
+
+
+        List<Point2D> edges = new ArrayList<>();
         for (double radian : radians) {
             edges.add(newEdgeAt(radian));
         }
@@ -220,26 +223,15 @@ public class PolygonTools {
 
     public static List<List<Point2D>> generateCombsOfPoints(List<Point2D> edges) {
 
-        List<List<Point2D>> combinations = newArrayList();
-
         Generator<Point2D> edgesLines = createSimpleCombinationGenerator(createVector(
                 edges), 2);
 
-        for (ICombinatoricsVector<Point2D> edgesLine : edgesLines) {
-            combinations.add(edgesLine.getVector());
-        }
+        return stream(edgesLines.spliterator(), false).map(edgesLine -> edgesLine.getVector()).collect(toList());
 
-        return combinations;
     }
 
     public static List<List<Point2D>> buildLines(final Point2D centre, List<Point2D> points) {
-
-        List<List<Point2D>> lines = newArrayList();
-        for (Point2D point2D : points) {
-            lines.add(asList(centre, point2D));
-        }
-
-        return lines;
+        return points.stream().map((point) -> asList(centre, point)).collect(toList());
     }
 
     public static List<Point2D> newOct(Point2D centre, double r) {
@@ -347,7 +339,7 @@ public class PolygonTools {
 
     public static List<List<Point2D>> concateOuterHexagons(List<Point2D> outer, List<Point2D> outerRot) {
 
-        List<List<Point2D>> out = newArrayList();
+        List<List<Point2D>> out = new ArrayList<>();
 
         int index = 0;
         for (Point2D edge : outer) {

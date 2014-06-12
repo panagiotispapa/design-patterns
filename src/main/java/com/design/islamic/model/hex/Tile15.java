@@ -5,10 +5,10 @@ import com.design.islamic.model.Payloads;
 import com.design.islamic.model.Tile;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.design.common.PolygonTools.*;
-import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Math.sin;
 import static java.util.Arrays.asList;
 
@@ -24,7 +24,7 @@ public class Tile15 implements Tile {
 
     public Tile15(final Point2D centre, final double r) {
 
-        lines = newArrayList();
+        lines = new ArrayList<>();
 
 
         newR = (r * sin(PI_QUARTER)) / 2.5;

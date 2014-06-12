@@ -7,9 +7,11 @@ import org.fest.assertions.api.Assertions;
 import org.junit.Test;
 
 import java.awt.geom.Point2D;
+import java.util.Arrays;
 import java.util.Set;
 
 import static com.design.islamic.model.Centre.newCentre;
+import static java.util.Arrays.asList;
 
 public class CentreTest {
 
@@ -27,9 +29,9 @@ public class CentreTest {
 
 
 //        Set<Point2D> set = Sets.newHashSet(c1, c2, c3);
-        Set<Point2D> set = Sets.newHashSet(Lists.newArrayList(c1, c2, c3, c4, c5));
+        Set<Point2D> set = Sets.newHashSet(asList(c1, c2, c3, c4, c5));
 
-        set.addAll(Lists.newArrayList(newCentre(4.0, 6.4)));
+        set.addAll(asList(newCentre(4.0, 6.4)));
 
         Assertions.assertThat(set).containsOnly(c1, c2, c4);
 

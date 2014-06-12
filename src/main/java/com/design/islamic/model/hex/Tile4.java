@@ -3,15 +3,15 @@ package com.design.islamic.model.hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.Payloads;
 import com.design.islamic.model.Tile;
-import com.google.common.base.Function;
 
 import java.awt.geom.Point2D;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.design.common.PolygonTools.*;
 import static com.design.common.view.SvgFactory.WHITE;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 
@@ -23,13 +23,8 @@ public class Tile4 implements Tile {
     private final String styleWhiteBold = newStyle(WHITE, 2, 1);
     private final String styleWhite = newStyle(WHITE, 1, 1);
 
-    public static List<Tile4> fromCentres(final Iterable<Point2D> centres, final double r) {
-        return newArrayList(transform(centres, new Function<Point2D, Tile4>() {
-            @Override
-            public Tile4 apply(Point2D centre) {
-                return new Tile4(centre, r);
-            }
-        }));
+    public static List<Tile4> fromCentres(Collection<Point2D> centres, final double r) {
+        return centres.stream().map((centre) -> new Tile4(centre, r)).collect(Collectors.toList());
     }
 
     public Tile4(Point2D centre, double r) {

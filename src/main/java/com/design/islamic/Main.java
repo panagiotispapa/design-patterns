@@ -39,19 +39,9 @@ public class Main implements ActionListener {
         JMenu rectPatternsMenu = new JMenu("Rect Patterns");
         rectPatternsMenu.setMnemonic(KeyEvent.VK_R);
 
-        ActionListener hexListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                menuPressedHex(e.getActionCommand());
-            }
-        };
+        ActionListener hexListener = e -> menuPressedHex(e.getActionCommand());
 
-        ActionListener rectListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                menuPressedRect(e.getActionCommand());
-            }
-        };
+        ActionListener rectListener = e -> menuPressedRect(e.getActionCommand());
 
         for (HexPattern hexPattern : HexPattern.values()) {
             hexPatternsMenu.add(newMenuItem(hexPattern.getDescription(), hexListener));

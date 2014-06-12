@@ -1,6 +1,5 @@
 package com.design.common.model;
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -8,18 +7,12 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import java.awt.geom.Point2D;
 import java.util.List;
 
-import static com.google.common.collect.Iterables.transform;
-import static com.google.common.collect.Lists.newArrayList;
+import static java.util.stream.Collectors.toList;
 
 public class Shapes {
 
     public static List<Points> newPointsList(List<List<Point2D>> pointsList) {
-        return newArrayList(transform(pointsList, new Function<List<Point2D>, Points>() {
-            @Override
-            public Points apply(List<Point2D> point2DList) {
-                return newPoints(point2DList);
-            }
-        }));
+        return pointsList.stream().map((point2DList) ->  newPoints(point2DList)).collect(toList());
     }
 
     public static Points newPoints(Iterable<Point2D> points) {

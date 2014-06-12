@@ -3,18 +3,17 @@ package com.design.islamic;
 import com.design.common.PolygonTools;
 import com.design.islamic.model.Tile;
 import com.design.islamic.model.hex.*;
-import com.google.common.base.Function;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.design.common.PolygonTools.*;
 import static com.design.common.view.SvgFactory.*;
 import static com.design.islamic.GenericTools.concatEdges;
-import static com.google.common.collect.Iterables.transform;
-import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Math.*;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
 public class HexDesignHelper {
 
@@ -44,21 +43,11 @@ public class HexDesignHelper {
         builder.append(highlightPoints(outsideCentres));
         builder.append(drawPolygon(outsideCentres, gray));
 
-        builder.append(transform(outsideCentres, new Function<Point2D, String>() {
-            @Override
-            public String apply(Point2D centre) {
-                return newCircle(centre, r, gray);
-            }
-        }));
 
-        builder.append(transform(outsideCentres, new Function<Point2D, String>() {
-            @Override
-            public String apply(Point2D endPoint) {
-                return newPolyline(asList(centre, endPoint), gray);
-            }
-        }));
 
-//
+        builder.append(outsideCentres.stream().map(c_centre -> newCircle(c_centre, r, gray)).collect(toList()));
+        builder.append(outsideCentres.stream().map(c_centre -> newPolyline(asList(centre, c_centre), gray)).collect(toList()));
+
 
         builder.append(drawPolylines(generateCombsOfPoints(edges), gray));
 
@@ -195,7 +184,7 @@ public class HexDesignHelper {
 
     private static List<List<Point2D>> buildExtConfigForDesign3(final List<Point2D> centres, final double r) {
 
-        List<List<Point2D>> out = newArrayList();
+        List<List<Point2D>> out = new ArrayList<>();
         //List<Point2D> edges = cloneAndTranslateScalePoints(centre, r, hexPoints);
 
         int index = 0;

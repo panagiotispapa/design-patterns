@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Collection;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -51,9 +52,7 @@ public class SvgFactory {
     public static String drawPolygons(List<List<Point2D>> pointsList, final String style) {
         StringBuilder builder = new StringBuilder(pointsList.size());
 
-        for (List<Point2D> point2Ds : pointsList) {
-            builder.append(drawPolygon(point2Ds, style));
-        }
+        pointsList.forEach(point -> builder.append(drawPolygon(point, style)));
 
         return builder.toString();
 
@@ -82,12 +81,7 @@ public class SvgFactory {
 
 
         StringBuilder builder = new StringBuilder(pointsList.size());
-
-//        List<String> out = new ArrayList<String>(pointsList.size());
-        for (List<Point2D> point2Ds : pointsList) {
-            builder.append(newPolyline(point2Ds, style));
-//            out.add(newPolyline(point2Ds, style));
-        }
+        pointsList.forEach(point -> builder.append(newPolyline(point, style)));
 
         return builder.toString();
     }
@@ -121,9 +115,7 @@ public class SvgFactory {
 
         final String style = newStyle("red", "black", 1, 1, 1);
         StringBuilder builder = new StringBuilder(points.size());
-        for (Point2D centre : points) {
-            builder.append(newCircle(centre, 3, style));
-        }
+        points.forEach(point -> builder.append(newCircle(point, 3, style)));
 
         return builder.toString();
 
@@ -133,6 +125,7 @@ public class SvgFactory {
 
         final String style = newStyle("red", "black", 1, 1, 1);
         StringBuilder builder = new StringBuilder(points.length);
+
         for (Point2D centre : points) {
             builder.append(newCircle(centre, 3, style));
         }
@@ -143,14 +136,10 @@ public class SvgFactory {
 
 
 
-    public static String drawCircles(List<Circle> circles, final String style) {
+    public static String drawCircles(Collection<Circle> circles, final String style) {
 
         StringBuilder builder = new StringBuilder(circles.size());
-
-        for (Circle circle : circles) {
-            builder.append(drawCircle(circle, style));
-        }
-
+        circles.forEach(circle -> builder.append(drawCircle(circle, style)));
         return builder.toString();
     }
 
@@ -176,9 +165,8 @@ public class SvgFactory {
     public static String drawArcList(List<Arc> arcList, final String style) {
         StringBuilder builder = new StringBuilder(arcList.size());
 
-        for (Arc arc : arcList) {
-            builder.append(drawArc(arc, style));
-        }
+        arcList.forEach(arc -> builder.append(drawArc(arc, style)));
+
         return builder.toString();
 
     }
@@ -224,14 +212,9 @@ public class SvgFactory {
     private static String toPointsString(Iterable<Point2D> points) {
 
         StringBuilder builder = new StringBuilder();
+        points.forEach(point -> builder.append(format("%s,%s ", point.getX(), point.getY())));
 
-        for (Point2D point : points) {
-            builder.append(format("%s,%s ", point.getX(), point.getY()));
-        }
-
-        String toR = builder.toString();
-
-        return toR;
+        return builder.toString();
     }
 
 }

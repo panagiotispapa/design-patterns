@@ -2,6 +2,7 @@ package com.design.celtic;
 
 import com.design.common.model.Arc;
 import com.design.common.model.Circle;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import java.awt.*;
@@ -74,7 +75,7 @@ public class Patterns {
 
         shapes.append(drawArcList(layer4, styleFrontGray));
         shapes.append(drawArcList(layer5, styleFrontWhite));
-//        shapes.append(drawCircles(layer1, styleBackLight));
+        shapes.append(drawCircles(layer1, styleBackLight));
         shapes.append(drawCircles(layer2, styleFrontGray));
         shapes.append(drawArcList(layer3, styleBackStrong));
         shapes.append(drawCircle(mainCircle, styleBackStrong));

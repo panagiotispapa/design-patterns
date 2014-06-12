@@ -5,8 +5,6 @@ import com.google.common.collect.Maps;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.google.common.collect.Lists.newArrayList;
-
 public class Bag<E> {
 
 
@@ -45,15 +43,15 @@ public class Bag<E> {
     }
 
     public List<List<E>> combinations() {
-        List<List<E>> ret = newArrayList();
-        List<E> current = newArrayList();
+        List<List<E>> ret = new ArrayList<>();
+        List<E> current = new ArrayList<>();
         combinations0(ret, current);
         return ret;
     }
 
     private void combinations0(List<List<E>> ret, List<E> current) {
         if (countMap.isEmpty()) {
-            ret.add(newArrayList(current));
+            ret.add((current));
             return;
         }
         int position = current.size();

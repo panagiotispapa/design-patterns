@@ -5,12 +5,12 @@ import com.design.islamic.model.Payloads;
 import com.design.islamic.model.Tile;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.design.common.PolygonTools.*;
 import static com.design.common.view.SvgFactory.WHITE;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 
 public class Tile11 implements Tile {
@@ -65,12 +65,12 @@ public class Tile11 implements Tile {
 
     private void buildPoints() {
 
-        pointsA = newArrayList();
-        pointsB = newArrayList();
-        pointsC = newArrayList();
-        pointsD = newArrayList();
+        pointsA = new ArrayList<>();
+        pointsB = new ArrayList<>();
+        pointsC = new ArrayList<>();
+        pointsD = new ArrayList<>();
 
-        pointsE = newArrayList();
+        pointsE = new ArrayList<>();
 
         for (int i = 0; i < HEX_N; i++) {
             pointsA.add(newEdgeAt(mainHexRot.get(i),innerR*HEX_DIST_HEIGHT,HEX_RADIANS_ROT[toHexIndex(i+2)]));
@@ -82,7 +82,7 @@ public class Tile11 implements Tile {
     }
     private void buildLines() {
 
-        lines = newArrayList();
+        lines = new ArrayList<>();
 
 
         for (int i = 0; i < HEX_N; i++) {
