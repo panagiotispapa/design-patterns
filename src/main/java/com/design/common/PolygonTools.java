@@ -90,6 +90,7 @@ public class PolygonTools {
         return (HEX_DIST_HEIGHT - d);
 
     }
+
     private static double calcDistDam() {
 
         double phi1 = Math.atan(1 / (4.0 * sin(HEX_PHI)));
@@ -196,7 +197,6 @@ public class PolygonTools {
 
     private static List<Point2D> newEdgesAt(double[] radians) {
 
-
         List<Point2D> edges = new ArrayList<>();
         for (double radian : radians) {
             edges.add(newEdgeAt(radian));
@@ -214,8 +214,10 @@ public class PolygonTools {
     public static List<Point2D> cloneAndTranslateScalePoints(final Point2D centre, final double r, List<Point2D> points) {
 
         List<Point2D> edges = clonePoints(points);
-        scalePoints(edges, r);
-        translatePoints(edges, centre);
+        edges.stream().forEach(e -> {
+            scalePoint(e, r);
+            translatePoint(e, centre);
+        });
 
         return edges;
 

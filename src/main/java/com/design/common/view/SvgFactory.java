@@ -3,7 +3,6 @@ package com.design.common.view;
 import com.design.common.model.Arc;
 import com.design.common.model.Circle;
 import com.design.islamic.model.Payload;
-
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.svg.SVGDocument;
@@ -16,7 +15,9 @@ import java.util.Collection;
 import java.util.List;
 
 import static java.lang.String.format;
+import static java.lang.String.join;
 import static java.lang.String.valueOf;
+import static java.util.stream.Collectors.joining;
 
 public class SvgFactory {
 
@@ -43,26 +44,13 @@ public class SvgFactory {
         return format("fill:%s;stroke:%s;stroke-width:%d;fill-opacity:%s;stroke-opacity:%s", fill, stroke, strokeWidth, fillOpacity, strokeOpcacity);
     }
 
-
-
-
-
-
-
-    public static String drawPolygons(List<List<Point2D>> pointsList, final String style) {
-        StringBuilder builder = new StringBuilder(pointsList.size());
-
-        pointsList.forEach(point -> builder.append(drawPolygon(point, style)));
-
-        return builder.toString();
-
+    public static String drawPolygons(List<List<Point2D>> pointsList, String style) {
+        return pointsList.stream().map(p -> drawPolygon(p, style)).collect(joining());
     }
 
+    public static String drawPolygon(Collection<Point2D> points, String style) {
 
-
-    public static String drawPolygon(Iterable<Point2D> points, String style) {
-
-        return format("<polygon points=\"%s\" style=\"%s\" />",toPointsString(points),style);
+        return format("<polygon points=\"%s\" style=\"%s\" />", toPointsString(points), style);
 
 //        try {
 //            return XMLBuilder.create("polygon")
@@ -75,29 +63,19 @@ public class SvgFactory {
 
     }
 
-
-
     public static String drawPolylines(List<List<Point2D>> pointsList, final String style) {
-
-
-        StringBuilder builder = new StringBuilder(pointsList.size());
-        pointsList.forEach(point -> builder.append(newPolyline(point, style)));
-
-        return builder.toString();
+        return pointsList.stream().map(p->newPolyline(p, style)).collect(joining());
     }
 
-
-
-    public static String newPolyline(Iterable<Point2D> points, String style) {
+    public static String newPolyline(Collection<Point2D> points, String style) {
 
         return format("<polyline points=\"%s\" style=\"%s\"/>", toPointsString(points), style);
 
     }
 
-
     public static String drawPayload(Payload payload) {
 
-        StringBuilder builder =new StringBuilder();
+        StringBuilder builder = new StringBuilder();
 
         builder.append(drawPolygons(payload.getPolygons(), styleWhiteBold));
         builder.append(drawPolygons(payload.getPolygonsSecondary(), styleWhite));
@@ -108,16 +86,10 @@ public class SvgFactory {
         return builder.toString();
     }
 
-
-
-
     public static String highlightPoints(List<Point2D> points) {
+        String style = newStyle("red", "black", 1, 1, 1);
 
-        final String style = newStyle("red", "black", 1, 1, 1);
-        StringBuilder builder = new StringBuilder(points.size());
-        points.forEach(point -> builder.append(newCircle(point, 3, style)));
-
-        return builder.toString();
+        return points.stream().map(p->newCircle(p, 3, style)).collect(joining());
 
     }
 
@@ -134,22 +106,13 @@ public class SvgFactory {
 
     }
 
-
-
     public static String drawCircles(Collection<Circle> circles, final String style) {
-
-        StringBuilder builder = new StringBuilder(circles.size());
-        circles.forEach(circle -> builder.append(drawCircle(circle, style)));
-        return builder.toString();
+        return circles.stream().map(circle->drawCircle(circle, style)).collect(joining());
     }
-
-
 
     public static String drawCircle(Circle circle, String style) {
         return newCircle(circle.getCentre(), circle.getR(), style);
     }
-
-
 
     public static String newCircle(Point2D centre, double r, String style) {
         return format("<circle cx=\"%f\" cy=\"%f\" r=\"%f\" style=\"%s\" />",
@@ -157,21 +120,14 @@ public class SvgFactory {
                 centre.getY(),
                 r,
                 style
-                );
+        );
 
     }
 
-
-    public static String drawArcList(List<Arc> arcList, final String style) {
-        StringBuilder builder = new StringBuilder(arcList.size());
-
-        arcList.forEach(arc -> builder.append(drawArc(arc, style)));
-
-        return builder.toString();
+    public static String drawArcList(List<Arc> arcList, String style) {
+        return arcList.stream().map(arc -> drawArc(arc, style)).collect(joining());
 
     }
-
-
 
     public static String drawArc(Arc arc, String style) {
         final String path = arc.isUp() ? "M %f %f a 1 1 0 0 1 %f 0" : "M %f %f a 1 1 0 0 0 %f 0";
@@ -184,10 +140,7 @@ public class SvgFactory {
                 ),
                 style);
 
-
     }
-
-
 
     public static SVGDocument fromSvgDoc(String svgDoc) {
 
@@ -202,19 +155,16 @@ public class SvgFactory {
     }
 
     public static String buildSvg(Dimension dim, String shapes) {
-        return format("<svg width=\"%s\" height=\"%s\">%s</svg>", valueOf(dim.getWidth()), valueOf(dim.getHeight()),shapes);
+        return format("<svg width=\"%s\" height=\"%s\">%s</svg>", valueOf(dim.getWidth()), valueOf(dim.getHeight()), shapes);
     }
 
+    private static String toPointsString(Collection<Point2D> points) {
+        return points.stream().map(point->format("%s,%s", point.getX(), point.getY())).collect(joining(" "));
 
-
-
-
-    private static String toPointsString(Iterable<Point2D> points) {
-
-        StringBuilder builder = new StringBuilder();
-        points.forEach(point -> builder.append(format("%s,%s ", point.getX(), point.getY())));
-
-        return builder.toString();
+//        StringBuilder builder = new StringBuilder();
+//        points.forEach(point -> builder.append(format("%s,%s ", point.getX(), point.getY())));
+//
+//        return builder.toString();
     }
 
 }

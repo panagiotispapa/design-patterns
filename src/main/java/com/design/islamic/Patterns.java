@@ -7,13 +7,18 @@ import com.google.common.collect.Sets;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.design.common.PolygonTools.*;
 import static com.design.common.view.SvgFactory.*;
 import static com.design.islamic.model.Centre.newCentre;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 public final class Patterns {
 
@@ -24,7 +29,7 @@ public final class Patterns {
     }
 
 
-    private static Set<Point2D> edgesFromCentres(Iterable<Point2D> centres, double r) {
+    private static Set<Point2D> edgesFromCentres(Collection<Point2D> centres, double r) {
 
         ImmutableSet.Builder<Point2D> builder = ImmutableSet.builder();
 
@@ -35,7 +40,7 @@ public final class Patterns {
 
     }
 
-    public static Set<Point2D> calculateHexEdges(Iterable<Point2D> centres, double r) {
+    public static Set<Point2D> calculateHexEdges(Collection<Point2D> centres, double r) {
         ImmutableSet.Builder<Point2D> builder = ImmutableSet.builder();
 
         for (Point2D centre : centres) {
@@ -135,7 +140,7 @@ public final class Patterns {
         return calculateNewCellCentres(calculateNewCellCentres(centre, r), r, level);
     }
 
-    private static Set<Point2D> calculateNewCellCentres(Iterable<Point2D> centres, double r, int level) {
+    private static Set<Point2D> calculateNewCellCentres(Collection<Point2D> centres, double r, int level) {
 
         if (level == 1) {
             return Sets.newHashSet(centres);
@@ -150,28 +155,32 @@ public final class Patterns {
 
     }
 
-    private static Set<Point2D> calculateNewCellCentres(Iterable<Point2D> centres, double r) {
+    private static Set<Point2D> calculateNewCellCentres(Collection<Point2D> centres, double r) {
 
-        ImmutableSet.Builder<Point2D> builder = ImmutableSet.builder();
+        return centres.stream().map(c -> calculateNewCellCentres(c, r)).flatMap(p -> p.stream()).collect(toSet());
 
-        for (Point2D centre : centres) {
-            builder.addAll(calculateNewCellCentres(centre, r));
-        }
-
-        return builder.build();
+//        ImmutableSet.Builder<Point2D> builder = ImmutableSet.builder();
+//
+//        for (Point2D centre : centres) {
+//            builder.addAll(calculateNewCellCentres(centre, r));
+//        }
+//
+//        return builder.build();
 
     }
 
     public static List<Payload> buildHexPatterns(Set<Point2D> centres, Payload payload) {
 
+        return centres.stream().map(p->payload.translate(p)).collect(toList());
 
-        List<Payload> payloads = new ArrayList<Payload>(centres.size());
-
-        for (Point2D centre : centres) {
-            payloads.add(payload.translate(centre));
-        }
-
-        return payloads;
+//
+//        List<Payload> payloads = new ArrayList<Payload>(centres.size());
+//
+//        for (Point2D centre : centres) {
+//            payloads.add(payload.translate(centre));
+//        }
+//
+//        return payloads;
 
     }
 
@@ -189,12 +198,7 @@ public final class Patterns {
         StringBuilder shapes = new StringBuilder();
         shapes.append(drawPolygon(backGroundRect, styleBlack));
 
-
-
-        for (Payload payload1 : payloads) {
-            shapes.append(drawPayload(payload1));
-//            total.addAll(drawPayload(payload1));
-        }
+        payloads.forEach(p->shapes.append(drawPayload(p)));
 
         String svg = buildSvg(dim,
                 shapes.toString());
