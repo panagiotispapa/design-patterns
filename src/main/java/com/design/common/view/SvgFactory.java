@@ -8,15 +8,17 @@ import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.svg.SVGDocument;
 
 import java.awt.*;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import static java.lang.String.format;
-import static java.lang.String.join;
 import static java.lang.String.valueOf;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 
 public class SvgFactory {
@@ -63,8 +65,12 @@ public class SvgFactory {
 
     }
 
+    public static String drawPolylinesFromLine2D(List<Line2D> lineList, final String style) {
+        return lineList.stream().map(line -> newPolyline(asList(line.getP1(), line.getP2()), style)).collect(joining());
+    }
+
     public static String drawPolylines(List<List<Point2D>> pointsList, final String style) {
-        return pointsList.stream().map(p->newPolyline(p, style)).collect(joining());
+        return pointsList.stream().map(p -> newPolyline(p, style)).collect(joining());
     }
 
     public static String newPolyline(Collection<Point2D> points, String style) {
@@ -72,6 +78,12 @@ public class SvgFactory {
         return format("<polyline points=\"%s\" style=\"%s\"/>", toPointsString(points), style);
 
     }
+
+//    public static String newPolyline(Collection<Line2D> points, String style) {
+//
+//        return format("<polyline points=\"%s\" style=\"%s\"/>", toPointsString(points), style);
+//
+//    }
 
     public static String drawPayload(Payload payload) {
 
@@ -89,7 +101,7 @@ public class SvgFactory {
     public static String highlightPoints(List<Point2D> points) {
         String style = newStyle("red", "black", 1, 1, 1);
 
-        return points.stream().map(p->newCircle(p, 3, style)).collect(joining());
+        return points.stream().map(p -> newCircle(p, 3, style)).collect(joining());
 
     }
 
@@ -107,7 +119,7 @@ public class SvgFactory {
     }
 
     public static String drawCircles(Collection<Circle> circles, final String style) {
-        return circles.stream().map(circle->drawCircle(circle, style)).collect(joining());
+        return circles.stream().map(circle -> drawCircle(circle, style)).collect(joining());
     }
 
     public static String drawCircle(Circle circle, String style) {
@@ -159,12 +171,11 @@ public class SvgFactory {
     }
 
     private static String toPointsString(Collection<Point2D> points) {
-        return points.stream().map(point->format("%s,%s", point.getX(), point.getY())).collect(joining(" "));
-
-//        StringBuilder builder = new StringBuilder();
-//        points.forEach(point -> builder.append(format("%s,%s ", point.getX(), point.getY())));
-//
-//        return builder.toString();
+        return points.stream().map(point -> format("%s,%s", point.getX(), point.getY())).collect(joining(" "));
     }
+
+//    private static String toPointsString(Collection<Line2D> points) {
+//        return points.stream().map(point -> format("%s,%s", point.getX(), point.getY())).collect(joining(" "));
+//    }
 
 }

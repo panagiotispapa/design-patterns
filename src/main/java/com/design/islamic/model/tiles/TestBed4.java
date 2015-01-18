@@ -36,20 +36,20 @@ public class TestBed4 {
 
 //        Set<Point2D> newCentres = calculateNewCellCentres(calculateNewCellCentres(newCentre(width / 2.0, height / 2.0), r), r, 16);
         Point2D centre = newCentre(dim.getWidth() / 2.0, dim.getHeight() / 2.0);
-        Set<Point2D> newCentres = calculateNewCellCentres(centre, r, 17);
+//        Set<Point2D> newCentres = calculateNewCellCentres(centre, r, 17);
 
-        final String styleBack = newStyle("black", "black", 1, 1, 1);
-        final String style = newStyle("yellow", "yellow", 1, 1, 1);
+//        final String styleBack = newStyle("black", "black", 1, 1, 1);
+//        final String style = newStyle("yellow", "yellow", 1, 1, 1);
 
-        String backObj = drawPolygon(cloneAndTranslateScalePoints(centre, r, hexPoints), styleBack);
+//        String backObj = drawPolygon(cloneAndTranslateScalePoints(centre, r, hexPoints), styleBack);
 
-        String testObject = HexDesignHelper.newStarDesign1(centre, r);
+        String testObject = HexDesignHelper.newStarDesignTest(centre, r);
 //        String testObject = RectDesignHelper.newRectDesign1(centre, r);
 
 
-        StringBuilder shapes = new StringBuilder();
-
-        shapes.append(backObj);
+//        StringBuilder shapes = new StringBuilder();
+//
+//        shapes.append(backObj);
 
         String mySVG = buildSvg(dim, (testObject)
         );

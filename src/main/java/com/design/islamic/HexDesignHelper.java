@@ -3,6 +3,7 @@ package com.design.islamic;
 import com.design.common.PolygonTools;
 import com.design.islamic.model.Tile;
 import com.design.islamic.model.hex.*;
+import com.design.islamic.model.tiles.Hex;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -11,6 +12,10 @@ import java.util.List;
 import static com.design.common.PolygonTools.*;
 import static com.design.common.view.SvgFactory.*;
 import static com.design.islamic.GenericTools.concatEdges;
+import static com.design.islamic.model.DrawSegmentsInstructions.DIAGONALS;
+import static com.design.islamic.model.DrawSegmentsInstructions.PERIMETER;
+import static com.design.islamic.model.DrawSegmentsInstructions.lines;
+import static com.design.islamic.model.tiles.Hex.newHex;
 import static java.lang.Math.*;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -43,11 +48,8 @@ public class HexDesignHelper {
         builder.append(highlightPoints(outsideCentres));
         builder.append(drawPolygon(outsideCentres, gray));
 
-
-
         builder.append(outsideCentres.stream().map(c_centre -> newCircle(c_centre, r, gray)).collect(toList()));
         builder.append(outsideCentres.stream().map(c_centre -> newPolyline(asList(centre, c_centre), gray)).collect(toList()));
-
 
         builder.append(drawPolylines(generateCombsOfPoints(edges), gray));
 
@@ -64,6 +66,22 @@ public class HexDesignHelper {
 
         return builder.toString();
 
+    }
+
+    public static String newStarDesignTest(final Point2D centre, final double r) {
+
+        Hex one = newHex(Hex.NO_TRANSFORMS, 1, Hex.Type.VER);
+
+        StringBuilder builder = new StringBuilder();
+
+        final String gray = newStyle(GRAY, 1, 1);
+        final String green = newStyle(GREEN, 2, 1);
+
+        builder.append(drawPolylinesFromLine2D(lines(0, centre, r, one, PERIMETER), green));
+        builder.append(drawPolylinesFromLine2D(lines(0, centre, r, one, DIAGONALS), gray));
+        builder.append(drawPolylinesFromLine2D(lines(0, centre, r, one.getInternal(), DIAGONALS), gray));
+
+        return builder.toString();
     }
 
     public static String newStarDesign2(final Point2D centre, final double r) {
@@ -1091,7 +1109,6 @@ public class HexDesignHelper {
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
 
-
         Tile tile = new Tile29(centre, r);
 
         StringBuilder builder = new StringBuilder();
@@ -1116,7 +1133,6 @@ public class HexDesignHelper {
         builder.append(highlightPoints(newHexagon(centre, r * d6)));
         builder.append(highlightPoints(newHexagonRot(centre, r * d6 * HEX_DIST_HEX_TO_RECT)));
 
-
         builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
 
         return builder.toString();
@@ -1128,7 +1144,6 @@ public class HexDesignHelper {
         final String green = newStyle(GREEN, 2, 1);
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
-
 
         Tile tile = new Tile30(centre, r);
 
@@ -1153,7 +1168,6 @@ public class HexDesignHelper {
         builder.append(highlightPoints(newHexagonRot(centre, r * d1)));
         builder.append(highlightPoints(newHexagon(centre, r * d6)));
         builder.append(highlightPoints(newHexagonRot(centre, r * d6 * HEX_DIST_HEX_TO_RECT)));
-
 
         builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
 

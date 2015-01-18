@@ -5,7 +5,9 @@ import org.paukov.combinatorics.Generator;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static com.design.islamic.GenericTools.*;
 import static com.design.islamic.model.Centre.newCentre;
@@ -66,6 +68,13 @@ public class PolygonTools {
     public static List<Point2D> hexPoints = newEdgesAt(HEX_RADIANS);
     public static List<Point2D> hexPointsAlt = newEdgesAt(HEX_RADIANS_ROT);
 
+    public static List<Point2D> calcVertexes(int N, double offset) {
+        final double phi = (2.0 * PI) / N;
+        return IntStream.range(0, N)
+                .mapToDouble(k -> phi * (k + offset))
+                .mapToObj(PolygonTools::newEdgeAt).collect(toList());
+    }
+
     private static double calcDistProj(double phi) {
         return sin(phi / 2.0);
     }
@@ -111,6 +120,8 @@ public class PolygonTools {
     }
 
     private static double[] computeDegrees(int n, double phi) {
+
+//        IntStream.range(0,n).mapToDouble(k-> phi*k).toArray();
 
         double[] degrees = new double[n];
 
@@ -196,12 +207,7 @@ public class PolygonTools {
     }
 
     private static List<Point2D> newEdgesAt(double[] radians) {
-
-        List<Point2D> edges = new ArrayList<>();
-        for (double radian : radians) {
-            edges.add(newEdgeAt(radian));
-        }
-        return edges;
+        return Arrays.stream(radians).mapToObj(PolygonTools::newEdgeAt).collect(toList());
     }
 
     public static Point2D newEdgeAt(double phi) {
