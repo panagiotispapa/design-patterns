@@ -1,5 +1,8 @@
 package com.design.islamic.model.tiles;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
+
 import java.awt.geom.Point2D;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,8 +43,11 @@ public class Hex {
         return ratio;
     }
 
+    public Hex getMirror() {
+        return newHex(transforms, ratio, type.revert());
+    }
+
     public Hex getInternal() {
-        System.out.println("HEIGHT_RATIO " + HEIGHT_RATIO);
         return newHex(transforms, ratio * HEIGHT_RATIO, type.revert());
     }
 
@@ -94,34 +100,48 @@ public class Hex {
 
         }
 
-        public Point2D transform(int offset, Point2D startingPoint, double R, Hex hex) {
+        public Point2D transform(int offset, Pair<Point2D, Double> initialConditions, Hex hex) {
 
-            Point2D finalCentre = startingPoint;
+            Point2D finalCentre = initialConditions.getLeft();
+            Double R = initialConditions.getRight();
             for (CentreTransform centreTransform : hex.getTransforms()) {
-                finalCentre = transform(offset, finalCentre, R, centreTransform);
+                finalCentre = transform(offset, initialConditions, centreTransform);
             }
 
             final Point2D vertexOrig = getVertexPoint(offset, hex.getType());
 
-            return new Point2D.Double(
-                    vertexOrig.getX() * R * hex.getRatio() + finalCentre.getX(),
-                    vertexOrig.getY() * R * hex.getRatio() + finalCentre.getY()
-            );
+            return transform(vertexOrig, Triple.of(finalCentre, R, hex.getRatio()));
+//            return new Point2D.Double(
+//                    vertexOrig.getX() * R * hex.getRatio() + finalCentre.getX(),
+//                    vertexOrig.getY() * R * hex.getRatio() + finalCentre.getY()
+//            );
 
         }
 
-        public Point2D transform(int offset, Point2D startingPoint, double R, CentreTransform centreTransform) {
+        public Point2D transform(int offset, Pair<Point2D, Double> initialConditions, CentreTransform centreTransform) {
 
-            final float ratio = centreTransform.getRatio();
+            final double ratio = centreTransform.getRatio();
 
             final Hex.Type type = centreTransform.getType();
             final Point2D vertexOrig = centreTransform.getVertex().getVertexPoint(offset, type);
 
-            return new Point2D.Double(
-                    vertexOrig.getX() * R * ratio + startingPoint.getX(),
-                    vertexOrig.getY() * R * ratio + startingPoint.getY()
-            );
+            final Double R = initialConditions.getRight();
+            final Point2D startingPoint = initialConditions.getLeft();
 
+            return transform(vertexOrig, Triple.of(startingPoint, R, ratio));
+//            return new Point2D.Double(
+//                    vertexOrig.getX() * R * ratio + startingPoint.getX(),
+//                    vertexOrig.getY() * R * ratio + startingPoint.getY()
+//            );
+
+        }
+
+        private static Point2D transform(Point2D vertex, Triple<Point2D, Double, Double> transformation) {
+            final Double newR = transformation.getRight() * transformation.getMiddle();
+            return new Point2D.Double(
+                    vertex.getX() * newR + transformation.getLeft().getX(),
+                    vertex.getY() * newR + transformation.getLeft().getY()
+            );
         }
 
         public Point2D getVertexPoint(int offset, Type type) {

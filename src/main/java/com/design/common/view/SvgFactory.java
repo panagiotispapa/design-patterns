@@ -65,8 +65,8 @@ public class SvgFactory {
 
     }
 
-    public static String drawPolylinesFromLine2D(List<Line2D> lineList, final String style) {
-        return lineList.stream().map(line -> newPolyline(asList(line.getP1(), line.getP2()), style)).collect(joining());
+    public static String drawPolylinesFromLine2D(List<Line2D> lines, final String style) {
+        return lines.stream().map(line -> newPolyline(line, style)).collect(joining());
     }
 
     public static String drawPolylines(List<List<Point2D>> pointsList, final String style) {
@@ -74,10 +74,14 @@ public class SvgFactory {
     }
 
     public static String newPolyline(Collection<Point2D> points, String style) {
-
         return format("<polyline points=\"%s\" style=\"%s\"/>", toPointsString(points), style);
-
     }
+
+    public static String newPolyline(Line2D line, String style) {
+        return format("<polyline points=\"%s\" style=\"%s\"/>", toPointsString(line), style);
+    }
+
+
 
 //    public static String newPolyline(Collection<Line2D> points, String style) {
 //
@@ -173,9 +177,43 @@ public class SvgFactory {
     private static String toPointsString(Collection<Point2D> points) {
         return points.stream().map(point -> format("%s,%s", point.getX(), point.getY())).collect(joining(" "));
     }
+    private static String toPointsString(Line2D line) {
+        return toPointsString(Arrays.asList(line.getP1(), line.getP2()));
+    }
 
 //    private static String toPointsString(Collection<Line2D> points) {
 //        return points.stream().map(point -> format("%s,%s", point.getX(), point.getY())).collect(joining(" "));
 //    }
+
+    public static class SvgBuilder{
+        private final StringBuilder builder;
+
+        public static SvgBuilder with(StringBuilder builder) {
+            return new SvgBuilder(builder);
+        }
+
+        private SvgBuilder(StringBuilder builder) {
+            this.builder = builder;
+        }
+
+        public SvgBuilder drawLines(List<Line2D> lines, final String style) {
+            builder.append(drawPolylinesFromLine2D(lines, style));
+            return this;
+        }
+
+        public SvgBuilder drawPolyLine(List<Point2D> points, final String style) {
+            builder.append(SvgFactory.drawPolygon(points, style));
+            return this;
+        }
+
+        public SvgBuilder highlightPoints(List<Point2D> points) {
+            builder.append(SvgFactory.highlightPoints(points));
+            return this;
+        }
+
+        public StringBuilder getBuilder() {
+            return builder;
+        }
+    }
 
 }
