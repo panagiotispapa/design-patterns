@@ -3,6 +3,7 @@ package com.design.islamic.model.tiles;
 import com.design.common.view.SvgFactory;
 import com.design.islamic.HexDesignHelper;
 import org.apache.batik.swing.JSVGCanvas;
+import org.apache.commons.lang3.tuple.Pair;
 import org.w3c.dom.Node;
 
 import javax.swing.*;
@@ -43,7 +44,7 @@ public class TestBed4 {
 
 //        String backObj = drawPolygon(cloneAndTranslateScalePoints(centre, r, hexPoints), styleBack);
 
-        String testObject = HexDesignHelper.newStarDesign1(centre, r);
+        String testObject = HexDesignHelper.newStarDesign1(Pair.of(centre, r));
 //        String testObject = RectDesignHelper.newRectDesign1(centre, r);
 
 

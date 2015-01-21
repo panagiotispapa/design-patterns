@@ -4,10 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.geom.Point2D;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.design.common.PolygonTools.calcVertexes;
 import static com.design.islamic.model.tiles.Hex.Type.HOR;
@@ -55,9 +52,18 @@ public class Hex {
         return newHex(transforms, ratio / HEIGHT_RATIO, type.revert());
     }
 
+    public static Hex newHex(double ratio, Type type) {
+        return newHex(NO_TRANSFORMS, ratio, type);
+    }
+
+    public static Hex newHex(CentreTransform transform, double ratio, Type type) {
+        return newHex(Arrays.asList(transform), ratio, type);
+    }
+
     public static Hex newHex(List<CentreTransform> transforms, double ratio, Type type) {
         return new Hex(transforms, ratio, type);
     }
+
 
     public static enum Type {
         VER,

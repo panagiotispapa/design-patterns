@@ -2,17 +2,17 @@ package com.design.islamic.model.tiles;
 
 public class CentreTransform {
 
-    private final float ratio;
-    private final Hex.Vertex vertex;
+    private final double ratio;
     private final Hex.Type type;
+    private final Hex.Vertex vertex;
 
-    public CentreTransform(float ratio, Hex.Vertex vertex, Hex.Type type) {
+    public CentreTransform(double ratio, Hex.Type type, Hex.Vertex vertex) {
         this.ratio = ratio;
-        this.vertex = vertex;
         this.type = type;
+        this.vertex = vertex;
     }
 
-    public float getRatio() {
+    public double getRatio() {
         return ratio;
     }
 
@@ -24,8 +24,24 @@ public class CentreTransform {
         return type;
     }
 
-    public static CentreTransform newTransform(float ratio, Hex.Vertex vertex, Hex.Type type) {
-        return new CentreTransform(ratio, vertex, type);
+    public static CentreTransform newTransform(double ratio, Hex.Type type, Hex.Vertex vertex) {
+        return new CentreTransform(ratio, type, vertex);
+    }
+
+    public interface RatioBuilder {
+        TypeBuilder ratio(double ratio);
+    }
+
+    public interface TypeBuilder {
+        VertexBuilder type(Hex.Type type);
+    }
+
+    public interface VertexBuilder {
+        CentreTransform vertex(Hex.Vertex vertex);
+    }
+
+    public static RatioBuilder transform() {
+        return ratio -> type -> vertex -> newTransform(ratio, type, vertex);
 
     }
 }

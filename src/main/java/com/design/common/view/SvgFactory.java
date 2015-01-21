@@ -2,7 +2,9 @@ package com.design.common.view;
 
 import com.design.common.model.Arc;
 import com.design.common.model.Circle;
+import com.design.islamic.model.DrawSegmentsInstructions;
 import com.design.islamic.model.Payload;
+import com.design.islamic.model.tiles.Hex;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.svg.SVGDocument;
@@ -203,6 +205,11 @@ public class SvgFactory {
 
         public SvgBuilder drawPolyLine(List<Point2D> points, final String style) {
             builder.append(SvgFactory.drawPolygon(points, style));
+            return this;
+        }
+
+        public SvgBuilder drawPolyLines(List<List<Point2D>> points, final String style) {
+            builder.append(SvgFactory.drawPolylines(points, style));
             return this;
         }
 
