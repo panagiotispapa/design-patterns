@@ -24,6 +24,10 @@ public class CentreTransform {
         return type;
     }
 
+    public static CentreTransform newTransform(Hex hex, Hex.Vertex vertex) {
+        return newTransform(hex.getRatio(), hex.getType(), vertex);
+    }
+
     public static CentreTransform newTransform(double ratio, Hex.Type type, Hex.Vertex vertex) {
         return new CentreTransform(ratio, type, vertex);
     }

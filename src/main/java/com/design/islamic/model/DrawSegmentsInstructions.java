@@ -8,7 +8,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -29,6 +28,10 @@ public class DrawSegmentsInstructions {
             Sides.SIX.getVertexes()
     );
 
+    public static List<List<Hex.Vertex>> INNER_TRIANGLES = asList(
+            asList(ONE, THREE, FIVE, ONE),
+            asList(TWO, FOUR, SIX, TWO)
+    );
     public static List<Pair<Hex.Vertex, Hex.Vertex>> DIAGONALS = asList(
             Pair.of(ONE, FOUR),
             Pair.of(TWO, FIVE),
@@ -47,16 +50,6 @@ public class DrawSegmentsInstructions {
     );
 
 
-    public static List<Line2D> lines(int offset, Pair<Point2D, Double> initialConditions, Hex hex, List<Pair<Hex.Vertex, Hex.Vertex>> instructions) {
-        return instructions.stream().map(i -> new Line2D.Double(
-                i.getLeft().transform(offset, initialConditions, hex),
-                i.getRight().transform(offset, initialConditions, hex)
-        )).collect(toList());
-    }
-
-    public static List<Point2D> vertexes(Pair<Point2D, Double> initialConditions, Hex hex) {
-        return Arrays.stream(Hex.Vertex.values()).map(v -> v.transform(0, initialConditions, hex)).collect(toList());
-    }
 
     public static List<Point2D> combineVertexes(Pair<Point2D, Double> initialConditions, Hex first, Hex second) {
         Stream<Point2D> point2DStream = Arrays.stream(Hex.Vertex.values())
@@ -77,15 +70,23 @@ public class DrawSegmentsInstructions {
         }
 
         public List<Line2D> lines(int offset, Hex hex, List<Pair<Hex.Vertex, Hex.Vertex>> instructions) {
-            return DrawSegmentsInstructions.lines(offset, initialConditions, hex, instructions);
+            return hex.lines(offset, initialConditions, instructions);
+        }
+
+        public List<List<Point2D>> lines2(int offset, Hex hex, List<List<Hex.Vertex>> instructions) {
+            return hex.lines2(offset, initialConditions, instructions);
         }
 
         public List<Line2D> lines(Hex hex, List<Pair<Hex.Vertex, Hex.Vertex>> instructions) {
             return lines(0, hex, instructions);
         }
 
+        public List<List<Point2D>> lines2(Hex hex, List<List<Hex.Vertex>> instructions) {
+            return lines2(0, hex, instructions);
+        }
+
         public List<Point2D> vertexes(Hex hex) {
-            return DrawSegmentsInstructions.vertexes(initialConditions, hex);
+            return hex.vertexes(initialConditions);
         }
 
         public List<Point2D> combineVertexes(Hex first, Hex second) {

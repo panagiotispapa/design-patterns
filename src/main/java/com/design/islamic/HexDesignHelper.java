@@ -91,9 +91,7 @@ public class HexDesignHelper {
         return builder.toString();
     }
 
-    public static String newStarDesign2(final Point2D centre, final double r) {
-
-        Pair<Point2D, Double> initialConditions = Pair.of(centre, r);
+    public static String newStarDesign2(Pair<Point2D, Double> initialConditions) {
 
         DrawSegmentsInstructions.Builder iBuilder = DrawSegmentsInstructions.Builder.with(initialConditions);
         SvgBuilder svgBuilder = SvgBuilder.with(new StringBuilder());
@@ -101,8 +99,6 @@ public class HexDesignHelper {
         final String gray = newStyle(GRAY, 1, 1);
         final String green = newStyle(GREEN, 2, 1);
         final String red = newStyle(RED, 2, 1);
-
-        final double newR = r * cos(HEX_PHI / 2);
 
         Hex outer = newHex(NO_TRANSFORMS, 1, VER);
         Hex outerH = outer.getInternal();
@@ -117,17 +113,16 @@ public class HexDesignHelper {
                         .highlightPoints(iBuilder.vertexes(outer))
                         .highlightPoints(iBuilder.vertexes(outerH))
                         .highlightPoints(iBuilder.vertexes(inner))
-                        .getBuilder().toString()
+                        .build()
                 ;
 
     }
 
-    public static String newStarDesign3(final Point2D centre, final double r) {
+    public static String newStarDesign3(Pair<Point2D, Double> initialConditions) {
 
-        Tile3 tile3 = new Tile3(centre, r);
+        Tile3 tile3 = new Tile3(initialConditions.getLeft(), initialConditions.getRight());
 
         StringBuilder builder = new StringBuilder();
-        Pair<Point2D, Double> initialConditions = Pair.of(centre, r);
 
         DrawSegmentsInstructions.Builder iBuilder = DrawSegmentsInstructions.Builder.with(initialConditions);
         SvgBuilder svgBuilder = SvgBuilder.with(builder);
@@ -137,8 +132,8 @@ public class HexDesignHelper {
         final String green = newStyle(GREEN, 2, 1);
         final String red = newStyle(RED, 2, 1);
 
-        Hex main = Hex.newHex(NO_TRANSFORMS, 1, VER);
-        Hex inner = Hex.newHex(NO_TRANSFORMS, HEX_DIST_EQ1, VER);
+        Hex main = newHex(NO_TRANSFORMS, 1, VER);
+        Hex inner = newHex(NO_TRANSFORMS, HEX_DIST_EQ1, VER);
         Hex inner2 = Hex.newHex(NO_TRANSFORMS, HEX_DIST_EQ1 * 0.5, VER);
 
         CentreTransform cTransform1 = newTransform(HEX_DIST_EQ1, VER, Hex.Vertex.ONE);
@@ -150,10 +145,7 @@ public class HexDesignHelper {
         Hex ext0_2 = Hex.newHex(cTransform2.vertex(Hex.Vertex.ONE), HEX_DIST_EQ1 * HEX_DIST_DIAGONAL_ROTATED * 0.5, VER);
         Hex ext0_3 = Hex.newHex(cTransform2.vertex(Hex.Vertex.SIX), HEX_DIST_EQ1 * HEX_DIST_DIAGONAL_ROTATED * 0.5, VER);
 
-        final double newR = r * HEX_DIST_EQ1;
-        double extConfR = r - newR;
-
-        List<List<Point2D>> extConfigs = buildExtConfigForDesign3(iBuilder.vertexes(inner), extConfR);
+        List<List<Point2D>> extConfigs = buildExtConfigForDesign3(iBuilder.vertexes(inner), initialConditions.getRight() * (1 - HEX_DIST_EQ1));
 
         svgBuilder
                 .drawPolyLine(iBuilder.vertexes(main), gray)
@@ -204,10 +196,9 @@ public class HexDesignHelper {
 
     }
 
-    public static String newStarDesign4(final Point2D centre, final double r) {
+    public static String newStarDesign4(Pair<Point2D, Double> initialConditions) {
 
         StringBuilder builder = new StringBuilder();
-        Pair<Point2D, Double> initialConditions = Pair.of(centre, r);
 
         DrawSegmentsInstructions.Builder iBuilder = DrawSegmentsInstructions.Builder.with(initialConditions);
         SvgBuilder svgBuilder = SvgBuilder.with(builder);
@@ -230,149 +221,119 @@ public class HexDesignHelper {
                         .drawPolyLines(generateCombsOfPoints(iBuilder.vertexes(layerExtPol1)), gray)
                         .drawLines(iBuilder.lines(0, layer1.getInternal(), DIAGONALS), gray)
                         .drawPolyLine(iBuilder.vertexes(layer3), green)
-                        .drawPolyLines(Tile4.buildExtConf(centre, r * HEX_DIST_DIAGONAL*HEX_DIST_DIAGONAL), red)
-                        .highlightPoints(iBuilder.vertexes(layerExt))
-                        .getBuilder().toString()
+                        .drawPolyLines(Tile4.buildExtConf(initialConditions.getLeft(), initialConditions.getRight() * HEX_DIST_DIAGONAL * HEX_DIST_DIAGONAL), red).highlightPoints(iBuilder.vertexes(layerExt))
+                        .build()
                 ;
 
     }
 
-    public static String newStarDesign5(final Point2D centre, final double r) {
+    public static String newStarDesign5(Pair<Point2D, Double> initialConditions) {
 
         StringBuilder builder = new StringBuilder();
+
+        DrawSegmentsInstructions.Builder iBuilder = DrawSegmentsInstructions.Builder.with(initialConditions);
+        SvgBuilder svgBuilder = SvgBuilder.with(builder);
 
         final String gray = newStyle(GRAY, 1, 1);
         final String green = newStyle(GREEN, 2, 1);
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
 
-        List<Point2D> layer1Edges = newHexagonRot(centre, r);
+        Hex layer1 = newHex(1, VER);
+        Hex layer2 = newHex(HEX_DIST_DIAGONAL, HOR);
+        Hex layer3 = newHex(HEX_DIST_DIAGONAL * HEX_DIST_DIAGONAL, VER);
+        Hex outer = newHex(layer3.getRatio() * HEX_DIST_NEW_CENTRE, HOR);
 
-        double layer2R = r * HEX_DIST_DIAGONAL;
+        List<List<Point2D>> lines = Tile5.buildOuterLines(iBuilder.vertexes(outer), layer3.getRatio() * initialConditions.getRight());
 
-        List<Point2D> layer2Edges = newHexagon(centre, layer2R);
+        return
+                svgBuilder
+                        .drawPolyLines(generateCombsOfPoints(iBuilder.vertexes(layer1)), gray)
+                        .drawPolyLines(generateCombsOfPoints(iBuilder.vertexes(layer2)), gray)
+                        .drawPolyLine(iBuilder.vertexes(layer2), blue)
+                        .drawPolyLine(iBuilder.vertexes(layer3), green)
+                        .drawPolyLines(lines, red)
+                        .highlightPoints(iBuilder.vertexes(outer))
+                        .build();
 
-        builder.append(
-                drawPolylines(generateCombsOfPoints(layer1Edges), gray)
-        );
-
-        double layer3R = layer2R * HEX_DIST_DIAGONAL;
-
-        List<Point2D> layer3Edges = newHexagonRot(centre, layer3R);
-
-        List<Point2D> outerEdges = newHexagon(centre, layer3R * HEX_DIST_NEW_CENTRE);
-
-        List<List<Point2D>> lines = Tile5.buildOuterLines(outerEdges, layer3R);
-
-        builder.append(
-                drawPolylines(generateCombsOfPoints(layer2Edges), gray)
-        );
-        builder.append(
-                drawPolygon(layer2Edges, blue)
-        );
-
-        builder.append(
-                drawPolygon(layer3Edges, green)
-        );
-
-        builder.append(highlightPoints(outerEdges));
-        builder.append(drawPolylines(lines, red));
-
-        return builder.toString();
     }
 
-    public static String newStarDesign6(final Point2D centre, final double r) {
+    public static String newStarDesign6(Pair<Point2D, Double> initialConditions) {
 
         StringBuilder builder = new StringBuilder();
+
+        DrawSegmentsInstructions.Builder iBuilder = DrawSegmentsInstructions.Builder.with(initialConditions);
+        SvgBuilder svgBuilder = SvgBuilder.with(builder);
 
         final String gray = newStyle(GRAY, 1, 1);
         final String green = newStyle(GREEN, 2, 1);
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
 
-        List<Point2D> layer1Edges = newHexagonRot(centre, r);
+        Hex layer1 = newHex(1, VER);
+        Hex layer2 = newHex(HEX_DIST_DIAGONAL_ROTATED, VER);
+        Hex outer = newHex(HEX_DIST_DIAGONAL_ROTATED * HEX_DIST_NEW_CENTRE, HOR);
+        Hex outerInner = newHex(newTransform(outer, Hex.Vertex.ONE), HEX_DIST_DIAGONAL_ROTATED * HEX_DIST_DIAGONAL_ROTATED, VER);
 
-        double newR = r * HEX_DIST_DIAGONAL_ROTATED;
-
-        List<Point2D> layer2Edges = newHexagonRot(centre, newR);
-        List<Point2D> outerEdges = newHexagon(centre, newR * HEX_DIST_NEW_CENTRE);
-
-        List<Point2D> outerInnerHex = newHexagonRot(outerEdges.get(0), newR * HEX_DIST_DIAGONAL_ROTATED);
-
-        builder.append(
-                drawPolylines(generateCombsOfPoints(layer1Edges), gray)
-        );
-
-        builder.append(
-                drawPolygons(newHexInnerTrianglesRot(centre, r), gray)
-        );
-
-        builder.append(drawPolygon(outerInnerHex, gray));
-
-        builder.append(highlightPoints(layer2Edges));
-        builder.append(highlightPoints(outerEdges));
-
-        builder.append(drawPolylines(Tile6.buildOuterLines(outerEdges, newR), red));
+        svgBuilder
+                .drawPolyLines(generateCombsOfPoints(iBuilder.vertexes(layer1)), gray)
+                .drawPolyLine(iBuilder.vertexes(outerInner), gray)
+                .drawPolyLines(iBuilder.lines2(layer1.getInternal(), INNER_TRIANGLES), gray)
+                .drawPolyLines(Tile6.buildOuterLines(iBuilder.vertexes(outer), initialConditions.getRight() * HEX_DIST_DIAGONAL_ROTATED), red)
+                .highlightPoints(iBuilder.vertexes(layer2))
+                .highlightPoints(iBuilder.vertexes(outer))
+        ;
 
         return builder.toString();
 
     }
 
-    public static String newDesign7(final Point2D centre, final double r) {
+    public static String newDesign7(Pair<Point2D, Double> initialConditions) {
 
         StringBuilder builder = new StringBuilder();
+
+        DrawSegmentsInstructions.Builder iBuilder = DrawSegmentsInstructions.Builder.with(initialConditions);
+        SvgBuilder svgBuilder = SvgBuilder.with(builder);
 
         final String gray = newStyle(GRAY, 1, 1);
         final String green = newStyle(GREEN, 2, 1);
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
 
+        Double r = initialConditions.getRight();
+        Point2D centre = initialConditions.getLeft();
         Tile7 tile7 = new Tile7(centre, r);
 
-        List<Point2D> outerHex = newHexagon(centre, r);
-        List<Point2D> outerHexRotated = newHexagonRot(centre, r);
+        Hex outer = newHex(1, HOR);
+        Hex outerHeights = outer.getInternal();
+        Hex inner = newHex(HEX_DIST_DIAGONAL_ROTATED, HOR);
+        Hex inner2 = newHex(HEX_DIST_DIAGONAL_ROTATED * HEX_DIST_DIAGONAL_ROTATED, HOR);
+        Hex outerSmall = newHex(newTransform(outer.getInternal(), Hex.Vertex.ONE), 1 - HEX_DIST_HEIGHT, VER);
 
-        double newR = r * HEX_DIST_DIAGONAL_ROTATED;
+        return
+                svgBuilder
+                        .drawPolyLine(iBuilder.vertexes(outer), gray)
+                        .drawPolyLine(iBuilder.vertexes(outer.getMirror()), gray)
 
-        List<Point2D> innerHex = newHexagon(centre, newR);
-        List<Point2D> innerHexRot = newHexagonRot(centre, newR);
+                        .drawLines(iBuilder.lines(outerHeights, DIAGONALS), gray)
+                        .drawLines(iBuilder.lines(outerHeights.getMirror(), DIAGONALS), gray)
 
-        List<Point2D> innerHex2 = newHexagon(centre, newR * HEX_DIST_DIAGONAL_ROTATED);
-        List<Point2D> innerHexRot2 = newHexagonRot(centre, newR * HEX_DIST_DIAGONAL_ROTATED);
+                        .drawPolyLine(iBuilder.vertexes(inner), blue)
+                        .drawPolyLine(iBuilder.vertexes(inner.getMirror()), blue)
+                        .drawPolyLine(iBuilder.vertexes(inner2), blue)
+                        .drawPolyLine(iBuilder.vertexes(inner2.getMirror()), blue)
+                        .drawPolyLine(iBuilder.vertexes(outerSmall), blue)
 
-        List<Point2D> heightPoints = newHexagonRot(centre, r * HEX_DIST_HEIGHT);
+                        .drawPolyLines(iBuilder.lines2(inner.getInternal(), INNER_TRIANGLES), gray)
+                        .drawPolyLines(iBuilder.lines2(inner.getInternal().getMirror(), INNER_TRIANGLES), gray)
 
-        double rSmall = r * (1 - HEX_DIST_HEIGHT);
+                        .highlightPoints(iBuilder.vertexes(outerHeights))
 
-        List<Point2D> outerHexSmall = newHexagonRot(heightPoints.get(0), rSmall);
+                        .drawPolyLines(tile7.getLines(), red)
 
-        builder.append(drawPolygon(outerHex, gray));
-        builder.append(drawPolygon(outerHexRotated, gray));
-
-        builder.append(drawPolylines(newHexHeights(centre, r), gray));
-        builder.append(drawPolylines(newHexHeightsRot(centre, r), gray));
-
-        builder.append(drawPolygons(newHexInnerTriangles(centre, r), gray));
-        builder.append(drawPolygons(newHexInnerTrianglesRot(centre, r), gray));
-
-        builder.append(drawPolygons(newHexInnerTriangles(centre, newR), gray));
-        builder.append(drawPolygons(newHexInnerTrianglesRot(centre, newR), gray));
-
-        builder.append(drawPolygon(innerHex, blue));
-        builder.append(drawPolygon(innerHexRot, blue));
-
-        builder.append(drawPolygon(innerHex2, blue));
-        builder.append(drawPolygon(innerHexRot2, blue));
-
-        builder.append(drawPolygon(outerHexSmall, blue));
-        builder.append(drawPolylines(newHexHeightsRot(heightPoints.get(0), rSmall), gray));
-
-        builder.append(highlightPoints(heightPoints));
-
-        builder.append(drawPolylines(tile7.getLines(), red));
-
-        return builder.toString();
-
+                        .drawLines(iBuilder.lines(outerSmall.getInternal(), DIAGONALS), green)
+                        .build()
+                ;
     }
 
     public static String newDesign8(final Point2D centre, final double r) {

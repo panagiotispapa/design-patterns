@@ -218,8 +218,8 @@ public class SvgFactory {
             return this;
         }
 
-        public StringBuilder getBuilder() {
-            return builder;
+        public String build() {
+            return builder.toString();
         }
     }
 
