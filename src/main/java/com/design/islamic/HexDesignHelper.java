@@ -55,8 +55,8 @@ public class HexDesignHelper {
         builder.append(outsideCentres.stream().map(c_centre -> newPolyline(asList(initialConditions.getLeft(), c_centre), gray)).collect(toList()));
 
         svgBuilder
-                .drawPolyLine(iBuilder.vertexes(main), gray)
-                .drawLines(iBuilder.lines(main, DIAGONALS_FULL), gray)
+//                .drawPolyLine(iBuilder.vertexes(main), gray)
+                .drawPolyLines(iBuilder.lines(main, ALL_LINES), gray)
                 .drawPolyLine(iBuilder.vertexes(layer1), gray)
                 .drawPolyLine(iBuilder.vertexes(layerMiddle), gray)
                 .drawPolyLine(iBuilder.vertexes(outerCentres), gray)
@@ -106,9 +106,9 @@ public class HexDesignHelper {
 
         return
                 svgBuilder
-                        .drawLines(iBuilder.lines(outer, PERIMETER), gray)
-                        .drawLines(iBuilder.lines(outer, DIAGONALS), gray)
-                        .drawLines(iBuilder.lines(inner, PERIMETER), gray)
+                        .drawPolyLines(iBuilder.lines(outer, PERIMETER), gray)
+                        .drawPolyLines(iBuilder.lines(outer, DIAGONALS), gray)
+                        .drawPolyLines(iBuilder.lines(inner, PERIMETER), gray)
                         .drawPolyLine(iBuilder.combineVertexes(inner, outerH), green)
                         .highlightPoints(iBuilder.vertexes(outer))
                         .highlightPoints(iBuilder.vertexes(outerH))
@@ -149,7 +149,7 @@ public class HexDesignHelper {
 
         svgBuilder
                 .drawPolyLine(iBuilder.vertexes(main), gray)
-                .drawPolyLines(generateCombsOfPoints(iBuilder.vertexes(ext0)), gray)
+                .drawPolyLines(iBuilder.lines(ext0, ALL_LINES), gray)
                 .drawPolyLine(iBuilder.vertexes(ext0_1), blue)
                 .drawPolyLine(iBuilder.vertexes(ext0_2), blue)
                 .drawPolyLine(iBuilder.vertexes(ext0_3), blue)
@@ -216,10 +216,10 @@ public class HexDesignHelper {
 
         return
                 svgBuilder
-                        .drawPolyLines(generateCombsOfPoints(iBuilder.vertexes(layer1)), gray)
-                        .drawPolyLines(generateCombsOfPoints(iBuilder.vertexes(layer2)), gray)
-                        .drawPolyLines(generateCombsOfPoints(iBuilder.vertexes(layerExtPol1)), gray)
-                        .drawLines(iBuilder.lines(0, layer1.getInternal(), DIAGONALS), gray)
+                        .drawPolyLines((iBuilder.lines(layer1, ALL_LINES)), gray)
+                        .drawPolyLines((iBuilder.lines(layer2, ALL_LINES)), gray)
+                        .drawPolyLines((iBuilder.lines(layerExtPol1, ALL_LINES)), gray)
+                        .drawPolyLines(iBuilder.lines(0, layer1.getInternal(), DIAGONALS), gray)
                         .drawPolyLine(iBuilder.vertexes(layer3), green)
                         .drawPolyLines(Tile4.buildExtConf(initialConditions.getLeft(), initialConditions.getRight() * HEX_DIST_DIAGONAL * HEX_DIST_DIAGONAL), red).highlightPoints(iBuilder.vertexes(layerExt))
                         .build()
@@ -248,8 +248,8 @@ public class HexDesignHelper {
 
         return
                 svgBuilder
-                        .drawPolyLines(generateCombsOfPoints(iBuilder.vertexes(layer1)), gray)
-                        .drawPolyLines(generateCombsOfPoints(iBuilder.vertexes(layer2)), gray)
+                        .drawPolyLines((iBuilder.lines(layer1, ALL_LINES)), gray)
+                        .drawPolyLines((iBuilder.lines(layer2, ALL_LINES)), gray)
                         .drawPolyLine(iBuilder.vertexes(layer2), blue)
                         .drawPolyLine(iBuilder.vertexes(layer3), green)
                         .drawPolyLines(lines, red)
@@ -276,9 +276,9 @@ public class HexDesignHelper {
         Hex outerInner = newHex(newTransform(outer, Hex.Vertex.ONE), HEX_DIST_DIAGONAL_ROTATED * HEX_DIST_DIAGONAL_ROTATED, VER);
 
         svgBuilder
-                .drawPolyLines(generateCombsOfPoints(iBuilder.vertexes(layer1)), gray)
+                .drawPolyLines((iBuilder.lines(layer1, ALL_LINES)), gray)
                 .drawPolyLine(iBuilder.vertexes(outerInner), gray)
-                .drawPolyLines(iBuilder.lines2(layer1.getInternal(), INNER_TRIANGLES), gray)
+                .drawPolyLines(iBuilder.lines(layer1.getInternal(), INNER_TRIANGLES), gray)
                 .drawPolyLines(Tile6.buildOuterLines(iBuilder.vertexes(outer), initialConditions.getRight() * HEX_DIST_DIAGONAL_ROTATED), red)
                 .highlightPoints(iBuilder.vertexes(layer2))
                 .highlightPoints(iBuilder.vertexes(outer))
@@ -315,8 +315,8 @@ public class HexDesignHelper {
                         .drawPolyLine(iBuilder.vertexes(outer), gray)
                         .drawPolyLine(iBuilder.vertexes(outer.getMirror()), gray)
 
-                        .drawLines(iBuilder.lines(outerHeights, DIAGONALS), gray)
-                        .drawLines(iBuilder.lines(outerHeights.getMirror(), DIAGONALS), gray)
+                        .drawPolyLines(iBuilder.lines(outerHeights, DIAGONALS), gray)
+                        .drawPolyLines(iBuilder.lines(outerHeights.getMirror(), DIAGONALS), gray)
 
                         .drawPolyLine(iBuilder.vertexes(inner), blue)
                         .drawPolyLine(iBuilder.vertexes(inner.getMirror()), blue)
@@ -324,14 +324,14 @@ public class HexDesignHelper {
                         .drawPolyLine(iBuilder.vertexes(inner2.getMirror()), blue)
                         .drawPolyLine(iBuilder.vertexes(outerSmall), blue)
 
-                        .drawPolyLines(iBuilder.lines2(inner.getInternal(), INNER_TRIANGLES), gray)
-                        .drawPolyLines(iBuilder.lines2(inner.getInternal().getMirror(), INNER_TRIANGLES), gray)
+                        .drawPolyLines(iBuilder.lines(inner.getInternal(), INNER_TRIANGLES), gray)
+                        .drawPolyLines(iBuilder.lines(inner.getInternal().getMirror(), INNER_TRIANGLES), gray)
 
                         .highlightPoints(iBuilder.vertexes(outerHeights))
 
                         .drawPolyLines(tile7.getLines(), red)
 
-                        .drawLines(iBuilder.lines(outerSmall.getInternal(), DIAGONALS), green)
+                        .drawPolyLines(iBuilder.lines(outerSmall.getInternal(), DIAGONALS), green)
                         .build()
                 ;
     }

@@ -1,12 +1,12 @@
 package com.design.islamic.model.tiles;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.*;
+import java.util.function.Function;
 
+import static com.design.common.Mappings.fromListOfLists;
 import static com.design.common.PolygonTools.calcVertexes;
 import static com.design.islamic.model.tiles.Hex.Type.HOR;
 import static com.design.islamic.model.tiles.Hex.Type.VER;
@@ -66,28 +66,16 @@ public class Hex {
         return new Hex(transforms, ratio, type);
     }
 
-
     public List<Point2D> vertexes(Pair<Point2D, Double> initialConditions) {
         return Arrays.stream(Hex.Vertex.values()).map(v -> v.transform(0, initialConditions, this)).collect(toList());
     }
 
-    public List<Line2D> lines(int offset, Pair<Point2D, Double> initialConditions, List<Pair<Hex.Vertex, Hex.Vertex>> instructions) {
-        return instructions.stream().map(i -> new Line2D.Double(
-                i.getLeft().transform(offset, initialConditions, this),
-                i.getRight().transform(offset, initialConditions, this)
-        )).collect(toList());
+    public List<List<Point2D>> lines(Pair<Point2D, Double> initialConditions, List<List<Hex.Vertex>> instructions) {
+        return lines(0, initialConditions, instructions);
     }
 
-    public List<List<Point2D>> lines2(Pair<Point2D, Double> initialConditions, List<List<Hex.Vertex>> instructions) {
-        return lines2(0, initialConditions, instructions);
-    }
-
-    public List<List<Point2D>> lines2(int offset, Pair<Point2D, Double> initialConditions, List<List<Hex.Vertex>> instructions) {
-        return instructions.stream().map(v->toPoints(offset, initialConditions, v)).collect(toList());
-    }
-
-    private List<Point2D> toPoints(int offset, Pair<Point2D, Double> initialConditions, List<Vertex> vertexes) {
-        return vertexes.stream().map(v->v.transform(offset, initialConditions, this)).collect(toList());
+    public List<List<Point2D>> lines(int offset, Pair<Point2D, Double> initialConditions, List<List<Hex.Vertex>> instructions) {
+        return fromListOfLists(instructions, v -> v.transform(offset, initialConditions, this));
     }
 
     public static enum Type {
@@ -131,40 +119,24 @@ public class Hex {
 
         }
 
-
         public Point2D transform(int offset, Pair<Point2D, Double> initialConditions, Hex hex) {
 
             Point2D finalCentre = initialConditions.getLeft();
             Double R = initialConditions.getRight();
             for (CentreTransform centreTransform : hex.getTransforms()) {
-                finalCentre = transform(offset, initialConditions, centreTransform);
+                finalCentre = transform(offset, initialConditions).apply(centreTransform);
             }
 
-            final Point2D vertexOrig = getVertexPoint(offset, hex.getType());
-
-            return transform(vertexOrig, Triple.of(finalCentre, R, hex.getRatio()));
-
+            return goTo(R * hex.getRatio(), finalCentre).apply(getVertexPoint(offset, hex.getType()));
         }
 
-        public Point2D transform(int offset, Pair<Point2D, Double> initialConditions, CentreTransform centreTransform) {
-
-            final double ratio = centreTransform.getRatio();
-
-            final Hex.Type type = centreTransform.getType();
-            final Point2D vertexOrig = centreTransform.getVertex().getVertexPoint(offset, type);
-
-            final Double R = initialConditions.getRight();
-            final Point2D startingPoint = initialConditions.getLeft();
-
-            return transform(vertexOrig, Triple.of(startingPoint, R, ratio));
+        private static Function<CentreTransform, Point2D> transform(int offset, Pair<Point2D, Double> initialConditions) {
+            return c -> goTo(initialConditions.getRight() * c.getRatio(), initialConditions.getLeft())
+                    .apply(c.getVertex().getVertexPoint(offset, c.getType()));
         }
 
-        private static Point2D transform(Point2D vertex, Triple<Point2D, Double, Double> transformation) {
-            final Double newR = transformation.getRight() * transformation.getMiddle();
-            return new Point2D.Double(
-                    vertex.getX() * newR + transformation.getLeft().getX(),
-                    vertex.getY() * newR + transformation.getLeft().getY()
-            );
+        private static Function<Point2D, Point2D> goTo(double distance, Point2D translation) {
+            return p -> new Point2D.Double(p.getX() * distance + translation.getX(), p.getY() * distance + translation.getY());
         }
 
         public Point2D getVertexPoint(int offset, Type type) {

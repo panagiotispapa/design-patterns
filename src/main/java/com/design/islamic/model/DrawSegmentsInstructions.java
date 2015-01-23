@@ -18,35 +18,31 @@ import static java.util.stream.Collectors.toList;
 
 public class DrawSegmentsInstructions {
 
-    public static List<Pair<Hex.Vertex, Hex.Vertex>> NONE = emptyList();
-    public static List<Pair<Hex.Vertex, Hex.Vertex>> PERIMETER = asList(
-            Sides.ONE.getVertexes(),
-            Sides.TWO.getVertexes(),
-            Sides.THREE.getVertexes(),
-            Sides.FOUR.getVertexes(),
-            Sides.FIVE.getVertexes(),
-            Sides.SIX.getVertexes()
+    public static List<List<Hex.Vertex>> NONE = emptyList();
+    public static List<List<Hex.Vertex>> PERIMETER = asList(
+            asList(
+                    Hex.Vertex.ONE,
+                    Hex.Vertex.TWO,
+                    Hex.Vertex.THREE,
+                    Hex.Vertex.FOUR,
+                    Hex.Vertex.FIVE,
+                    Hex.Vertex.SIX,
+                    Hex.Vertex.ONE
+            )
     );
 
     public static List<List<Hex.Vertex>> INNER_TRIANGLES = asList(
             asList(ONE, THREE, FIVE, ONE),
             asList(TWO, FOUR, SIX, TWO)
     );
-    public static List<Pair<Hex.Vertex, Hex.Vertex>> DIAGONALS = asList(
-            Pair.of(ONE, FOUR),
-            Pair.of(TWO, FIVE),
-            Pair.of(THREE, SIX)
+    public static List<List<Hex.Vertex>> DIAGONALS = asList(
+            asList(ONE, FOUR),
+            asList(TWO, FIVE),
+            asList(THREE, SIX)
     );
 
-    public static List<Pair<Hex.Vertex, Hex.Vertex>> DIAGONALS_FULL = Lists.newArrayList(
-            Iterables.concat(DIAGONALS, Arrays.asList(
-                    Pair.of(ONE, THREE),
-                    Pair.of(ONE, FIVE),
-                    Pair.of(TWO, FOUR),
-                    Pair.of(TWO, SIX),
-                    Pair.of(THREE, FIVE),
-                    Pair.of(FOUR, SIX)
-            ))
+    public static List<List<Hex.Vertex>> ALL_LINES = Lists.newArrayList(
+            Iterables.concat(DIAGONALS, INNER_TRIANGLES, PERIMETER)
     );
 
 
@@ -69,20 +65,12 @@ public class DrawSegmentsInstructions {
             this.initialConditions = initialConditions;
         }
 
-        public List<Line2D> lines(int offset, Hex hex, List<Pair<Hex.Vertex, Hex.Vertex>> instructions) {
-            return hex.lines(offset, initialConditions, instructions);
-        }
-
-        public List<List<Point2D>> lines2(int offset, Hex hex, List<List<Hex.Vertex>> instructions) {
-            return hex.lines2(offset, initialConditions, instructions);
-        }
-
-        public List<Line2D> lines(Hex hex, List<Pair<Hex.Vertex, Hex.Vertex>> instructions) {
+        public List<List<Point2D>> lines(Hex hex, List<List<Hex.Vertex>> instructions) {
             return lines(0, hex, instructions);
         }
 
-        public List<List<Point2D>> lines2(Hex hex, List<List<Hex.Vertex>> instructions) {
-            return lines2(0, hex, instructions);
+        public List<List<Point2D>> lines(int offset, Hex hex, List<List<Hex.Vertex>> instructions) {
+            return hex.lines(offset, initialConditions, instructions);
         }
 
         public List<Point2D> vertexes(Hex hex) {
@@ -96,20 +84,20 @@ public class DrawSegmentsInstructions {
     }
 
     public static enum Sides {
-        ONE(Pair.of(Hex.Vertex.ONE, Hex.Vertex.TWO)),
-        TWO(Pair.of(Hex.Vertex.TWO, Hex.Vertex.THREE)),
-        THREE(Pair.of(Hex.Vertex.THREE, Hex.Vertex.FOUR)),
-        FOUR(Pair.of(Hex.Vertex.FOUR, Hex.Vertex.FIVE)),
-        FIVE(Pair.of(Hex.Vertex.FIVE, Hex.Vertex.SIX)),
-        SIX(Pair.of(Hex.Vertex.SIX, Hex.Vertex.ONE));
+        ONE(asList(Hex.Vertex.ONE, Hex.Vertex.TWO)),
+        TWO(asList(Hex.Vertex.TWO, Hex.Vertex.THREE)),
+        THREE(asList(Hex.Vertex.THREE, Hex.Vertex.FOUR)),
+        FOUR(asList(Hex.Vertex.FOUR, Hex.Vertex.FIVE)),
+        FIVE(asList(Hex.Vertex.FIVE, Hex.Vertex.SIX)),
+        SIX(asList(Hex.Vertex.SIX, Hex.Vertex.ONE));
 
-        private final Pair<Hex.Vertex, Hex.Vertex> vertexes;
+        private final List<Hex.Vertex> vertexes;
 
-        Sides(Pair<Hex.Vertex, Hex.Vertex> vertexes) {
+        Sides(List<Hex.Vertex> vertexes) {
             this.vertexes = vertexes;
         }
 
-        public Pair<Hex.Vertex, Hex.Vertex> getVertexes() {
+        public List<Hex.Vertex> getVertexes() {
             return vertexes;
         }
     }
