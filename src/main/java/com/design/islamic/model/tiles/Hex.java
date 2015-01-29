@@ -67,7 +67,11 @@ public class Hex {
     }
 
     public List<Point2D> vertexes(Pair<Point2D, Double> initialConditions) {
-        return Arrays.stream(Hex.Vertex.values()).map(v -> v.transform(0, initialConditions, this)).collect(toList());
+        return Arrays.stream(Hex.Vertex.values()).map(Hex.Vertex.mapToPoint(0, initialConditions, this)).collect(toList());
+    }
+
+    public static Function<Hex, List<Point2D>> vertexes2(Pair<Point2D, Double> initialConditions) {
+        return hex -> Arrays.stream(Hex.Vertex.values()).map(Hex.Vertex.mapToPoint(0, initialConditions, hex)).collect(toList());
     }
 
     public List<List<Point2D>> lines(Pair<Point2D, Double> initialConditions, List<List<Hex.Vertex>> instructions) {
@@ -75,7 +79,18 @@ public class Hex {
     }
 
     public List<List<Point2D>> lines(int offset, Pair<Point2D, Double> initialConditions, List<List<Hex.Vertex>> instructions) {
-        return fromListOfLists(instructions, v -> v.transform(offset, initialConditions, this));
+        return fromListOfLists(Hex.Vertex.mapToPoint(offset, initialConditions, this)).apply(instructions);
+    }
+//    public List<List<Point2D>> lines(Pair<Point2D, Double> initialConditions, List<List<Hex.Vertex>> instructions) {
+//        return lines(0,initialConditions, instructions);
+//    }
+
+    public Function<List<List<Hex.Vertex>>, List<List<Point2D>>> lines(Pair<Point2D, Double> initialConditions) {
+        return lines(0, initialConditions);
+    }
+
+    public Function<List<List<Hex.Vertex>>, List<List<Point2D>>> lines(int offset, Pair<Point2D, Double> initialConditions) {
+        return fromListOfLists(Hex.Vertex.mapToPoint(offset, initialConditions, this));
     }
 
     public static enum Type {
@@ -105,6 +120,8 @@ public class Hex {
             return (index + offset) % 6;
         }
 
+        public static List<Vertex> ALL = Arrays.stream(Hex.Vertex.values()).collect(toList());
+
         private static final Map<Type, List<Point2D>> vertexes;
 
         static {
@@ -119,15 +136,50 @@ public class Hex {
 
         }
 
+        public static Function<Vertex, Point2D> mapToPoint(Pair<Point2D, Double> initialConditions, Pair<Hex, Integer> instruction) {
+            return mapToPoint(instruction.getRight(), initialConditions, instruction.getLeft());
+        }
+
+        public static Function<Vertex, Point2D> mapToPoint(int offset, Pair<Point2D, Double> initialConditions, Hex hex) {
+            return v -> v.transform(offset, initialConditions, hex);
+        }
+
+        private static Function<Hex, Point2D> findCentre(int offset, Pair<Point2D, Double> initialConditions) {
+            return hex -> {
+
+                Point2D finalCentre = initialConditions.getLeft();
+                for (CentreTransform centreTransform : hex.getTransforms()) {
+                    finalCentre = transform(offset, initialConditions).apply(centreTransform);
+                }
+                return finalCentre;
+
+            };
+        }
+
+        public static Function<Pair<Hex, List<List<Vertex>>>, List<List<Point2D>>> vertexesToPoints(int offset, Pair<Point2D, Double> initialConditions) {
+            return p -> fromListOfLists(
+                    vertexToPoint(offset, initialConditions, p.getLeft(), findCentre(offset, initialConditions).apply(p.getLeft())))
+                    .apply(p.getRight());
+        }
+
+        private static Function<Vertex, Point2D> vertexToPoint(int offset, Pair<Point2D, Double> initialConditions, Hex hex, Point2D finalCentre) {
+            Double finalR = initialConditions.getRight() * hex.getRatio();
+
+            return transform(offset, hex.getType(), finalR, finalCentre);
+
+        }
+
+        private static Function<Vertex, Point2D> transform(int offset, Type type, Double finalR, Point2D centre) {
+            return v -> goTo(finalR, centre).apply(v.getVertexPoint(offset, type));
+        }
+
         public Point2D transform(int offset, Pair<Point2D, Double> initialConditions, Hex hex) {
 
-            Point2D finalCentre = initialConditions.getLeft();
-            Double R = initialConditions.getRight();
-            for (CentreTransform centreTransform : hex.getTransforms()) {
-                finalCentre = transform(offset, initialConditions).apply(centreTransform);
-            }
+            Double finalR = initialConditions.getRight() * hex.getRatio();
+            Point2D finalCentre = findCentre(offset, initialConditions).apply(hex);
 
-            return goTo(R * hex.getRatio(), finalCentre).apply(getVertexPoint(offset, hex.getType()));
+            return transform(offset, hex.getType(), finalR, finalCentre).apply(this);
+
         }
 
         private static Function<CentreTransform, Point2D> transform(int offset, Pair<Point2D, Double> initialConditions) {

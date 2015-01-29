@@ -2,11 +2,11 @@ package com.design.common.view;
 
 import com.design.common.model.Arc;
 import com.design.common.model.Circle;
-import com.design.islamic.model.DrawSegmentsInstructions;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.tiles.Hex;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
+import org.apache.commons.lang3.tuple.Pair;
 import org.w3c.dom.svg.SVGDocument;
 
 import java.awt.*;
@@ -17,10 +17,10 @@ import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 
 public class SvgFactory {
@@ -75,15 +75,21 @@ public class SvgFactory {
         return pointsList.stream().map(p -> newPolyline(p, style)).collect(joining());
     }
 
+    public static Function<List<List<Point2D>>, String> toPolylines(final String style) {
+        return pointsList -> pointsList.stream().map(p -> newPolyline(p, style)).collect(joining());
+    }
+
     public static String newPolyline(Collection<Point2D> points, String style) {
         return format("<polyline points=\"%s\" style=\"%s\"/>", toPointsString(points), style);
+    }
+
+    public static Function<List<Point2D>, String> mapToPolyline(String style) {
+        return points -> format("<polyline points=\"%s\" style=\"%s\"/>", toPointsString(points), style);
     }
 
     public static String newPolyline(Line2D line, String style) {
         return format("<polyline points=\"%s\" style=\"%s\"/>", toPointsString(line), style);
     }
-
-
 
 //    public static String newPolyline(Collection<Line2D> points, String style) {
 //
@@ -102,6 +108,17 @@ public class SvgFactory {
         builder.append(drawPolylines(payload.getPolylinesSecondary(), styleWhite));
 
         return builder.toString();
+    }
+
+    public static Function<List<Point2D>, String> highlightPoints() {
+        String style = newStyle("red", "black", 1, 1, 1);
+
+        return points -> points.stream().map(p -> newCircle(p, 3, style)).collect(joining());
+
+    }
+
+    public static Function<Hex, String> highlightVertexes(Pair<Point2D, Double> initialConditions) {
+        return Hex.vertexes2(initialConditions).andThen(highlightPoints());
     }
 
     public static String highlightPoints(List<Point2D> points) {
@@ -179,6 +196,7 @@ public class SvgFactory {
     private static String toPointsString(Collection<Point2D> points) {
         return points.stream().map(point -> format("%s,%s", point.getX(), point.getY())).collect(joining(" "));
     }
+
     private static String toPointsString(Line2D line) {
         return toPointsString(Arrays.asList(line.getP1(), line.getP2()));
     }
@@ -186,41 +204,5 @@ public class SvgFactory {
 //    private static String toPointsString(Collection<Line2D> points) {
 //        return points.stream().map(point -> format("%s,%s", point.getX(), point.getY())).collect(joining(" "));
 //    }
-
-    public static class SvgBuilder{
-        private final StringBuilder builder;
-
-        public static SvgBuilder with(StringBuilder builder) {
-            return new SvgBuilder(builder);
-        }
-
-        private SvgBuilder(StringBuilder builder) {
-            this.builder = builder;
-        }
-
-        public SvgBuilder drawLines(List<Line2D> lines, final String style) {
-            builder.append(drawPolylinesFromLine2D(lines, style));
-            return this;
-        }
-
-        public SvgBuilder drawPolyLine(List<Point2D> points, final String style) {
-            builder.append(SvgFactory.drawPolygon(points, style));
-            return this;
-        }
-
-        public SvgBuilder drawPolyLines(List<List<Point2D>> points, final String style) {
-            builder.append(SvgFactory.drawPolylines(points, style));
-            return this;
-        }
-
-        public SvgBuilder highlightPoints(List<Point2D> points) {
-            builder.append(SvgFactory.highlightPoints(points));
-            return this;
-        }
-
-        public String build() {
-            return builder.toString();
-        }
-    }
 
 }
