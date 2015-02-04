@@ -31,6 +31,19 @@ public class DrawSegmentsInstructions {
                     Hex.Vertex.ONE
             )
     );
+    public static List<List<Hex.Vertex>> PERIMETER2 = asList(
+            asList(
+                    Hex.Vertex.THREE,
+                    Hex.Vertex.FOUR,
+                    Hex.Vertex.FIVE
+//                    Hex.Vertex.SIX
+//                    Hex.Vertex.THREE,
+//                    Hex.Vertex.FOUR,
+//                    Hex.Vertex.FIVE,
+//                    Hex.Vertex.SIX,
+//                    Hex.Vertex.ONE
+            )
+    );
 
     public static List<List<Hex.Vertex>> INNER_TRIANGLES = asList(
             asList(ONE, THREE, FIVE, ONE),

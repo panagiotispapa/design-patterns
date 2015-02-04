@@ -5,6 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 
 import static com.design.common.Mappings.fromListOfLists;
 import static com.design.common.PolygonTools.calcVertexes;
@@ -17,7 +18,7 @@ import static java.util.stream.Collectors.toList;
 public class Hex {
     public static final double PHI = (2.0 * PI) / 6.0;
 
-    private static final double HEIGHT_RATIO = cos(PHI / 2.0);
+    public static final double HEIGHT_RATIO = cos(PHI / 2.0);
     public static List<CentreTransform> NO_TRANSFORMS = Collections.emptyList();
 
     private final List<CentreTransform> transforms;
@@ -154,6 +155,15 @@ public class Hex {
                 return finalCentre;
 
             };
+        }
+
+        public static Function<Pair<Hex, List<List<Vertex>>>, List<List<Point2D>>> vertexesToPointsFull(Pair<Point2D, Double> initialConditions) {
+            return p -> IntStream.range(0, 6).mapToObj(i -> Hex.Vertex.vertexesToPoints(i, initialConditions).apply(Pair.of(p.getLeft(), p.getRight())))
+                    .flatMap(l -> l.stream()).collect(toList());
+        }
+
+        public static Function<Pair<Hex, List<List<Vertex>>>, List<List<Point2D>>> vertexesToPointsSingle(Pair<Point2D, Double> initialConditions) {
+            return vertexesToPoints(0, initialConditions);
         }
 
         public static Function<Pair<Hex, List<List<Vertex>>>, List<List<Point2D>>> vertexesToPoints(int offset, Pair<Point2D, Double> initialConditions) {

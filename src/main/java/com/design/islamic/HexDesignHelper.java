@@ -5,6 +5,7 @@ import com.design.islamic.model.Tile;
 import com.design.islamic.model.hex.*;
 import com.design.islamic.model.tiles.CentreTransform;
 import com.design.islamic.model.tiles.Hex;
+import com.design.islamic.model.tiles.HexGrid;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -12,6 +13,8 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static com.design.common.PolygonTools.*;
 import static com.design.common.view.SvgFactory.*;
@@ -19,10 +22,9 @@ import static com.design.islamic.model.DrawSegmentsInstructions.*;
 import static com.design.islamic.model.DrawSegmentsInstructions.CombinedVertexes.OUTER_VERTEXES;
 import static com.design.islamic.model.DrawSegmentsInstructions.CombinedVertexes.STAR;
 import static com.design.islamic.model.tiles.CentreTransform.newTransform;
-import static com.design.islamic.model.tiles.Hex.NO_TRANSFORMS;
+import static com.design.islamic.model.tiles.Hex.*;
 import static com.design.islamic.model.tiles.Hex.Type.HOR;
 import static com.design.islamic.model.tiles.Hex.Type.VER;
-import static com.design.islamic.model.tiles.Hex.newHex;
 import static java.lang.Math.*;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
@@ -49,10 +51,10 @@ public class HexDesignHelper {
         final String gray = newStyle("gray", 1, 1);
         final String green = newStyle("green", 1, 1);
 
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, List<List<Point2D>>> lines = Hex.Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Vertex>>>, List<List<Point2D>>> lines = Vertex.vertexesToPoints(0, ic);
         Function<Triple<Hex, Hex, CombinedVertexes>, List<List<Point2D>>> star = combineVertexes(ic);
         Function<Hex, String> highlight = highlightVertexes(ic);
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
+        Function<Pair<Hex, List<List<Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
         Function<Triple<Hex, Hex, CombinedVertexes>, String> greenStar = star.andThen(toPolylines(green));
 
         builder
@@ -91,11 +93,11 @@ public class HexDesignHelper {
         Hex outerH = outer.getInternal();
         Hex inner = newHex(NO_TRANSFORMS, 0.5, VER);
 
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, List<List<Point2D>>> lines = Hex.Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Vertex>>>, List<List<Point2D>>> lines = Vertex.vertexesToPoints(0, ic);
         Function<Triple<Hex, Hex, CombinedVertexes>, List<List<Point2D>>> star = combineVertexes(ic);
         Function<Hex, String> highlight = highlightVertexes(ic);
 
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
+        Function<Pair<Hex, List<List<Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
 
         Function<Triple<Hex, Hex, CombinedVertexes>, String> greenStar = star.andThen(toPolylines(green));
 
@@ -125,27 +127,27 @@ public class HexDesignHelper {
         final String green = newStyle(GREEN, 2, 1);
         final String red = newStyle(RED, 2, 1);
 
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, List<List<Point2D>>> lines = Hex.Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Vertex>>>, List<List<Point2D>>> lines = Vertex.vertexesToPoints(0, ic);
         Function<Triple<Hex, Hex, CombinedVertexes>, List<List<Point2D>>> star = combineVertexes(ic);
         Function<Hex, String> highlight = highlightVertexes(ic);
 
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> blueLines = lines.andThen(toPolylines(blue));
+        Function<Pair<Hex, List<List<Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
+        Function<Pair<Hex, List<List<Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
+        Function<Pair<Hex, List<List<Vertex>>>, String> blueLines = lines.andThen(toPolylines(blue));
         Function<Triple<Hex, Hex, CombinedVertexes>, String> blueStar = star.andThen(toPolylines(blue));
 
         Hex main = newHex(NO_TRANSFORMS, 1, VER);
         Hex inner = newHex(NO_TRANSFORMS, HEX_DIST_EQ1, VER);
         Hex inner2 = Hex.newHex(NO_TRANSFORMS, HEX_DIST_EQ1 * 0.5, VER);
 
-        CentreTransform cTransform1 = newTransform(HEX_DIST_EQ1, VER, Hex.Vertex.ONE);
+        CentreTransform cTransform1 = newTransform(HEX_DIST_EQ1, VER, Vertex.ONE);
         CentreTransform.VertexBuilder cTransform2 = CentreTransform.transform().ratio(HEX_DIST_EQ1 * HEX_DIST_HEIGHT).type(HOR);
 
         Hex ext0 = Hex.newHex(cTransform1, 1 - HEX_DIST_EQ1, VER);
         Hex ext0_1 = Hex.newHex(cTransform1, (1 - HEX_DIST_EQ1) * HEX_DIST_DIAGONAL_ROTATED, HOR);
 
-        Hex ext0_2 = Hex.newHex(cTransform2.vertex(Hex.Vertex.ONE), HEX_DIST_EQ1 * HEX_DIST_DIAGONAL_ROTATED * 0.5, VER);
-        Hex ext0_3 = Hex.newHex(cTransform2.vertex(Hex.Vertex.SIX), HEX_DIST_EQ1 * HEX_DIST_DIAGONAL_ROTATED * 0.5, VER);
+        Hex ext0_2 = Hex.newHex(cTransform2.vertex(Vertex.ONE), HEX_DIST_EQ1 * HEX_DIST_DIAGONAL_ROTATED * 0.5, VER);
+        Hex ext0_3 = Hex.newHex(cTransform2.vertex(Vertex.SIX), HEX_DIST_EQ1 * HEX_DIST_DIAGONAL_ROTATED * 0.5, VER);
 
         List<List<Point2D>> extConfigs = buildExtConfigForDesign3(inner.vertexes(ic), ic.getRight() * (1 - HEX_DIST_EQ1));
 
@@ -211,18 +213,18 @@ public class HexDesignHelper {
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
 
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, List<List<Point2D>>> lines = Hex.Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Vertex>>>, List<List<Point2D>>> lines = Vertex.vertexesToPoints(0, ic);
         Function<Triple<Hex, Hex, CombinedVertexes>, List<List<Point2D>>> star = combineVertexes(ic);
         Function<Hex, String> highlight = highlightVertexes(ic);
 
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
+        Function<Pair<Hex, List<List<Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
+        Function<Pair<Hex, List<List<Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
 
         Hex layer1 = Hex.newHex(1, VER);
         Hex layer2 = Hex.newHex(HEX_DIST_DIAGONAL, HOR);
         Hex layer3 = Hex.newHex(HEX_DIST_DIAGONAL * HEX_DIST_DIAGONAL, VER);
         Hex layerExt = Hex.newHex(layer3.getRatio() * HEX_DIST_NEW_CENTRE, HOR);
-        Hex layerExtPol1 = Hex.newHex(newTransform(layerExt.getRatio(), layerExt.getType(), Hex.Vertex.ONE), layer3.getRatio(), VER);
+        Hex layerExtPol1 = Hex.newHex(newTransform(layerExt.getRatio(), layerExt.getType(), Vertex.ONE), layer3.getRatio(), VER);
 
         return builder
                 .append(grayLines.apply(Pair.of(layer1, ALL_LINES)))
@@ -236,6 +238,45 @@ public class HexDesignHelper {
 
     }
 
+    public static String newDesignTest(Pair<Point2D, Double> ic) {
+
+        StringBuilder builder = new StringBuilder();
+
+        final String gray = newStyle(GRAY, 1, 1);
+        final String green = newStyle(GREEN, 2, 1);
+        final String red = newStyle(RED, 2, 1);
+        final String blue = newStyle(BLUE, 2, 1);
+
+        Function<Pair<Hex, List<List<Vertex>>>, List<List<Point2D>>> lines = Vertex.vertexesToPoints(0, ic);
+
+        Hex layer1 = newHex(1, VER);
+        Hex layer2 = newHex(newTransform(1, VER, Vertex.ONE), 0.5, VER);
+
+        Function<Pair<Hex, List<List<Vertex>>>, String> grayLines = Vertex.vertexesToPointsSingle(ic).andThen(toPolylines(gray));
+        List<Point2D> grid = HexGrid.grid(ic.getLeft(), ic.getRight() / 4, HexGrid.TYPE.VER, 16);
+        return builder
+
+
+//                .append(grid.stream().map(p -> Vertex.vertexesToPointsSingle(Pair.of(p, ic.getRight())).andThen(toPolylines(newStyle(GRAY, 1, 0.5)))).map(f -> f.apply(Pair.of(newHex(1.0 / 4.0, HOR), PERIMETER))).collect(joining()))
+
+
+                .append(grayLines.apply(Pair.of(layer1, PERIMETER)))
+                .append(grayLines.apply(Pair.of(layer1, DIAGONALS)))
+//                .append(Hex.Vertex.vertexesToPoints(0, ic).andThen(toPolylines(blue)).apply(Pair.of(layer2, PERIMETER2)))
+//                .append(Hex.Vertex.vertexesToPoints(1, ic).andThen(toPolylines(blue)).apply(Pair.of(layer2, PERIMETER2)))
+
+                .append(Vertex.vertexesToPointsFull(ic).andThen(toPolylines(blue)).apply(Pair.of(layer2, PERIMETER2)))
+
+                .append(highlightPoints().apply(grid))
+//                .append(grid.stream().map(p->Pair.of(newHex( 1.0/4.0,HOR),PERIMETER)).map(Vertex.vertexesToPointsSingle(Pair.of(p,))).collect(joining()))
+
+//                .append(toPolylines(blue).apply(collectii))
+
+                .toString()
+                ;
+
+    }
+
     public static String newStarDesign5(Pair<Point2D, Double> ic) {
 
         StringBuilder builder = new StringBuilder();
@@ -245,13 +286,13 @@ public class HexDesignHelper {
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
 
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, List<List<Point2D>>> lines = Hex.Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Vertex>>>, List<List<Point2D>>> lines = Vertex.vertexesToPoints(0, ic);
         Function<Triple<Hex, Hex, CombinedVertexes>, List<List<Point2D>>> star = combineVertexes(ic);
         Function<Hex, String> highlight = highlightVertexes(ic);
 
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> blueLines = lines.andThen(toPolylines(blue));
+        Function<Pair<Hex, List<List<Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
+        Function<Pair<Hex, List<List<Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
+        Function<Pair<Hex, List<List<Vertex>>>, String> blueLines = lines.andThen(toPolylines(blue));
         Function<Triple<Hex, Hex, CombinedVertexes>, String> blueStar = star.andThen(toPolylines(blue));
 
         Hex layer1 = newHex(1, VER);
@@ -285,19 +326,19 @@ public class HexDesignHelper {
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
 
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, List<List<Point2D>>> lines = Hex.Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Vertex>>>, List<List<Point2D>>> lines = Vertex.vertexesToPoints(0, ic);
         Function<Triple<Hex, Hex, CombinedVertexes>, List<List<Point2D>>> star = combineVertexes(ic);
         Function<Hex, String> highlight = highlightVertexes(ic);
 
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> blueLines = lines.andThen(toPolylines(blue));
+        Function<Pair<Hex, List<List<Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
+        Function<Pair<Hex, List<List<Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
+        Function<Pair<Hex, List<List<Vertex>>>, String> blueLines = lines.andThen(toPolylines(blue));
         Function<Triple<Hex, Hex, CombinedVertexes>, String> blueStar = star.andThen(toPolylines(blue));
 
         Hex layer1 = newHex(1, VER);
         Hex layer2 = newHex(HEX_DIST_DIAGONAL_ROTATED, VER);
         Hex outer = newHex(HEX_DIST_DIAGONAL_ROTATED * HEX_DIST_NEW_CENTRE, HOR);
-        Hex outerInner = newHex(newTransform(outer, Hex.Vertex.ONE), HEX_DIST_DIAGONAL_ROTATED * HEX_DIST_DIAGONAL_ROTATED, VER);
+        Hex outerInner = newHex(newTransform(outer, Vertex.ONE), HEX_DIST_DIAGONAL_ROTATED * HEX_DIST_DIAGONAL_ROTATED, VER);
 
         return builder
                 .append(grayLines.apply(Pair.of(layer1, ALL_LINES)))
@@ -319,13 +360,13 @@ public class HexDesignHelper {
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
 
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, List<List<Point2D>>> lines = Hex.Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Vertex>>>, List<List<Point2D>>> lines = Vertex.vertexesToPoints(0, ic);
         Function<Triple<Hex, Hex, CombinedVertexes>, List<List<Point2D>>> star = combineVertexes(ic);
         Function<Hex, String> highlight = highlightVertexes(ic);
 
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> blueLines = lines.andThen(toPolylines(blue));
+        Function<Pair<Hex, List<List<Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
+        Function<Pair<Hex, List<List<Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
+        Function<Pair<Hex, List<List<Vertex>>>, String> blueLines = lines.andThen(toPolylines(blue));
         Function<Triple<Hex, Hex, CombinedVertexes>, String> blueStar = star.andThen(toPolylines(blue));
 
         Double r = ic.getRight();
@@ -336,7 +377,7 @@ public class HexDesignHelper {
         Hex outerHeights = outer.getInternal();
         Hex inner = newHex(HEX_DIST_DIAGONAL_ROTATED, HOR);
         Hex inner2 = newHex(HEX_DIST_DIAGONAL_ROTATED * HEX_DIST_DIAGONAL_ROTATED, HOR);
-        Hex outerSmall = newHex(newTransform(outer.getInternal(), Hex.Vertex.ONE), 1 - HEX_DIST_HEIGHT, VER);
+        Hex outerSmall = newHex(newTransform(outer.getInternal(), Vertex.ONE), 1 - HEX_DIST_HEIGHT, VER);
 
         return
                 builder
@@ -363,10 +404,6 @@ public class HexDesignHelper {
 
     }
 
-    private static String linesFromMany(List<Hex> hexList, Function<Pair<Hex, List<List<Hex.Vertex>>>, String> f, List<List<Hex.Vertex>> lines) {
-        return hexList.stream().map(h -> f.apply(Pair.of(h, lines))).collect(joining());
-    }
-
     public static String newDesign8(final Point2D centre, final double r) {
 
         StringBuilder builder = new StringBuilder();
@@ -378,13 +415,13 @@ public class HexDesignHelper {
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
 
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, List<List<Point2D>>> lines = Hex.Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Vertex>>>, List<List<Point2D>>> lines = Vertex.vertexesToPoints(0, ic);
         Function<Triple<Hex, Hex, CombinedVertexes>, List<List<Point2D>>> star = combineVertexes(ic);
         Function<Hex, String> highlight = highlightVertexes(ic);
 
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> blueLines = lines.andThen(toPolylines(blue));
+        Function<Pair<Hex, List<List<Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
+        Function<Pair<Hex, List<List<Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
+        Function<Pair<Hex, List<List<Vertex>>>, String> blueLines = lines.andThen(toPolylines(blue));
         Function<Triple<Hex, Hex, CombinedVertexes>, String> blueStar = star.andThen(toPolylines(blue));
 
         Tile8 tile8 = new Tile8(centre, r);
@@ -396,19 +433,18 @@ public class HexDesignHelper {
         return
 
                 builder
-                        .append(linesFromMany(asList(
-                                main,
-                                main.getMirror(),
-                                mainInternal,
-                                mainInternal.getMirror(),
-                                tile,
-                                tile.getMirror()
-                        ), grayLines, PERIMETER))
-                        .append(linesFromMany(asList(
-                                main,
-                                main.getMirror()
-                        ), grayLines, DIAGONALS))
-
+                        .append(
+                                Stream.of(
+                                        Pair.of(main, PERIMETER),
+                                        Pair.of(main.getMirror(), PERIMETER),
+                                        Pair.of(mainInternal, PERIMETER),
+                                        Pair.of(mainInternal.getMirror(), PERIMETER),
+                                        Pair.of(tile, PERIMETER),
+                                        Pair.of(tile.getMirror(), PERIMETER),
+                                        Pair.of(main, DIAGONALS),
+                                        Pair.of(main.getMirror(), DIAGONALS)
+                                ).map(grayLines).collect(joining())
+                        )
                         .append(blueStar.apply(Triple.of(mainInternal, mainInternal.getMirror(), STAR)))
 
 //                .append(highlightPoints().apply(tile8.getPointsA()))
@@ -435,13 +471,16 @@ public class HexDesignHelper {
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
 
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, List<List<Point2D>>> lines = Hex.Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Vertex>>>, List<List<Point2D>>> lines = Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Vertex>>>, List<List<Point2D>>> linesFull = Vertex.vertexesToPointsFull(ic);
+
         Function<Triple<Hex, Hex, CombinedVertexes>, List<List<Point2D>>> star = combineVertexes(ic);
         Function<Hex, String> highlight = highlightVertexes(ic);
 
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> blueLines = lines.andThen(toPolylines(blue));
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> redLines = lines.andThen(toPolylines(red));
+        Function<Pair<Hex, List<List<Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
+        Function<Pair<Hex, List<List<Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
+        Function<Pair<Hex, List<List<Vertex>>>, String> blueLines = lines.andThen(toPolylines(blue));
         Function<Triple<Hex, Hex, CombinedVertexes>, String> grayStar = star.andThen(toPolylines(gray));
 
         Hex outerr = newHex(1, HOR);
@@ -449,21 +488,27 @@ public class HexDesignHelper {
         Hex outer2 = newHex(Tile9.OUTER_R2, HOR);
         Hex inner1 = newHex(Tile9.INNER_R1, HOR);
         Hex inner2 = newHex(Tile9.INNER_R2, HOR);
+        Hex outer4 = newHex(Tile9.OUTER_R4, HOR);
 
+        Hex outerrLayer = newHex(newTransform(outerr.getMirror(), Vertex.ONE), Tile9.INNER_R1, VER);
         List<Point2D> outer = newHexagon(centre, r);
         List<Point2D> outerRot = newHexagonRot(centre, r);
 
+        Hex outer1T = newHex(newTransform(outerr, Hex.Vertex.ONE), 1.0 - Tile9.OUTER_R1, HOR);
+        Hex outer2T = newHex(newTransform(outerr, Hex.Vertex.ONE), 1.0 - Tile9.OUTER_R2, HOR);
+
         builder
-                .append(linesFromMany(asList(
-                        outerr,
-                        outerr.getMirror(),
-                        inner1,
-                        inner1.getMirror()
-                ), grayLines, PERIMETER))
-                .append(linesFromMany(asList(
-                        outerr,
-                        outerr.getMirror()
-                ), grayLines, DIAGONALS))
+                .append(
+                        Stream.of(
+                                Pair.of(outerr, PERIMETER),
+                                Pair.of(outerr.getMirror(), PERIMETER),
+                                Pair.of(inner1, PERIMETER),
+                                Pair.of(inner1.getMirror(), PERIMETER),
+                                Pair.of(outerr, DIAGONALS),
+                                Pair.of(outerr.getMirror(), DIAGONALS)
+                        ).map(grayLines).collect(joining())
+                )
+
                 .append(grayStar.apply(Triple.of(outerr, outerr.getMirror(), OUTER_VERTEXES)))
                 .append(grayStar.apply(Triple.of(outer1, outer1.getMirror(), OUTER_VERTEXES)))
                 .append(grayStar.apply(Triple.of(outer2, outer2.getMirror(), OUTER_VERTEXES)))
@@ -491,37 +536,41 @@ public class HexDesignHelper {
         builder
                 .append(grayLines.apply(Pair.of(inner2, INNER_TRIANGLES)))
                 .append(grayLines.apply(Pair.of(inner2.getMirror(), INNER_TRIANGLES)))
+                .append(grayLines.apply(Pair.of(newHex((1.0 - Tile9.INNER_R1), VER), PERIMETER)))
+//
+                .append(redLines.apply(Pair.of(outerr.getMirror(), PERIMETER)))
+                .append(drawPolylines(tile9.getLines(), red))
+//
+//                .append(grayStar.apply(Triple.of(outer1T, outer1T.getMirror(), OUTER_VERTEXES)))
+//                .append(grayStar.apply(Triple.of(outer2T, outer2T.getMirror(), OUTER_VERTEXES)))
+//
+                .append(Stream.of(
+                        outer4,
+                        outer4.getMirror()
+                ).map(highlight).collect(joining()))
+                .append(Stream.of(
+                        tile9.getOuterLayer1(),
+                        tile9.getOuterLayer1Rot(),
+                        tile9.getOuterLayer2(),
+                        tile9.getOuterLayer2Rot()
+                ).map(highlightPoints()).collect(joining()))
+                .append(linesFull.andThen(toPolylines(blue)).apply(Pair.of(outerrLayer, PERIMETER)))
         ;
 
         builder.append(drawPolylines(concateOuterHexagons(
                 newHexagon(outer.get(0), r * (1.0 - Tile9.OUTER_R1)),
                 newHexagonRot(outer.get(0), r * (1.0 - Tile9.OUTER_R1))
         ), gray));
-
+//
         builder.append(drawPolylines(concateOuterHexagons(
                 newHexagon(outer.get(0), r * (1.0 - Tile9.OUTER_R2)),
                 newHexagonRot(outer.get(0), r * (1.0 - Tile9.OUTER_R2))
         ), gray));
 
-        Hex.Vertex.ALL.stream().forEach(
-                v ->
-                        builder.append(blueLines.apply(Pair.of(
-                                newHex(newTransform(outerr.getMirror(), v), Tile9.INNER_R1, VER), PERIMETER)))
-        );
-
-        builder.append(grayLines.apply(Pair.of(newHex((1.0 - Tile9.INNER_R1),VER),PERIMETER)));
-
-
 //        out.add(drawPolygon(newHexagonRot(outerRot.get(2), r * Tile9.INNER_R1), blue));
 //        out.add(drawPolygon(newHexagonRot(outerRot.get(3), r * Tile9.INNER_R1), blue));
 //        out.add(drawPolygon(newHexagonRot(outerRot.get(4), r * Tile9.INNER_R1), blue));
 //        builder.append(drawPolylines(Tile9.calcOuterLines1(centre, r), red));
-
-        builder.append(drawPolygon(newHexagonRot(centre, r), red));
-        builder.append(drawPolylines(tile9.getLines(), red));
-
-        builder.append(highlightPoints(newHexagon(centre, r * Tile9.OUTER_R4)));
-        builder.append(highlightPoints(newHexagonRot(centre, r * Tile9.OUTER_R4)));
 
 //        builder.append(highlightPoints(tile9.getPointsA()));
 //        builder.append(highlightPoints(tile9.getPointsB()));
@@ -544,10 +593,6 @@ public class HexDesignHelper {
 //        builder.append(highlightPoints(tile9.getPointsS()));
 //        builder.append(highlightPoints(tile9.getInnerLayer1()));
 //        builder.append(highlightPoints(tile9.getInnerLayer1Rot()));
-        builder.append(highlightPoints(tile9.getOuterLayer1()));
-        builder.append(highlightPoints(tile9.getOuterLayer1Rot()));
-        builder.append(highlightPoints(tile9.getOuterLayer2()));
-        builder.append(highlightPoints(tile9.getOuterLayer2Rot()));
 
         return builder.toString();
 
@@ -566,105 +611,132 @@ public class HexDesignHelper {
 
         Pair<Point2D, Double> ic = Pair.of(centre, r);
 
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, List<List<Point2D>>> lines = Hex.Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Vertex>>>, List<List<Point2D>>> linesFull = Vertex.vertexesToPointsFull(ic);
+
+        Function<Pair<Hex, List<List<Vertex>>>, List<List<Point2D>>> lines = Vertex.vertexesToPoints(0, ic);
         Function<Triple<Hex, Hex, CombinedVertexes>, List<List<Point2D>>> star = combineVertexes(ic);
         Function<Hex, String> highlight = highlightVertexes(ic);
 
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
-        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> blueLines = lines.andThen(toPolylines(blue));
+        Function<Pair<Hex, List<List<Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
+        Function<Pair<Hex, List<List<Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
+        Function<Pair<Hex, List<List<Vertex>>>, String> blueLines = lines.andThen(toPolylines(blue));
         Function<Triple<Hex, Hex, CombinedVertexes>, String> blueStar = star.andThen(toPolylines(blue));
 
-        builder.append(drawPolygon(newHexagonRot(centre, r), gray));
+        Hex main = newHex(1, VER);
+        Hex layerInner = newHex(newTransform(main, Vertex.ONE), tile.getInnerR() / r, HOR);
 
-        for (Point2D edge : tile.getMainHexRot()) {
-            builder.append(drawPolygon(newHexagon(edge, tile.getInnerR()), gray));
-        }
+        return
+                builder
+                        .append(linesFull.andThen(toPolylines(gray)).apply(Pair.of(layerInner, PERIMETER)))
+                        .append((newCircle(centre, tile.getInnerR(), gray)))
+                        .append(Stream.of(
+                                Pair.of(main, PERIMETER),
+                                Pair.of(main, DIAGONALS),
+                                Pair.of(main.getInternal(), DIAGONALS)
+                        ).map(grayLines).collect(joining()))
+                        .append(tile.getMainHeights().stream().map(edge -> newCircle(edge, r / 2.0, gray)).collect(joining()))
 
-        builder.append((newCircle(centre, tile.getInnerR(), gray)));
-        for (Point2D edge : tile.getMainHeights()) {
-            builder.append((newCircle(edge, r / 2.0, gray)));
-        }
+                        .append(
+                                Stream.of(
+                                        tile.getMainHeights(),
+                                        tile.getPointsA(),
+                                        tile.getPointsB(),
+                                        tile.getPointsC(),
+                                        tile.getPointsD()
+                                ).map(highlightPoints()).collect(joining())
+                        )
+                        .append(drawPolylines(tile.getLines(), red))
+                        .toString()
+                ;
 
-        builder.append(drawPolylines(newHexHeightsRot(centre, r), gray));
-        builder.append(drawPolylines(newHexDiagRot(centre, r), gray));
-
-        builder.append(highlightPoints(tile.getMainHeights()));
-        builder.append(highlightPoints(tile.getPointsA()));
-        builder.append(highlightPoints(tile.getPointsB()));
-        builder.append(highlightPoints(tile.getPointsC()));
-        builder.append(highlightPoints(tile.getPointsD()));
 //        builder.append(highlightPoints(newHexagon(centre,tile.getInnerR2())));
 
-        builder.append(drawPolylines(tile.getLines(), red));
-
-        return builder.toString();
     }
 
     public static String newDesign12(final Point2D centre, final double r) {
-
         StringBuilder builder = new StringBuilder();
 
         Tile tile = new Tile12(centre, r);
 
+        Pair<Point2D, Double> ic = Pair.of(centre, r);
+
         final String gray = newStyle(GRAY, 1, 1);
         final String green = newStyle(GREEN, 2, 1);
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
 
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, List<List<Point2D>>> lines = Hex.Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> blueLines = lines.andThen(toPolylines(blue));
+
+        final double ratio = RECT_DIST_HEIGHT / 5.0;
+
 //        final double newR = ((r * RECT_DIST_HEIGHT) / 6.0)/HEX_DIST_HEIGHT;
-        final double newR = ((r * RECT_DIST_HEIGHT) / 5.0);
 
-        builder.append(drawPolygon(newRectRot(centre, r), gray));
-        builder.append(drawPolygon(newRectRot(centre, r * Tile12.RATIO_W), gray));
 //        builder.append(drawPolygon(newHexagonRot(centre, r), gray));
-        builder.append(drawPolygon(newHexagonRot(centre, newR), gray));
-        builder.append(drawPolylines(newHexDiagRot(centre, r), gray));
 
-        builder.append(drawPolygon(newHexagonRot(centre, 2 * newR), gray));
-        builder.append(drawPolygon(newHexagonRot(centre, 3 * newR), gray));
-        builder.append(drawPolygon(newHexagonRot(centre, 4 * newR), gray));
-        builder.append(drawPolygon(newHexagonRot(centre, 5 * newR), gray));
-        builder.append(drawPolygon(newHexagonRot(centre, 6 * newR), gray));
-        builder.append(drawPolygon(newHexagonRot(centre, 7 * newR), gray));
+        return
+                builder
+                        .append(drawPolygon(newRectRot(centre, r), gray))
+                        .append(drawPolygon(newRectRot(centre, r * Tile12.RATIO_W), gray))
+                        .append(Stream.of(
+                                Pair.of(newHex(ratio, VER), PERIMETER),
+                                Pair.of(newHex(1, VER), DIAGONALS),
+                                Pair.of(newHex(2 * ratio, VER), PERIMETER),
+                                Pair.of(newHex(3 * ratio, VER), PERIMETER),
+                                Pair.of(newHex(4 * ratio, VER), PERIMETER),
+                                Pair.of(newHex(5 * ratio, VER), PERIMETER),
+                                Pair.of(newHex(6 * ratio, VER), PERIMETER),
+                                Pair.of(newHex(7 * ratio, VER), PERIMETER)
+                        ).map(grayLines).collect(joining()))
+                        .append(drawPolygons(tile.getPayload().getPolygons(), red))
+                        .append(drawPolylines(tile.getPayload().getPolylines(), red))
+                        .toString();
+
 //        builder.append(drawPolygon(newHexStarTileRotated(centre, 2 * newR, HEX_DIST_DIAGONAL), blue));
 
 //        builder.append(drawPolygon(newHexagonRot(newEdgeAt(centre, 2*newR, HEX_RADIANS_ROT.get(2)), newR), gray));
 
-        builder.append(drawPolygons(tile.getPayload().getPolygons(), red));
-        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
-
-        return builder.toString();
-
     }
 
     public static String newDesign13(final Point2D centre, final double r) {
-
         StringBuilder builder = new StringBuilder();
 
         Tile tile = new Tile13(centre, r);
+
+        Pair<Point2D, Double> ic = Pair.of(centre, r);
 
         final String gray = newStyle(GRAY, 1, 1);
         final String green = newStyle(GREEN, 2, 1);
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
 
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, List<List<Point2D>>> lines = Hex.Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
+
         double newR = r / 3.0;
         double newR2 = newR * PolygonTools.HEX_DIST_NEW_CENTRE;
 
-        List<Point2D> layerOut = newHexagon(centre, 2.0 * newR);
+        double ratio = 1 / 3.0;
+        double ratio2 = ratio * PolygonTools.HEX_DIST_NEW_CENTRE;
 
-        builder.append(drawPolygon(newHexagon(centre, r), gray));
-        builder.append(drawPolygon(newHexagon(centre, newR), gray));
+        Hex out = newHex(2.0 * ratio, HOR);
 
-        builder.append(drawPolygon(layerOut, gray));
-        builder.append(drawPolygon(newHexagonRot(centre, newR2), gray));
+        return
+                builder
+                        .append(Stream.of(
+                                Pair.of(newHex(1, HOR), PERIMETER),
+                                Pair.of(newHex(ratio, HOR), PERIMETER),
+                                Pair.of(newHex(ratio2, VER), PERIMETER),
+                                Pair.of(newHex(newTransform(out, Vertex.ONE), ratio, HOR), PERIMETER),
+                                Pair.of(out, PERIMETER)
+                        ).map(grayLines).collect(joining())
+                        )
+                        .append(drawPolylines(tile.getPayload().getPolylines(), red))
 
-        builder.append(drawPolygon(newHexagon(layerOut.get(0), newR), gray));
+                        .toString();
 
-        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
-
-        return builder.toString();
     }
 
     public static String newDesign14(final Point2D centre, final double r) {
@@ -673,27 +745,37 @@ public class HexDesignHelper {
         final String green = newStyle(GREEN, 2, 1);
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
+        Pair<Point2D, Double> ic = Pair.of(centre, r);
+        Function<Hex, String> highlight = highlightVertexes(ic);
+
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, List<List<Point2D>>> lines = Hex.Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> blueLines = lines.andThen(toPolylines(blue));
 
         Tile14 tile = new Tile14(centre, r);
 
         StringBuilder builder = new StringBuilder();
 
-        double newR = r / 4.0;
+        double ratio = 1 / 4.0;
 
-        builder.append(drawPolygon(newHexagon(centre, r), gray));
-        builder.append(drawPolylines(newHexDiag(centre, r), gray));
+        Hex main = newHex(1, HOR);
 
-        for (int i = 1; i < 4; i++) {
-            builder.append(drawPolygon(newHexagon(centre, i * newR), gray));
-        }
+        return
+                builder
+                        .append(grayLines.apply(Pair.of(main, PERIMETER)))
+                        .append(grayLines.apply(Pair.of(main, DIAGONALS)))
+                        .append(IntStream.range(1, 4).mapToObj(i -> Pair.of(newHex(i * ratio, HOR), PERIMETER)).map(grayLines).collect(joining()))
 
-        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
+                        .append(drawPolylines(tile.getPayload().getPolylines(), red))
+                        .append(Stream.of(
+                                asList(tile.getPointsA()),
+                                asList(tile.getPointsB()),
+                                asList(tile.getPointsC())
+                        ).map(highlightPoints()).collect(joining()))
+                        .toString()
+                ;
 
-        builder.append(highlightPoints(tile.getPointsA()));
-        builder.append(highlightPoints(tile.getPointsB()));
-        builder.append(highlightPoints(tile.getPointsC()));
-
-        return builder.toString();
     }
 
     public static String newDesign15(final Point2D centre, final double r) {
@@ -702,22 +784,33 @@ public class HexDesignHelper {
         final String green = newStyle(GREEN, 2, 1);
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
+        Pair<Point2D, Double> ic = Pair.of(centre, r);
+        Function<Hex, String> highlight = highlightVertexes(ic);
+
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, List<List<Point2D>>> lines = Hex.Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> redLines = lines.andThen(toPolylines(red));
+
+        double ratio = sin(PI_QUARTER) / 2.5;
 
         double newR = (r * sin(PI_QUARTER)) / 2.5;
         Tile tile = new Tile15(centre, r);
 
-        StringBuilder builder = new StringBuilder();
+        return
+                new StringBuilder()
+                        .append(Stream.of(
+                                Pair.of(newHex(ratio, VER), PERIMETER),
+                                Pair.of(newHex(2 * ratio, VER), PERIMETER),
+                                Pair.of(newHex(5 * ratio, VER), PERIMETER),
+                                Pair.of(newHex(5 * ratio, VER), DIAGONALS)
+                        ).map(grayLines).collect(joining()))
+                        .append(drawPolygon(newRectRot(centre, r), gray))
+                        .append(drawPolygon(newRectRot(centre, r * Tile15.RATIO_W), gray))
+                        .append(toPolylines(red).apply(tile.getPayload().getPolylines()))
 
-        builder.append(drawPolygon(newRectRot(centre, r), gray));
-        builder.append(drawPolygon(newRectRot(centre, r * Tile15.RATIO_W), gray));
-        builder.append(drawPolygon(newHexagonRot(centre, newR), gray));
-        builder.append(drawPolygon(newHexagonRot(centre, 2 * newR), gray));
-        builder.append(drawPolygon(newHexagonRot(centre, 5 * newR), gray));
-        builder.append(drawPolylines(newHexDiagRot(centre, 5 * newR), gray));
+                        .toString();
 
-        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
-
-        return builder.toString();
     }
 
     public static String newDesign16(final Point2D centre, final double r) {
@@ -726,23 +819,34 @@ public class HexDesignHelper {
         final String green = newStyle(GREEN, 2, 1);
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
+        Pair<Point2D, Double> ic = Pair.of(centre, r);
+        Function<Hex, String> highlight = highlightVertexes(ic);
+
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, List<List<Point2D>>> lines = Hex.Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> redLines = lines.andThen(toPolylines(red));
+
 
         Tile tile = new Tile16(centre, r);
 
-        double newR = r / 9.0;
+        double ratio = 1 / 9.0;
+
+        Hex main = newHex(1, VER);
 
         StringBuilder builder = new StringBuilder();
+        return
+                builder
+                        .append(Stream.of(
+                                Pair.of(main, PERIMETER),
+                                Pair.of(main, DIAGONALS)
+                        ).map(grayLines).collect(joining()))
 
-        builder.append(drawPolygon(newHexagonRot(centre, r), gray));
-        builder.append(drawPolylines(newHexDiagRot(centre, r), gray));
+                        .append(IntStream.range(1, 9).mapToObj(i -> Pair.of(newHex(i * ratio, VER), PERIMETER)).map(grayLines).collect(joining()))
+                        .append(toPolylines(red).apply(tile.getPayload().getPolylines()))
+                        .toString()
+                ;
 
-        for (int i = 1; i < 9; i++) {
-            builder.append(drawPolygon(newHexagonRot(centre, i * newR), gray));
-        }
-
-        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
-
-        return builder.toString();
     }
 
     public static String newDesign17(final Point2D centre, final double r) {
@@ -751,20 +855,35 @@ public class HexDesignHelper {
         final String green = newStyle(GREEN, 2, 1);
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
+        Pair<Point2D, Double> ic = Pair.of(centre, r);
+        Function<Hex, String> highlight = highlightVertexes(ic);
+
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, List<List<Point2D>>> lines = Hex.Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> redLines = lines.andThen(toPolylines(red));
+
 
         StringBuilder builder = new StringBuilder();
 
         Tile tile = new Tile17(centre, r);
 
+
+        double ratio = 1 / 3.0;
         double newR = r / 3.0;
 
-        builder.append(drawPolygon(newHexagon(centre, r), gray));
-        builder.append(drawPolygon(newHexagon(centre, newR), gray));
-        builder.append(highlightPoints(newHexagon(centre, 2 * newR)));
+        builder
+                .append(Stream.of(
+                        Pair.of(newHex(1, HOR), PERIMETER),
+                        Pair.of(newHex(ratio, HOR), PERIMETER)
+                ).map(grayLines).collect(joining()))
+                .append(highlight.apply(newHex(2 * ratio, HOR)))
+                .append(drawPolygons(tile.getPayload().getPolygons(), red))
 
-        builder.append(drawPolygons(tile.getPayload().getPolygons(), red));
+        ;
 
         return builder.toString();
+
     }
 
     public static String newDesign19(final Point2D centre, final double r) {
@@ -773,26 +892,42 @@ public class HexDesignHelper {
         final String green = newStyle(GREEN, 2, 1);
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
+        Pair<Point2D, Double> ic = Pair.of(centre, r);
+        Function<Hex, String> highlight = highlightVertexes(ic);
+
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, List<List<Point2D>>> lines = Hex.Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> redLines = lines.andThen(toPolylines(red));
 
         StringBuilder builder = new StringBuilder();
 
         Tile tile = new Tile19(centre, r);
 
+        double ratio = 1 / 5.0;
         double newR = r / 5.0;
 
-        List<Point2D> outerLayer1 = newHexagonRot(centre, 2 * newR);
-        List<Point2D> outerLayer2 = newHexagonRot(centre, 3 * newR);
-        List<Point2D> outerLayer3 = newHexagonRot(centre, 4 * newR);
+        Hex main = newHex(1, VER);
+        Hex outer0 = newHex(ratio, VER);
+        Hex outer1 = newHex(2 * ratio, VER);
+        Hex outer2 = newHex(3 * ratio, VER);
+        Hex outer3 = newHex(4 * ratio, VER);
 
-        builder.append(drawPolygon(newHexagonRot(centre, r), gray));
-        builder.append(drawPolygon(newHexagonRot(centre, newR), gray));
-        builder.append(highlightPoints(outerLayer1));
-        builder.append(highlightPoints(outerLayer2));
-        builder.append(highlightPoints(outerLayer3));
-
-        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
+        builder
+                .append(Stream.of(
+                        Pair.of(main, PERIMETER),
+                        Pair.of(outer0, PERIMETER)
+                ).map(grayLines).collect(joining()))
+                .append(Stream.of(
+                        outer1,
+                        outer2,
+                        outer3
+                ).map(highlight).collect(joining()))
+                .append(toPolylines(red).apply(tile.getPayload().getPolylines()))
+        ;
 
         return builder.toString();
+
     }
 
     public static String newDesign20(final Point2D centre, final double r) {
@@ -801,25 +936,35 @@ public class HexDesignHelper {
         final String green = newStyle(GREEN, 2, 1);
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
+        Pair<Point2D, Double> ic = Pair.of(centre, r);
+        Function<Hex, String> highlight = highlightVertexes(ic);
+
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, List<List<Point2D>>> lines = Hex.Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> redLines = lines.andThen(toPolylines(red));
 
         StringBuilder builder = new StringBuilder();
 
-        double newR = r / 6.0;
+        double ratio = 1 / 6.0;
+        Hex main = newHex(1, HOR);
 
         Tile tile = new Tile20(centre, r);
 
-        builder.append(drawPolygon(newHexagon(centre, r), gray));
-        builder.append(drawPolygon(newHexagon(centre, newR), gray));
-        builder.append(drawPolygon(newHexagon(centre, 2 * newR), gray));
-        builder.append(drawPolygon(newHexagon(centre, 3 * newR), gray));
-        builder.append(drawPolygon(newHexagon(centre, 4 * newR), gray));
-        builder.append(drawPolygon(newHexagon(centre, 5 * newR), gray));
+        builder
+                .append(Stream.concat(
+                        Stream.of(
+                                Pair.of(main, PERIMETER),
+                                Pair.of(main, DIAGONALS)
+                        ),
+                        IntStream.range(1, 6).mapToObj(i -> Pair.of(newHex(i * ratio, HOR), PERIMETER))
 
-        builder.append(drawPolylines(newHexDiag(centre, r), gray));
+                ).map(grayLines).collect(joining()))
+                .append(toPolylines(red).apply(tile.getPayload().getPolylines()))
 
-        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
-
+        ;
         return builder.toString();
+
     }
 
     public static String newDesign21(final Point2D centre, final double r) {
@@ -828,24 +973,32 @@ public class HexDesignHelper {
         final String green = newStyle(GREEN, 2, 1);
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
+        Pair<Point2D, Double> ic = Pair.of(centre, r);
+        Function<Hex, String> highlight = highlightVertexes(ic);
+
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, List<List<Point2D>>> lines = Hex.Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> redLines = lines.andThen(toPolylines(red));
 
         StringBuilder builder = new StringBuilder();
 
+        double ratio = 1 / 6.0;
+        Hex main = newHex(1, HOR);
+
         Tile tile = new Tile21(centre, r);
 
-        double newR = r / 6.0;
+        builder
+                .append(Stream.concat(
+                        Stream.of(
+                                Pair.of(main, PERIMETER),
+                                Pair.of(main, DIAGONALS),
+                                Pair.of(main.getInternal(), DIAGONALS)
+                        ),
+                        IntStream.range(1, 6).mapToObj(i -> Pair.of(newHex(i * ratio, HOR), PERIMETER))
 
-        builder.append(drawPolygon(newHexagon(centre, r), gray));
-        builder.append(drawPolygon(newHexagon(centre, newR), gray));
-        builder.append(drawPolygon(newHexagon(centre, 2 * newR), gray));
-        builder.append(drawPolygon(newHexagon(centre, 3 * newR), gray));
-        builder.append(drawPolygon(newHexagon(centre, 4 * newR), gray));
-        builder.append(drawPolygon(newHexagon(centre, 5 * newR), gray));
-
-        builder.append(drawPolylines(newHexDiag(centre, r), gray));
-        builder.append(drawPolylines(newHexHeights(centre, r), gray));
-
-        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
+                ).map(grayLines).collect(joining()))
+                .append(toPolylines(red).apply(tile.getPayload().getPolylines()));
 
         return builder.toString();
     }
@@ -856,27 +1009,42 @@ public class HexDesignHelper {
         final String green = newStyle(GREEN, 2, 1);
         final String red = newStyle(RED, 2, 1);
         final String blue = newStyle(BLUE, 2, 1);
+        Pair<Point2D, Double> ic = Pair.of(centre, r);
+        Function<Hex, String> highlight = highlightVertexes(ic);
+
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, List<List<Point2D>>> lines = Hex.Vertex.vertexesToPoints(0, ic);
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> grayLines = lines.andThen(toPolylines(gray));
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> greenLines = lines.andThen(toPolylines(green));
+        Function<Pair<Hex, List<List<Hex.Vertex>>>, String> redLines = lines.andThen(toPolylines(red));
 
         StringBuilder builder = new StringBuilder();
+
+        double ratioH = 1 / 16.0;
+        double ratio = ratioH / HEX_DIST_HEIGHT;
 
         double newH = r / 16.0;
         double newR = newH / HEX_DIST_HEIGHT;
 
+        Hex main = newHex(1, HOR);
+
         Tile tile = new Tile22(centre, r);
 
-        builder.append(drawPolygon(newHexagon(centre, r), gray));
+        builder
+                .append(Stream.concat(
+                        Stream.of(
+                                Pair.of(main, PERIMETER),
+                                Pair.of(main, DIAGONALS),
+                                Pair.of(main.getInternal(), DIAGONALS)
+                        ),
+                        IntStream.range(1, 16).mapToObj(i -> Pair.of(newHex(i * ratio, VER), PERIMETER))
 
-        builder.append(drawPolylines(newHexDiag(centre, r), gray));
-        builder.append(drawPolylines(newHexHeights(centre, r), gray));
-
-        for (int i = 1; i < 16; i++) {
-            builder.append(drawPolygon(newHexagonRot(centre, i * newR), gray));
-        }
-
-        builder.append(drawPolygons(tile.getPayload().getPolygons(), blue));
-        builder.append(drawPolylines(tile.getPayload().getPolylines(), red));
+                ).map(grayLines).collect(joining()))
+                .append(toPolylines(red).apply(tile.getPayload().getPolylines()))
+                .append(drawPolygons(tile.getPayload().getPolygons(), blue))
+        ;
 
         return builder.toString();
+
     }
 
     public static String newDesign23(final Point2D centre, final double r) {
