@@ -16,8 +16,6 @@ public class HexGrid {
 
         final Point2D start = new Point2D.Double(centre.getX() - half * type.getxRatio(), centre.getY() - half * type.getyRatio());
 
-//        return Arrays.asList(centre);
-
         return IntStream.range(0, size)
                 .mapToObj(nextHorPoint(start, r, type))
                 .flatMap(p -> IntStream.range(0, size)
@@ -26,26 +24,28 @@ public class HexGrid {
     }
 
     public static IntFunction<Point2D> nextHorPoint(Point2D start, double r, TYPE type) {
-        final double yOffset = type == TYPE.VER ? 0.5 * r : 0;
-        return i -> new Point2D.Double(start.getX() + i * type.getxRatio() * r, start.getY() + (i % 2) * yOffset);
+        return i -> new Point2D.Double(start.getX() + i * type.getxRatio() * r, start.getY() + (i % 2) * type.getyOffset() * r);
     }
 
     public static IntFunction<Point2D> nextVerPoint(Point2D start, double r, TYPE type) {
-        final double xOffset = type == TYPE.VER ? 0 : 0.5 * r;
-        return i -> new Point2D.Double(start.getX() + (i % 2) * xOffset, start.getY() + i * type.getyRatio() * r);
+        return i -> new Point2D.Double(start.getX() + (i % 2) * type.getxOffset() * r, start.getY() + i * type.getyRatio() * r);
     }
 
     public static enum TYPE {
 
-        HOR(1, HEIGHT_RATIO),
-        VER(HEIGHT_RATIO, 1);
+        HOR(1, HEIGHT_RATIO, 0.5, 0),
+        VER(HEIGHT_RATIO, 1, 0, 0.5);
 
         private final double xRatio;
         private final double yRatio;
+        private final double xOffset;
+        private final double yOffset;
 
-        TYPE(double xRatio, double yRatio) {
+        TYPE(double xRatio, double yRatio, double xOffset, double yOffset) {
             this.xRatio = xRatio;
             this.yRatio = yRatio;
+            this.xOffset = xOffset;
+            this.yOffset = yOffset;
         }
 
         public double getxRatio() {
@@ -54,6 +54,14 @@ public class HexGrid {
 
         public double getyRatio() {
             return yRatio;
+        }
+
+        public double getxOffset() {
+            return xOffset;
+        }
+
+        public double getyOffset() {
+            return yOffset;
         }
     }
 }
