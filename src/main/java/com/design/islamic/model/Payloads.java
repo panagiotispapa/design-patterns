@@ -1,8 +1,12 @@
 package com.design.islamic.model;
 
+import com.design.common.Mappings;
+import com.design.common.Points;
+
 import java.awt.geom.Point2D;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 import static com.design.islamic.GenericTools.*;
 
@@ -31,6 +35,28 @@ public class Payloads {
         return new PayloadImpl(polygons, EMPTY, EMPTY, EMPTY);
 
     }
+
+    public interface LinesBuilder {
+        LinesSecondaryBuilder lines(List<List<Point2D>> lines);
+    }
+
+    public interface LinesSecondaryBuilder {
+        Payload secondaryLines(List<List<Point2D>> secondaryLines);
+    }
+
+    public static LinesBuilder payload() {
+        return lines -> linesSecondary -> new PayloadImpl(EMPTY, EMPTY, lines, linesSecondary);
+    }
+
+    public static Function<Point2D, Payload> translate(Payload payload) {
+        return p -> new PayloadImpl(
+                Mappings.fromListOfLists(Points.translate(p)).apply(payload.getPolygons()),
+                Mappings.fromListOfLists(Points.translate(p)).apply(payload.getPolygonsSecondary()),
+                Mappings.fromListOfLists(Points.translate(p)).apply(payload.getPolylines()),
+                Mappings.fromListOfLists(Points.translate(p)).apply(payload.getPolygonsSecondary())
+        );
+    }
+
 
     private static class PayloadImpl implements Payload {
         private final List<List<Point2D>> polygons;

@@ -3,10 +3,8 @@ package com.design.common.view;
 import com.design.common.model.Arc;
 import com.design.common.model.Circle;
 import com.design.islamic.model.Payload;
-import com.design.islamic.model.tiles.Hex;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
-import org.apache.commons.lang3.tuple.Pair;
 import org.w3c.dom.svg.SVGDocument;
 
 import java.awt.*;
@@ -115,10 +113,6 @@ public class SvgFactory {
 
         return points -> points.stream().map(p -> newCircle(p, 3, style)).collect(joining());
 
-    }
-
-    public static Function<Hex, String> highlightVertexes(Pair<Point2D, Double> initialConditions) {
-        return Hex.vertexes2(initialConditions).andThen(highlightPoints());
     }
 
     public static String highlightPoints(List<Point2D> points) {

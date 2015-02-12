@@ -6,7 +6,9 @@ import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static com.design.islamic.model.tiles.Hex.HEIGHT_RATIO;
+import static com.design.islamic.model.Hex.HEIGHT_RATIO;
+
+//import static com.design.islamic.model.tiles.Hex.HEIGHT_RATIO;
 
 public class HexGrid {
 
