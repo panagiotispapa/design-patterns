@@ -2,6 +2,8 @@ package com.design.islamic.model.tiles;
 
 import com.design.common.view.SvgFactory;
 import com.design.islamic.HexDesignHelper;
+import com.design.islamic.model.hex.Tile3New;
+import com.design.islamic.model.hex.TileStar;
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.commons.lang3.tuple.Pair;
 import org.w3c.dom.Node;
@@ -11,12 +13,8 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
-import java.util.Set;
 
-import static com.design.common.PolygonTools.cloneAndTranslateScalePoints;
-import static com.design.common.PolygonTools.hexPoints;
-import static com.design.common.view.SvgFactory.*;
-import static com.design.islamic.Patterns.*;
+import static com.design.common.view.SvgFactory.buildSvg;
 import static com.design.islamic.model.Centre.newCentre;
 
 public class TestBed4 {
@@ -44,12 +42,14 @@ public class TestBed4 {
 
 //        String backObj = drawPolygon(cloneAndTranslateScalePoints(centre, r, hexPoints), styleBack);
 
-        String testObject = HexDesignHelper.with(Pair.of(centre, r)).newDesign30();
+//        String testObject = new TileStar(Pair.of(centre, r), TileStar.RATIO_1).design3();
+        String testObject = new Tile3New(Pair.of(centre, r)).design1();
+
+//        String testObject = HexDesignHelper.with(Pair.of(centre, r)).newDesign30();
 //        String testObject = HexDesignHelper.with(Pair.of(centre, r)).newDesign28();
-//        String testObject = HexDesignHelper.newDesign29(centre, r);
+//        String testObject = HexDesignHelper.with(Pair.of(centre, r)).newStarDesign3();
 //        String testObject = HexDesignHelper.newDesign8(Pair.of(centre, r));
 //        String testObject = RectDesignHelper.newRectDesign1(centre, r);
-
 
 //        StringBuilder shapes = new StringBuilder();
 //
@@ -76,7 +76,7 @@ public class TestBed4 {
     }
 
     public static void main(String[] args) {
-        Dimension dim = new Dimension(1024+2*64, 768);
+        Dimension dim = new Dimension(1024 + 2 * 64, 768);
 
         JFrame frame = new JFrame();
         frame.setTitle("Polygon");

@@ -1,14 +1,14 @@
 package com.design.islamic.model;
 
 import com.design.islamic.CentreConfiguration;
-import com.design.islamic.Patterns;
 import com.design.islamic.model.hex.*;
 import com.google.common.collect.Maps;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.Map;
 
-import static com.design.common.PolygonTools.*;
 import static com.design.islamic.Patterns.buildHexPatternBlackAndWhite;
 import static com.design.islamic.Patterns.buildHexPatterns;
 import static com.design.islamic.model.Centre.newCentre;
@@ -43,9 +43,11 @@ public class PatternManager {
 //                return buildHexPattern2(centreConfiguration, r, dim);
 //            }
 //        });
-        hexProviderMap.put(HexPattern.STAR1, new TileStar(newCentre(0, 0), r, HEX_DIST_OUTER_CIRCLE).getPayload());
-        hexProviderMap.put(HexPattern.STAR2, new TileStar(newCentre(0, 0), r, HEX_DIST_DIAGONAL).getPayload());
-        hexProviderMap.put(HexPattern.STAR3, new TileStar(newCentre(0, 0), r, HEX_DIST3).getPayload());
+        Pair<Point2D, Double> ic = Pair.of(newCentre(0, 0), r);
+
+        hexProviderMap.put(HexPattern.STAR1, new TileStar(ic, TileStar.RATIO_2).getPayload());
+        hexProviderMap.put(HexPattern.STAR2, new TileStar(ic, TileStar.RATIO_1).getPayload());
+        hexProviderMap.put(HexPattern.STAR3, new TileStar(ic, TileStar.RATIO_3).getPayload());
         hexProviderMap.put(HexPattern.THREE, new Tile3(newCentre(0, 0), r).getPayload());
         hexProviderMap.put(HexPattern.FOUR, new Tile4(newCentre(0, 0), r).getPayload());
         hexProviderMap.put(HexPattern.FIVE, new Tile5(newCentre(0, 0), r).getPayload());

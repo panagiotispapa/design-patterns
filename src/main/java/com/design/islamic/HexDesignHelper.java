@@ -25,6 +25,7 @@ import static com.design.islamic.model.DrawSegmentsInstructions.CombinedVertexes
 import static java.lang.Math.*;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
 public class HexDesignHelper {
 
@@ -46,7 +47,7 @@ public class HexDesignHelper {
         this.initialConditions = initialConditions;
 
         toLines = Polygon.toLines(0, initialConditions);
-        toLinesFull = Polygon.toLines(IntStream.range(0, 6), initialConditions);
+        toLinesFull = Polygon.toLines(IntStream.range(0, 6).boxed().collect(toList()), initialConditions);
         toStar = DrawSegmentsInstructions.combVertexes(initialConditions);
         toVertexes = Polygon.vertexes(initialConditions);
     }
@@ -54,6 +55,8 @@ public class HexDesignHelper {
     public static HexDesignHelper with(Pair<Point2D, Double> initialConditions) {
         return new HexDesignHelper(initialConditions);
     }
+
+
 
     public String newStarDesign1() {
 
@@ -99,7 +102,7 @@ public class HexDesignHelper {
     public String newStarDesign2() {
 
         Polygon outer = Hex.hex(1, Polygon.Type.VER);
-        Polygon outerH = outer.getInternal();
+        Polygon outerH = outer.getRegistered();
         Polygon inner = Hex.hex(0.5, Polygon.Type.VER);
 
         return
@@ -158,7 +161,7 @@ public class HexDesignHelper {
                                 Pair.of(ext0_3, Hex.PERIMETER)
                         ).map(toLines.andThen(toPolylines(blue))),
                         Stream.of(
-                                Triple.of(inner2, inner.getInternal(), STAR)
+                                Triple.of(inner2, inner.getRegistered(), STAR)
                         ).map(toStar.andThen(toPolylines(blue))),
                         Stream.of(
                                 Pair.of(inner, Hex.PERIMETER)
@@ -169,7 +172,7 @@ public class HexDesignHelper {
                                 tile3.getLines2()
                         ).map(toPolylines(red)),
                         Stream.of(
-                                inner.getInternal(),
+                                inner.getRegistered(),
                                 inner,
                                 inner2
                         ).map(toVertexes.andThen(highlightPoints())),
@@ -226,7 +229,7 @@ public class HexDesignHelper {
                                 Pair.of(layer1, Hex.ALL_LINES),
                                 Pair.of(layer2, Hex.ALL_LINES),
                                 Pair.of(layerExtPol1, Hex.ALL_LINES),
-                                Pair.of(layer1.getInternal(), Hex.DIAGONALS)
+                                Pair.of(layer1.getRegistered(), Hex.DIAGONALS)
                         ).map(toLines.andThen(toPolylines(gray))),
                         Stream.of(
                                 Pair.of(layer3, Hex.PERIMETER)
@@ -248,7 +251,7 @@ public class HexDesignHelper {
         Polygon outer = Hex.hex(0.5, Polygon.Type.VER, Polygon.centreTransform(1, Hex.Vertex.ONE, Polygon.Type.VER));
 
         Function<Pair<Polygon, List<List<Polygon.Vertex>>>, List<List<Point2D>>> toLines = Polygon.toLines(0, initialConditions);
-        Function<Pair<Polygon, List<List<Polygon.Vertex>>>, List<List<Point2D>>> toLinesFull = Polygon.toLines(IntStream.range(0, 6), initialConditions);
+        Function<Pair<Polygon, List<List<Polygon.Vertex>>>, List<List<Point2D>>> toLinesFull = Polygon.toLines(IntStream.range(0, 6).boxed().collect(toList()), initialConditions);
 
         return
                 Stream.of(
@@ -257,8 +260,8 @@ public class HexDesignHelper {
 //                                Pair.of(outer, HexNew.PERIMETER)
                         ).map(toLines.andThen(toPolylines(gray))),
                         Stream.of(
-                                Pair.of(main.getInternal(), Hex.PERIMETER),
-                                Pair.of(main.getExternal(), Hex.PERIMETER)
+                                Pair.of(main.getRegistered(), Hex.PERIMETER),
+                                Pair.of(main.getFramed(), Hex.PERIMETER)
 //                                Pair.of(outer, HexNew.PERIMETER)
                         ).map(toLines.andThen(toPolylines(green))),
                         Stream.of(
@@ -268,7 +271,7 @@ public class HexDesignHelper {
                                 inner
                         ).map(Polygon.vertexes(initialConditions).andThen(highlightPoints())),
                         Stream.of(
-                                Triple.of(inner, main.getInternal(), STAR)
+                                Triple.of(inner, main.getRegistered(), STAR)
                         ).map(toStar.andThen(toPolylines(red)))
 
                 ).flatMap(s -> s).collect(joining());
@@ -363,7 +366,7 @@ public class HexDesignHelper {
                         Stream.of(
                                 Pair.of(layer1, Hex.ALL_LINES),
                                 Pair.of(outerInner, Hex.PERIMETER),
-                                Pair.of(layer1.getInternal(), Hex.INNER_TRIANGLES)
+                                Pair.of(layer1.getRegistered(), Hex.INNER_TRIANGLES)
                         ).map(toLines.andThen(toPolylines(gray))),
                         Stream.of(
                                 Tile6.buildOuterLines(toVertexes.apply(outer), initialConditions.getRight() * HEX_DIST_DIAGONAL_ROTATED)
@@ -383,7 +386,7 @@ public class HexDesignHelper {
         Tile7 tile7 = new Tile7(centre, r);
 
         Polygon outer = Hex.hex(1, Polygon.Type.HOR);
-        Polygon outerHeights = outer.getInternal();
+        Polygon outerHeights = outer.getRegistered();
         Polygon inner = Hex.hex(HEX_DIST_DIAGONAL_ROTATED, Polygon.Type.HOR);
         Polygon inner2 = Hex.hex(HEX_DIST_DIAGONAL_ROTATED * HEX_DIST_DIAGONAL_ROTATED, Polygon.Type.HOR);
         Polygon outerSmall = Hex.hex(1 - HEX_DIST_HEIGHT, Polygon.Type.VER, Polygon.centreTransform(outerHeights.getRatio(), Hex.Vertex.ONE, outerHeights.getType()));
@@ -395,8 +398,8 @@ public class HexDesignHelper {
                                 Pair.of(outer.getMirror(), Hex.PERIMETER),
                                 Pair.of(outerHeights, Hex.DIAGONALS),
                                 Pair.of(outerHeights.getMirror(), Hex.DIAGONALS),
-                                Pair.of(inner.getInternal(), Hex.INNER_TRIANGLES),
-                                Pair.of(inner.getInternal().getMirror(), Hex.INNER_TRIANGLES)
+                                Pair.of(inner.getRegistered(), Hex.INNER_TRIANGLES),
+                                Pair.of(inner.getRegistered().getMirror(), Hex.INNER_TRIANGLES)
                         ).map(toLines.andThen(toPolylines(gray))),
                         Stream.of(
                                 Pair.of(inner, Hex.PERIMETER),
@@ -406,7 +409,7 @@ public class HexDesignHelper {
                                 Pair.of(outerSmall, Hex.PERIMETER)
                         ).map(toLines.andThen(toPolylines(blue))),
                         Stream.of(
-                                Pair.of(outerSmall.getInternal(), Hex.DIAGONALS)
+                                Pair.of(outerSmall.getRegistered(), Hex.DIAGONALS)
                         ).map(toLines.andThen(toPolylines(green))),
                         Stream.of(
                                 tile7.getLines()
@@ -422,7 +425,7 @@ public class HexDesignHelper {
         Tile8 tile8 = new Tile8(initialConditions.getLeft(), initialConditions.getRight());
 
         Polygon main = Hex.hex(1, Polygon.Type.HOR);
-        Polygon mainInternal = main.getInternal();
+        Polygon mainInternal = main.getRegistered();
         Polygon tile = Hex.hex(tile8.getInnerR() / initialConditions.getRight(), Polygon.Type.HOR);
 
         return
@@ -609,7 +612,7 @@ public class HexDesignHelper {
                         Stream.of(
                                 Pair.of(main, Hex.PERIMETER),
                                 Pair.of(main, Hex.DIAGONALS),
-                                Pair.of(main.getInternal(), Hex.DIAGONALS)
+                                Pair.of(main.getRegistered(), Hex.DIAGONALS)
                         ).map(toLines.andThen(toPolylines(gray))),
                         Stream.of(
                                 Pair.of(layerInner, Hex.PERIMETER)
@@ -884,7 +887,7 @@ public class HexDesignHelper {
                                 Stream.of(
                                         Pair.of(main, Hex.PERIMETER),
                                         Pair.of(main, Hex.DIAGONALS),
-                                        Pair.of(main.getInternal(), Hex.DIAGONALS)
+                                        Pair.of(main.getRegistered(), Hex.DIAGONALS)
                                 ),
                                 IntStream.range(1, 6).mapToObj(i -> Pair.of(Hex.hex(i * ratio, Polygon.Type.HOR), Hex.PERIMETER))
                         ).map(toLines.andThen(toPolylines(gray))),
@@ -916,7 +919,7 @@ public class HexDesignHelper {
                                 Stream.of(
                                         Pair.of(main, Hex.PERIMETER),
                                         Pair.of(main, Hex.DIAGONALS),
-                                        Pair.of(main.getInternal(), Hex.DIAGONALS)
+                                        Pair.of(main.getRegistered(), Hex.DIAGONALS)
                                 ),
                                 IntStream.range(1, 16).mapToObj(i -> Pair.of(Hex.hex(i * ratio, Polygon.Type.VER), Hex.PERIMETER))
                         ).map(toLines).map(toPolylines(gray)),
@@ -1143,7 +1146,7 @@ public class HexDesignHelper {
                 Stream.of(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(main, Hex.DIAGONALS),
-                        Pair.of(main.getInternal(), Hex.DIAGONALS)
+                        Pair.of(main.getRegistered(), Hex.DIAGONALS)
                 ).map(toLines.andThen(toPolylines(gray))),
                 Stream.of(
                         inner1.getMirror(),
@@ -1179,7 +1182,7 @@ public class HexDesignHelper {
                         Stream.of(
                                 Pair.of(main, Hex.PERIMETER),
                                 Pair.of(main, Hex.DIAGONALS),
-                                Pair.of(main.getInternal(), Hex.DIAGONALS)
+                                Pair.of(main.getRegistered(), Hex.DIAGONALS)
                         ).map(toLines.andThen(toPolylines(gray))),
                         Stream.of(
                                 asList(asList(
@@ -1220,7 +1223,7 @@ public class HexDesignHelper {
                         Stream.of(
                                 Pair.of(main, Hex.PERIMETER),
                                 Pair.of(main, Hex.DIAGONALS),
-                                Pair.of(main.getInternal(), Hex.DIAGONALS)
+                                Pair.of(main.getRegistered(), Hex.DIAGONALS)
                         ).map(toLines.andThen(toPolylines(gray))),
                         Stream.of(
                                 asList(asList(

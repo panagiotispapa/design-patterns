@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
-import static java.lang.Math.cos;
 import static java.util.stream.Collectors.toList;
 
 public abstract class Polygon {
@@ -23,8 +22,16 @@ public abstract class Polygon {
         return p -> p.getVertexes().stream().map(p.toPoint(Triple.of(ic.getLeft(), ic.getRight(), 0))).collect(toList());
     }
 
-    public static Function<Pair<Polygon, List<List<Vertex>>>, List<List<Point2D>>> toLines(IntStream offsets, Pair<Point2D, Double> ic) {
-        return p -> offsets.mapToObj(i -> toLines(i, ic).apply(p)).flatMap(s -> s.stream()).collect(toList());
+    public static Function<Pair<Polygon, Vertex>, Point2D> vertex(Pair<Point2D, Double> ic) {
+        return p -> p.getLeft().toPoint(Triple.of(ic.getLeft(), ic.getRight(), 0)).apply(p.getLeft().getVertexes().get(p.getRight().getIndex()));
+    }
+
+    public static Function<Polygon, List<Pair<Point2D, Double>>> toCircles(Pair<Point2D, Double> ic) {
+        return p -> vertexes(ic).apply(p).stream().map(v -> Pair.of(v, p.getRatio() * ic.getRight())).collect(toList());
+    }
+
+    public static Function<Pair<Polygon, List<List<Vertex>>>, List<List<Point2D>>> toLines(List<Integer> offsets, Pair<Point2D, Double> ic) {
+        return p -> offsets.stream().map(i -> toLines(i, ic).apply(p)).flatMap(s -> s.stream()).collect(toList());
     }
 
     public static Function<Pair<Polygon, List<List<Vertex>>>, List<List<Point2D>>> toLines(int offset, Pair<Point2D, Double> ic) {
@@ -50,11 +57,11 @@ public abstract class Polygon {
         return newInstance(ratio, type.revert(), centreTransform);
     }
 
-    public Polygon getInternal() {
+    public Polygon getRegistered() {
         return newInstance(ratio * getHeightRatio(), type.revert(), centreTransform);
     }
 
-    public Polygon getExternal() {
+    public Polygon getFramed() {
         return newInstance(ratio / getHeightRatio(), type.revert(), centreTransform);
     }
 
@@ -70,6 +77,7 @@ public abstract class Polygon {
     public interface Vertex {
         Point2D getPoint(int offset, Polygon.Type type);
 
+        int getIndex();
     }
 
     private final double ratio;

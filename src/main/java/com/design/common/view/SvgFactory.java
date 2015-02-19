@@ -5,6 +5,7 @@ import com.design.common.model.Circle;
 import com.design.islamic.model.Payload;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
+import org.apache.commons.lang3.tuple.Pair;
 import org.w3c.dom.svg.SVGDocument;
 
 import java.awt.*;
@@ -73,8 +74,29 @@ public class SvgFactory {
         return pointsList.stream().map(p -> newPolyline(p, style)).collect(joining());
     }
 
+    public static Function<List<Pair<Point2D, Double>>, String> drawCircles(final String style) {
+        return
+                c -> c.stream().map(drawCircle(style)).collect(joining());
+    }
+
+    public static Function<Pair<Point2D, Double>, String> drawCircle(final String style) {
+        return p -> newCircle(p.getLeft(), p.getRight(), style);
+    }
+
+    public static Function<List<Pair<Point2D, String>>, String> drawTexts() {
+        return p -> p.stream().map(drawText()).collect(joining());
+    }
+
+    public static Function<Pair<Point2D, String>, String> drawText() {
+        return p -> String.format("<text x=\"%f\" y=\"%f\" fill=\"black\" font-size=\"18\">%s</text>", p.getLeft().getX() + 5, p.getLeft().getY() + 5, p.getRight());
+    }
+
     public static Function<List<List<Point2D>>, String> toPolylines(final String style) {
-        return pointsList -> pointsList.stream().map(p -> newPolyline(p, style)).collect(joining());
+        return pointsList -> pointsList.stream().map(toPolyline(style)).collect(joining());
+    }
+
+    public static Function<List<Point2D>, String> toPolyline(String style) {
+        return points -> format("<polyline points=\"%s\" style=\"%s\"/>", toPointsString(points), style);
     }
 
     public static String newPolyline(Collection<Point2D> points, String style) {
@@ -109,10 +131,12 @@ public class SvgFactory {
     }
 
     public static Function<List<Point2D>, String> highlightPoints() {
-        String style = newStyle("red", "black", 1, 1, 1);
+        return highlightPoints("red", 3);
+    }
 
-        return points -> points.stream().map(p -> newCircle(p, 3, style)).collect(joining());
-
+    public static Function<List<Point2D>, String> highlightPoints(String fill, int radius) {
+        String style = newStyle(fill, "black", 1, 1, 1);
+        return points -> points.stream().map(p -> newCircle(p, radius, style)).collect(joining());
     }
 
     public static String highlightPoints(List<Point2D> points) {

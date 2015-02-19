@@ -45,19 +45,51 @@ public class Hex extends Polygon {
     );
 
     public static List<List<Polygon.Vertex>> DIAGONALS = asList(
-            asList((Polygon.Vertex) Vertex.ONE, Vertex.FOUR),
-            asList(Vertex.TWO, Vertex.FIVE),
-            asList(Vertex.THREE, Vertex.SIX)
+            Diag.ONE.getVertexes(),
+            Diag.TWO.getVertexes(),
+            Diag.THREE.getVertexes()
     );
 
     public static List<List<Polygon.Vertex>> ALL_LINES = Lists.newArrayList(
             Iterables.concat(DIAGONALS, INNER_TRIANGLES, PERIMETER)
     );
 
-    public static Polygon hex(double ratio, Type type){
+    public static enum Sides {
+        ONE(asList((Polygon.Vertex) Vertex.ONE, Vertex.TWO)),
+        TWO(asList((Polygon.Vertex) Vertex.TWO, Vertex.THREE)),
+        THREE(asList((Polygon.Vertex) Vertex.THREE, Vertex.FOUR)),
+        FOUR(asList((Polygon.Vertex) Vertex.FOUR, Vertex.FIVE)),
+        FIVE(asList((Polygon.Vertex) Vertex.FIVE, Vertex.SIX)),
+        SIX(asList((Polygon.Vertex) Vertex.TWO, Vertex.THREE));
+
+        private final List<Polygon.Vertex> vertexes;
+
+        private Sides(List<Polygon.Vertex> vertexes) {
+            this.vertexes = vertexes;
+        }
+    }
+
+    public static enum Diag {
+        ONE(asList((Polygon.Vertex) Vertex.ONE, Vertex.FOUR)),
+        TWO(asList((Polygon.Vertex) Vertex.TWO, Vertex.FIVE)),
+        THREE(asList((Polygon.Vertex) Vertex.THREE, Vertex.SIX));
+
+        private final List<Polygon.Vertex> vertexes;
+
+        private Diag(List<Polygon.Vertex> vertexes) {
+            this.vertexes = vertexes;
+        }
+
+        public List<Polygon.Vertex> getVertexes() {
+            return vertexes;
+        }
+    }
+
+    public static Polygon hex(double ratio, Type type) {
         return new Hex(ratio, type);
     }
-    public static Polygon hex(double ratio, Type type, Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform){
+
+    public static Polygon hex(double ratio, Type type, Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform) {
         return new Hex(ratio, type, centreTransform);
     }
 
@@ -110,6 +142,11 @@ public class Hex extends Polygon {
         @Override
         public Point2D getPoint(int offset, Polygon.Type type) {
             return vertexes.get(type).get((index + offset) % 6);
+        }
+
+        @Override
+        public int getIndex() {
+            return index;
         }
 
     }
