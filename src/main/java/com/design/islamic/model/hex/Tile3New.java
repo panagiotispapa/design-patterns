@@ -1,7 +1,6 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.Polygon;
-import com.design.islamic.model.DrawSegmentsInstructions;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.tiles.HexGrid;
 import org.apache.commons.lang3.tuple.Pair;
@@ -15,6 +14,7 @@ import static com.design.common.view.SvgFactory.*;
 import static com.design.islamic.model.Hex.HEIGHT_RATIO;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
 public class Tile3New extends TileBasic {
 
@@ -48,7 +48,7 @@ public class Tile3New extends TileBasic {
     protected Stream<Triple<Polygon, Polygon, List<Polygon.Vertex>>> getMainStarsFull() {
         Polygon inner = Hex.hex(RATIO_1, Polygon.Type.VER);
 
-        Polygon outer = Hex.hex(RATIO_2, Polygon.Type.HOR, Polygon.centreTransform(RATIO_1, Hex.Vertex.ONE, Polygon.Type.VER));
+        Polygon outer = Hex.hex(RATIO_2, Polygon.Type.HOR, centreTransform(RATIO_1, Polygon.Type.VER));
 
         return Stream.of(Triple.of(inner, outer, asList((Polygon.Vertex) Hex.Vertex.ONE, Hex.Vertex.TWO)));
     }
@@ -63,15 +63,24 @@ public class Tile3New extends TileBasic {
         List<Point2D> hexGrid = HexGrid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4.0, HexGrid.TYPE.VER, 12);
 
         Polygon main = Hex.hex(1, Polygon.Type.VER);
-        Polygon registered = main.getRegistered();
         Polygon inner = Hex.hex(RATIO_1, Polygon.Type.VER);
         Polygon innerReg = inner.getRegistered();
 
-        Polygon outer = Hex.hex(RATIO_2, Polygon.Type.HOR, Polygon.centreTransform(RATIO_1, Hex.Vertex.ONE, Polygon.Type.VER));
+        Polygon outer = Hex.hex(RATIO_2, Polygon.Type.HOR, centreTransform(RATIO_1, Polygon.Type.VER));
 
-        Point2D pointB = toVertex.apply(Pair.of(inner, Hex.Vertex.ONE));
-        Point2D pointC = toVertex.apply(Pair.of(innerReg, Hex.Vertex.ONE));
-        Point2D pointD = toVertex.apply(Pair.of(outer, Hex.Vertex.ONE));
+        List<Pair<Point2D, String>> importantPoints = Stream.of(
+                Triple.of(inner, Hex.Vertex.ONE, "B"),
+                Triple.of(innerReg, Hex.Vertex.ONE, "C"),
+                Triple.of(outer, Hex.Vertex.ONE, "D")
+        ).map(importantPoint).collect(toList());
+
+        importantPoints.add(Pair.of(initialConditions.getLeft(), "K"));
+        importantPoints.add(Pair.of(new Point2D.Double(1000, 50), "KB=h/(h+0.5)"));
+        importantPoints.add(Pair.of(new Point2D.Double(1000, 150), "BD=h*(1-KB)"));
+
+        importantPoints.stream().map(drawText());
+        importantPoints.stream().map(Pair::getLeft).map(highlightPoint());
+
         return
                 Stream.of(
                         Stream.of(
@@ -90,23 +99,8 @@ public class Tile3New extends TileBasic {
                         Stream.of(
                                 Pair.of(outer, Hex.PERIMETER)
                         ).map(toLines.andThen(toPolylines(blue))),
-                        Stream.of(
-                                Pair.of(initialConditions.getLeft(), "K"),
-                                Pair.of(pointB, "B"),
-                                Pair.of(pointC, "C"),
-                                Pair.of(pointD, "D"),
-//                                Pair.of((Point2D) new Point2D.Double(950, 100), "AB=AC"),
-                                Pair.of((Point2D) new Point2D.Double(950, 50), "KB=h/(h+0.5)"),
-                                Pair.of((Point2D) new Point2D.Double(950, 150), "BD=h*(1-KB)")
-                        ).map(drawText()),
-                        Stream.of(
-                                asList(
-                                        pointB,
-                                        pointC,
-                                        pointD
-                                )
-                        ).map(highlightPoints()),
-
+                        importantPoints.stream().map(drawText()),
+                        importantPoints.stream().map(Pair::getLeft).map(highlightPoint()),
                         Stream.of(
                                 getPayload().getPolylines()
                         ).map(toPolylines(red))
@@ -114,7 +108,5 @@ public class Tile3New extends TileBasic {
                 ).flatMap(s -> s).collect(joining());
 
     }
-
-
 
 }

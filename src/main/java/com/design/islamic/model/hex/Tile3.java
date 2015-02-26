@@ -20,8 +20,6 @@ public class Tile3 implements Tile {
 //    private final List<List<Point2D>> outerRectangles;
 //    private final List<List<Point2D>> outerLines;
 
-    private final String styleWhiteBold = newStyle(WHITE, 2, 1);
-    private final String styleWhite = newStyle(WHITE, 1, 1);
 
     private final Point2D centre;
     private final double r;

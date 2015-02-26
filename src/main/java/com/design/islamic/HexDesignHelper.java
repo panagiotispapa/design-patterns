@@ -211,38 +211,6 @@ public class HexDesignHelper {
 
     }
 
-    public String newStarDesign4() {
-        Polygon layer1 = Hex.hex(1, Polygon.Type.VER);
-        Polygon layer2 = Hex.hex(HEX_DIST_DIAGONAL, Polygon.Type.HOR);
-        Polygon layer3 = Hex.hex(HEX_DIST_DIAGONAL * HEX_DIST_DIAGONAL, Polygon.Type.VER);
-        Polygon layerExt = Hex.hex(layer3.getRatio() * HEX_DIST_NEW_CENTRE, Polygon.Type.HOR);
-        Polygon layerExtPol1 = Hex.hex(layer3.getRatio(), Polygon.Type.VER, Polygon.centreTransform(layerExt.getRatio(), Hex.Vertex.ONE, layerExt.getType()));
-
-        Double r = initialConditions.getRight();
-        Point2D centre = initialConditions.getLeft();
-
-        Tile4 tile = new Tile4(centre, r);
-
-        return
-                Stream.of(
-                        Stream.of(
-                                Pair.of(layer1, Hex.ALL_LINES),
-                                Pair.of(layer2, Hex.ALL_LINES),
-                                Pair.of(layerExtPol1, Hex.ALL_LINES),
-                                Pair.of(layer1.getRegistered(), Hex.DIAGONALS)
-                        ).map(toLines.andThen(toPolylines(gray))),
-                        Stream.of(
-                                Pair.of(layer3, Hex.PERIMETER)
-                        ).map(toLines.andThen(toPolylines(green))),
-                        Stream.of(
-                                tile.getPayload().getPolylines()
-                        ).map(toPolylines(red)),
-                        Stream.of(
-                                layerExt
-                        ).map(toVertexes.andThen(highlightPoints()))
-                ).flatMap(s -> s).collect(joining());
-
-    }
 
     public String newDesignTest2() {
 

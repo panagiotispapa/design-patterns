@@ -135,8 +135,15 @@ public class SvgFactory {
     }
 
     public static Function<List<Point2D>, String> highlightPoints(String fill, int radius) {
+        return points -> points.stream().map(highlightPoint(fill, radius)).collect(joining());
+    }
+    public static Function<Point2D, String> highlightPoint() {
+        return highlightPoint("red", 3);
+    }
+
+    public static Function<Point2D, String> highlightPoint(String fill, int radius) {
         String style = newStyle(fill, "black", 1, 1, 1);
-        return points -> points.stream().map(p -> newCircle(p, radius, style)).collect(joining());
+        return p -> newCircle(p, radius, style);
     }
 
     public static String highlightPoints(List<Point2D> points) {

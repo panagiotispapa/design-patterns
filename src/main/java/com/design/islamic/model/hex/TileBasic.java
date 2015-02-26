@@ -1,6 +1,5 @@
 package com.design.islamic.model.hex;
 
-import com.design.common.Mappings;
 import com.design.common.Polygon;
 import com.design.islamic.model.*;
 import org.apache.commons.lang3.tuple.Pair;
@@ -25,6 +24,7 @@ public abstract class TileBasic implements Tile {
     protected Function<Polygon, List<Point2D>> toVertexes;
     protected Function<Pair<Polygon, Polygon.Vertex>, Point2D> toVertex;
     protected Function<Polygon, List<Pair<Point2D, Double>>> toCircles;
+    protected Function<Triple<Polygon, ? extends Polygon.Vertex, String>, Pair<Point2D, String>> importantPoint;
 
     protected TileBasic(Pair<Point2D, Double> initialConditions) {
         this.initialConditions = initialConditions;
@@ -36,6 +36,7 @@ public abstract class TileBasic implements Tile {
         toVertexes = Polygon.vertexes(initialConditions);
         toCircles = Polygon.toCircles(initialConditions);
         toVertex = Polygon.vertex(initialConditions);
+        importantPoint = t -> Pair.of(toVertex.apply(Pair.of(t.getLeft(), t.getMiddle())), t.getRight());
     }
 
     protected Stream<Pair<Polygon, List<List<Polygon.Vertex>>>> getMainLinesFull() {

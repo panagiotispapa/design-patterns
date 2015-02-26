@@ -48,8 +48,8 @@ public class PatternManager {
         hexProviderMap.put(HexPattern.STAR1, new TileStar(ic, TileStar.RATIO_2).getPayload());
         hexProviderMap.put(HexPattern.STAR2, new TileStar(ic, TileStar.RATIO_1).getPayload());
         hexProviderMap.put(HexPattern.STAR3, new TileStar(ic, TileStar.RATIO_3).getPayload());
-        hexProviderMap.put(HexPattern.THREE, new Tile3(newCentre(0, 0), r).getPayload());
-        hexProviderMap.put(HexPattern.FOUR, new Tile4(newCentre(0, 0), r).getPayload());
+        hexProviderMap.put(HexPattern.THREE, new Tile3New(ic).getPayload());
+        hexProviderMap.put(HexPattern.FOUR, new Tile4(ic).getPayload());
         hexProviderMap.put(HexPattern.FIVE, new Tile5(newCentre(0, 0), r).getPayload());
         hexProviderMap.put(HexPattern.SIX, new Tile6(newCentre(0, 0), r).getPayload());
         hexProviderMap.put(HexPattern.SEVEN, new Tile7(newCentre(0, 0), r).getPayload());

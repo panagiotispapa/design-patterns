@@ -1,79 +1,108 @@
 package com.design.islamic.model.hex;
 
-import com.design.islamic.model.Payload;
-import com.design.islamic.model.Payloads;
-import com.design.islamic.model.Tile;
+import com.design.common.Polygon;
+import com.design.islamic.model.Hex;
+import com.design.islamic.model.tiles.HexGrid;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.geom.Point2D;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static com.design.common.PolygonTools.*;
-import static com.design.common.view.SvgFactory.WHITE;
-import static com.design.common.view.SvgFactory.newStyle;
-import static com.google.common.collect.Lists.newArrayList;
-import static java.util.Arrays.asList;
+import static com.design.common.view.SvgFactory.*;
+import static com.design.islamic.model.Hex.HEIGHT_RATIO;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
-public class Tile4 implements Tile {
+public class Tile4 extends TileBasic {
 
-    private final List<Point2D> mainRect;
-    private final List<List<Point2D>> outerRectangles;
+    public static double RATIO_1 = 0.5 / HEIGHT_RATIO;
+    public static double RATIO_2 = RATIO_1 * RATIO_1;
 
-    private final String styleWhiteBold = newStyle(WHITE, 2, 1);
-    private final String styleWhite = newStyle(WHITE, 1, 1);
+    public Tile4(Pair<Point2D, Double> initialConditions) {
 
-    public static List<Tile4> fromCentres(Collection<Point2D> centres, final double r) {
-        return centres.stream().map((centre) -> new Tile4(centre, r)).collect(Collectors.toList());
-    }
-
-    public Tile4(Point2D centre, double r) {
-
-        mainRect = newHexagonRot(centre, r);
-
-        final double newR = r * HEX_DIST_DIAGONAL;
-
-        //innerEdges = cloneAndTranslateScalePoints(centre, newR/Math.cos(HEX_PHI/2.0), hexPoints);
-
-        final double extConfR = newR * HEX_DIST_DIAGONAL;
-
-        outerRectangles = buildExtConf(centre, extConfR);
+        super(initialConditions);
 
     }
-
-    public List<List<Point2D>> getOuterRectangles() {
-        return outerRectangles;
-    }
-
 
     @Override
-    public Payload getPayload() {
-        return Payloads.newPayloadFromLines(outerRectangles);
+    protected Stream<Pair<Polygon, List<List<Polygon.Vertex>>>> getMainLinesSingle() {
+        Polygon main = Hex.hex(0.5 / (HEIGHT_RATIO * HEIGHT_RATIO), Polygon.Type.VER);
+        return Stream.of(
+                Pair.of(main, Hex.PERIMETER)
+        );
     }
 
-    public static List<List<Point2D>> buildExtConf(Point2D centre, double r) {
+    @Override
+    protected Stream<Triple<Polygon, Polygon, List<Polygon.Vertex>>> getMainStarsFull() {
+        Polygon inner = Hex.hex(RATIO_2 / 0.5, Polygon.Type.VER);
+        Polygon outer = Hex.hex(RATIO_2, Polygon.Type.VER, centreTransform(1, Polygon.Type.VER));
+        return Stream.of(Triple.of(inner, outer, Arrays.asList((Polygon.Vertex) Hex.Vertex.THREE, Hex.Vertex.FIVE)));
+    }
 
-        List<Point2D> layerExtEdges = newHexagon(centre, r * HEX_DIST_NEW_CENTRE);
+    public String design1() {
+        String black = newStyle("black", 1, 1);
+        String blue = newStyle("blue", 1, 1);
+        String gray = newStyle("gray", 1, 1);
+        String green = newStyle("green", 1, 1);
+        String red = newStyle("red", 2, 1);
 
-        List<List<Point2D>> out = newArrayList();
+        List<Point2D> hexGrid = HexGrid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4.0, HexGrid.TYPE.VER, 12);
 
-        int k = 0;
+        Polygon main = Hex.hex(1, Polygon.Type.VER);
+        Polygon inner1 = Hex.hex(RATIO_1 / HEIGHT_RATIO, Polygon.Type.VER);
+        Polygon inner2 = Hex.hex(RATIO_1, Polygon.Type.HOR);
+        Polygon inner3 = Hex.hex(RATIO_1 * RATIO_1, Polygon.Type.VER);
+        Polygon outer = Hex.hex(inner3.getRatio(), Polygon.Type.VER, centreTransform(1, Polygon.Type.VER));
+//        Polygon innerReg = inner.getRegistered();
 
-        for (Point2D layerExtEdge : layerExtEdges) {
+//        Polygon outer = Hex.hex(RATIO_2, Polygon.Type.HOR, centreTransform(RATIO_1, Polygon.Type.VER));
 
-            out.add(asList(
-                    newEdgeAt(layerExtEdge, r, HEX_RADIANS_ROT[toHexIndex(k)]),
-                    newEdgeAt(layerExtEdge, r, HEX_RADIANS_ROT[toHexIndex(k + 1)]),
-                    newEdgeAt(layerExtEdge, r, HEX_RADIANS_ROT[toHexIndex(k + 4)]),
-                    newEdgeAt(layerExtEdge, r, HEX_RADIANS_ROT[toHexIndex(k + 5)])
+        List<Pair<Point2D, String>> importantPoints = Stream.of(
+                Triple.of(inner2, Hex.Vertex.ONE, "A"),
+                Triple.of(inner3, Hex.Vertex.ONE, "B"),
+                Triple.of(inner1, Hex.Vertex.ONE, "C"),
+                Triple.of(main, Hex.Vertex.ONE, "D"),
+                Triple.of(outer, Hex.Vertex.THREE, "E")
+        ).map(importantPoint).collect(toList());
 
-            ));
+        importantPoints.add(Pair.of(initialConditions.getLeft(), "K"));
+        importantPoints.add(Pair.of(new Point2D.Double(1000, 50), "KA=0.5/h"));
+        importantPoints.add(Pair.of(new Point2D.Double(1000, 50 + 30), "KB=(0.5/h)*(0.5/h)"));
+        importantPoints.add(Pair.of(new Point2D.Double(1000, 50 + 2 * 30), "KC=KA/h=2*KB=0.5/(h*h)"));
+        importantPoints.add(Pair.of(new Point2D.Double(1000, 50 + 3 * 30), "DC=DE=KB"));
 
-            k++;
+        importantPoints.stream().map(drawText());
+        importantPoints.stream().map(Pair::getLeft).map(highlightPoint());
 
-        }
+        return
+                Stream.of(
+                        Stream.of(
+                                highlightPoints("black", 2).apply(hexGrid)
+                        ),
+                        Stream.of(
+                                Pair.of(main, Hex.PERIMETER),
+                                Pair.of(main, Hex.DIAGONALS),
+                                Pair.of(main, Hex.INNER_TRIANGLES),
+                                Pair.of(inner2, Hex.INNER_TRIANGLES),
+                                Pair.of(outer, Hex.PERIMETER)
+                        ).map(toLines.andThen(toPolylines(gray))),
+                        Stream.of(
+                                Pair.of(inner2, Hex.PERIMETER)
+                        ).map(toLines.andThen(toPolylines(green))),
+                        Stream.of(
+                                Pair.of(inner1, Hex.PERIMETER),
+                                Pair.of(inner3, Hex.PERIMETER)
+                        ).map(toLines.andThen(toPolylines(blue))),
+                        importantPoints.stream().map(drawText()),
+                        importantPoints.stream().map(Pair::getLeft).map(highlightPoint()),
+                        Stream.of(
+                                getPayload().getPolylines()
+                        ).map(toPolylines(red))
 
-        return out;
+                ).flatMap(s -> s).collect(joining());
 
     }
 

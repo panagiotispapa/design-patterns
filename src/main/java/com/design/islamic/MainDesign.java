@@ -1,5 +1,6 @@
 package com.design.islamic;
 
+import com.design.islamic.model.hex.Tile3New;
 import com.design.islamic.model.hex.TileStar;
 import com.google.common.collect.Maps;
 import org.apache.batik.swing.JSVGCanvas;
@@ -55,6 +56,7 @@ public class MainDesign implements ActionListener {
         designs.put("Star 1", new TileStar(ic, TileStar.RATIO_1)::design1);
         designs.put("Star 2", new TileStar(ic, TileStar.RATIO_1)::design2);
         designs.put("Star 3", new TileStar(ic, TileStar.RATIO_1)::design3);
+        designs.put("Tile 3", new Tile3New(ic)::design1);
 
         designs.entrySet().stream().map(e -> e.getKey()).map(toMenuItemMapper).forEach(hexPatternsMenu::add);
 

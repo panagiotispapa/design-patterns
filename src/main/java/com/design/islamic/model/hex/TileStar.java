@@ -15,12 +15,13 @@ import static com.design.common.view.SvgFactory.*;
 import static com.design.islamic.model.Hex.HEIGHT_RATIO;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
 public class TileStar extends TileBasic {
 
     public static double RATIO_1 = 0.5;
     public static double RATIO_2 = HEIGHT_RATIO / (HEIGHT_RATIO + 0.5);
-    public static double RATIO_3 = 0.5 - (HEIGHT_RATIO - 0.5) * 0.5;
+    public static double RATIO_3 = (1.5 - HEIGHT_RATIO) * 0.5;
     private final double ratio;
 
     public TileStar(Pair<Point2D, Double> initialConditions, double ratio) {
@@ -30,14 +31,12 @@ public class TileStar extends TileBasic {
         this.ratio = ratio;
     }
 
-    public static Triple<Polygon, Polygon,DrawSegmentsInstructions.CombinedVertexes> getLines(double ratio) {
+    public static Triple<Polygon, Polygon, DrawSegmentsInstructions.CombinedVertexes> getLines(double ratio) {
         Polygon main = Hex.hex(1, Polygon.Type.VER);
         Polygon inner = Hex.hex(ratio, Polygon.Type.VER);
 
         return
-
                 Triple.of(inner, main.getRegistered(), DrawSegmentsInstructions.CombinedVertexes.STAR);
-
 
     }
 
@@ -98,6 +97,16 @@ public class TileStar extends TileBasic {
         Polygon inner2 = Hex.hex(RATIO_2, Polygon.Type.VER);
         Polygon inner2Reg = inner2.getRegistered();
 
+        List<Pair<Point2D, String>> importantPoints = Stream.of(
+                Triple.of(inner2, Hex.Vertex.SIX, "B"),
+                Triple.of(inner2Reg, Hex.Vertex.ONE, "A"),
+                Triple.of(registered, Hex.Vertex.ONE, "C")
+        ).map(importantPoint).collect(toList());
+
+        importantPoints.add(Pair.of(initialConditions.getLeft(), "K"));
+        importantPoints.add(Pair.of(new Point2D.Double(1000, 100), "AB=AC"));
+        importantPoints.add(Pair.of(new Point2D.Double(1000, 150), "KB=h/(h+0.5)"));
+
         return
                 Stream.of(
                         Stream.of(
@@ -109,15 +118,6 @@ public class TileStar extends TileBasic {
                                 Pair.of(main, Hex.DIAGONALS)
                         ).map(toLines.andThen(toPolylines(gray))),
 
-                        Stream.of(
-                                Pair.of(initialConditions.getLeft(), "K"),
-                                Pair.of(toVertex.apply(Pair.of(inner2, Hex.Vertex.SIX)), "B"),
-                                Pair.of(toVertex.apply(Pair.of(inner2Reg, Hex.Vertex.ONE)), "A"),
-                                Pair.of(toVertex.apply(Pair.of(registered, Hex.Vertex.ONE)), "C"),
-                                Pair.of((Point2D) new Point2D.Double(950, 100), "AB=AC"),
-                                Pair.of((Point2D) new Point2D.Double(950, 150), "KB=h/(h+0.5)")
-
-                        ).map(drawText()),
 //                        Stream.of(
 //                                registered
 //                        ).map(toCircles.andThen(drawCircles(blueLight))),
@@ -127,16 +127,11 @@ public class TileStar extends TileBasic {
                         Stream.of(
                                 Pair.of(inner, Hex.PERIMETER)
                         ).map(toLines.andThen(toPolylines(blue))),
+                        importantPoints.stream().map(drawText()),
+                        importantPoints.stream().map(Pair::getLeft).map(highlightPoint()),
                         Stream.of(
                                 getLines(RATIO_2)
-                        ).map(toStar.andThen(toPolylines(red))),
-                        Stream.of(
-                                asList(
-                                        initialConditions.getLeft(),
-                                        toVertex.apply(Pair.of(inner2, Hex.Vertex.SIX)),
-                                        toVertex.apply(Pair.of(inner2Reg, Hex.Vertex.ONE))
-                                )
-                        ).map(highlightPoints())
+                        ).map(toStar.andThen(toPolylines(red)))
 
                 ).flatMap(s -> s).collect(joining());
 
@@ -154,23 +149,23 @@ public class TileStar extends TileBasic {
 
         Polygon main = Hex.hex(1, Polygon.Type.VER);
         Polygon registered = main.getRegistered();
-        Polygon outer = Hex.hex(1, Polygon.Type.VER, Polygon.centreTransform(2 * HEIGHT_RATIO, Hex.Vertex.FIVE, Polygon.Type.HOR));
-        Polygon outerSmall = Hex.hex(HEIGHT_RATIO - 0.5, Polygon.Type.VER, Polygon.centreTransform(1, Hex.Vertex.FIVE, Polygon.Type.VER));
-        Polygon outerSmall2 = Hex.hex((HEIGHT_RATIO - 0.5) * 0.5, Polygon.Type.VER, Polygon.centreTransform(1, Hex.Vertex.FIVE, Polygon.Type.VER));
-        Polygon outerSmall3 = Hex.hex(0.5, Polygon.Type.VER, Polygon.centreTransform(1, Hex.Vertex.FIVE, Polygon.Type.VER));
-        Polygon outerSmall4 = Hex.hex(RATIO_3, Polygon.Type.VER, Polygon.centreTransform(HEIGHT_RATIO, Hex.Vertex.FIVE, Polygon.Type.HOR));
-        Polygon outerSmall5 = Hex.hex(RATIO_3, Polygon.Type.VER, Polygon.centreTransform(HEIGHT_RATIO, Hex.Vertex.TWO, Polygon.Type.HOR));
+        Polygon outerSmall = Hex.hex(1.5 - HEIGHT_RATIO, Polygon.Type.VER, centreTransform(2 * HEIGHT_RATIO, Polygon.Type.HOR));
 
         Polygon inner = Hex.hex(HEIGHT_RATIO * 0.5 + HEIGHT_RATIO * HEIGHT_RATIO, Polygon.Type.HOR, Polygon.centreTransform(RATIO_3, Hex.Vertex.ONE, Polygon.Type.VER));
         Polygon outerBig = Hex.hex(2, Polygon.Type.VER, Polygon.centreTransform(HEIGHT_RATIO, Hex.Vertex.ONE, Polygon.Type.HOR));
 
-        Point2D pointA = toVertex.apply(Pair.of(main, Hex.Vertex.FIVE));
-        Point2D pointB = toVertex.apply(Pair.of(outerSmall, Hex.Vertex.FOUR));
-        Point2D pointC = toVertex.apply(Pair.of(outerSmall2, Hex.Vertex.THREE));
-        Point2D pointD = toVertex.apply(Pair.of(outerSmall3, Hex.Vertex.THREE));
-        Point2D pointE = toVertex.apply(Pair.of(outerSmall4, Hex.Vertex.THREE));
-        Point2D pointF = toVertex.apply(Pair.of(outerSmall5, Hex.Vertex.THREE));
-        Point2D pointG = toVertex.apply(Pair.of(outerSmall5, Hex.Vertex.SIX));
+        List<Pair<Point2D, String>> importantPoints = Stream.of(
+                Triple.of(main, Hex.Vertex.ONE, "A"),
+                Triple.of(outerSmall, Hex.Vertex.THREE, "B"),
+                Triple.of(outerSmall, Hex.Vertex.FOUR, "C"),
+                Triple.of(registered, Hex.Vertex.ONE, "D"),
+                Triple.of(registered, Hex.Vertex.TWO, "E")
+        ).map(importantPoint).collect(toList());
+
+        importantPoints.add(Pair.of(initialConditions.getLeft(), "K"));
+        importantPoints.add(Pair.of(new Point2D.Double(1000, 50), "KE = EB = h"));
+        importantPoints.add(Pair.of(new Point2D.Double(1000, 100), "AB = h-0.5"));
+        importantPoints.add(Pair.of(new Point2D.Double(1000, 150), "BC = 1-AB = 1.5-h"));
 
         return
                 Stream.of(
@@ -179,6 +174,7 @@ public class TileStar extends TileBasic {
                         ),
                         Stream.of(
                                 Pair.of(main, Hex.PERIMETER),
+                                Pair.of(outerSmall, Hex.PERIMETER),
                                 Pair.of(main, Hex.DIAGONALS)
 //                                Pair.of(outer, Hex.DIAGONALS)
                         ).map(toLines.andThen(toPolylines(gray))),
@@ -189,14 +185,8 @@ public class TileStar extends TileBasic {
                                 Pair.of(registered, Hex.PERIMETER)
                         ).map(toLines.andThen(toPolylines(green))),
                         Stream.of(
-                                asList(
-                                        asList(pointA, pointB),
-                                        asList(pointD, pointB),
-                                        asList(pointD, pointC),
-                                        asList(pointC, pointB)
-                                )
-
-                        ).map(toPolylines(blue)),
+                                Triple.of(registered, outerSmall, asList((Polygon.Vertex) Hex.Vertex.THREE, Hex.Vertex.FOUR))
+                        ).map(toStarFull.andThen(toPolylines(green))),
                         Stream.of(
                                 Pair.of(inner, asList(Hex.Diag.THREE.getVertexes()))
 //                                Pair.of(outerBig, asList(asList((Polygon.Vertex) Hex.Vertex.TWO, Hex.Vertex.FIVE)))
@@ -204,32 +194,11 @@ public class TileStar extends TileBasic {
                         Stream.of(
                                 Pair.of(outerBig, asList(Hex.Diag.TWO.getVertexes()))
                         ).map(toLinesFull.andThen(toPolylines(gray))),
-                        Stream.of(
-                                Pair.of(initialConditions.getLeft(), "K"),
-                                Pair.of(pointA, "A"),
-                                Pair.of(pointB, "B"),
-                                Pair.of(pointC, "C"),
-                                Pair.of(pointD, "D"),
-                                Pair.of(pointE, "E"),
-                                Pair.of(pointF, "F"),
-                                Pair.of(pointG, "G"),
-                                Pair.of((Point2D) new Point2D.Double(950, 150), "DC = 0.5 - (h-0.5)*0.5")
-
-                        ).map(drawText()),
+                        importantPoints.stream().map(drawText()),
+                        importantPoints.stream().map(Pair::getLeft).map(highlightPoint()),
 //                        Stream.of(
-//                                Pair.of(inner, Hex.PERIMETER)
-//                        ).map(toLines.andThen(toPolylines(blue))),
-                        Stream.of(
-                                asList(
-                                        pointA,
-                                        pointB,
-                                        pointC,
-                                        pointD,
-                                        pointE,
-                                        pointF,
-                                        pointG
-                                )
-                        ).map(highlightPoints()),
+//                                Pair.of(Hex.hex(RATIO_3, Polygon.Type.VER), Hex.PERIMETER)
+//                        ).map(toLines.andThen(toPolylines(red))),
                         Stream.of(
                                 getLines(RATIO_3)
                         ).map(toStar.andThen(toPolylines(red)))
