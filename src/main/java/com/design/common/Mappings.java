@@ -4,14 +4,17 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 public class Mappings {
+
 
     public static <T, R> Function<List<T>, List<R>> fromList(Function<T, R> mapping) {
         return in -> in.stream().map(mapping).collect(toList());
@@ -50,7 +53,7 @@ public class Mappings {
     }
 
     public static <T> Function<List<List<T>>, List<T>> toFlatMapList() {
-        return t -> t.stream().map(l -> l.stream()).flatMap(s -> s).collect(toList());
+        return t -> t.stream().map(Collection::stream).flatMap(s -> s).collect(toList());
     }
 
 //    public static <I, O> Function<I, O> chaining(Function<I, O> first, Function<I, O>... rest) {

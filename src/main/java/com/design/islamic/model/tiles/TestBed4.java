@@ -1,7 +1,7 @@
 package com.design.islamic.model.tiles;
 
 import com.design.common.view.SvgFactory;
-import com.design.islamic.model.hex.Tile4;
+import com.design.islamic.model.hex.Tile11;
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.commons.lang3.tuple.Pair;
 import org.w3c.dom.Node;
@@ -41,9 +41,9 @@ public class TestBed4 {
 //        String backObj = drawPolygon(cloneAndTranslateScalePoints(centre, r, hexPoints), styleBack);
 
 //        String testObject = new TileStar(Pair.of(centre, r), TileStar.RATIO_1).design3();
-        String testObject = new Tile4(Pair.of(centre, r)).design1();
+        String testObject = new Tile11(Pair.of(centre, r)).design1();
 
-//        String testObject = HexDesignHelper.with(Pair.of(centre, r)).newStarDesign4();
+//        String testObject = HexDesignHelper.with(Pair.of(centre, r)).newDesign11();
 //        String testObject = HexDesignHelper.with(Pair.of(centre, r)).newDesign28();
 //        String testObject = HexDesignHelper.with(Pair.of(centre, r)).newStarDesign3();
 //        String testObject = HexDesignHelper.newDesign8(Pair.of(centre, r));

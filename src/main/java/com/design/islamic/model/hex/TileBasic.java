@@ -6,6 +6,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.geom.Point2D;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -17,11 +18,13 @@ import static java.util.stream.Collectors.toList;
 public abstract class TileBasic implements Tile {
 
     protected final Pair<Point2D, Double> initialConditions;
+    protected Function<Pair<Pair<Polygon, Polygon.Vertex>, Pair<Polygon, Polygon.Vertex>>, List<List<Point2D>>> toMixVertexesFull;
     protected Function<Pair<Polygon, List<List<Polygon.Vertex>>>, List<List<Point2D>>> toLines;
     protected Function<Pair<Polygon, List<List<Polygon.Vertex>>>, List<List<Point2D>>> toLinesFull;
     protected Function<Triple<Polygon, Polygon, DrawSegmentsInstructions.CombinedVertexes>, List<List<Point2D>>> toStar;
     protected Function<Triple<Polygon, Polygon, List<Polygon.Vertex>>, List<List<Point2D>>> toStarFull;
     protected Function<Polygon, List<Point2D>> toVertexes;
+    protected Function<Pair<Polygon, Polygon.Vertex>, List<Point2D>> toVertexesFull;
     protected Function<Pair<Polygon, Polygon.Vertex>, Point2D> toVertex;
     protected Function<Polygon, List<Pair<Point2D, Double>>> toCircles;
     protected Function<Triple<Polygon, ? extends Polygon.Vertex, String>, Pair<Point2D, String>> importantPoint;
@@ -29,11 +32,14 @@ public abstract class TileBasic implements Tile {
     protected TileBasic(Pair<Point2D, Double> initialConditions) {
         this.initialConditions = initialConditions;
 
+        List<Integer> allVertexIndexes = IntStream.range(0, 6).boxed().collect(toList());
         toLines = Polygon.toLines(0, initialConditions);
-        toLinesFull = Polygon.toLines(IntStream.range(0, 6).boxed().collect(toList()), initialConditions);
+        toLinesFull = Polygon.toLines(allVertexIndexes, initialConditions);
         toStar = DrawSegmentsInstructions.combVertexes(initialConditions);
         toStarFull = DrawSegmentsInstructions.combVertexesFull(initialConditions);
         toVertexes = Polygon.vertexes(initialConditions);
+        toVertexesFull = Polygon.vertexesFull(allVertexIndexes, initialConditions);
+        toMixVertexesFull = Polygon.mixVertexesFull(allVertexIndexes, initialConditions);
         toCircles = Polygon.toCircles(initialConditions);
         toVertex = Polygon.vertex(initialConditions);
         importantPoint = t -> Pair.of(toVertex.apply(Pair.of(t.getLeft(), t.getMiddle())), t.getRight());
@@ -67,6 +73,10 @@ public abstract class TileBasic implements Tile {
         return Stream.empty();
     }
 
+    protected Stream<Pair<Pair<Polygon, Polygon.Vertex>, Pair<Polygon, Polygon.Vertex>>> getMainMixVertexesFull() {
+        return Stream.empty();
+    }
+
     protected static Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform(double ratio, Polygon.Type type) {
         return Polygon.centreTransform(ratio, Hex.Vertex.ONE, type);
     }
@@ -80,15 +90,16 @@ public abstract class TileBasic implements Tile {
                                 getMainLinesFull().map(toLinesFull),
                                 getMainLinesSingle().map(toLines),
                                 getMainStars().map(toStar),
-                                getMainStarsFull().map(toStarFull)
-                        ).flatMap(s -> s).map(s -> s.stream()).flatMap(s -> s).collect(toList())
+                                getMainStarsFull().map(toStarFull),
+                                getMainMixVertexesFull().map(toMixVertexesFull)
+                        ).flatMap(s -> s).map(Collection::stream).flatMap(s -> s).collect(toList())
 
                 ).secondaryLines(
                         Stream.of(
                                 getSecondaryLinesFull().map(toLinesFull),
                                 getSecondaryLinesSingle().map(toLines),
                                 getSecondaryStars().map(toStar)
-                        ).flatMap(s -> s).map(s -> s.stream()).flatMap(s -> s).collect(Collectors.toList())
+                        ).flatMap(s -> s).map(Collection::stream).flatMap(s -> s).collect(Collectors.toList())
 
                 );
     }

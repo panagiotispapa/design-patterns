@@ -67,6 +67,10 @@ public class Hex extends Polygon {
         private Sides(List<Polygon.Vertex> vertexes) {
             this.vertexes = vertexes;
         }
+
+        public List<Polygon.Vertex> getVertexes() {
+            return vertexes;
+        }
     }
 
     public static enum Diag {

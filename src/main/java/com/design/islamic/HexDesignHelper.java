@@ -58,72 +58,6 @@ public class HexDesignHelper {
 
 
 
-    public String newStarDesign1() {
-
-        Polygon main = Hex.hex(1, Polygon.Type.HOR);
-        Polygon outerCentres = Hex.hex(HEX_DIST_NEW_CENTRE, Polygon.Type.VER);
-        Polygon layer1 = Hex.hex(HEX_DIST_OUTER_CIRCLE, Polygon.Type.VER);
-        Polygon layer2 = Hex.hex(HEX_DIST_DIAGONAL, Polygon.Type.VER);
-        Polygon layer3 = Hex.hex(HEX_DIST3, Polygon.Type.VER);
-        Polygon layer4 = Hex.hex(1, Polygon.Type.VER);
-        Polygon layerMiddle = Hex.hex(0.5, Polygon.Type.HOR);
-
-        final List<Point2D> outsideCentres = toVertexes.apply(outerCentres);
-
-        return Stream.of(
-                Stream.of(
-                        newCircle(initialConditions.getLeft(), initialConditions.getRight(), black)
-                ),
-                outsideCentres.stream().map(c_centre -> newCircle(c_centre, initialConditions.getRight(), gray)),
-                outsideCentres.stream().map(c_centre -> newPolyline(asList(initialConditions.getLeft(), c_centre), gray)),
-                Stream.of(
-                        Pair.of(main, Hex.ALL_LINES),
-                        Pair.of(layer1, Hex.PERIMETER),
-                        Pair.of(layerMiddle, Hex.PERIMETER),
-                        Pair.of(outerCentres, Hex.PERIMETER)
-                ).map(toLines.andThen(toPolylines(gray))),
-                Stream.of(
-                        Triple.of(layer4, layer1.getMirror(), STAR),
-                        Triple.of(layer4, layer2.getMirror(), STAR),
-                        Triple.of(layer4, layer3.getMirror(), STAR)
-                ).map(toStar.andThen(toPolylines(green))),
-                Stream.of(
-                        outerCentres,
-                        layer1,
-                        layer2,
-                        layer3,
-                        layer4
-                ).map(toVertexes.andThen(highlightPoints()))
-
-        ).flatMap(s -> s).collect(joining());
-
-    }
-
-    public String newStarDesign2() {
-
-        Polygon outer = Hex.hex(1, Polygon.Type.VER);
-        Polygon outerH = outer.getRegistered();
-        Polygon inner = Hex.hex(0.5, Polygon.Type.VER);
-
-        return
-                Stream.of(
-                        Stream.of(
-                                Pair.of(outer, Hex.PERIMETER),
-                                Pair.of(outer, Hex.DIAGONALS),
-                                Pair.of(inner, Hex.PERIMETER)
-                        ).map(toLines.andThen(toPolylines(gray))),
-                        Stream.of(
-                                Triple.of(inner, outerH, STAR)
-                        ).map(toStar.andThen(toPolylines(green))),
-                        Stream.of(
-                                outer,
-                                outerH,
-                                inner
-                        ).map(toVertexes.andThen(highlightPoints()))
-
-                ).flatMap(s -> s).collect(joining());
-
-    }
 
     private static Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform(double ratio, Polygon.Type type) {
         return Polygon.centreTransform(ratio, Hex.Vertex.ONE, type);
@@ -131,7 +65,7 @@ public class HexDesignHelper {
 
     public String newStarDesign3() {
 
-        Tile3 tile3 = new Tile3(initialConditions.getLeft(), initialConditions.getRight());
+        Tile2b tile2b = new Tile2b(initialConditions.getLeft(), initialConditions.getRight());
 
         Polygon main = Hex.hex(1, Polygon.Type.VER);
         Polygon inner = Hex.hex(HEX_DIST_EQ1, Polygon.Type.VER);
@@ -168,8 +102,8 @@ public class HexDesignHelper {
                         ).map(toLines.andThen(toPolylines(green))),
                         Stream.of(
                                 extConfigs,
-                                tile3.getLines(),
-                                tile3.getLines2()
+                                tile2b.getLines(),
+                                tile2b.getLines2()
                         ).map(toPolylines(red)),
                         Stream.of(
                                 inner.getRegistered(),
@@ -289,64 +223,6 @@ public class HexDesignHelper {
 
     }
 
-    public String newStarDesign5() {
-        Polygon layer1 = Hex.hex(1, Polygon.Type.VER);
-        Polygon layer2 = Hex.hex(HEX_DIST_DIAGONAL, Polygon.Type.HOR);
-        Polygon layer3 = Hex.hex(HEX_DIST_DIAGONAL * HEX_DIST_DIAGONAL, Polygon.Type.VER);
-        Polygon outer = Hex.hex(layer3.getRatio() * HEX_DIST_NEW_CENTRE, Polygon.Type.HOR);
-
-        Double r = initialConditions.getRight();
-        Point2D centre = initialConditions.getLeft();
-
-        Tile5 tile = new Tile5(centre, r);
-
-        return
-                Stream.of(
-                        Stream.of(
-                                Pair.of(layer1, Hex.ALL_LINES),
-                                Pair.of(layer2, Hex.ALL_LINES)
-                        ).map(toLines.andThen(toPolylines(gray))),
-                        Stream.of(
-                                Pair.of(layer2, Hex.PERIMETER)
-                        ).map(toLines.andThen(toPolylines(blue))),
-                        Stream.of(
-                                Pair.of(layer3, Hex.PERIMETER)
-                        ).map(toLines.andThen(toPolylines(green))),
-                        Stream.of(
-                                tile.getPayload().getPolylines()
-                        ).map(toPolylines(red)),
-                        Stream.of(
-                                outer
-                        ).map(toVertexes.andThen(highlightPoints()))
-
-                ).flatMap(s -> s).collect(joining());
-
-    }
-
-    public String newStarDesign6() {
-        Polygon layer1 = Hex.hex(1, Polygon.Type.VER);
-        Polygon layer2 = Hex.hex(HEX_DIST_DIAGONAL_ROTATED, Polygon.Type.VER);
-        Polygon outer = Hex.hex(HEX_DIST_DIAGONAL_ROTATED * HEX_DIST_NEW_CENTRE, Polygon.Type.HOR);
-        Polygon outerInner = Hex.hex(HEX_DIST_DIAGONAL_ROTATED * HEX_DIST_DIAGONAL_ROTATED, Polygon.Type.VER, Polygon.centreTransform(outer.getRatio(), Hex.Vertex.ONE, outer.getType()));
-
-        return
-                Stream.of(
-                        Stream.of(
-                                Pair.of(layer1, Hex.ALL_LINES),
-                                Pair.of(outerInner, Hex.PERIMETER),
-                                Pair.of(layer1.getRegistered(), Hex.INNER_TRIANGLES)
-                        ).map(toLines.andThen(toPolylines(gray))),
-                        Stream.of(
-                                Tile6.buildOuterLines(toVertexes.apply(outer), initialConditions.getRight() * HEX_DIST_DIAGONAL_ROTATED)
-                        ).map(toPolylines(red)),
-                        Stream.of(
-                                outer,
-                                layer2
-                        ).map(toVertexes.andThen(highlightPoints()))
-
-                ).flatMap(s -> s).collect(joining());
-
-    }
 
     public String newDesign7() {
         Double r = initialConditions.getRight();
@@ -566,44 +442,7 @@ public class HexDesignHelper {
 
     }
 
-    public String newDesign11() {
-        Double r = initialConditions.getRight();
-        Point2D centre = initialConditions.getLeft();
 
-        Tile11 tile = new Tile11(initialConditions.getLeft(), initialConditions.getRight());
-
-        Polygon main = Hex.hex(1, Polygon.Type.VER);
-        Polygon layerInner = Hex.hex(tile.getInnerR() / r, Polygon.Type.HOR, centreTransform(main.getRatio(), main.getType()));
-
-        return
-                Stream.of(
-                        Stream.of(
-                                Pair.of(main, Hex.PERIMETER),
-                                Pair.of(main, Hex.DIAGONALS),
-                                Pair.of(main.getRegistered(), Hex.DIAGONALS)
-                        ).map(toLines.andThen(toPolylines(gray))),
-                        Stream.of(
-                                Pair.of(layerInner, Hex.PERIMETER)
-                        ).map(toLinesFull.andThen(toPolylines(gray))),
-                        Stream.of(newCircle(initialConditions.getLeft(), tile.getInnerR(), gray)),
-                        tile.getMainHeights().stream().map(edge -> newCircle(edge, r / 2.0, gray)),
-                        Stream.of(
-                                tile.getMainHeights(),
-                                tile.getPointsA(),
-                                tile.getPointsB(),
-                                tile.getPointsC(),
-                                tile.getPointsD()
-                        ).map(highlightPoints()),
-                        Stream.of(
-                                tile.getPayload().getPolylines()
-                        ).map(toPolylines(red))
-//
-
-                ).flatMap(s -> s).collect(joining());
-
-//        builder.append(highlightPoints(newHexagon(centre,tile.getInnerR2())));
-
-    }
 
     public String newDesign12() {
         Double r = initialConditions.getRight();

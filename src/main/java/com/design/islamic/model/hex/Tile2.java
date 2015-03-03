@@ -1,6 +1,7 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.Polygon;
+import com.design.islamic.model.DrawSegmentsInstructions;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.tiles.HexGrid;
 import org.apache.commons.lang3.tuple.Pair;
@@ -16,12 +17,12 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
-public class Tile3New extends TileBasic {
+public class Tile2 extends TileBasic {
 
     public static double RATIO_1 = HEIGHT_RATIO / (HEIGHT_RATIO + 0.5);
     public static double RATIO_2 = HEIGHT_RATIO * (1 - RATIO_1);
 
-    public Tile3New(Pair<Point2D, Double> initialConditions) {
+    public Tile2(Pair<Point2D, Double> initialConditions) {
 
         super(initialConditions);
 
@@ -29,11 +30,12 @@ public class Tile3New extends TileBasic {
 
 //    @Override
 //    protected Stream<Triple<Polygon, Polygon, DrawSegmentsInstructions.CombinedVertexes>> getMainStars() {
-//
 //        Polygon main = Hex.hex(RATIO_1, Polygon.Type.VER);
-//        Polygon inner = Hex.hex(RATIO_1 * 0.5, Polygon.Type.VER);
+//        Polygon inner = Hex.hex(RATIO_1*0.5, Polygon.Type.VER);
 //
-//        return Stream.of(Triple.of(inner, main.getRegistered(), DrawSegmentsInstructions.CombinedVertexes.STAR));
+//        return Stream.of(
+//                Triple.of(inner, main.getRegistered(), DrawSegmentsInstructions.CombinedVertexes.STAR)
+//        );
 //    }
 
     @Override

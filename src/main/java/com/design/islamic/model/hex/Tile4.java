@@ -9,6 +9,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import java.awt.geom.Point2D;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.design.common.view.SvgFactory.*;
@@ -19,7 +20,7 @@ import static java.util.stream.Collectors.toList;
 public class Tile4 extends TileBasic {
 
     public static double RATIO_1 = 0.5 / HEIGHT_RATIO;
-    public static double RATIO_2 = RATIO_1 * RATIO_1;
+    public static double RATIO_2 = RATIO_1 / HEIGHT_RATIO;
 
     public Tile4(Pair<Point2D, Double> initialConditions) {
 
@@ -29,7 +30,7 @@ public class Tile4 extends TileBasic {
 
     @Override
     protected Stream<Pair<Polygon, List<List<Polygon.Vertex>>>> getMainLinesSingle() {
-        Polygon main = Hex.hex(0.5 / (HEIGHT_RATIO * HEIGHT_RATIO), Polygon.Type.VER);
+        Polygon main = Hex.hex(RATIO_2, Polygon.Type.VER);
         return Stream.of(
                 Pair.of(main, Hex.PERIMETER)
         );
@@ -37,8 +38,8 @@ public class Tile4 extends TileBasic {
 
     @Override
     protected Stream<Triple<Polygon, Polygon, List<Polygon.Vertex>>> getMainStarsFull() {
-        Polygon inner = Hex.hex(RATIO_2 / 0.5, Polygon.Type.VER);
-        Polygon outer = Hex.hex(RATIO_2, Polygon.Type.VER, centreTransform(1, Polygon.Type.VER));
+        Polygon inner = Hex.hex(RATIO_2, Polygon.Type.VER);
+        Polygon outer = Hex.hex(1 - RATIO_2, Polygon.Type.VER, centreTransform(1, Polygon.Type.VER));
         return Stream.of(Triple.of(inner, outer, Arrays.asList((Polygon.Vertex) Hex.Vertex.THREE, Hex.Vertex.FIVE)));
     }
 
@@ -52,8 +53,8 @@ public class Tile4 extends TileBasic {
         List<Point2D> hexGrid = HexGrid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4.0, HexGrid.TYPE.VER, 12);
 
         Polygon main = Hex.hex(1, Polygon.Type.VER);
-        Polygon inner1 = Hex.hex(RATIO_1 / HEIGHT_RATIO, Polygon.Type.VER);
         Polygon inner2 = Hex.hex(RATIO_1, Polygon.Type.HOR);
+        Polygon inner1 = inner2.getFramed();
         Polygon inner3 = Hex.hex(RATIO_1 * RATIO_1, Polygon.Type.VER);
         Polygon outer = Hex.hex(inner3.getRatio(), Polygon.Type.VER, centreTransform(1, Polygon.Type.VER));
 //        Polygon innerReg = inner.getRegistered();
@@ -69,10 +70,21 @@ public class Tile4 extends TileBasic {
         ).map(importantPoint).collect(toList());
 
         importantPoints.add(Pair.of(initialConditions.getLeft(), "K"));
-        importantPoints.add(Pair.of(new Point2D.Double(1000, 50), "KA=0.5/h"));
-        importantPoints.add(Pair.of(new Point2D.Double(1000, 50 + 30), "KB=(0.5/h)*(0.5/h)"));
-        importantPoints.add(Pair.of(new Point2D.Double(1000, 50 + 2 * 30), "KC=KA/h=2*KB=0.5/(h*h)"));
-        importantPoints.add(Pair.of(new Point2D.Double(1000, 50 + 3 * 30), "DC=DE=KB"));
+        List<String> equations = Arrays.asList(
+                "i=0.5/h",
+                "KA=i",
+                "KB=i*i",
+                "KC=KA/h=2*KB",
+                "DC=DE=KB",
+                "DC=1-KC"
+        );
+
+        IntStream.range(0, equations.size())
+                .forEach(i -> importantPoints.add(Pair.of(new Point2D.Double(1000, (i + 1) * 50), equations.get(i))));
+//        importantPoints.add(Pair.of(new Point2D.Double(1000, 50), "KA=0.5/h"));
+//        importantPoints.add(Pair.of(new Point2D.Double(1000, 50 + 30), "KB=(0.5/h)*(0.5/h)"));
+//        importantPoints.add(Pair.of(new Point2D.Double(1000, 50 + 2 * 30), "KC=KA/h=2*KB=0.5/(h*h)"));
+//        importantPoints.add(Pair.of(new Point2D.Double(1000, 50 + 3 * 30), "DC=DE=KB"));
 
         importantPoints.stream().map(drawText());
         importantPoints.stream().map(Pair::getLeft).map(highlightPoint());
