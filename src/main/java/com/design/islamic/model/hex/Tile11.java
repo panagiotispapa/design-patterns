@@ -31,35 +31,27 @@ public class Tile11 extends TileBasic {
     }
 
     @Override
-    protected Stream<Pair<Polygon, List<List<Polygon.Vertex>>>> getMainLinesFull() {
-        Polygon outer = Hex.hex(RATIO_2, Polygon.Type.HOR, centreTransform(1, Polygon.Type.VER));
-        return Stream.of(
-                Pair.of(outer, asList(Hex.Sides.FOUR.getVertexes()))
-        );
-    }
-
-    @Override
-    protected Stream<Triple<Polygon, Polygon, List<Polygon.Vertex>>> getMainStarsFull() {
-        Polygon inner = Hex.hex(RATIO_3, Polygon.Type.HOR);
-        Polygon outer = Hex.hex(RATIO_4, Polygon.Type.VER, centreTransform(RATIO_3, Polygon.Type.HOR));
-        return Stream.of(Triple.of(inner, outer,
-                asList((Polygon.Vertex) Hex.Vertex.TWO, Hex.Vertex.FIVE)));
-    }
-
-    @Override
-    protected Stream<Pair<Pair<Polygon, Polygon.Vertex>, Pair<Polygon, Polygon.Vertex>>> getMainMixVertexesFull() {
+    protected Stream<List<Pair<Polygon, Polygon.Vertex>>> getMainMixVertexesFull() {
         Polygon outer = Hex.hex(RATIO_2, Polygon.Type.HOR, centreTransform(1, Polygon.Type.VER));
         Polygon outerReg = outer.getRegistered();
+
+        Polygon inner = Hex.hex(RATIO_3, Polygon.Type.HOR);
+
         return Stream.of(
-                Pair.of(
+                asList(
+                        Pair.of(outerReg, Hex.Vertex.THREE),
+                        Pair.of(outer, Hex.Vertex.FOUR),
                         Pair.of(outer, Hex.Vertex.FIVE),
                         Pair.of(outerReg, Hex.Vertex.FIVE)
                 ),
-                Pair.of(
-                        Pair.of(outer, Hex.Vertex.FOUR),
-                        Pair.of(outerReg, Hex.Vertex.THREE)
+                asList(
+                        Pair.of(inner, Hex.Vertex.ONE),
+                        Pair.of(outer, Hex.Vertex.FIVE)
+                ),
+                asList(
+                        Pair.of(inner, Hex.Vertex.TWO),
+                        Pair.of(outer, Hex.Vertex.FOUR)
                 )
-
         );
     }
 

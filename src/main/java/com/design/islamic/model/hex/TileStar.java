@@ -1,7 +1,6 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.Polygon;
-import com.design.islamic.model.DrawSegmentsInstructions;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.tiles.HexGrid;
 import org.apache.commons.lang3.tuple.Pair;
@@ -31,18 +30,24 @@ public class TileStar extends TileBasic {
         this.ratio = ratio;
     }
 
-    public static Triple<Polygon, Polygon, DrawSegmentsInstructions.CombinedVertexes> getLines(double ratio) {
-        Polygon main = Hex.hex(1, Polygon.Type.VER);
+    public static List<Pair<Polygon, Polygon.Vertex>> getLines(double ratio) {
+        Polygon main = Hex.hex(HEIGHT_RATIO, Polygon.Type.HOR);
         Polygon inner = Hex.hex(ratio, Polygon.Type.VER);
 
         return
-                Triple.of(inner, main.getRegistered(), DrawSegmentsInstructions.CombinedVertexes.STAR);
-
+                asList(
+                        Pair.of(inner, Hex.Vertex.ONE),
+                        Pair.of(main, Hex.Vertex.TWO),
+                        Pair.of(inner, Hex.Vertex.TWO)
+                );
     }
 
     @Override
-    protected Stream<Triple<Polygon, Polygon, DrawSegmentsInstructions.CombinedVertexes>> getMainStars() {
-        return Stream.of(getLines(ratio));
+    protected Stream<List<Pair<Polygon, Polygon.Vertex>>> getMainMixVertexesFull() {
+        return
+                Stream.of(
+                        getLines(ratio)
+                );
     }
 
     public String design1() {
@@ -75,7 +80,7 @@ public class TileStar extends TileBasic {
                         ).map(toLines.andThen(toPolylines(blue))),
                         Stream.of(
                                 getLines(RATIO_1)
-                        ).map(toStar.andThen(toPolylines(red)))
+                        ).map(toMixVertexesFull.andThen(toPolylines(red)))
 
                 ).flatMap(s -> s).collect(joining());
 
@@ -131,7 +136,7 @@ public class TileStar extends TileBasic {
                         importantPoints.stream().map(Pair::getLeft).map(highlightPoint()),
                         Stream.of(
                                 getLines(RATIO_2)
-                        ).map(toStar.andThen(toPolylines(red)))
+                        ).map(toMixVertexesFull.andThen(toPolylines(red)))
 
                 ).flatMap(s -> s).collect(joining());
 
@@ -201,7 +206,7 @@ public class TileStar extends TileBasic {
 //                        ).map(toLines.andThen(toPolylines(red))),
                         Stream.of(
                                 getLines(RATIO_3)
-                        ).map(toStar.andThen(toPolylines(red)))
+                        ).map(toMixVertexesFull.andThen(toPolylines(red)))
 
                 ).flatMap(s -> s).collect(joining());
 

@@ -18,7 +18,7 @@ import static java.util.stream.Collectors.toList;
 public abstract class TileBasic implements Tile {
 
     protected final Pair<Point2D, Double> initialConditions;
-    protected Function<Pair<Pair<Polygon, Polygon.Vertex>, Pair<Polygon, Polygon.Vertex>>, List<List<Point2D>>> toMixVertexesFull;
+    protected Function<List<Pair<Polygon, Polygon.Vertex>>, List<List<Point2D>>> toMixVertexesFull;
     protected Function<Pair<Polygon, List<List<Polygon.Vertex>>>, List<List<Point2D>>> toLines;
     protected Function<Pair<Polygon, List<List<Polygon.Vertex>>>, List<List<Point2D>>> toLinesFull;
     protected Function<Triple<Polygon, Polygon, DrawSegmentsInstructions.CombinedVertexes>, List<List<Point2D>>> toStar;
@@ -73,7 +73,7 @@ public abstract class TileBasic implements Tile {
         return Stream.empty();
     }
 
-    protected Stream<Pair<Pair<Polygon, Polygon.Vertex>, Pair<Polygon, Polygon.Vertex>>> getMainMixVertexesFull() {
+    protected Stream<List<Pair<Polygon, Polygon.Vertex>>> getMainMixVertexesFull() {
         return Stream.empty();
     }
 

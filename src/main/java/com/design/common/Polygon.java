@@ -20,28 +20,25 @@ public abstract class Polygon {
     }
 
     public static Function<Polygon, List<Point2D>> vertexes(Pair<Point2D, Double> ic) {
-        return p -> p.getVertexes().stream().map(p.toPoint(Triple.of(ic.getLeft(), ic.getRight(), 0))).collect(toList());
+        return p -> p.getVertexes().stream().map(p.toPoint(0, ic)).collect(toList());
     }
 
     public static Function<Pair<Polygon, Vertex>, Point2D> vertex(Pair<Point2D, Double> ic) {
-        return p -> p.getLeft().toPoint(Triple.of(ic.getLeft(), ic.getRight(), 0)).apply(p.getLeft().getVertexes().get(p.getRight().getIndex()));
+        return p -> p.getLeft().toPoint(0, ic).apply(p.getLeft().getVertexes().get(p.getRight().getIndex()));
     }
 
     public static Function<Pair<Polygon, Vertex>, List<Point2D>> vertexesFull(List<Integer> offsets, Pair<Point2D, Double> ic) {
         return p -> {
             final Vertex chosen = p.getLeft().getVertexes().get(p.getRight().getIndex());
-            return offsets.stream().map(o -> p.getLeft().toPoint(Triple.of(ic.getLeft(), ic.getRight(), o)))
+            return offsets.stream().map(o -> p.getLeft().toPoint(o, ic))
                     .map(t -> t.apply(chosen)).collect(toList());
         };
     }
 
-    public static Function<Pair<Pair<Polygon, Vertex>, Pair<Polygon, Vertex>>, List<List<Point2D>>> mixVertexesFull(List<Integer> offsets, Pair<Point2D, Double> ic) {
+    public static Function<List<Pair<Polygon, Vertex>>, List<List<Point2D>>> mixVertexesFull(List<Integer> offsets, Pair<Point2D, Double> ic) {
         Function<Pair<Polygon, Vertex>, List<Point2D>> toVertexesFull = vertexesFull(offsets, ic);
-        return p-> Mappings.<Point2D>combine(Arrays.asList(0)).apply(
-                Pair.of(
-                        toVertexesFull.apply(p.getLeft()),
-                        toVertexesFull.apply(p.getRight())
-                )
+        return p -> Mappings.<Point2D>combine().apply(
+                p.stream().map(toVertexesFull).collect(toList())
         );
     }
 
@@ -54,12 +51,12 @@ public abstract class Polygon {
     }
 
     public static Function<Pair<Polygon, List<List<Vertex>>>, List<List<Point2D>>> toLines(int offset, Pair<Point2D, Double> ic) {
-        return pair -> Mappings.fromListOfLists(pair.getLeft().toPoint(Triple.of(ic.getLeft(), ic.getRight(), offset))).apply(pair.getRight());
+        return pair -> Mappings.fromListOfLists(pair.getLeft().toPoint(offset, ic)).apply(pair.getRight());
     }
 
-    public Function<Vertex, Point2D> toPoint(Triple<Point2D, Double, Integer> ic) {
-        final Point2D centre = centreTransform.apply(ic).getLeft();
-        return mapVertexToPoint(centre, ic.getMiddle(), ic.getRight());
+    public Function<Vertex, Point2D> toPoint(int offset, Pair<Point2D, Double> ic) {
+        final Point2D centre = centreTransform.apply(Triple.of(ic.getLeft(), ic.getRight(), offset)).getLeft();
+        return mapVertexToPoint(centre, ic.getRight(), offset);
     }
 
     public Function<Vertex, Point2D> mapVertexToPoint(Point2D centre, double r, int offset) {
