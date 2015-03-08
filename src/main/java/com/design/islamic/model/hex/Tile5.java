@@ -2,7 +2,7 @@ package com.design.islamic.model.hex;
 
 import com.design.common.Polygon;
 import com.design.islamic.model.Hex;
-import com.design.islamic.model.tiles.HexGrid;
+import com.design.islamic.model.tiles.Grid;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -12,8 +12,11 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.*;
 import static com.design.islamic.model.Hex.HEIGHT_RATIO;
+import static com.design.islamic.model.Hex.Vertex.*;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
@@ -28,19 +31,17 @@ public class Tile5 extends TileBasic {
 
     }
 
-//    @Override
-//    protected Stream<Pair<Polygon, List<List<Polygon.Vertex>>>> getMainLinesSingle() {
-//        Polygon main = Hex.hex(RATIO_2, Polygon.Type.VER);
-//        return Stream.of(
-//                Pair.of(main, Hex.PERIMETER)
-//        );
-//    }
-
     @Override
-    protected Stream<Triple<Polygon, Polygon, List<Polygon.Vertex>>> getMainStarsFull() {
-        Polygon inner = Hex.hex(RATIO_2, Polygon.Type.VER);
-        Polygon outer = Hex.hex(1 - RATIO_2, Polygon.Type.VER, centreTransform(1, Polygon.Type.VER));
-        return Stream.of(Triple.of(inner, outer, Arrays.asList((Polygon.Vertex) Hex.Vertex.THREE, Hex.Vertex.FIVE)));
+    protected Stream<List<Pair<Polygon, Polygon.Vertex>>> getMainMixVertexesFull() {
+        Polygon outer = Hex.hex(1 - RATIO_2, VER, centreTransform(1, VER));
+
+        return Stream.of(
+                asList(
+                        Pair.of(outer, FIVE),
+                        Pair.of(outer, FOUR),
+                        Pair.of(outer, THREE)
+                )
+        );
     }
 
     public String design1() {
@@ -50,13 +51,14 @@ public class Tile5 extends TileBasic {
         String green = newStyle("green", 1, 1);
         String red = newStyle("red", 2, 1);
 
-        List<Point2D> hexGrid = HexGrid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4.0, HexGrid.TYPE.VER, 12);
+        List<Point2D> hexGrid = Grid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4.0,
+                Grid.Configs.HEX_VER.getConfiguration(), 12);
 
-        Polygon main = Hex.hex(1, Polygon.Type.VER);
+        Polygon main = Hex.hex(1, VER);
         Polygon inner2 = Hex.hex(RATIO_1, Polygon.Type.HOR);
         Polygon inner1 = inner2.getFramed();
-        Polygon inner3 = Hex.hex(RATIO_1 * RATIO_1, Polygon.Type.VER);
-        Polygon outer = Hex.hex(inner3.getRatio(), Polygon.Type.VER, centreTransform(1, Polygon.Type.VER));
+        Polygon inner3 = Hex.hex(RATIO_1 * RATIO_1, VER);
+        Polygon outer = Hex.hex(inner3.getRatio(), VER, centreTransform(1, VER));
 //        Polygon innerReg = inner.getRegistered();
 
 //        Polygon outer = Hex.hex(RATIO_2, Polygon.Type.HOR, centreTransform(RATIO_1, Polygon.Type.VER));

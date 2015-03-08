@@ -3,6 +3,7 @@ package com.design.islamic.model.hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.Payloads;
 import com.design.islamic.model.Tile;
+import com.design.islamic.model.tiles.Grid;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -52,7 +53,8 @@ public class Tile18 implements Tile {
                 EMPTY,
                 polygons,
                 lines,
-                EMPTY);
+                EMPTY,
+                Grid.Configs.HEX_VER.getConfiguration());
     }
 
 }

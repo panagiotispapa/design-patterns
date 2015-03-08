@@ -1,6 +1,7 @@
 package com.design.islamic.model;
 
 import com.design.common.Polygon;
+import com.design.common.RatioHelper;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.Triple;
@@ -20,6 +21,12 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 public class Hex extends Polygon {
+
+    public static final RatioHelper HELPER = RatioHelper.Ratios.HEX.getHelper();
+    public static final Function<Double, Double> $H = HELPER.toHeight();
+    public static final Function<Double, Double> £H = HELPER.fromHeight();
+    public static final Function<Double, Double> $P = HELPER.toProjection();
+    public static final Function<Double, Double> £P = HELPER.fromProjection();
 
     public static final int N = 6;
 

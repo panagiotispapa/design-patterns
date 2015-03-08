@@ -3,6 +3,7 @@ package com.design.islamic.model.hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.Payloads;
 import com.design.islamic.model.Tile;
+import com.design.islamic.model.tiles.Grid;
 
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -339,8 +340,10 @@ public class Tile22 implements Tile {
 
     @Override
     public Payload getPayload() {
-        return Payloads.newPayloadFromPolygonsAndLines(polygons,
-                lines
+        return Payloads.newPayloadFromPolygonsAndLines(
+                polygons,
+                lines,
+                Grid.Configs.HEX_VER.getConfiguration()
         );
     }
 

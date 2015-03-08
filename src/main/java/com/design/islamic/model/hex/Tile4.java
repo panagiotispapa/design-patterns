@@ -2,25 +2,29 @@ package com.design.islamic.model.hex;
 
 import com.design.common.Polygon;
 import com.design.islamic.model.Hex;
-import com.design.islamic.model.tiles.HexGrid;
+import com.design.islamic.model.tiles.Grid;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.geom.Point2D;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static com.design.common.Polygon.Type.HOR;
+import static com.design.common.Polygon.Type.VER;
+import static com.design.common.RatioHelper.$1;
 import static com.design.common.view.SvgFactory.*;
-import static com.design.islamic.model.Hex.HEIGHT_RATIO;
+import static com.design.islamic.model.Hex.Vertex.*;
+import static com.design.islamic.model.Hex.£H;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 public class Tile4 extends TileBasic {
 
-    public static double RATIO_1 = 0.5 / HEIGHT_RATIO;
-    public static double RATIO_2 = RATIO_1 / HEIGHT_RATIO;
+    private static double RATIO_KA = £H.apply(0.5);
+    private static double RATIO_CD = £H.andThen($1).apply(RATIO_KA);
 
     public Tile4(Pair<Point2D, Double> initialConditions) {
 
@@ -28,19 +32,22 @@ public class Tile4 extends TileBasic {
 
     }
 
-    @Override
-    protected Stream<Pair<Polygon, List<List<Polygon.Vertex>>>> getMainLinesSingle() {
-        Polygon main = Hex.hex(RATIO_2, Polygon.Type.VER);
-        return Stream.of(
-                Pair.of(main, Hex.PERIMETER)
-        );
-    }
 
     @Override
-    protected Stream<Triple<Polygon, Polygon, List<Polygon.Vertex>>> getMainStarsFull() {
-        Polygon inner = Hex.hex(RATIO_2, Polygon.Type.VER);
-        Polygon outer = Hex.hex(1 - RATIO_2, Polygon.Type.VER, centreTransform(1, Polygon.Type.VER));
-        return Stream.of(Triple.of(inner, outer, Arrays.asList((Polygon.Vertex) Hex.Vertex.THREE, Hex.Vertex.FIVE)));
+    protected Stream<List<Pair<Polygon, Polygon.Vertex>>> getMainMixVertexesFull() {
+        Polygon inner = Hex.hex(RATIO_KA, HOR);
+        Polygon outer = Hex.hex(RATIO_CD, VER, centreTransform(1, VER));
+
+        return Stream.of(
+                asList(
+                        Pair.of(outer, FIVE),
+                        Pair.of(inner, TWO)
+                ),
+                asList(
+                        Pair.of(outer, THREE),
+                        Pair.of(inner, ONE)
+                )
+        );
     }
 
     public String design1() {
@@ -50,13 +57,14 @@ public class Tile4 extends TileBasic {
         String green = newStyle("green", 1, 1);
         String red = newStyle("red", 2, 1);
 
-        List<Point2D> hexGrid = HexGrid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4.0, HexGrid.TYPE.VER, 12);
+        List<Point2D> hexGrid = Grid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4.0,
+                Grid.Configs.HEX_VER.getConfiguration(), 12);
 
-        Polygon main = Hex.hex(1, Polygon.Type.VER);
-        Polygon inner2 = Hex.hex(RATIO_1, Polygon.Type.HOR);
+        Polygon main = Hex.hex(1, VER);
+        Polygon inner2 = Hex.hex(RATIO_KA, Polygon.Type.HOR);
         Polygon inner1 = inner2.getFramed();
-        Polygon inner3 = Hex.hex(RATIO_1 * RATIO_1, Polygon.Type.VER);
-        Polygon outer = Hex.hex(inner3.getRatio(), Polygon.Type.VER, centreTransform(1, Polygon.Type.VER));
+        Polygon inner3 = Hex.hex(RATIO_KA * RATIO_KA, VER);
+        Polygon outer = Hex.hex(inner3.getRatio(), VER, centreTransform(1, VER));
 //        Polygon innerReg = inner.getRegistered();
 
 //        Polygon outer = Hex.hex(RATIO_2, Polygon.Type.HOR, centreTransform(RATIO_1, Polygon.Type.VER));
@@ -70,7 +78,7 @@ public class Tile4 extends TileBasic {
         ).map(importantPoint).collect(toList());
 
         importantPoints.add(Pair.of(initialConditions.getLeft(), "K"));
-        List<String> equations = Arrays.asList(
+        List<String> equations = asList(
                 "i=0.5/h",
                 "KA=i",
                 "KB=i*i",
@@ -81,10 +89,6 @@ public class Tile4 extends TileBasic {
 
         IntStream.range(0, equations.size())
                 .forEach(i -> importantPoints.add(Pair.of(new Point2D.Double(1000, (i + 1) * 50), equations.get(i))));
-//        importantPoints.add(Pair.of(new Point2D.Double(1000, 50), "KA=0.5/h"));
-//        importantPoints.add(Pair.of(new Point2D.Double(1000, 50 + 30), "KB=(0.5/h)*(0.5/h)"));
-//        importantPoints.add(Pair.of(new Point2D.Double(1000, 50 + 2 * 30), "KC=KA/h=2*KB=0.5/(h*h)"));
-//        importantPoints.add(Pair.of(new Point2D.Double(1000, 50 + 3 * 30), "DC=DE=KB"));
 
         importantPoints.stream().map(drawText());
         importantPoints.stream().map(Pair::getLeft).map(highlightPoint());

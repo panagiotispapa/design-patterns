@@ -1,8 +1,8 @@
 package com.design.islamic.model.tiles;
 
 import com.design.common.view.SvgFactory;
-import com.design.islamic.model.hex.Tile11;
-import com.design.islamic.model.hex.TileStar;
+import com.design.islamic.HexDesignHelper;
+import com.design.islamic.model.hex.*;
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.commons.lang3.tuple.Pair;
 import org.w3c.dom.Node;
@@ -12,6 +12,10 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 
 import static com.design.common.view.SvgFactory.buildSvg;
 import static com.design.islamic.model.Centre.newCentre;
@@ -41,10 +45,10 @@ public class TestBed4 {
 
 //        String backObj = drawPolygon(cloneAndTranslateScalePoints(centre, r, hexPoints), styleBack);
 
-        String testObject = new TileStar(Pair.of(centre, r), TileStar.RATIO_1).design1();
-//        String testObject = new Tile(Pair.of(centre, r)).design1();
+//        String testObject = new TileStar(Pair.of(centre, r), TileStar.RATIO_1).design3();
+        String testObject = new Tile7New(Pair.of(centre, r)).design1();
 
-//        String testObject = HexDesignHelper.with(Pair.of(centre, r)).newDesign11();
+//        String testObject = HexDesignHelper.with(Pair.of(centre, r)).newDesign12();
 //        String testObject = HexDesignHelper.with(Pair.of(centre, r)).newDesign28();
 //        String testObject = HexDesignHelper.with(Pair.of(centre, r)).newStarDesign3();
 //        String testObject = HexDesignHelper.newDesign8(Pair.of(centre, r));
@@ -57,9 +61,34 @@ public class TestBed4 {
         String mySVG = buildSvg(dim, (testObject)
         );
 
-        jsvgCanvas.setSVGDocument(SvgFactory.fromSvgDoc(mySVG));
+        saveToFile(mySVG);
 
-        System.out.println(jsvgCanvas.getSize());
+//        jsvgCanvas.setSVGDocument(SvgFactory.fromSvgDoc(mySVG));
+//
+//        System.out.println(jsvgCanvas.getSize());
+
+    }
+
+    private void saveToFile(String svg) {
+
+        try {
+            Files.write(Paths.get("C:\\p\\", "out.html"),
+                    Arrays.asList(toHtml(svg))
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static String toHtml(String svg) {
+        return "<html>" +
+                "<header>" +
+                "</header>" +
+                "<body>" +
+                svg +
+                "</body>" +
+                "</html>";
 
     }
 
@@ -87,7 +116,7 @@ public class TestBed4 {
         });
         Container contentPane = frame.getContentPane();
         contentPane.add(new TestBed4(dim, 300).getComponent());
-        frame.setVisible(true);
+//        frame.setVisible(true);
 
         frame.invalidate();
 

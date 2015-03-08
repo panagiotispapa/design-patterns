@@ -2,7 +2,7 @@ package com.design.islamic.model.hex;
 
 import com.design.common.Polygon;
 import com.design.islamic.model.Hex;
-import com.design.islamic.model.tiles.HexGrid;
+import com.design.islamic.model.tiles.Grid;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 
 import static com.design.common.view.SvgFactory.*;
 import static com.design.islamic.model.Hex.HEIGHT_RATIO;
+import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -37,8 +38,8 @@ public class TileStar extends TileBasic {
         return
                 asList(
                         Pair.of(inner, Hex.Vertex.ONE),
-                        Pair.of(main, Hex.Vertex.TWO),
-                        Pair.of(inner, Hex.Vertex.TWO)
+                        Pair.of(main, TWO),
+                        Pair.of(inner, TWO)
                 );
     }
 
@@ -57,7 +58,8 @@ public class TileStar extends TileBasic {
         String green = newStyle("green", 1, 1);
         String red = newStyle("red", 2, 1);
 
-        List<Point2D> hexGrid = HexGrid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4.0, HexGrid.TYPE.VER, 12);
+        List<Point2D> hexGrid = Grid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4.0,
+                Grid.Configs.HEX_VER.getConfiguration(), 12);
 
         Polygon main = Hex.hex(1, Polygon.Type.VER);
         Polygon registered = main.getRegistered();
@@ -94,7 +96,8 @@ public class TileStar extends TileBasic {
         String green = newStyle("green", 1, 1);
         String red = newStyle("red", 2, 1);
 
-        List<Point2D> hexGrid = HexGrid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4.0, HexGrid.TYPE.VER, 12);
+        List<Point2D> hexGrid = Grid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4.0,
+                Grid.Configs.HEX_VER.getConfiguration(), 12);
 
         Polygon main = Hex.hex(1, Polygon.Type.VER);
         Polygon registered = main.getRegistered();
@@ -150,7 +153,8 @@ public class TileStar extends TileBasic {
         String green = newStyle("green", 1, 1);
         String red = newStyle("red", 2, 1);
 
-        List<Point2D> hexGrid = HexGrid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4.0, HexGrid.TYPE.VER, 12);
+        List<Point2D> hexGrid = Grid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4.0,
+                Grid.Configs.HEX_VER.getConfiguration(), 12);
 
         Polygon main = Hex.hex(1, Polygon.Type.VER);
         Polygon registered = main.getRegistered();
@@ -164,7 +168,7 @@ public class TileStar extends TileBasic {
                 Triple.of(outerSmall, Hex.Vertex.THREE, "B"),
                 Triple.of(outerSmall, Hex.Vertex.FOUR, "C"),
                 Triple.of(registered, Hex.Vertex.ONE, "D"),
-                Triple.of(registered, Hex.Vertex.TWO, "E")
+                Triple.of(registered, TWO, "E")
         ).map(importantPoint).collect(toList());
 
         importantPoints.add(Pair.of(initialConditions.getLeft(), "K"));
@@ -190,8 +194,16 @@ public class TileStar extends TileBasic {
                                 Pair.of(registered, Hex.PERIMETER)
                         ).map(toLines.andThen(toPolylines(green))),
                         Stream.of(
-                                Triple.of(registered, outerSmall, asList((Polygon.Vertex) Hex.Vertex.THREE, Hex.Vertex.FOUR))
-                        ).map(toStarFull.andThen(toPolylines(green))),
+                                toPolylines(green).apply(
+                                        toMixVertexesFull.apply(
+                                                asList(
+                                                        Pair.of(outerSmall, THREE),
+                                                        Pair.of(registered, ONE),
+                                                        Pair.of(outerSmall, FOUR)
+                                                )
+                                        )
+                                )
+                        ),
                         Stream.of(
                                 Pair.of(inner, asList(Hex.Diag.THREE.getVertexes()))
 //                                Pair.of(outerBig, asList(asList((Polygon.Vertex) Hex.Vertex.TWO, Hex.Vertex.FIVE)))

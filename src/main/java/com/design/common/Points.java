@@ -1,7 +1,12 @@
 package com.design.common;
 
 import java.awt.geom.Point2D;
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static com.design.common.Mappings.fromListOfLists;
 
 public class Points {
 
@@ -17,4 +22,8 @@ public class Points {
         return p -> new Point2D.Double(p.getX() * scaleTo, p.getY() * scaleTo);
     }
 
+    public static Function<List<List<Point2D>>, List<List<Point2D>>> applyGrid(List<Point2D> grid) {
+        return p -> grid.stream().map(g -> fromListOfLists(translate(g)).apply(p))
+                .map(Collection::stream).flatMap(s -> s).collect(Collectors.toList());
+    }
 }

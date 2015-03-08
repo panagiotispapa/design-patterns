@@ -6,7 +6,7 @@ import com.design.islamic.model.DrawSegmentsInstructions;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Tile;
 import com.design.islamic.model.hex.*;
-import com.design.islamic.model.tiles.HexGrid;
+import com.design.islamic.model.tiles.Grid;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -194,7 +194,9 @@ public class HexDesignHelper {
         Polygon layer2 = Hex.hex(0.5, Polygon.Type.VER, Polygon.centreTransform(1, Hex.Vertex.ONE, Polygon.Type.VER));
 
 //        Function<Pair<Hex, List<List<Vertex>>>, String> grayLines = Vertex.vertexesToPointsSingle(ic).andThen(toPolylines(gray));
-        List<Point2D> grid = HexGrid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4, HexGrid.TYPE.HOR, 16);
+        List<Point2D> grid = Grid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4,
+                Grid.Configs.HEX_HOR.getConfiguration(), 16);
+
         return builder
 
                 .append(grid.stream().map(p -> drawPolygon(newHexagon(p, initialConditions.getRight() / 4), grayLight)).collect(joining()))

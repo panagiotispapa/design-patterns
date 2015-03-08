@@ -2,18 +2,21 @@ package com.design.islamic.model.hex;
 
 import com.design.common.Polygon;
 import com.design.islamic.model.Hex;
-import com.design.islamic.model.tiles.HexGrid;
+import com.design.islamic.model.tiles.Grid;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.geom.Point2D;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static com.design.common.Polygon.Type.HOR;
+import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.*;
+import static com.design.islamic.model.Hex.$H;
 import static com.design.islamic.model.Hex.HEIGHT_RATIO;
+import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -29,22 +32,22 @@ public class Tile6 extends TileBasic {
     }
 
     @Override
-    protected Stream<Pair<Polygon, List<List<Polygon.Vertex>>>> getMainLinesSingle() {
-        Polygon main = Hex.hex(0.5, Polygon.Type.VER);
-        return Stream.of(
-                Pair.of(main, Hex.PERIMETER)
-        );
-    }
-
-    @Override
-    protected Stream<Triple<Polygon, Polygon, List<Polygon.Vertex>>> getMainStarsFull() {
-        Polygon main = Hex.hex(1, Polygon.Type.VER);
-        Polygon inner = Hex.hex(0.5, Polygon.Type.VER);
-        Polygon outer = Hex.hex(0.5 * HEIGHT_RATIO, Polygon.Type.HOR, centreTransform(1, Polygon.Type.VER));
+    protected Stream<List<Pair<Polygon, Polygon.Vertex>>> getMainMixVertexesFull() {
+        Polygon main = Hex.hex(1, VER);
+        Polygon inner = Hex.hex(0.5, VER);
+        Polygon outer = Hex.hex($H.apply(0.5), HOR, centreTransform(1, VER));
 
         return Stream.of(
-                Triple.of(inner, outer, asList((Polygon.Vertex) Hex.Vertex.FOUR, Hex.Vertex.FIVE)),
-                Triple.of(main, outer, asList((Polygon.Vertex) Hex.Vertex.FOUR, Hex.Vertex.FIVE))
+                asList(
+                        Pair.of(main, ONE),
+                        Pair.of(outer, FIVE),
+                        Pair.of(inner, TWO)
+                ),
+                asList(
+                        Pair.of(main, ONE),
+                        Pair.of(outer, FOUR),
+                        Pair.of(inner, SIX)
+                )
         );
     }
 
@@ -55,12 +58,13 @@ public class Tile6 extends TileBasic {
         String green = newStyle("green", 1, 1);
         String red = newStyle("red", 2, 1);
 
-        List<Point2D> hexGrid = HexGrid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4.0, HexGrid.TYPE.VER, 12);
+        List<Point2D> hexGrid = Grid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4.0,
+                Grid.Configs.HEX_VER.getConfiguration(), 12);
 
-        Polygon main = Hex.hex(1, Polygon.Type.VER);
-        Polygon inner1 = Hex.hex(RATIO_1, Polygon.Type.HOR);
-        Polygon inner2 = Hex.hex(0.5, Polygon.Type.VER);
-        Polygon outer = Hex.hex(0.5, Polygon.Type.VER, centreTransform(1, Polygon.Type.VER));
+        Polygon main = Hex.hex(1, VER);
+        Polygon inner1 = Hex.hex(RATIO_1, HOR);
+        Polygon inner2 = Hex.hex(0.5, VER);
+        Polygon outer = Hex.hex(0.5, VER, centreTransform(1, VER));
         Polygon outerReg = outer.getRegistered();
 
         List<Pair<Point2D, String>> importantPoints = Stream.of(

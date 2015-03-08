@@ -1,5 +1,6 @@
 package com.design.common.view;
 
+import com.design.common.Points;
 import com.design.common.model.Arc;
 import com.design.common.model.Circle;
 import com.design.islamic.model.Payload;
@@ -117,6 +118,12 @@ public class SvgFactory {
 //
 //    }
 
+    public static String drawOnGrid(List<List<Point2D>> lines, List<Point2D> gridPoints, String style) {
+        List<List<Point2D>> allLines = Points.applyGrid(gridPoints).apply(lines);
+        return drawPolylines(allLines, style);
+
+    }
+
     public static String drawPayload(Payload payload) {
 
         StringBuilder builder = new StringBuilder();
@@ -130,13 +137,14 @@ public class SvgFactory {
         return builder.toString();
     }
 
-    public static Function<List<Point2D>, String> highlightPoints() {
+    public static Function<Collection<Point2D>, String> highlightPoints() {
         return highlightPoints("red", 3);
     }
 
-    public static Function<List<Point2D>, String> highlightPoints(String fill, int radius) {
+    public static Function<Collection<Point2D>, String> highlightPoints(String fill, int radius) {
         return points -> points.stream().map(highlightPoint(fill, radius)).collect(joining());
     }
+
     public static Function<Point2D, String> highlightPoint() {
         return highlightPoint("red", 3);
     }

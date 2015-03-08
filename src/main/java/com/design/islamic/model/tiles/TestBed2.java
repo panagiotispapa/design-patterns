@@ -1,27 +1,30 @@
 package com.design.islamic.model.tiles;
 
-import com.design.common.PolygonTools;
+import com.design.common.view.SvgFactory;
 import com.design.islamic.CentreConfiguration;
 import com.design.islamic.Patterns;
-import com.design.common.view.SvgFactory;
-import com.design.islamic.model.hex.*;
-import com.design.islamic.model.rect.*;
+import com.design.islamic.model.Payload;
+import com.design.islamic.model.hex.Tile3;
 import org.apache.batik.swing.JSVGCanvas;
-import org.w3c.dom.Node;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
-import java.util.Set;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.List;
 
-import static com.design.common.PolygonTools.HEX_DIST_HEIGHT;
-import static com.design.common.PolygonTools.HEX_PHI;
-import static com.design.islamic.CentreConfiguration.Conf.*;
-import static com.design.islamic.Patterns.*;
+import static com.design.common.view.SvgFactory.*;
+import static com.design.islamic.CentreConfiguration.Conf.HEX_SECOND;
+import static com.design.islamic.Patterns.buildHexPatterns;
 import static com.design.islamic.model.Centre.newCentre;
 import static java.lang.System.currentTimeMillis;
+import static java.util.Arrays.asList;
 
 public class TestBed2 {
 
@@ -39,20 +42,26 @@ public class TestBed2 {
         jsvgCanvas.setSize(dim);
         jPanel.setSize(dim);
 
-        CentreConfiguration centreConfiguration = new CentreConfiguration(r,17);
+        CentreConfiguration centreConfiguration = new CentreConfiguration(r, 17);
 
-
-
+        Pair<Point2D, Double> ic = Pair.of(new Point2D.Double(0, 0), r);
 
         long now = currentTimeMillis();
 
-        String mySVG = Patterns.buildHexPatternBlackAndWhite(
-                buildHexPatterns(
-                        centreConfiguration.getCentresConfig(HEX_SECOND, 1.0),
-                        new Tile30(newCentre(0,0),r).getPayload())
-                , dim
+//        String mySVG = Patterns.buildHexPatternBlackAndWhite(
+//                buildHexPatterns(
+//                        centreConfiguration.getCentresConfig(HEX_SECOND, 1.0),
+//                        new Tile3(ic).getPayload())
+//                , dim
+//
+//        );
 
-        );
+        Payload payload = new Tile3(ic).getPayload();
+        List<Point2D> gridPoints = Grid.gridFromStart(ic.getLeft(), ic.getRight(), payload.getGridConfiguration(), 17);
+        String svg = SvgFactory.drawOnGrid(payload.getPolylines(), gridPoints, newStyle(BLACK, 2, 1));
+
+        String mySVG = buildSvg(dim,
+                svg);
 
 
 //        String mySVG = Patterns.buildHexPatternBlackAndWhite(
@@ -62,21 +71,35 @@ public class TestBed2 {
 //
 //        );
 
+        saveToFile(mySVG);
 
+        System.out.println("Finished in " + (currentTimeMillis() - now) / 1000.0);
 
-
-        System.out.println("Finished in " + (currentTimeMillis()-now)/1000.0);
-
-
-        jsvgCanvas.setSVGDocument(SvgFactory.fromSvgDoc(mySVG));
-
-        System.out.println(jsvgCanvas.getSize());
+//        jsvgCanvas.setSVGDocument(SvgFactory.fromSvgDoc(mySVG));
+//
+//        System.out.println(jsvgCanvas.getSize());
 
     }
 
-    public static void removeChildren(Node node) {
-        while (node.hasChildNodes()) {
-            node.removeChild(node.getFirstChild());
+    public static String toHtml(String svg) {
+        return "<html>" +
+                "<header>" +
+                "</header>" +
+                "<body>" +
+                svg +
+                "</body>" +
+                "</html>";
+
+    }
+
+    private void saveToFile(String svg) {
+
+        try {
+            Files.write(Paths.get("C:\\p\\", "out.html"),
+                    Arrays.asList(toHtml(svg))
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
@@ -87,7 +110,7 @@ public class TestBed2 {
 
     public static void main(String[] args) {
 
-        Dimension dim = new Dimension(1024+2*128 + 32, 768);
+        Dimension dim = new Dimension(1024 + 2 * 128 + 32, 768);
 
         JFrame frame = new JFrame();
         frame.setTitle("Polygon");
@@ -100,7 +123,7 @@ public class TestBed2 {
         Container contentPane = frame.getContentPane();
 
         contentPane.add(new TestBed2(dim, 100).getComponent());
-        frame.setVisible(true);
+//        frame.setVisible(true);
 
         frame.invalidate();
 

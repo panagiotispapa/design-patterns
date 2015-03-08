@@ -3,6 +3,7 @@ package com.design.islamic.model.rect;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.Payloads;
 import com.design.islamic.model.Tile;
+import com.design.islamic.model.tiles.Grid;
 
 import java.awt.geom.Point2D;
 import java.util.Arrays;
@@ -75,7 +76,7 @@ public class Tile2 implements Tile {
 
     @Override
     public Payload getPayload() {
-        return Payloads.newPayloadFromPolygonsAndLines(asList(central), lines);
+        return Payloads.newPayloadFromPolygonsAndLines(asList(central), lines, Grid.Configs.HEX_VER.getConfiguration());
     }
 
     public List<List<Point2D>> getLines() {

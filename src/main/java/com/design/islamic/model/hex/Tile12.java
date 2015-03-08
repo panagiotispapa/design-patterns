@@ -2,6 +2,7 @@ package com.design.islamic.model.hex;
 
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.Tile;
+import com.design.islamic.model.tiles.Grid;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
@@ -184,7 +185,7 @@ public class Tile12 implements Tile {
     @Override
     public Payload getPayload() {
         return newPayloadFromPolygonsAndLines(
-                polygons, lines
+                polygons, lines, Grid.Configs.HEX_VER.getConfiguration()
         );
     }
 }

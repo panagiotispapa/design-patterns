@@ -3,6 +3,7 @@ package com.design.islamic.model.hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.Payloads;
 import com.design.islamic.model.Tile;
+import com.design.islamic.model.tiles.Grid;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -50,7 +51,6 @@ public class Tile13 implements Tile {
 
     private void buildPoints(final Point2D centre, final double r) {
 
-
         List<Point2D> layer2 = newHexagon(centre, 2.0 * newR);
 
         pointsA = new Point2D[HEX_N];
@@ -62,12 +62,12 @@ public class Tile13 implements Tile {
 
         for (int i = 0; i < HEX_N; i++) {
 
-            pointsA[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS[toHexIndex(i+3)]);
-            pointsB[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS[toHexIndex(i+2)]);
-            pointsC[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS[toHexIndex(i+1)]);
-            pointsD[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS[toHexIndex(i+5)]);
-            pointsE[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS[toHexIndex(i+4)]);
-            pointsF[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS[toHexIndex(i+3)]);
+            pointsA[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS[toHexIndex(i + 3)]);
+            pointsB[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS[toHexIndex(i + 2)]);
+            pointsC[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS[toHexIndex(i + 1)]);
+            pointsD[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS[toHexIndex(i + 5)]);
+            pointsE[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS[toHexIndex(i + 4)]);
+            pointsF[i] = newEdgeAt(layer2.get(i), newR, HEX_RADIANS[toHexIndex(i + 3)]);
 
         }
 
@@ -75,6 +75,6 @@ public class Tile13 implements Tile {
 
     @Override
     public Payload getPayload() {
-        return Payloads.newPayloadFromLines(lines);
+        return Payloads.newPayloadFromLines(lines, Grid.Configs.HEX_VER.getConfiguration());
     }
 }

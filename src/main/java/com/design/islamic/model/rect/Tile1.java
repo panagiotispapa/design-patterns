@@ -2,6 +2,7 @@ package com.design.islamic.model.rect;
 
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.Tile;
+import com.design.islamic.model.tiles.Grid;
 
 import java.awt.geom.Point2D;
 
@@ -22,6 +23,6 @@ public class Tile1 implements Tile {
 
     @Override
     public Payload getPayload() {
-        return newPayloadFromPolygons(asList(newRectRot(centre, r)));
+        return newPayloadFromPolygons(asList(newRectRot(centre, r)), Grid.Configs.HEX_VER.getConfiguration());
     }
 }

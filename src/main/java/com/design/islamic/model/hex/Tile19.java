@@ -3,6 +3,7 @@ package com.design.islamic.model.hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.Payloads;
 import com.design.islamic.model.Tile;
+import com.design.islamic.model.tiles.Grid;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -82,8 +83,8 @@ public class Tile19 implements Tile {
     @Override
     public Payload getPayload() {
         return Payloads.newPayloadFromLines(
-                lines
-        );
+                lines,
+                Grid.Configs.HEX_VER.getConfiguration());
     }
 
 }

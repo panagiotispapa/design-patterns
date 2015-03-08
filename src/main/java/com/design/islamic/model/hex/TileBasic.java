@@ -1,7 +1,11 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.Polygon;
-import com.design.islamic.model.*;
+import com.design.islamic.model.Hex;
+import com.design.islamic.model.Payload;
+import com.design.islamic.model.Payloads;
+import com.design.islamic.model.Tile;
+import com.design.islamic.model.tiles.Grid;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -21,8 +25,6 @@ public abstract class TileBasic implements Tile {
     protected Function<List<Pair<Polygon, Polygon.Vertex>>, List<List<Point2D>>> toMixVertexesFull;
     protected Function<Pair<Polygon, List<List<Polygon.Vertex>>>, List<List<Point2D>>> toLines;
     protected Function<Pair<Polygon, List<List<Polygon.Vertex>>>, List<List<Point2D>>> toLinesFull;
-    protected Function<Triple<Polygon, Polygon, DrawSegmentsInstructions.CombinedVertexes>, List<List<Point2D>>> toStar;
-    protected Function<Triple<Polygon, Polygon, List<Polygon.Vertex>>, List<List<Point2D>>> toStarFull;
     protected Function<Polygon, List<Point2D>> toVertexes;
     protected Function<Pair<Polygon, Polygon.Vertex>, List<Point2D>> toVertexesFull;
     protected Function<Pair<Polygon, Polygon.Vertex>, Point2D> toVertex;
@@ -35,8 +37,6 @@ public abstract class TileBasic implements Tile {
         List<Integer> allVertexIndexes = IntStream.range(0, 6).boxed().collect(toList());
         toLines = Polygon.toLines(0, initialConditions);
         toLinesFull = Polygon.toLines(allVertexIndexes, initialConditions);
-        toStar = DrawSegmentsInstructions.combVertexes(initialConditions);
-        toStarFull = DrawSegmentsInstructions.combVertexesFull(initialConditions);
         toVertexes = Polygon.vertexes(initialConditions);
         toVertexesFull = Polygon.vertexesFull(allVertexIndexes, initialConditions);
         toMixVertexesFull = Polygon.mixVertexesFull(allVertexIndexes, initialConditions);
@@ -49,27 +49,11 @@ public abstract class TileBasic implements Tile {
         return Stream.empty();
     }
 
-    protected Stream<Pair<Polygon, List<List<Polygon.Vertex>>>> getSecondaryLinesFull() {
-        return Stream.empty();
-    }
-
     protected Stream<Pair<Polygon, List<List<Polygon.Vertex>>>> getMainLinesSingle() {
         return Stream.empty();
     }
 
     protected Stream<Pair<Polygon, List<List<Polygon.Vertex>>>> getSecondaryLinesSingle() {
-        return Stream.empty();
-    }
-
-    protected Stream<Triple<Polygon, Polygon, DrawSegmentsInstructions.CombinedVertexes>> getMainStars() {
-        return Stream.empty();
-    }
-
-    protected Stream<Triple<Polygon, Polygon, List<Polygon.Vertex>>> getMainStarsFull() {
-        return Stream.empty();
-    }
-
-    protected Stream<Triple<Polygon, Polygon, DrawSegmentsInstructions.CombinedVertexes>> getSecondaryStars() {
         return Stream.empty();
     }
 
@@ -81,6 +65,10 @@ public abstract class TileBasic implements Tile {
         return Polygon.centreTransform(ratio, Hex.Vertex.ONE, type);
     }
 
+    protected Grid.Configuration getGridConfiguration() {
+        return Grid.Configs.HEX_VER.getConfiguration();
+    }
+
     @Override
     public Payload getPayload() {
 
@@ -89,18 +77,14 @@ public abstract class TileBasic implements Tile {
                         Stream.of(
                                 getMainLinesFull().map(toLinesFull),
                                 getMainLinesSingle().map(toLines),
-                                getMainStars().map(toStar),
-                                getMainStarsFull().map(toStarFull),
                                 getMainMixVertexesFull().map(toMixVertexesFull)
                         ).flatMap(s -> s).map(Collection::stream).flatMap(s -> s).collect(toList())
 
                 ).secondaryLines(
                         Stream.of(
-                                getSecondaryLinesFull().map(toLinesFull),
-                                getSecondaryLinesSingle().map(toLines),
-                                getSecondaryStars().map(toStar)
+                                getSecondaryLinesSingle().map(toLines)
                         ).flatMap(s -> s).map(Collection::stream).flatMap(s -> s).collect(Collectors.toList())
 
-                );
+                ).gridConfiguration(getGridConfiguration());
     }
 }
