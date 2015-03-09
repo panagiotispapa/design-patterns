@@ -66,7 +66,7 @@ public abstract class TileBasic implements Tile {
     }
 
     protected Grid.Configuration getGridConfiguration() {
-        return Grid.Configs.HEX_VER.getConfiguration();
+        return Grid.Configs.HEX_HOR2.getConfiguration();
     }
 
     @Override

@@ -226,46 +226,7 @@ public class HexDesignHelper {
     }
 
 
-    public String newDesign7() {
-        Double r = initialConditions.getRight();
-        Point2D centre = initialConditions.getLeft();
-        Tile7 tile7 = new Tile7(centre, r);
 
-        Polygon outer = Hex.hex(1, Polygon.Type.HOR);
-        Polygon outerHeights = outer.getRegistered();
-        Polygon inner = Hex.hex(HEX_DIST_DIAGONAL_ROTATED, Polygon.Type.HOR);
-        Polygon inner2 = Hex.hex(HEX_DIST_DIAGONAL_ROTATED * HEX_DIST_DIAGONAL_ROTATED, Polygon.Type.HOR);
-        Polygon outerSmall = Hex.hex(1 - HEX_DIST_HEIGHT, Polygon.Type.VER, Polygon.centreTransform(outerHeights.getRatio(), Hex.Vertex.ONE, outerHeights.getType()));
-
-        return
-                Stream.of(
-                        Stream.of(
-                                Pair.of(outer, Hex.PERIMETER),
-                                Pair.of(outer.getMirror(), Hex.PERIMETER),
-                                Pair.of(outerHeights, Hex.DIAGONALS),
-                                Pair.of(outerHeights.getMirror(), Hex.DIAGONALS),
-                                Pair.of(inner.getRegistered(), Hex.INNER_TRIANGLES),
-                                Pair.of(inner.getRegistered().getMirror(), Hex.INNER_TRIANGLES)
-                        ).map(toLines.andThen(toPolylines(gray))),
-                        Stream.of(
-                                Pair.of(inner, Hex.PERIMETER),
-                                Pair.of(inner.getMirror(), Hex.PERIMETER),
-                                Pair.of(inner2, Hex.PERIMETER),
-                                Pair.of(inner2.getMirror(), Hex.PERIMETER),
-                                Pair.of(outerSmall, Hex.PERIMETER)
-                        ).map(toLines.andThen(toPolylines(blue))),
-                        Stream.of(
-                                Pair.of(outerSmall.getRegistered(), Hex.DIAGONALS)
-                        ).map(toLines.andThen(toPolylines(green))),
-                        Stream.of(
-                                tile7.getLines()
-                        ).map(toPolylines(red)),
-                        Stream.of(
-                                outerHeights
-                        ).map(toVertexes.andThen(highlightPoints()))
-                ).flatMap(s -> s).collect(joining());
-
-    }
 
     public String newDesign8() {
         Tile8 tile8 = new Tile8(initialConditions.getLeft(), initialConditions.getRight());

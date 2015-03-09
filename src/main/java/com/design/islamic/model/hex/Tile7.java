@@ -1,91 +1,144 @@
 package com.design.islamic.model.hex;
 
-import com.design.islamic.model.Payload;
-import com.design.islamic.model.Payloads;
-import com.design.islamic.model.Tile;
+import com.design.common.Polygon;
+import com.design.islamic.model.Hex;
 import com.design.islamic.model.tiles.Grid;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.geom.Point2D;
 import java.util.List;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
-import static com.design.common.PolygonTools.*;
-import static com.design.common.view.SvgFactory.WHITE;
-import static com.design.common.view.SvgFactory.newStyle;
-import static com.google.common.collect.Lists.newArrayList;
+import static com.design.common.Polygon.Type.HOR;
+import static com.design.common.Polygon.Type.VER;
+import static com.design.common.RatioHelper.£2;
+import static com.design.common.view.SvgFactory.*;
+import static com.design.islamic.model.Hex.*;
+import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
-public class Tile7 implements Tile {
-    private final List<Point2D> mainHex;
-    private List<List<Point2D>> lines;
+public class Tile7 extends TileBasic {
 
-    private final String styleWhiteBold = newStyle(WHITE, 2, 1);
-    private final String styleWhite = newStyle(WHITE, 1, 1);
+    public static double RATIO_AB = 1.0 - HEIGHT_RATIO;
+    public static double RATIO_BE = $P.apply(RATIO_AB);
+    public static double RATIO_KD = $H.andThen(£2.andThen(£H)).apply(1.0);
 
-    private List<Point2D> outerLayerRot;
-    private List<Point2D> outerLayer;
+    public Tile7(Pair<Point2D, Double> initialConditions) {
 
-    private final Point2D centre;
-    private final double r;
-
-    public Tile7(Point2D centre, double r) {
-
-        this.centre = centre;
-        this.r = r;
-
-        mainHex = newHexagonRot(centre, r);
-
-        buildPoints();
-
-        buildLines();
+        super(initialConditions);
 
     }
-
-    private void buildPoints() {
-        outerLayerRot = newHexagonRot(centre, r * HEX_DIST_HEIGHT);
-        outerLayer = newHexagon(centre, r * HEX_DIST_HEIGHT);
-
-    }
-
-    private void buildLines() {
-        lines = newArrayList();
-
-        final double rSmall = r * (1 - HEX_DIST_HEIGHT);
-        final double distH = rSmall * HEX_DIST_HEIGHT;
-        double newR = r * HEX_DIST_DIAGONAL_ROTATED;
-
-        for (int i = 0; i < HEX_N; i++) {
-            Point2D edgeRot = outerLayerRot.get(i);
-            lines.add(asList(
-                    newEdgeAt(edgeRot, distH, HEX_RADIANS[i]),
-                    edgeRot,
-                    newEdgeAt(edgeRot, distH, HEX_RADIANS[toHexIndex(i + 1)])
-
-            ));
-
-            lines.add(asList(
-                    newEdgeAt(edgeRot, newR, HEX_RADIANS[toHexIndex(i + 4)]),
-                    edgeRot,
-                    newEdgeAt(edgeRot, newR, HEX_RADIANS[toHexIndex(i + 3)])
-            ));
-
-            Point2D edge = outerLayer.get(i);
-            lines.add(asList(
-                    newEdgeAt(edge, newR, HEX_RADIANS_ROT[toHexIndex(i + 3)]),
-                    edge,
-                    newEdgeAt(edge, newR, HEX_RADIANS_ROT[toHexIndex(i + 2)])
-            ));
-
-        }
-
-    }
-
-    public List<List<Point2D>> getLines() {
-        return lines;
-    }
-
 
     @Override
-    public Payload getPayload() {
-        return Payloads.newPayloadFromLines(lines, Grid.Configs.HEX_VER.getConfiguration());
+    protected Stream<List<Pair<Polygon, Polygon.Vertex>>> getMainMixVertexesFull() {
+        Polygon inner = Hex.hex(RATIO_KD, HOR);
+        Polygon outer = Hex.hex(RATIO_BE, VER, centreTransform(1, VER));
+        Polygon outerBig = Hex.hex(0.5, VER, centreTransform(1, VER));
+
+        return Stream.of(
+                asList(
+                        Pair.of(outer, FIVE),
+                        Pair.of(inner, TWO)
+                ),
+                asList(
+                        Pair.of(outer, THREE),
+                        Pair.of(inner, ONE)
+                ),
+                asList(
+                        Pair.of(outerBig, FIVE),
+                        Pair.of(outerBig, FOUR),
+                        Pair.of(outerBig, THREE)
+                )
+        );
     }
+
+    public String design1() {
+        String black = newStyle("black", 1, 1);
+        String blue = newStyle("blue", 1, 1);
+        String gray = newStyle("gray", 1, 1);
+        String green = newStyle("green", 1, 1);
+        String red = newStyle("red", 2, 1);
+
+        List<Point2D> hexGrid = Grid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4.0, Grid.Configs.HEX_VER.getConfiguration(), 12);
+//        List<Point2D> hexGrid = Grid.gridFromStart(new Point2D.Double(0, 0), initialConditions.getRight() / 4.0,
+//                Grid.Configuration.customRect(RECT_DIST_HEIGHT * 2 * 1.2, RECT_DIST_HEIGHT * 2), 24);
+//                Grid.Configs.HEX_VER2.getConfiguration(), 24);
+
+//        CentreConfiguration centreConfiguration = new CentreConfiguration(initialConditions.getRight() / 4.0, 8);
+//        Set<Point2D> centresConfig = centreConfiguration.getCentresConfig(CentreConfiguration.Conf.HEX_THIRD, 1.0);
+
+        Polygon main = Hex.hex(1, VER);
+        Polygon mainReg = main.getRegistered();
+        Polygon mainHor = main.getMirror();
+        Polygon mainHorReg = mainHor.getRegistered();
+        Polygon inner = Hex.hex(0.5, VER);
+        Polygon innerReg = inner.getRegistered();
+        Polygon innerHor = inner.getMirror();
+        Polygon innerHorReg = innerHor.getRegistered();
+
+        Polygon outerSmall = Hex.hex(RATIO_BE, VER, centreTransform(1, VER));
+//        Polygon inner1 = Hex.hex(RATIO_1, HOR);
+//        Polygon inner2 = Hex.hex(0.5, VER);
+//        Polygon outer = Hex.hex(0.5, VER, centreTransform(1, VER));
+//        Polygon outerReg = outer.getRegistered();
+
+//        List<Pair<Point2D, String>> importantPoints = new ArrayList<>();
+        List<Pair<Point2D, String>> importantPoints = Stream.of(
+                Triple.of(main, ONE, "B"),
+                Triple.of(mainHorReg, ONE, "A"),
+                Triple.of(innerHorReg, ONE, "C"),
+                Triple.of(inner, ONE, "D"),
+                Triple.of(outerSmall, FIVE, "E")
+        ).map(importantPoint).collect(toList());
+
+        importantPoints.add(Pair.of(initialConditions.getLeft(), "K"));
+        List<String> equations = asList(
+                "AB=1-h",
+                "KC=0.5*h",
+                "KD=KC/h",
+                "BE=0.5*AB"
+        );
+
+        IntStream.range(0, equations.size())
+                .forEach(i -> importantPoints.add(Pair.of(new Point2D.Double(1000, (i + 1) * 50), equations.get(i))));
+
+        importantPoints.stream().map(drawText());
+        importantPoints.stream().map(Pair::getLeft).map(highlightPoint());
+
+        return
+                Stream.of(
+                        Stream.of(
+                                highlightPoints("black", 2).apply(hexGrid)
+                        ),
+                        Stream.of(
+                                Pair.of(main, Hex.PERIMETER),
+                                Pair.of(mainHor, Hex.PERIMETER),
+                                Pair.of(main, Hex.DIAGONALS),
+                                Pair.of(mainHor, Hex.DIAGONALS),
+                                Pair.of(mainHorReg, Hex.INNER_TRIANGLES)
+//                                Pair.of(main.getRegistered(), Hex.INNER_TRIANGLES),
+//                                Pair.of(outer, Hex.PERIMETER),
+//                                Pair.of(outerReg, Hex.PERIMETER)
+                        ).map(toLines.andThen(toPolylines(gray))),
+                        Stream.of(
+                                Pair.of(inner, Hex.PERIMETER)
+                        ).map(toLines.andThen(toPolylines(green))),
+                        Stream.of(
+                                Pair.of(innerHor, Hex.PERIMETER),
+                                Pair.of(outerSmall, Hex.PERIMETER)
+                        ).map(toLines.andThen(toPolylines(blue))),
+                        importantPoints.stream().map(drawText()),
+                        importantPoints.stream().map(Pair::getLeft).map(highlightPoint()),
+//                        Stream.of(centresConfig).map(highlightPoints()),
+                        Stream.of(
+                                getPayload().getPolylines()
+                        ).map(toPolylines(red))
+
+                ).flatMap(s -> s).collect(joining());
+    }
+
 }

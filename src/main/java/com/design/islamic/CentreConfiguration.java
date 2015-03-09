@@ -12,9 +12,9 @@ import static com.design.islamic.model.Centre.newCentre;
 public class CentreConfiguration {
 
     public static enum Conf {
-        HEX_FIRST,
-        HEX_SECOND,
-        HEX_THIRD,
+        HEX_FIRST,//HEX_HOR3
+        HEX_SECOND,//HEX_HOR2
+        HEX_THIRD,//HEX_VER2
         RECT
     }
 

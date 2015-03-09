@@ -48,11 +48,6 @@ public class Tile3 extends TileBasic {
         );
     }
 
-    @Override
-    protected Grid.Configuration getGridConfiguration() {
-        return Grid.Configs.HEX_HOR.getConfiguration();
-    }
-
     public String design1() {
         String black = newStyle("black", 1, 1);
         String blue = newStyle("blue", 1, 1);

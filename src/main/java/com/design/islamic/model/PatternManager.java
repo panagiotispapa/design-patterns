@@ -53,7 +53,7 @@ public class PatternManager {
         hexProviderMap.put(HexPattern.FOUR, new Tile4(ic).getPayload());
         hexProviderMap.put(HexPattern.FIVE, new Tile5(ic).getPayload());
         hexProviderMap.put(HexPattern.SIX, new Tile6(ic).getPayload());
-        hexProviderMap.put(HexPattern.SEVEN, new Tile7(newCentre(0, 0), r).getPayload());
+        hexProviderMap.put(HexPattern.SEVEN, new Tile7(ic).getPayload());
         hexProviderMap.put(HexPattern.EIGHT, new Tile8(newCentre(0, 0), r).getPayload());
         hexProviderMap.put(HexPattern.NINE, new Tile9(newCentre(0, 0), r).getPayload());
         hexProviderMap.put(HexPattern.ELEVEN, new Tile11(ic).getPayload());

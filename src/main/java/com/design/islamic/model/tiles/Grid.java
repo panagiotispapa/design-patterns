@@ -7,7 +7,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static com.design.common.PolygonTools.RECT_DIST_HEIGHT;
 import static com.design.islamic.model.Hex.HEIGHT_RATIO;
 
 //import static com.design.islamic.model.tiles.Hex.HEIGHT_RATIO;
@@ -106,7 +105,10 @@ public class Grid {
     public static enum Configs {
 
         HEX_HOR(1, HEIGHT_RATIO, 0.5, 0),
+        HEX_HOR2(2.0 * HEIGHT_RATIO, 1.5, HEIGHT_RATIO, 0),
+        HEX_HOR3(2.0, 2.0 * HEIGHT_RATIO, 1.0, 0),
         HEX_VER(HEIGHT_RATIO, 1, 0, 0.5),
+        HEX_VER2(1.5, 2.0 * HEIGHT_RATIO, 0, HEIGHT_RATIO),
         RECT(1, 1, 0, 0);
 
         private final Configuration configuration;
