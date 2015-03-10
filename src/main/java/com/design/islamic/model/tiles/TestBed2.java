@@ -3,6 +3,7 @@ package com.design.islamic.model.tiles;
 import com.design.common.view.SvgFactory;
 import com.design.islamic.CentreConfiguration;
 import com.design.islamic.model.Payload;
+import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.hex.*;
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.commons.lang3.tuple.Pair;
@@ -56,21 +57,24 @@ public class TestBed2 {
 
         String background = buildBackground(dim);
 
-        List<Pair<String, Supplier<Payload>>> patterns = Arrays.asList(
-//                Pair.of("Tile_Star_1", () -> new TileStar(ic, TileStar.RATIO_1).getPayload()),
-//                Pair.of("Tile_Star_2", () -> new TileStar(ic, TileStar.RATIO_2).getPayload()),
-//                Pair.of("Tile_Star_3", () -> new TileStar(ic, TileStar.RATIO_3).getPayload()),
-//                Pair.of("Tile_02", () -> new Tile2(ic).getPayload()),
-//                Pair.of("Tile_03", () -> new Tile3(ic).getPayload()),
-//                Pair.of("Tile_04", () -> new Tile4(ic).getPayload()),
-//                Pair.of("Tile_05", () -> new Tile5(ic).getPayload()),
-//                Pair.of("Tile_06", () -> new Tile6(ic).getPayload())
-                Pair.of("Tile_07", () -> new Tile7(ic).getPayload())
+        List<Pair<String, Supplier<PayloadSimple>>> patterns = Arrays.asList(
+//                Pair.of("Tile_Star_1", ()-> TileStar.getPayloadSimple(TileStar.RATIO_1)),
+//                Pair.of("Tile_Star_2", ()-> TileStar.getPayloadSimple(TileStar.RATIO_2)),
+//                Pair.of("Tile_Star_3", ()-> TileStar.getPayloadSimple(TileStar.RATIO_3)),
+//                Pair.of("Tile_02", Tile2::getPayloadSimple),
+//                Pair.of("Tile_03", Tile3::getPayloadSimple),
+//                Pair.of("Tile_04", Tile4::getPayloadSimple),
+//                Pair.of("Tile_05", Tile5::getPayloadSimple)
+//                Pair.of("Tile_06", Tile6::getPayloadSimple)
+
+//                Pair.of("Tile_07", Tile7::getPayloadSimple)
 //                Pair.of("Tile_3", () -> new Tile3(ic).getPayload())
-                );
+        );
 
         patterns.forEach(p ->
-                saveToFile(buildSvg(dim, background + buildSvgFromPayload(p.getRight(), ic)), p.getLeft()));
+                saveToFile(buildSvg(dim, background + buildSvgFromPayloadSimple(p.getRight(), ic)), p.getLeft()));
+
+        drawDesigns(dim);
 
 //        String mySVG = buildSvg(dim,
 //                background + buildSvgFromPayload(() -> new Tile3(ic).getPayload(), ic));
@@ -89,6 +93,41 @@ public class TestBed2 {
 //        jsvgCanvas.setSVGDocument(SvgFactory.fromSvgDoc(mySVG));
 //
 //        System.out.println(jsvgCanvas.getSize());
+
+    }
+
+    private void drawDesigns(Dimension dim) {
+
+        Point2D centre = newCentre(dim.getWidth() / 2.0, dim.getHeight() / 2.0);
+
+        Pair<Point2D, Double> ic = Pair.of(centre, 300.0);
+
+        List<Pair<String, Supplier<String>>> designs = Arrays.asList(
+//                Pair.of("Tile_Star_1", new TileStar(ic, TileStar.RATIO_1)::design1),
+//                Pair.of("Tile_Star_2", new TileStar(ic, TileStar.RATIO_1)::design2),
+//                Pair.of("Tile_Star_3", new TileStar(ic, TileStar.RATIO_1)::design3),
+//                Pair.of("Tile_2", new Tile2(ic)::design1),
+//                Pair.of("Tile_3", new Tile3(ic)::design1),
+//                Pair.of("Tile_4", new Tile4(ic)::design1),
+//                Pair.of("Tile_5", new Tile5(ic)::design1),
+//                Pair.of("Tile_6", new Tile6(ic)::design1)
+//                Pair.of("Tile_7", new Tile7(ic)::design1)
+                Pair.of("Tile_8", new Tile8New(ic)::design1)
+        );
+
+        designs.forEach(d ->
+                saveToFile(
+                        buildSvg(dim, d.getRight().get()),
+                        "Design_" + d.getLeft()
+                ));
+
+    }
+
+    private String buildSvgFromPayloadSimple(Supplier<PayloadSimple> supplier, Pair<Point2D, Double> ic) {
+        PayloadSimple payload = supplier.get();
+        List<Point2D> gridPoints = Grid.gridFromStart(ic.getLeft(), ic.getRight(), payload.getGridConfiguration(), 17);
+
+        return SvgFactory.drawOnGrid(payload.toLines(ic), gridPoints, newStyle(WHITE, 2, 1));
 
     }
 

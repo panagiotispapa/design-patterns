@@ -2,12 +2,12 @@ package com.design.islamic.model.hex;
 
 import com.design.common.Polygon;
 import com.design.islamic.model.Hex;
+import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.tiles.Grid;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.geom.Point2D;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -33,18 +33,19 @@ public class Tile3 extends TileBasic {
         super(initialConditions);
     }
 
-    @Override
-    protected Stream<List<Pair<Polygon, Polygon.Vertex>>> getMainMixVertexesFull() {
+    public static PayloadSimple getPayloadSimple() {
         Polygon main = Hex.hex(1, VER);
-
         Polygon inner = Hex.hex(RATIO_2, HOR);
 
-        return Stream.of(
-                Arrays.asList(
-                        Pair.of(inner, ONE),
-                        Pair.of(main, ONE),
-                        Pair.of(inner, TWO)
-                )
+        return new PayloadSimple(
+                asList(
+                        asList(
+                                Pair.of(inner, ONE),
+                                Pair.of(main, ONE),
+                                Pair.of(inner, TWO)
+
+                        )
+                ), Hex.ALL_VERTEX_INDEXES
         );
     }
 
@@ -100,7 +101,7 @@ public class Tile3 extends TileBasic {
         importantPoints.stream().map(Pair::getLeft).map(highlightPoint());
 
         List<List<Point2D>> apply = toMixVertexesFull.apply(
-                Arrays.asList(
+                asList(
                         Pair.of(outer, FIVE),
                         Pair.of(mainReg, FOUR),
                         Pair.of(outer, TWO)
@@ -134,7 +135,7 @@ public class Tile3 extends TileBasic {
                         Stream.of(
                                 toPolylines(gray).apply(
                                         toMixVertexesFull.apply(
-                                                Arrays.asList(
+                                                asList(
                                                         Pair.of(outer, FIVE),
                                                         Pair.of(mainReg, FOUR),
                                                         Pair.of(outer, TWO)
@@ -142,7 +143,7 @@ public class Tile3 extends TileBasic {
                                         ))
                         ),
                         Stream.of(
-                                getPayload().getPolylines()
+                                getPayloadSimple().toLines(initialConditions)
                         ).map(toPolylines(red))
 
                 ).flatMap(s -> s).collect(joining());

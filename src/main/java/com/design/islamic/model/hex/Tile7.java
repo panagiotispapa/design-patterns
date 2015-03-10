@@ -2,11 +2,13 @@ package com.design.islamic.model.hex;
 
 import com.design.common.Polygon;
 import com.design.islamic.model.Hex;
+import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.tiles.Grid;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.geom.Point2D;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -33,26 +35,28 @@ public class Tile7 extends TileBasic {
 
     }
 
-    @Override
-    protected Stream<List<Pair<Polygon, Polygon.Vertex>>> getMainMixVertexesFull() {
+    public static PayloadSimple getPayloadSimple() {
         Polygon inner = Hex.hex(RATIO_KD, HOR);
         Polygon outer = Hex.hex(RATIO_BE, VER, centreTransform(1, VER));
         Polygon outerBig = Hex.hex(0.5, VER, centreTransform(1, VER));
 
-        return Stream.of(
-                asList(
-                        Pair.of(outer, FIVE),
-                        Pair.of(inner, TWO)
-                ),
-                asList(
-                        Pair.of(outer, THREE),
-                        Pair.of(inner, ONE)
-                ),
-                asList(
-                        Pair.of(outerBig, FIVE),
-                        Pair.of(outerBig, FOUR),
-                        Pair.of(outerBig, THREE)
+        return new PayloadSimple(
+                Arrays.asList(
+                        asList(
+                                Pair.of(outer, FIVE),
+                                Pair.of(inner, TWO)
+                        ),
+                        asList(
+                                Pair.of(outer, THREE),
+                                Pair.of(inner, ONE)
+                        ),
+                        asList(
+                                Pair.of(outerBig, FIVE),
+                                Pair.of(outerBig, FOUR),
+                                Pair.of(outerBig, THREE)
+                        )
                 )
+                , Hex.ALL_VERTEX_INDEXES
         );
     }
 
@@ -135,7 +139,7 @@ public class Tile7 extends TileBasic {
                         importantPoints.stream().map(Pair::getLeft).map(highlightPoint()),
 //                        Stream.of(centresConfig).map(highlightPoints()),
                         Stream.of(
-                                getPayload().getPolylines()
+                                getPayloadSimple().toLines(initialConditions)
                         ).map(toPolylines(red))
 
                 ).flatMap(s -> s).collect(joining());

@@ -2,6 +2,7 @@ package com.design.islamic.model.hex;
 
 import com.design.common.Polygon;
 import com.design.islamic.model.Hex;
+import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.tiles.Grid;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
@@ -31,23 +32,26 @@ public class Tile6 extends TileBasic {
 
     }
 
-    @Override
-    protected Stream<List<Pair<Polygon, Polygon.Vertex>>> getMainMixVertexesFull() {
+    public static PayloadSimple getPayloadSimple() {
         Polygon main = Hex.hex(1, VER);
         Polygon inner = Hex.hex(0.5, VER);
         Polygon outer = Hex.hex($H.apply(0.5), HOR, centreTransform(1, VER));
 
-        return Stream.of(
+        return new PayloadSimple(
                 asList(
-                        Pair.of(main, ONE),
-                        Pair.of(outer, FIVE),
-                        Pair.of(inner, TWO)
+                        asList(
+                                Pair.of(main, ONE),
+                                Pair.of(outer, FIVE),
+                                Pair.of(inner, TWO)
+                        ),
+                        asList(
+                                Pair.of(main, ONE),
+                                Pair.of(outer, FOUR),
+                                Pair.of(inner, SIX)
+                        )
+
                 ),
-                asList(
-                        Pair.of(main, ONE),
-                        Pair.of(outer, FOUR),
-                        Pair.of(inner, SIX)
-                )
+                Hex.ALL_VERTEX_INDEXES
         );
     }
 
@@ -108,7 +112,7 @@ public class Tile6 extends TileBasic {
                         importantPoints.stream().map(drawText()),
                         importantPoints.stream().map(Pair::getLeft).map(highlightPoint()),
                         Stream.of(
-                                getPayload().getPolylines()
+                                getPayloadSimple().toLines(initialConditions)
                         ).map(toPolylines(red))
 
                 ).flatMap(s -> s).collect(joining());

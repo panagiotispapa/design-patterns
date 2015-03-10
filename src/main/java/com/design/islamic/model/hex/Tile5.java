@@ -2,6 +2,7 @@ package com.design.islamic.model.hex;
 
 import com.design.common.Polygon;
 import com.design.islamic.model.Hex;
+import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.tiles.Grid;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
@@ -31,16 +32,18 @@ public class Tile5 extends TileBasic {
 
     }
 
-    @Override
-    protected Stream<List<Pair<Polygon, Polygon.Vertex>>> getMainMixVertexesFull() {
+    public static PayloadSimple getPayloadSimple() {
         Polygon outer = Hex.hex(1 - RATIO_2, VER, centreTransform(1, VER));
 
-        return Stream.of(
+        return new PayloadSimple(
                 asList(
-                        Pair.of(outer, FIVE),
-                        Pair.of(outer, FOUR),
-                        Pair.of(outer, THREE)
-                )
+                        asList(
+                                Pair.of(outer, FIVE),
+                                Pair.of(outer, FOUR),
+                                Pair.of(outer, THREE)
+                        )
+
+                ), Hex.ALL_VERTEX_INDEXES
         );
     }
 
@@ -109,7 +112,7 @@ public class Tile5 extends TileBasic {
                         importantPoints.stream().map(drawText()),
                         importantPoints.stream().map(Pair::getLeft).map(highlightPoint()),
                         Stream.of(
-                                getPayload().getPolylines()
+                                getPayloadSimple().toLines(initialConditions)
                         ).map(toPolylines(red))
 
                 ).flatMap(s -> s).collect(joining());

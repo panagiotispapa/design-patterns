@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 
 import static com.design.common.PolygonTools.calcVertexes;
 import static java.lang.Math.PI;
@@ -27,6 +28,8 @@ public class Hex extends Polygon {
     public static final Function<Double, Double> £H = HELPER.fromHeight();
     public static final Function<Double, Double> $P = HELPER.toProjection();
     public static final Function<Double, Double> £P = HELPER.fromProjection();
+
+    public static final List<Integer> ALL_VERTEX_INDEXES = IntStream.range(0, 6).boxed().collect(toList());
 
     public static final int N = 6;
 

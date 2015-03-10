@@ -2,6 +2,7 @@ package com.design.islamic.model.hex;
 
 import com.design.common.Polygon;
 import com.design.islamic.model.Hex;
+import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.tiles.Grid;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
@@ -49,6 +50,14 @@ public class TileStar extends TileBasic {
                 Stream.of(
                         getLines(ratio)
                 );
+    }
+
+    public static PayloadSimple getPayloadSimple(double ratio) {
+        return new PayloadSimple(
+                asList(
+                        getLines(ratio)
+                ), Hex.ALL_VERTEX_INDEXES
+        );
     }
 
     public String design1() {
