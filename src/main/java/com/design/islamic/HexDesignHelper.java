@@ -228,43 +228,6 @@ public class HexDesignHelper {
 
 
 
-    public String newDesign8() {
-        Tile8 tile8 = new Tile8(initialConditions.getLeft(), initialConditions.getRight());
-
-        Polygon main = Hex.hex(1, Polygon.Type.HOR);
-        Polygon mainInternal = main.getRegistered();
-        Polygon tile = Hex.hex(tile8.getInnerR() / initialConditions.getRight(), Polygon.Type.HOR);
-
-        return
-                Stream.of(
-                        Stream.of(
-                                Pair.of(main, Hex.PERIMETER),
-                                Pair.of(main.getMirror(), Hex.PERIMETER),
-                                Pair.of(mainInternal, Hex.PERIMETER),
-                                Pair.of(mainInternal.getMirror(), Hex.PERIMETER),
-                                Pair.of(tile, Hex.PERIMETER),
-                                Pair.of(tile.getMirror(), Hex.PERIMETER),
-                                Pair.of(main, Hex.DIAGONALS),
-                                Pair.of(main.getMirror(), Hex.DIAGONALS)
-                        ).map(toLines.andThen(toPolylines(gray))),
-                        Stream.of(
-                                Triple.of(mainInternal, mainInternal.getMirror(), STAR)
-                        ).map(toStar.andThen(toPolylines(blue))),
-                        Stream.of(
-                                tile8.getPointsG()
-                        ).map(highlightPoints()),
-                        Stream.of(
-                                tile8.getLines()
-                        ).map(toPolylines(red))
-
-                ).flatMap(s -> s).collect(joining());
-
-//                .append(highlightPoints().apply(tile8.getPointsA()))
-//                .append(highlightPoints().apply(tile8.getPointsB()))
-//                .append(highlightPoints().apply(tile8.getPointsC()))
-//                .append(highlightPoints().apply(tile8.getPointsD()))
-    }
-
     public String newDesign9() {
         StringBuilder builder = new StringBuilder();
 

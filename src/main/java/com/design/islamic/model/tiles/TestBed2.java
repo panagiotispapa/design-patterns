@@ -68,6 +68,7 @@ public class TestBed2 {
 //                Pair.of("Tile_06", Tile6::getPayloadSimple)
 
 //                Pair.of("Tile_07", Tile7::getPayloadSimple)
+                Pair.of("Tile_08", Tile8::getPayloadSimple)
 //                Pair.of("Tile_3", () -> new Tile3(ic).getPayload())
         );
 
@@ -112,7 +113,7 @@ public class TestBed2 {
 //                Pair.of("Tile_5", new Tile5(ic)::design1),
 //                Pair.of("Tile_6", new Tile6(ic)::design1)
 //                Pair.of("Tile_7", new Tile7(ic)::design1)
-                Pair.of("Tile_8", new Tile8New(ic)::design1)
+                Pair.of("Tile_8", new Tile8(ic)::design1)
         );
 
         designs.forEach(d ->

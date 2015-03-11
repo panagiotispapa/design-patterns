@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 public abstract class TileBasic implements Tile {
@@ -30,6 +31,16 @@ public abstract class TileBasic implements Tile {
     protected Function<Pair<Polygon, Polygon.Vertex>, Point2D> toVertex;
     protected Function<Polygon, List<Pair<Point2D, Double>>> toCircles;
     protected Function<Triple<Polygon, ? extends Polygon.Vertex, String>, Pair<Point2D, String>> importantPoint;
+
+    protected static Function<Polygon, List<Triple<Polygon, Polygon.Vertex, String>>> allHexVertexesAsImportant =
+            polygon -> asList(
+                    Triple.of(polygon, Hex.Vertex.ONE, "1"),
+                    Triple.of(polygon, Hex.Vertex.TWO, "2"),
+                    Triple.of(polygon, Hex.Vertex.THREE, "3"),
+                    Triple.of(polygon, Hex.Vertex.FOUR, "4"),
+                    Triple.of(polygon, Hex.Vertex.FIVE, "5"),
+                    Triple.of(polygon, Hex.Vertex.SIX, "6")
+            );
 
     protected TileBasic(Pair<Point2D, Double> initialConditions) {
         this.initialConditions = initialConditions;
