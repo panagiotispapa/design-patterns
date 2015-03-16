@@ -14,15 +14,17 @@ public class PayloadSimple {
     private final List<List<Pair<Polygon, Polygon.Vertex>>> lines;
     private final Grid.Configuration gridConfiguration;
     private final List<Integer> allVertexes;
+    private final String name;
 
-    public PayloadSimple(List<List<Pair<Polygon, Polygon.Vertex>>> lines, List<Integer> allVertexes, Grid.Configuration gridConfiguration) {
+    public PayloadSimple(String name, List<List<Pair<Polygon, Polygon.Vertex>>> lines, List<Integer> allVertexes, Grid.Configuration gridConfiguration) {
         this.lines = lines;
         this.gridConfiguration = gridConfiguration;
         this.allVertexes = allVertexes;
+        this.name = name;
     }
 
-    public PayloadSimple(List<List<Pair<Polygon, Polygon.Vertex>>> lines, List<Integer> allVertexes) {
-        this(lines, allVertexes, Grid.Configs.HEX_HOR2.getConfiguration());
+    public PayloadSimple(String name, List<List<Pair<Polygon, Polygon.Vertex>>> lines, List<Integer> allVertexes) {
+        this(name, lines, allVertexes, Grid.Configs.HEX_HOR2.getConfiguration());
     }
 
     public List<List<Pair<Polygon, Polygon.Vertex>>> getLines() {
@@ -36,6 +38,10 @@ public class PayloadSimple {
     public List<List<Point2D>> toLines(Pair<Point2D, Double> ic) {
         return lines.stream().map(Polygon.mixVertexesFull(allVertexes, ic))
                 .map(Collection::stream).flatMap(s -> s).collect(toList());
+    }
+
+    public String getName() {
+        return name;
     }
 }
 

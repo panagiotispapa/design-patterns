@@ -1,5 +1,6 @@
 package com.design.common.view;
 
+import com.design.common.DesignHelper;
 import com.design.common.Points;
 import com.design.common.model.Arc;
 import com.design.common.model.Circle;
@@ -232,6 +233,18 @@ public class SvgFactory {
 
     private static String toPointsString(Line2D line) {
         return toPointsString(Arrays.asList(line.getP1(), line.getP2()));
+    }
+
+
+    public static String toHtml(String svg) {
+        return "<html>" +
+                "<header>" +
+                "</header>" +
+                "<body>" +
+                svg +
+                "</body>" +
+                "</html>";
+
     }
 
 //    private static String toPointsString(Collection<Line2D> points) {

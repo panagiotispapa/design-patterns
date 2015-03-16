@@ -36,7 +36,7 @@ public class PatternManager {
         rectProviderMap.put(RectPattern.ONE, new com.design.islamic.model.rect.Tile1(newCentre(0, 0), r).getPayload());
         rectProviderMap.put(RectPattern.TWO, new com.design.islamic.model.rect.Tile2(newCentre(0, 0), r).getPayload());
 
-        hexProviderMap.put(HexPattern.ONE, new Tile1(newCentre(0, 0), r).getPayload());
+//        hexProviderMap.put(HexPattern.ONE, new Tile1(newCentre(0, 0), r).getPayload());
 //        hexProviderMap.put(HexPattern.TWO, new PatternProvider() {
 //            @Override
 //            public XMLBuilder provideSVG(CentreConfiguration centreConfiguration, double r, Dimension dim) {
@@ -45,18 +45,18 @@ public class PatternManager {
 //        });
         Pair<Point2D, Double> ic = Pair.of(newCentre(0, 0), r);
 
-        hexProviderMap.put(HexPattern.STAR1, new TileStar(ic, TileStar.RATIO_2).getPayload());
-        hexProviderMap.put(HexPattern.STAR2, new TileStar(ic, TileStar.RATIO_1).getPayload());
-        hexProviderMap.put(HexPattern.STAR3, new TileStar(ic, TileStar.RATIO_3).getPayload());
-        hexProviderMap.put(HexPattern.TWO, new Tile2(ic).getPayload());
-        hexProviderMap.put(HexPattern.THREE, new Tile3(ic).getPayload());
-        hexProviderMap.put(HexPattern.FOUR, new Tile4(ic).getPayload());
-        hexProviderMap.put(HexPattern.FIVE, new Tile5(ic).getPayload());
-        hexProviderMap.put(HexPattern.SIX, new Tile6(ic).getPayload());
-        hexProviderMap.put(HexPattern.SEVEN, new Tile7(ic).getPayload());
-        hexProviderMap.put(HexPattern.EIGHT, new Tile8(ic).getPayload());
+//        hexProviderMap.put(HexPattern.STAR1, new TileStar(ic, TileStar.RATIO_2).getPayload());
+//        hexProviderMap.put(HexPattern.STAR2, new TileStar(ic, TileStar.RATIO_1).getPayload());
+//        hexProviderMap.put(HexPattern.STAR3, new TileStar(ic, TileStar.RATIO_3).getPayload());
+//        hexProviderMap.put(HexPattern.TWO, new Tile2(ic).getPayload());
+//        hexProviderMap.put(HexPattern.THREE, new Tile3(ic).getPayload());
+//        hexProviderMap.put(HexPattern.FOUR, new Tile4(ic).getPayload());
+//        hexProviderMap.put(HexPattern.FIVE, new Tile5(ic).getPayload());
+//        hexProviderMap.put(HexPattern.SIX, new Tile6(ic).getPayload());
+//        hexProviderMap.put(HexPattern.SEVEN, new Tile7(ic).getPayload());
+//        hexProviderMap.put(HexPattern.EIGHT, new Tile8(ic).getPayload());
         hexProviderMap.put(HexPattern.NINE, new Tile9(newCentre(0, 0), r).getPayload());
-        hexProviderMap.put(HexPattern.ELEVEN, new Tile11(ic).getPayload());
+//        hexProviderMap.put(HexPattern.ELEVEN, new Tile11(ic).getPayload());
         hexProviderMap.put(HexPattern.TWELVE, new Tile12(newCentre(0, 0), r).getPayload());
         hexProviderMap.put(HexPattern.THIRTEEN, new Tile13(newCentre(0, 0), r).getPayload());
         hexProviderMap.put(HexPattern.FOURTEEN, new Tile14(newCentre(0, 0), r).getPayload());

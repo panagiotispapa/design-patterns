@@ -1,128 +1,112 @@
 package com.design.islamic.model.hex;
 
+import com.design.common.DesignHelper;
 import com.design.common.Polygon;
+import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
+import com.design.islamic.model.PayloadSimple;
+import com.design.islamic.model.TileSupplier;
 import com.design.islamic.model.tiles.Grid;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
-import java.awt.geom.Point2D;
 import java.util.List;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
-import static com.design.common.view.SvgFactory.*;
-import static com.design.islamic.model.Hex.HEIGHT_RATIO;
+import static com.design.common.Polygon.Type.HOR;
+import static com.design.common.Polygon.Type.VER;
+import static com.design.common.view.SvgFactory.newStyle;
+import static com.design.islamic.model.Hex.*;
+import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 
-public class Tile11 extends TileBasic {
+public class Tile11 {
 
-    public static double RATIO_1 = 1.0 / 3.0;
-    public static double RATIO_2 = RATIO_1 / HEIGHT_RATIO;
-    public static double RATIO_3 = HEIGHT_RATIO - 0.5 * RATIO_2;
-    public static double RATIO_4 = 0.5 - RATIO_3;
+    private static double AB = 1.0 / 3.0;
+    private static double AC = £H.apply(AB);
+    private static double KE = HEIGHT_RATIO - 0.5 * AC;
+    private static double EC = 0.5 - KE;
 
-    public Tile11(Pair<Point2D, Double> initialConditions) {
+    @TileSupplier
+    public static PayloadSimple getPayloadSimple() {
 
-        super(initialConditions);
+        Polygon hexAC = Hex.hex(AC, HOR, centreTransform(1, VER));
+        Polygon outerReg = hexAC.getRegistered();
 
-    }
+        Polygon hexKE = Hex.hex(KE, HOR);
 
-    @Override
-    protected Stream<List<Pair<Polygon, Polygon.Vertex>>> getMainMixVertexesFull() {
-        Polygon outer = Hex.hex(RATIO_2, Polygon.Type.HOR, centreTransform(1, Polygon.Type.VER));
-        Polygon outerReg = outer.getRegistered();
-
-        Polygon inner = Hex.hex(RATIO_3, Polygon.Type.HOR);
-
-        return Stream.of(
+        return new PayloadSimple("hex_tile_11",
                 asList(
-                        Pair.of(outerReg, Hex.Vertex.THREE),
-                        Pair.of(outer, Hex.Vertex.FOUR),
-                        Pair.of(outer, Hex.Vertex.FIVE),
-                        Pair.of(outerReg, Hex.Vertex.FIVE)
-                ),
-                asList(
-                        Pair.of(inner, Hex.Vertex.ONE),
-                        Pair.of(outer, Hex.Vertex.FIVE)
-                ),
-                asList(
-                        Pair.of(inner, Hex.Vertex.TWO),
-                        Pair.of(outer, Hex.Vertex.FOUR)
-                )
+                        asList(
+                                Pair.of(outerReg, THREE),
+                                Pair.of(hexAC, FOUR),
+                                Pair.of(hexAC, FIVE),
+                                Pair.of(outerReg, FIVE)
+                        ),
+                        asList(
+                                Pair.of(hexKE, ONE),
+                                Pair.of(hexAC, FIVE)
+                        ),
+                        asList(
+                                Pair.of(hexKE, Hex.Vertex.TWO),
+                                Pair.of(hexAC, FOUR)
+                        )
+                ), Hex.ALL_VERTEX_INDEXES
         );
+
     }
 
-    public String design1() {
+    @DesignSupplier
+    public static DesignHelper getDesignHelper() {
         String black = newStyle("black", 1, 1);
         String blue = newStyle("blue", 1, 1);
         String gray = newStyle("gray", 1, 1);
         String green = newStyle("green", 1, 1);
         String red = newStyle("red", 2, 1);
 
-        List<Point2D> hexGrid = Grid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4.0,
-                Grid.Configs.HEX_VER.getConfiguration(), 12);
-
-        Polygon main = Hex.hex(1, Polygon.Type.VER);
+        Polygon main = Hex.hex(1, VER);
         Polygon mainReg = main.getRegistered();
-        Polygon outer = Hex.hex(RATIO_2, Polygon.Type.HOR, centreTransform(1, Polygon.Type.VER));
-        Polygon outerReg = outer.getRegistered();
-        Polygon inner = Hex.hex(RATIO_3, Polygon.Type.HOR);
-        Polygon outerSmall = Hex.hex(RATIO_4, Polygon.Type.VER, centreTransform(RATIO_3, Polygon.Type.HOR));
+        Polygon hexAC = Hex.hex(AC, HOR, centreTransform(1, VER));
+        Polygon outerReg = hexAC.getRegistered();
+        Polygon hexKE = Hex.hex(KE, HOR);
+        Polygon hexEC = Hex.hex(EC, VER, centreTransform(KE, HOR));
 
-        List<Pair<Point2D, String>> importantPoints = Stream.of(
-                Triple.of(main, Hex.Vertex.ONE, "A"),
-                Triple.of(outerReg, Hex.Vertex.FIVE, "B"),
-                Triple.of(outer, Hex.Vertex.FIVE, "C"),
-                Triple.of(outer, Hex.Vertex.SIX, "D"),
-                Triple.of(inner, Hex.Vertex.ONE, "E")
-        ).map(importantPoint).collect(toList());
-
-        importantPoints.add(Pair.of(initialConditions.getLeft(), "K"));
         List<String> equations = asList(
-                "AB=1/3",
-                "CD=AB/h",
-                "KE=h-(CD/2)",
-                "EC=0.5-AB",
-                ""
+                "AB = 1 / 3",
+                "CD = AB / h",
+                "KE = h - (CD / 2)",
+                "EC = 0.5 - AB"
         );
 
-        IntStream.range(0, equations.size())
-                .forEach(i -> importantPoints.add(Pair.of(new Point2D.Double(1000, (i + 1) * 50), equations.get(i))));
+        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_11_design")
+                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
+                .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
+                .addEquations(equations)
+                .addLinesInstructions(asList(
+                        Pair.of(main, Hex.PERIMETER),
+                        Pair.of(main, Hex.DIAGONALS),
+                        Pair.of(mainReg, Hex.DIAGONALS),
+                        Pair.of(hexAC, Hex.PERIMETER)
 
-        importantPoints.stream().map(drawText());
-        importantPoints.stream().map(Pair::getLeft).map(highlightPoint());
-
-        return
-                Stream.of(
-                        Stream.of(
-                                highlightPoints("black", 2).apply(hexGrid)
-                        ),
-                        Stream.of(
-                                Pair.of(main, Hex.PERIMETER),
-                                Pair.of(main, Hex.DIAGONALS),
-                                Pair.of(mainReg, Hex.DIAGONALS)
-//                                Pair.of(outer, Hex.PERIMETER)
-                        ).map(toLines.andThen(toPolylines(gray))),
-                        Stream.of(
-                                Pair.of(outer, Hex.PERIMETER)
-                        ).map(toLinesFull.andThen(toPolylines(gray))),
-                        Stream.of(
-                                Pair.of(inner, Hex.PERIMETER)
-                        ).map(toLines.andThen(toPolylines(green))),
-                        Stream.of(
-                                Pair.of(outerSmall, Hex.PERIMETER)
+                ), gray)
+                .addLinesInstructions(asList(
+                        Pair.of(hexKE, Hex.PERIMETER)
+                ), green)
+                .addLinesInstructions(asList(
+                        Pair.of(hexEC, Hex.PERIMETER)
 //                                Pair.of(inner3, Hex.PERIMETER)
-                        ).map(toLines.andThen(toPolylines(blue))),
-                        importantPoints.stream().map(drawText()),
-                        importantPoints.stream().map(Pair::getLeft).map(highlightPoint()),
-                        Stream.of(
-                                getPayload().getPolylines()
-                        ).map(toPolylines(red))
 
-                ).flatMap(s -> s).collect(joining());
+                ), blue)
+                .addImportantPoints(asList(
+                        Triple.of(main, ONE, "A"),
+                        Triple.of(outerReg, FIVE, "B"),
+                        Triple.of(hexAC, FIVE, "C"),
+                        Triple.of(hexAC, SIX, "D"),
+                        Triple.of(hexKE, ONE, "E")
+                ))
+                .addAllVertexesAsImportantPoints(asList(
+//                        outer
+                ))
+                ;
 
     }
 

@@ -1,5 +1,6 @@
 package com.design.islamic.model.tiles;
 
+import com.design.common.DesignHelper;
 import com.design.common.view.SvgFactory;
 import com.design.islamic.CentreConfiguration;
 import com.design.islamic.model.Payload;
@@ -57,10 +58,10 @@ public class TestBed2 {
 
         String background = buildBackground(dim);
 
-        List<Pair<String, Supplier<PayloadSimple>>> patterns = Arrays.asList(
+        List<Supplier<PayloadSimple>> patterns = Arrays.asList(
 //                Pair.of("Tile_Star_1", ()-> TileStar.getPayloadSimple(TileStar.RATIO_1)),
 //                Pair.of("Tile_Star_2", ()-> TileStar.getPayloadSimple(TileStar.RATIO_2)),
-//                Pair.of("Tile_Star_3", ()-> TileStar.getPayloadSimple(TileStar.RATIO_3)),
+//                TileStar::getPayloadSimple3
 //                Pair.of("Tile_02", Tile2::getPayloadSimple),
 //                Pair.of("Tile_03", Tile3::getPayloadSimple),
 //                Pair.of("Tile_04", Tile4::getPayloadSimple),
@@ -68,12 +69,15 @@ public class TestBed2 {
 //                Pair.of("Tile_06", Tile6::getPayloadSimple)
 
 //                Pair.of("Tile_07", Tile7::getPayloadSimple)
-                Pair.of("Tile_08", Tile8::getPayloadSimple)
+//                Tile8::getPayloadSimple
 //                Pair.of("Tile_3", () -> new Tile3(ic).getPayload())
         );
 
-        patterns.forEach(p ->
-                saveToFile(buildSvg(dim, background + buildSvgFromPayloadSimple(p.getRight(), ic)), p.getLeft()));
+        patterns.forEach(p ->{
+                    PayloadSimple payloadSimple = p.get();
+                    saveToFile(buildSvg(dim, background + buildSvgFromPayloadSimple(payloadSimple, ic)), payloadSimple.getName());
+                }
+                );
 
         drawDesigns(dim);
 
@@ -103,29 +107,32 @@ public class TestBed2 {
 
         Pair<Point2D, Double> ic = Pair.of(centre, 300.0);
 
-        List<Pair<String, Supplier<String>>> designs = Arrays.asList(
+        List<Supplier<DesignHelper>> designs = Arrays.asList(
 //                Pair.of("Tile_Star_1", new TileStar(ic, TileStar.RATIO_1)::design1),
 //                Pair.of("Tile_Star_2", new TileStar(ic, TileStar.RATIO_1)::design2),
-//                Pair.of("Tile_Star_3", new TileStar(ic, TileStar.RATIO_1)::design3),
+//                TileStar::getDesignHelper3
+                Tile11::getDesignHelper
 //                Pair.of("Tile_2", new Tile2(ic)::design1),
 //                Pair.of("Tile_3", new Tile3(ic)::design1),
 //                Pair.of("Tile_4", new Tile4(ic)::design1),
 //                Pair.of("Tile_5", new Tile5(ic)::design1),
 //                Pair.of("Tile_6", new Tile6(ic)::design1)
 //                Pair.of("Tile_7", new Tile7(ic)::design1)
-                Pair.of("Tile_8", new Tile8(ic)::design1)
+//                Pair.of("Tile_8", Tile8::getDesignHelper)
+//                Pair.of("Tile_8", Tile8::getDesignHelper)
         );
 
-        designs.forEach(d ->
-                saveToFile(
-                        buildSvg(dim, d.getRight().get()),
-                        "Design_" + d.getLeft()
-                ));
+        designs.forEach(d -> {
+            DesignHelper designHelper = d.get();
+            saveToFile(
+                    buildSvg(dim, designHelper.build(ic)),
+                    designHelper.getName()
+            );
+        });
 
     }
 
-    private String buildSvgFromPayloadSimple(Supplier<PayloadSimple> supplier, Pair<Point2D, Double> ic) {
-        PayloadSimple payload = supplier.get();
+    private String buildSvgFromPayloadSimple(PayloadSimple payload, Pair<Point2D, Double> ic) {
         List<Point2D> gridPoints = Grid.gridFromStart(ic.getLeft(), ic.getRight(), payload.getGridConfiguration(), 17);
 
         return SvgFactory.drawOnGrid(payload.toLines(ic), gridPoints, newStyle(WHITE, 2, 1));
@@ -140,16 +147,6 @@ public class TestBed2 {
 
     }
 
-    public static String toHtml(String svg) {
-        return "<html>" +
-                "<header>" +
-                "</header>" +
-                "<body>" +
-                svg +
-                "</body>" +
-                "</html>";
-
-    }
 
     private void saveToFile(String svg, String name) {
 

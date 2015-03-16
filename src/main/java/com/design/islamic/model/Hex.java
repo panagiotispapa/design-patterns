@@ -1,5 +1,6 @@
 package com.design.islamic.model;
 
+import com.design.common.Points;
 import com.design.common.Polygon;
 import com.design.common.RatioHelper;
 import com.google.common.collect.Iterables;
@@ -30,6 +31,10 @@ public class Hex extends Polygon {
     public static final Function<Double, Double> £P = HELPER.fromProjection();
 
     public static final List<Integer> ALL_VERTEX_INDEXES = IntStream.range(0, 6).boxed().collect(toList());
+
+    public static Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform(double ratio, Polygon.Type type) {
+        return Polygon.centreTransform(ratio, Vertex.ONE, type);
+    }
 
     public static final int N = 6;
 

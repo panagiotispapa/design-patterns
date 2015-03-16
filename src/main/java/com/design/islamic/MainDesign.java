@@ -52,15 +52,15 @@ public class MainDesign implements ActionListener {
         Pair<Point2D, Double> ic = Pair.of(centre, r);
 
         designs = Maps.newHashMap();
-        designs.put("Star 1", new TileStar(ic, TileStar.RATIO_1)::design1);
-        designs.put("Star 2", new TileStar(ic, TileStar.RATIO_1)::design2);
-        designs.put("Star 3", new TileStar(ic, TileStar.RATIO_1)::design3);
-        designs.put("Tile 2", new Tile2(ic)::design1);
-        designs.put("Tile 3", new Tile3(ic)::design1);
-        designs.put("Tile 4", new Tile4(ic)::design1);
-        designs.put("Tile 5", new Tile5(ic)::design1);
-        designs.put("Tile 6", new Tile6(ic)::design1);
-        designs.put("Tile 11", new Tile11(ic)::design1);
+//        designs.put("Star 1", new TileStar(ic, TileStar.RATIO_1)::design1);
+//        designs.put("Star 2", new TileStar(ic, TileStar.RATIO_1)::design2);
+//        designs.put("Star 3", new TileStar(ic, TileStar.RATIO_1)::design3);
+//        designs.put("Tile 2", new Tile2(ic)::design1);
+//        designs.put("Tile 3", new Tile3(ic)::design1);
+//        designs.put("Tile 4", new Tile4(ic)::design1);
+//        designs.put("Tile 5", new Tile5(ic)::design1);
+//        designs.put("Tile 6", new Tile6(ic)::design1);
+//        designs.put("Tile 11", new Tile11(ic)::design1);
 
         designs.entrySet().stream().map(Map.Entry::getKey).map(toMenuItemMapper).forEach(hexPatternsMenu::add);
 

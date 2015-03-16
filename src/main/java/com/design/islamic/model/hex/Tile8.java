@@ -1,28 +1,23 @@
 package com.design.islamic.model.hex;
 
+import com.design.common.DesignHelper;
 import com.design.common.Polygon;
-import com.design.islamic.model.Hex;
-import com.design.islamic.model.PayloadSimple;
-import com.design.islamic.model.tiles.Grid;
+import com.design.islamic.model.*;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
-import java.awt.geom.Point2D;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
-import static com.design.common.view.SvgFactory.*;
+import static com.design.common.view.SvgFactory.newStyle;
 import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 
-public class Tile8 extends TileBasic {
+
+public class Tile8 {
 
     private static final double KB = 0.5;
     private static final double KC = £H.apply(KB);
@@ -41,12 +36,7 @@ public class Tile8 extends TileBasic {
     private static final double JD = JA - AD;
     private static final double JM = $H.apply(IJ);
 
-    public Tile8(Pair<Point2D, Double> initialConditions) {
-
-        super(initialConditions);
-
-    }
-
+    @TileSupplier
     public static PayloadSimple getPayloadSimple() {
         Polygon main = Hex.hex(1, VER);
         Polygon mainReg = main.getRegistered();
@@ -58,7 +48,7 @@ public class Tile8 extends TileBasic {
         Polygon hexJM_3 = Hex.hex(JM, VER, Polygon.centreTransform(KJ, Hex.Vertex.TWO, HOR));
         Polygon hexJM_4 = Hex.hex(JM, HOR, Polygon.centreTransform(KJ, Hex.Vertex.SIX, VER));
 
-        return new PayloadSimple(
+        return new PayloadSimple("hex_tile_08",
                 Arrays.asList(
                         asList(
                                 Pair.of(hexJM_3, FOUR),
@@ -80,14 +70,14 @@ public class Tile8 extends TileBasic {
         );
     }
 
-    public String design1() {
+    @DesignSupplier
+    public static DesignHelper getDesignHelper() {
         String black = newStyle("black", 1, 1);
         String blue = newStyle("blue", 1, 1);
         String gray = newStyle("gray", 1, 1);
         String green = newStyle("green", 1, 1);
         String red = newStyle("red", 2, 1);
 
-        List<Point2D> hexGrid = Grid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4.0, Grid.Configs.HEX_VER.getConfiguration(), 12);
 
         Polygon main = Hex.hex(1, VER);
         Polygon mainHor = main.getMirror();
@@ -116,36 +106,6 @@ public class Tile8 extends TileBasic {
         Polygon hexRot2 = Hex.hex(1, VER, centreTransform(FE, HOR));
         Polygon hexRot3 = Hex.hex(1, VER, centreTransform(KF, HOR));
 
-//        List<Pair<Point2D, String>> importantPoints = new ArrayList<>();
-        List<Pair<Point2D, String>> importantPoints = Stream.of(
-                Triple.of(main, ONE, "A"),
-                Triple.of(hexKB, ONE, "B"),
-                Triple.of(hexKC, ONE, "C"),
-                Triple.of(hexKD, ONE, "D"),
-                Triple.of(hexAE, FIVE, "E"),
-                Triple.of(hexAF, FOUR, "F"),
-                Triple.of(hexKF, ONE, "F"),
-                Triple.of(hexAG, FOUR, "G"),
-                Triple.of(hexKH, ONE, "H"),
-                Triple.of(hexKI, TWO, "I"),
-                Triple.of(hexKJ, ONE, "J"),
-                Triple.of(hexJD, TWO, "L"),
-                Triple.of(hexJM, FIVE, "M")
-        ).map(importantPoint).collect(toList());
-
-        importantPoints.add(Pair.of(initialConditions.getLeft(), "K"));
-
-//        importantPoints.addAll(
-//                Stream.of(
-//                        hexJARot,
-//                        hexKI,
-//                        hexAG,
-//                        hexJM,
-//                        hexJM_2,
-//                        hexJM_3,
-//                        hexJM_4
-//                ).map(allHexVertexesAsImportant).map(Collection::stream).flatMap(s -> s).map(importantPoint).collect(toList())
-//        );
 
         List<String> equations = asList(
                 "KB = 0.5",
@@ -166,72 +126,75 @@ public class Tile8 extends TileBasic {
                 "JM = IJ*h"
         );
 
-        IntStream.range(0, equations.size())
-                .forEach(i -> importantPoints.add(Pair.of(new Point2D.Double(1000, (i + 1) * 40), equations.get(i))));
+        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_08_design")
+                .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
+                .addEquations(equations)
+                .addLinesInstructions(asList(
+                        Pair.of(main, Hex.DIAGONALS),
+                        Pair.of(mainHor, Hex.DIAGONALS),
+                        Pair.of(hexAE, Hex.PERIMETER)
+                ), gray)
+                .addLinesInstructions(asList(
+                        Pair.of(main, Hex.PERIMETER),
+                        Pair.of(main, Hex.INNER_TRIANGLES)
+                ), green)
+                .addLinesInstructions(asList(
+                        Pair.of(mainHor, Hex.INNER_TRIANGLES),
+                        Pair.of(mainHor, Hex.PERIMETER)
+                ), blue)
+                .addAllVertexesAsImportantPoints(
+        asList(
+//                        hexJARot,
+//                        hexKI,
+//                        hexAG,
+//                        hexJM,
+//                        hexJM_2,
+//                        hexJM_3,
+//                                hexJM_4
+                )
+                )
+                .addMixedLinesInstructionsList(asList(
+                        asList(
+                                Pair.of(hexRot1, THREE),
+                                Pair.of(hexRot1, SIX)
+                        ),
+                        asList(
+                                Pair.of(hexRot2, TWO),
+                                Pair.of(hexRot2, FIVE)
+                        ),
+                        asList(
+                                Pair.of(hexRot3, TWO),
+                                Pair.of(hexRot3, FIVE)
+                        ),
+                        asList(
+                                Pair.of(main, SIX),
+                                Pair.of(mainHor, ONE),
+                                Pair.of(main, ONE)
+                        ),
+                        asList(
+                                Pair.of(mainHorReg, SIX),
+                                Pair.of(mainReg, ONE),
+                                Pair.of(mainHorReg, ONE)
+                        )
+                ), gray)
+                .addImportantPoints(asList(
+                        Triple.of(main, ONE, "A"),
+                        Triple.of(hexKB, ONE, "B"),
+                        Triple.of(hexKC, ONE, "C"),
+                        Triple.of(hexKD, ONE, "D"),
+                        Triple.of(hexAE, FIVE, "E"),
+                        Triple.of(hexAF, FOUR, "F"),
+                        Triple.of(hexKF, ONE, "F"),
+                        Triple.of(hexAG, FOUR, "G"),
+                        Triple.of(hexKH, ONE, "H"),
+                        Triple.of(hexKI, TWO, "I"),
+                        Triple.of(hexKJ, ONE, "J"),
+                        Triple.of(hexJD, TWO, "L"),
+                        Triple.of(hexJM, FIVE, "M")
+                ))
 
-        importantPoints.stream().map(drawText());
-        importantPoints.stream().map(Pair::getLeft).map(highlightPoint());
+                ;
 
-        return
-                Stream.of(
-//                        Stream.of(
-//                                highlightPoints("black", 2).apply(hexGrid)
-//                        ),
-                        Stream.of(
-
-                                Pair.of(main, Hex.DIAGONALS),
-                                Pair.of(mainHor, Hex.DIAGONALS),
-                                Pair.of(hexAE, Hex.PERIMETER)
-                        ).map(toLines.andThen(toPolylines(gray))),
-                        Stream.of(
-                                Pair.of(main, Hex.PERIMETER),
-                                Pair.of(main, Hex.INNER_TRIANGLES)
-                        ).map(toLines.andThen(toPolylines(green))),
-                        Stream.of(
-                                Pair.of(mainHor, Hex.INNER_TRIANGLES),
-                                Pair.of(mainHor, Hex.PERIMETER)
-                        ).map(toLines.andThen(toPolylines(blue))),
-                        Stream.of(
-                                toMixVertexesFull.apply(
-                                        asList(
-                                                Pair.of(hexRot1, THREE),
-                                                Pair.of(hexRot1, SIX)
-                                        )
-                                ),
-                                toMixVertexesFull.apply(
-                                        asList(
-                                                Pair.of(hexRot2, TWO),
-                                                Pair.of(hexRot2, FIVE)
-                                        )
-                                ),
-                                toMixVertexesFull.apply(
-                                        asList(
-                                                Pair.of(hexRot3, TWO),
-                                                Pair.of(hexRot3, FIVE)
-                                        )
-                                ),
-                                toMixVertexesFull.apply(
-                                        asList(
-                                                Pair.of(main, SIX),
-                                                Pair.of(mainHor, ONE),
-                                                Pair.of(main, ONE)
-                                        )
-                                ),
-                                toMixVertexesFull.apply(
-                                        asList(
-                                                Pair.of(mainHorReg, SIX),
-                                                Pair.of(mainReg, ONE),
-                                                Pair.of(mainHorReg, ONE)
-                                        )
-                                )
-                        ).map(toPolylines(gray)),
-                        importantPoints.stream().map(drawText()),
-                        importantPoints.stream().map(Pair::getLeft).map(highlightPoint()),
-                        Stream.of(
-                                getPayloadSimple().toLines(initialConditions)
-                        ).map(toPolylines(red))
-
-                ).flatMap(s -> s).collect(joining());
     }
 
 }
