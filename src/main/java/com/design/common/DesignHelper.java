@@ -23,6 +23,7 @@ public class DesignHelper {
     private List<Pair<Point2D, String>> importantPoints = new ArrayList<>();
     private List<Triple<Polygon, ? extends Polygon.Vertex, String>> importantVertexes = new ArrayList<>();
     private List<Pair<List<Polygon>, String>> circlePolygons = new ArrayList<>();
+    private List<Pair<List<Pair<Polygon, Double>>, String>> circlePolygonsWithRadius = new ArrayList<>();
     //    protected Function<Triple<Polygon, ? extends Polygon.Vertex, String>, Pair<Point2D, String>> importantPoint;
     protected static Function<Polygon, List<Triple<Polygon, Polygon.Vertex, String>>> allVertexesAsImportant =
             polygon -> {
@@ -31,16 +32,14 @@ public class DesignHelper {
 
             };
 
-
     private final String name;
-    
+
     private final List<Integer> allVertexIndexes;
 
     public DesignHelper(List<Integer> allVertexIndexes, String name) {
         this.allVertexIndexes = allVertexIndexes;
         this.name = name;
     }
-
 
     public DesignHelper addLinesInstructions(List<Pair<Polygon, List<List<Polygon.Vertex>>>> instructions, String style) {
         linesInstructions.add(Pair.of(instructions, style));
@@ -67,13 +66,17 @@ public class DesignHelper {
         return this;
     }
 
+    public DesignHelper addCircleWithRadius(List<Pair<Polygon, Double>> circles, String style) {
+        circlePolygonsWithRadius.add(Pair.of(circles, style));
+        return this;
+    }
+
     public DesignHelper addImportantPoint(Pair<Point2D, String> point) {
         importantPoints.add(point);
         return this;
     }
 
     public DesignHelper addAllVertexesAsImportantPoints(List<Polygon> polygons) {
-
 
         polygons.stream().forEach(
                 polygon -> {
@@ -105,6 +108,7 @@ public class DesignHelper {
         Function<Triple<Polygon, ? extends Polygon.Vertex, String>, Pair<Point2D, String>> importantPoint = t -> Pair.of(toVertex.apply(Pair.of(t.getLeft(), t.getMiddle())), t.getRight());
 
         Function<Polygon, List<Pair<Point2D, Double>>> toCircle = Polygon.toCircles(initialConditions);
+        Function<Pair<Polygon, Double>, List<Pair<Point2D, Double>>> toCirclesWithRadius = Polygon.toCirclesWithRadius(initialConditions);
 
         importantPoints.add(Pair.of(initialConditions.getLeft(), "K"));
 
@@ -126,6 +130,9 @@ public class DesignHelper {
                 circlePolygons.stream().map(p ->
                                 p.getLeft().stream().map(toCircle.andThen(drawCircles(p.getRight())))
                 ).flatMap(s -> s),
+                circlePolygonsWithRadius.stream().map(p ->
+                                p.getLeft().stream().map(toCirclesWithRadius.andThen(drawCircles(p.getRight())))
+                ).flatMap(s -> s),
                 Stream.of(highlightPoints("black", 2).apply(gridPoints)),
                 importantPoints.stream().map(drawText()),
                 importantPoints.stream().map(Pair::getLeft).map(highlightPoint())
@@ -133,10 +140,10 @@ public class DesignHelper {
         ).flatMap(s -> s).collect(joining());
 
     }
-    
-    public String getName(){
+
+    public String getName() {
         return name;
-        
+
     }
 
 }

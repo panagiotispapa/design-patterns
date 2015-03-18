@@ -46,6 +46,10 @@ public abstract class Polygon {
         return p -> vertexes(ic).apply(p).stream().map(v -> Pair.of(v, p.getRatio() * ic.getRight())).collect(toList());
     }
 
+    public static Function<Pair<Polygon, Double>, List<Pair<Point2D, Double>>> toCirclesWithRadius(Pair<Point2D, Double> ic) {
+        return p -> vertexes(ic).apply(p.getLeft()).stream().map(v -> Pair.of(v, p.getRight() * ic.getRight())).collect(toList());
+    }
+
     public static Function<Pair<Polygon, List<List<Vertex>>>, List<List<Point2D>>> toLines(List<Integer> offsets, Pair<Point2D, Double> ic) {
         return p -> offsets.stream().map(i -> toLines(i, ic).apply(p)).flatMap(Collection::stream).collect(toList());
     }

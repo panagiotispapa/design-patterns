@@ -111,7 +111,7 @@ public class TestBed2 {
 //                Pair.of("Tile_Star_1", new TileStar(ic, TileStar.RATIO_1)::design1),
 //                Pair.of("Tile_Star_2", new TileStar(ic, TileStar.RATIO_1)::design2),
 //                TileStar::getDesignHelper3
-                Tile11::getDesignHelper
+                Tile9New::getDesignHelper
 //                Pair.of("Tile_2", new Tile2(ic)::design1),
 //                Pair.of("Tile_3", new Tile3(ic)::design1),
 //                Pair.of("Tile_4", new Tile4(ic)::design1),
@@ -151,7 +151,7 @@ public class TestBed2 {
     private void saveToFile(String svg, String name) {
 
         try {
-            Files.write(Paths.get("C:\\p\\", name + ".html"),
+            Files.write(Paths.get("./", name + ".html"),
                     Arrays.asList(toHtml(svg))
             );
         } catch (IOException e) {

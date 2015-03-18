@@ -128,7 +128,7 @@ public class Export {
     private static void saveToFile(String svg, String name) {
 
         try {
-            String path = "C:\\p\\";
+            String path = "./";
             Files.write(Paths.get(path, name + ".html"),
                     Arrays.asList(toHtml(svg))
             );
