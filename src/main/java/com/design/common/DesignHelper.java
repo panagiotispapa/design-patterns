@@ -32,6 +32,7 @@ public class DesignHelper {
 
             };
 
+    private int fontSize = 18;
     private final String name;
 
     private final List<Integer> allVertexIndexes;
@@ -61,6 +62,10 @@ public class DesignHelper {
         return this;
     }
 
+    public DesignHelper withFontSize(int fontSize){
+        this.fontSize=fontSize;
+        return this;
+    }
     public DesignHelper addCircle(List<Polygon> circles, String style) {
         circlePolygons.add(Pair.of(circles, style));
         return this;
@@ -134,7 +139,7 @@ public class DesignHelper {
                                 p.getLeft().stream().map(toCirclesWithRadius.andThen(drawCircles(p.getRight())))
                 ).flatMap(s -> s),
                 Stream.of(highlightPoints("black", 2).apply(gridPoints)),
-                importantPoints.stream().map(drawText()),
+                importantPoints.stream().map(drawText(fontSize)),
                 importantPoints.stream().map(Pair::getLeft).map(highlightPoint())
 
         ).flatMap(s -> s).collect(joining());

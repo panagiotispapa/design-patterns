@@ -16,6 +16,9 @@ public class RatioHelper {
         return a -> a / factor;
     }
 
+    public static final Function<Double, Double> $SQ2 = $(Math.sqrt(2));
+    public static final Function<Double, Double> £SQ2 = £(Math.sqrt(2));
+
     public static final Function<Double, Double> $2 = $(2.0);
 
     public static final Function<Double, Double> £2 = £(2.0);
@@ -36,19 +39,19 @@ public class RatioHelper {
         this.phi = phi / 2.0;
     }
 
-    public Function<Double, Double> toHeight() {
+    public Function<Double, Double> $H() {
         return $(retrieveHeight());
     }
 
-    public Function<Double, Double> fromHeight() {
+    public Function<Double, Double> £H() {
         return £(retrieveHeight());
     }
 
-    public Function<Double, Double> toProjection() {
+    public Function<Double, Double> $P() {
         return $(retrieveProjection());
     }
 
-    public Function<Double, Double> fromProjection() {
+    public Function<Double, Double> £P() {
         return £(retrieveProjection());
     }
 
@@ -61,6 +64,7 @@ public class RatioHelper {
     }
 
     public static enum Ratios {
+        DOD((2.0 * PI) / 12.0),
         HEX((2.0 * PI) / 6.0),
         RECT((2.0 * PI) / 4.0);
 
@@ -72,6 +76,22 @@ public class RatioHelper {
 
         public RatioHelper getHelper() {
             return helper;
+        }
+
+        public Function<Double, Double> $H() {
+            return helper.$H();
+        }
+
+        public Function<Double, Double> £H() {
+            return helper.£H();
+        }
+
+        public Function<Double, Double> $P() {
+            return helper.$P();
+        }
+
+        public Function<Double, Double> £P() {
+            return helper.£P();
         }
     }
 }

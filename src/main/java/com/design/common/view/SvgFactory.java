@@ -89,10 +89,13 @@ public class SvgFactory {
         return p -> p.stream().map(drawText()).collect(joining());
     }
 
-    public static Function<Pair<Point2D, String>, String> drawText() {
-        return p -> String.format("<text x=\"%f\" y=\"%f\" fill=\"black\" font-size=\"18\">%s</text>", p.getLeft().getX() + 5, p.getLeft().getY() + 5, p.getRight());
+    public static Function<Pair<Point2D, String>, String> drawText(int fontSize) {
+        return p -> String.format("<text x=\"%f\" y=\"%f\" fill=\"black\" font-size=\"%d\">%s</text>", p.getLeft().getX() + 5, p.getLeft().getY() + 5, fontSize, p.getRight());
     }
 
+    public static Function<Pair<Point2D, String>, String> drawText() {
+        return drawText(18);
+    }
     public static Function<List<List<Point2D>>, String> toPolylines(final String style) {
         return pointsList -> pointsList.stream().map(toPolyline(style)).collect(joining());
     }

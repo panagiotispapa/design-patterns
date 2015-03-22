@@ -16,6 +16,7 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 
 import static com.design.common.PolygonTools.calcVertexes;
+import static com.design.common.RatioHelper.Ratios.HEX;
 import static java.lang.Math.PI;
 import static java.lang.Math.cos;
 import static java.util.Arrays.asList;
@@ -24,11 +25,10 @@ import static java.util.stream.Collectors.toList;
 
 public class Hex extends Polygon {
 
-    public static final RatioHelper HELPER = RatioHelper.Ratios.HEX.getHelper();
-    public static final Function<Double, Double> $H = HELPER.toHeight();
-    public static final Function<Double, Double> £H = HELPER.fromHeight();
-    public static final Function<Double, Double> $P = HELPER.toProjection();
-    public static final Function<Double, Double> £P = HELPER.fromProjection();
+    public static final Function<Double, Double> $H = HEX.$H();
+    public static final Function<Double, Double> £H = HEX.£H();
+    public static final Function<Double, Double> $P = HEX.$P();
+    public static final Function<Double, Double> £P = HEX.£P();
 
     public static final List<Integer> ALL_VERTEX_INDEXES = IntStream.range(0, 6).boxed().collect(toList());
 
