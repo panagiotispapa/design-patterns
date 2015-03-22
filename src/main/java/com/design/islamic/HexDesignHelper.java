@@ -232,36 +232,7 @@ public class HexDesignHelper {
 
 
 
-    public String newDesign13() {
-        Double r = initialConditions.getRight();
-        Point2D centre = initialConditions.getLeft();
 
-        Tile tile = new Tile13(centre, r);
-
-        double newR = r / 3.0;
-        double newR2 = newR * PolygonTools.HEX_DIST_NEW_CENTRE;
-
-        double ratio = 1 / 3.0;
-        double ratio2 = ratio * PolygonTools.HEX_DIST_NEW_CENTRE;
-
-        Polygon out = Hex.hex(2.0 * ratio, Polygon.Type.HOR);
-
-        return
-                Stream.of(
-                        Stream.of(
-                                Pair.of(Hex.hex(1, Polygon.Type.HOR), Hex.PERIMETER),
-                                Pair.of(Hex.hex(ratio, Polygon.Type.HOR), Hex.PERIMETER),
-                                Pair.of(Hex.hex(ratio2, Polygon.Type.VER), Hex.PERIMETER),
-                                Pair.of(Hex.hex(ratio, Polygon.Type.HOR, centreTransform(out.getRatio(), out.getType())), Hex.PERIMETER),
-                                Pair.of(out, Hex.PERIMETER)
-                        ).map(toLines.andThen(toPolylines(gray))),
-                        Stream.of(
-                                tile.getPayload().getPolylines()
-                        ).map(toPolylines(red))
-
-                ).flatMap(s -> s).collect(joining());
-
-    }
 
     public String newDesign14() {
         Double r = initialConditions.getRight();
