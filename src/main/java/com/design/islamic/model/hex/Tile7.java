@@ -32,24 +32,26 @@ public class Tile7 {
         Polygon outer = Hex.hex(RATIO_BE, VER, centreTransform(1, VER));
         Polygon outerBig = Hex.hex(0.5, VER, centreTransform(1, VER));
 
-        return new PayloadSimple("hex_tile_07",
-                asList(
-                        asList(
-                                Pair.of(outer, FIVE),
-                                Pair.of(inner, TWO)
-                        ),
-                        asList(
-                                Pair.of(outer, THREE),
-                                Pair.of(inner, ONE)
-                        ),
-                        asList(
-                                Pair.of(outerBig, FIVE),
-                                Pair.of(outerBig, FOUR),
-                                Pair.of(outerBig, THREE)
+        return new PayloadSimple.Builder("hex_tile_07",
+                 Hex.ALL_VERTEX_INDEXES
+        )
+                .withLines(                asList(
+                                asList(
+                                        Pair.of(outer, FIVE),
+                                        Pair.of(inner, TWO)
+                                ),
+                                asList(
+                                        Pair.of(outer, THREE),
+                                        Pair.of(inner, ONE)
+                                ),
+                                asList(
+                                        Pair.of(outerBig, FIVE),
+                                        Pair.of(outerBig, FOUR),
+                                        Pair.of(outerBig, THREE)
+                                )
                         )
                 )
-                , Hex.ALL_VERTEX_INDEXES
-        );
+                .build();
     }
 
     @DesignSupplier

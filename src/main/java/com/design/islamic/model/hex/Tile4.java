@@ -30,8 +30,10 @@ public class Tile4 {
         Polygon inner = Hex.hex(RATIO_KA, HOR);
         Polygon outer = Hex.hex(RATIO_CD, VER, Hex.centreTransform(1, VER));
 
-        return new PayloadSimple("hex_tile_04",
-                asList(
+        return new PayloadSimple.Builder("hex_tile_04",
+                Hex.ALL_VERTEX_INDEXES
+        )
+                .withLines(asList(
                         asList(
                                 Pair.of(outer, FIVE),
                                 Pair.of(inner, TWO)
@@ -41,8 +43,8 @@ public class Tile4 {
                                 Pair.of(inner, ONE)
                         )
 
-                ), Hex.ALL_VERTEX_INDEXES
-        );
+                ))
+                .build();
     }
 
     @DesignSupplier

@@ -47,7 +47,7 @@ public class TestBed4 {
 //        String testObject = new TileStar(Pair.of(centre, r), TileStar.RATIO_1).design3();
 //        String testObject = new Tile7(Pair.of(centre, r)).design1();
 
-        String testObject = HexDesignHelper.with(Pair.of(centre, r)).newDesign12();
+        String testObject = HexDesignHelper.with(Pair.of(centre, r)).newDesign13();
 //        String testObject = HexDesignHelper.with(Pair.of(centre, r)).newDesign28();
 //        String testObject = HexDesignHelper.with(Pair.of(centre, r)).newStarDesign3();
 //        String testObject = HexDesignHelper.newDesign8(Pair.of(centre, r));
@@ -71,7 +71,7 @@ public class TestBed4 {
     private void saveToFile(String svg) {
 
         try {
-            Files.write(Paths.get("C:\\p\\", "out.html"),
+            Files.write(Paths.get("./", "out.html"),
                     Arrays.asList(toHtml(svg))
             );
         } catch (IOException e) {

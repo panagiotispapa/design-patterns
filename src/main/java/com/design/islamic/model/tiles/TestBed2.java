@@ -68,6 +68,7 @@ public class TestBed2 {
 //                Pair.of("Tile_05", Tile5::getPayloadSimple)
 //                Pair.of("Tile_06", Tile6::getPayloadSimple)
 //                Tile9New::getPayloadSimple
+                Tile12::getPayloadSimple
 //                Pair.of("Tile_07", Tile7::getPayloadSimple)
 //                Tile8::getPayloadSimple
 //                Pair.of("Tile_3", () -> new Tile3(ic).getPayload())
@@ -111,8 +112,9 @@ public class TestBed2 {
 //                Pair.of("Tile_Star_1", new TileStar(ic, TileStar.RATIO_1)::design1),
 //                Pair.of("Tile_Star_2", new TileStar(ic, TileStar.RATIO_1)::design2),
 //                TileStar::getDesignHelper3
-                Tile9::getDesignHelper1,
-                Tile9::getDesignHelper2
+//                Tile9::getDesignHelper1,
+//                Tile9::getDesignHelper2
+                Tile12::getDesignHelper
 //                Pair.of("Tile_2", new Tile2(ic)::design1),
 //                Pair.of("Tile_3", new Tile3(ic)::design1),
 //                Pair.of("Tile_4", new Tile4(ic)::design1),

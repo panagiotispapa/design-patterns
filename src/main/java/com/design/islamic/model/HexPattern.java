@@ -1,7 +1,6 @@
 package com.design.islamic.model;
 
 import com.design.islamic.CentreConfiguration;
-import com.design.islamic.model.hex.Tile12;
 import com.design.islamic.model.hex.Tile15;
 import com.google.common.collect.Maps;
 
@@ -26,7 +25,7 @@ public enum HexPattern {
     EIGHT("Pattern 8", HEX_SECOND, 1.0),
     NINE("Pattern 9", HEX_SECOND, 1.0),
     ELEVEN("Pattern 11", HEX_SECOND, 1.0),
-    TWELVE("Pattern 12", RECT, Tile12.RATIO_W),
+//    TWELVE("Pattern 12", RECT, Tile12.RATIO_W),
     THIRTEEN("Pattern 13", HEX_THIRD, 1.0),
     FOURTEEN("Pattern 14", HEX_THIRD, 1.0),
     FIFTEEN("Pattern 15", RECT, Tile15.RATIO_W),

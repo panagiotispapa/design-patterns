@@ -19,6 +19,7 @@ import static java.util.stream.Collectors.toList;
 public class DesignHelper {
     private List<Pair<List<Pair<Polygon, List<List<Polygon.Vertex>>>>, String>> linesInstructions = new ArrayList<>();
     private List<Pair<List<Pair<Polygon, Polygon.Vertex>>, String>> mixedLinesInstructions = new ArrayList<>();
+    private List<Pair<List<Pair<Polygon, Polygon.Vertex>>, String>> singleLinesInstructions = new ArrayList<>();
     private Grid.Configuration gridConfig;
     private List<Pair<Point2D, String>> importantPoints = new ArrayList<>();
     private List<Triple<Polygon, ? extends Polygon.Vertex, String>> importantVertexes = new ArrayList<>();
@@ -49,6 +50,11 @@ public class DesignHelper {
 
     public DesignHelper addMixedLinesInstructionsList(List<List<Pair<Polygon, Polygon.Vertex>>> instructions, String style) {
         instructions.stream().forEach(i -> mixedLinesInstructions.add(Pair.of(i, style)));
+        return this;
+    }
+
+    public DesignHelper addSingleLinesInstructionsList(List<List<Pair<Polygon, Polygon.Vertex>>> instructions, String style) {
+        instructions.stream().forEach(i -> singleLinesInstructions.add(Pair.of(i, style)));
         return this;
     }
 
@@ -124,6 +130,8 @@ public class DesignHelper {
             gridPoints = Grid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4.0, gridConfig, 12);
 
         }
+//        singleLinesInstructions.stream().map(p->Mappings.fromListOfLists(toVertex).apply(p.getLeft())).
+//        Mappings.fromListOfLists(toVertex).apply(singleLinesInstructions.);
 
         return Stream.of(
                 linesInstructions.stream().map(p ->
@@ -131,6 +139,10 @@ public class DesignHelper {
                 ).flatMap(s -> s),
                 mixedLinesInstructions.stream().map(p ->
                                 toPolylines(p.getRight()).apply(toMixedLines.apply(p.getLeft()))
+                ),
+                singleLinesInstructions.stream().map(
+                        p ->
+                                toPolyline(p.getRight()).apply(Mappings.fromList(toVertex).apply(p.getLeft()) )
                 ),
                 circlePolygons.stream().map(p ->
                                 p.getLeft().stream().map(toCircle.andThen(drawCircles(p.getRight())))

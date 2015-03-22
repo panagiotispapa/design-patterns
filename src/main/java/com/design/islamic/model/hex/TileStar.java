@@ -14,9 +14,7 @@ import java.util.List;
 
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.$H;
-import static com.design.islamic.model.Hex.$P;
-import static com.design.islamic.model.Hex.HEIGHT_RATIO;
+import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 
@@ -40,29 +38,36 @@ public class TileStar {
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple1() {
-        return new PayloadSimple("hex_tile_star_01",
-                asList(
-                        getLines(RATIO_1)
-                ), Hex.ALL_VERTEX_INDEXES
-        );
+        return new PayloadSimple
+                .Builder(
+                "hex_tile_star_01",
+                Hex.ALL_VERTEX_INDEXES
+        ).withLines(asList(
+                getLines(RATIO_1)
+        ))
+                .build();
     }
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple2() {
-        return new PayloadSimple("hex_tile_star_02",
-                asList(
+        return new PayloadSimple.Builder("hex_tile_star_02",
+                Hex.ALL_VERTEX_INDEXES
+        )
+                .withLines(asList(
                         getLines(RATIO_2)
-                ), Hex.ALL_VERTEX_INDEXES
-        );
+                ))
+                .build();
     }
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple3() {
-        return new PayloadSimple("hex_tile_star_03",
-                asList(
+        return new PayloadSimple.Builder("hex_tile_star_03",
+                Hex.ALL_VERTEX_INDEXES
+        )
+                .withLines(asList(
                         getLines(RATIO_3)
-                ), Hex.ALL_VERTEX_INDEXES
-        );
+                ))
+                .build();
     }
 
     @DesignSupplier

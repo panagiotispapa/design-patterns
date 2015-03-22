@@ -230,48 +230,7 @@ public class HexDesignHelper {
 
 
 
-    public String newDesign12() {
-        Double r = initialConditions.getRight();
-        Point2D centre = initialConditions.getLeft();
 
-        Tile tile = new Tile12(centre, r);
-
-        final double ratio = RECT_DIST_HEIGHT / 5.0;
-
-//        final double newR = ((r * RECT_DIST_HEIGHT) / 6.0)/HEX_DIST_HEIGHT;
-
-//        builder.append(drawPolygon(newHexagonRot(centre, r), gray));
-
-        return
-                Stream.of(
-                        Stream.of(
-//                                Pair.of(HexNew.hex(1, Polygon.Type.VER), HexNew.PERIMETER),
-//                                Pair.of(HexNew.hex(Tile12.RATIO_W, Polygon.Type.VER), HexNew.PERIMETER),
-                                Pair.of(Hex.hex(ratio, Polygon.Type.VER), Hex.PERIMETER),
-                                Pair.of(Hex.hex(1, Polygon.Type.VER), Hex.DIAGONALS),
-                                Pair.of(Hex.hex(2 * ratio, Polygon.Type.VER), Hex.PERIMETER),
-                                Pair.of(Hex.hex(3 * ratio, Polygon.Type.VER), Hex.PERIMETER),
-                                Pair.of(Hex.hex(4 * ratio, Polygon.Type.VER), Hex.PERIMETER),
-                                Pair.of(Hex.hex(5 * ratio, Polygon.Type.VER), Hex.PERIMETER),
-                                Pair.of(Hex.hex(6 * ratio, Polygon.Type.VER), Hex.PERIMETER),
-                                Pair.of(Hex.hex(7 * ratio, Polygon.Type.VER), Hex.PERIMETER)
-                        ).map(toLines.andThen(toPolylines(gray))),
-                        Stream.of(
-                                drawPolygon(newRectRot(centre, r), gray),
-                                drawPolygon(newRectRot(centre, r * Tile12.RATIO_W), gray)
-                        ),
-                        Stream.of(
-                                tile.getPayload().getPolylines()
-                        ).map(toPolylines(red)),
-                        Stream.of(drawPolygons(tile.getPayload().getPolygons(), red))
-
-                ).flatMap(s -> s).collect(joining());
-
-//        builder.append(drawPolygon(newHexStarTileRotated(centre, 2 * newR, HEX_DIST_DIAGONAL), blue));
-
-//        builder.append(drawPolygon(newHexagonRot(newEdgeAt(centre, 2*newR, HEX_RADIANS_ROT.get(2)), newR), gray));
-
-    }
 
     public String newDesign13() {
         Double r = initialConditions.getRight();

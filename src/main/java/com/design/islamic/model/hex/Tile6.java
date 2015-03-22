@@ -30,8 +30,10 @@ public class Tile6 {
         Polygon inner = Hex.hex(0.5, VER);
         Polygon outer = Hex.hex($H.apply(0.5), HOR, Hex.centreTransform(1, VER));
 
-        return new PayloadSimple("hex_tile_06",
-                asList(
+        return new PayloadSimple.Builder("hex_tile_06",
+                Hex.ALL_VERTEX_INDEXES
+        )
+                .withLines(asList(
                         asList(
                                 Pair.of(main, ONE),
                                 Pair.of(outer, FIVE),
@@ -43,9 +45,8 @@ public class Tile6 {
                                 Pair.of(inner, SIX)
                         )
 
-                ),
-                Hex.ALL_VERTEX_INDEXES
-        );
+                ))
+                .build();
     }
 
     @DesignSupplier

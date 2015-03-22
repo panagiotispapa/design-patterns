@@ -32,16 +32,20 @@ public class Tile3 {
         Polygon main = Hex.hex(1, VER);
         Polygon inner = Hex.hex(RATIO_2, HOR);
 
-        return new PayloadSimple("hex_tile_03",
-                asList(
+        return new PayloadSimple.Builder("hex_tile_03",
+                 Hex.ALL_VERTEX_INDEXES
+        )
+                .withLines(
                         asList(
-                                Pair.of(inner, ONE),
-                                Pair.of(main, ONE),
-                                Pair.of(inner, TWO)
+                                asList(
+                                        Pair.of(inner, ONE),
+                                        Pair.of(main, ONE),
+                                        Pair.of(inner, TWO)
 
+                                )
                         )
-                ), Hex.ALL_VERTEX_INDEXES
-        );
+                )
+                .build();
     }
 
     @DesignSupplier

@@ -29,20 +29,23 @@ public class Tile2 {
     public static PayloadSimple getPayloadSimple() {
         Polygon inner = Hex.hex(RATIO_KB, VER);
         Polygon outer = Hex.hex(RATIO_BD, HOR, Hex.centreTransform(RATIO_KB, VER));
-        return new PayloadSimple("hex_tile_02",
-                asList(
-                        asList(
-                                Pair.of(outer, ONE),
-                                Pair.of(inner, ONE),
-                                Pair.of(outer, TWO)
-                        ),
-                        asList(
-                                Pair.of(inner, ONE),
-                                Pair.of(inner, TWO)
-                        )
-                ),
+        return new PayloadSimple.Builder("hex_tile_02",
                 Hex.ALL_VERTEX_INDEXES
-        );
+        )
+                .withLines(
+                        asList(
+                                asList(
+                                        Pair.of(outer, ONE),
+                                        Pair.of(inner, ONE),
+                                        Pair.of(outer, TWO)
+                                ),
+                                asList(
+                                        Pair.of(inner, ONE),
+                                        Pair.of(inner, TWO)
+                                )
+                        )
+                )
+                .build();
 
     }
 

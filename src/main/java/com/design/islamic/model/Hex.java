@@ -1,8 +1,6 @@
 package com.design.islamic.model;
 
-import com.design.common.Points;
 import com.design.common.Polygon;
-import com.design.common.RatioHelper;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.Triple;
@@ -168,6 +166,9 @@ public class Hex extends Polygon {
             return index;
         }
 
+        public Polygon.Vertex cast() {
+            return this;
+        }
     }
 
 }

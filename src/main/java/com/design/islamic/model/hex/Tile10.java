@@ -19,7 +19,7 @@ import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 
-public class Tile11 {
+public class Tile10 {
 
     private static double AB = 1.0 / 3.0;
     private static double AC = £H.apply(AB);
@@ -34,8 +34,10 @@ public class Tile11 {
 
         Polygon hexKE = Hex.hex(KE, HOR);
 
-        return new PayloadSimple("hex_tile_11",
-                asList(
+        return new PayloadSimple.Builder("hex_tile_10",
+                Hex.ALL_VERTEX_INDEXES
+        )
+                .withLines(asList(
                         asList(
                                 Pair.of(outerReg, THREE),
                                 Pair.of(hexAC, FOUR),
@@ -50,8 +52,8 @@ public class Tile11 {
                                 Pair.of(hexKE, Hex.Vertex.TWO),
                                 Pair.of(hexAC, FOUR)
                         )
-                ), Hex.ALL_VERTEX_INDEXES
-        );
+                ))
+                .build();
 
     }
 
@@ -77,7 +79,7 @@ public class Tile11 {
                 "EC = 0.5 - AB"
         );
 
-        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_11_design")
+        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_10_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
                 .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
                 .addEquations(equations)

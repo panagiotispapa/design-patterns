@@ -48,26 +48,28 @@ public class Tile8 {
         Polygon hexJM_3 = Hex.hex(JM, VER, Polygon.centreTransform(KJ, Hex.Vertex.TWO, HOR));
         Polygon hexJM_4 = Hex.hex(JM, HOR, Polygon.centreTransform(KJ, Hex.Vertex.SIX, VER));
 
-        return new PayloadSimple("hex_tile_08",
-                Arrays.asList(
-                        asList(
-                                Pair.of(hexJM_3, FOUR),
-                                Pair.of(hexAG, THREE),
-                                Pair.of(hexAG, FOUR),
-                                Pair.of(hexAG, FIVE),
-                                Pair.of(hexJM_2, FOUR)
-                        ),
-                        asList(
+        return new PayloadSimple.Builder("hex_tile_08",
+                 Hex.ALL_VERTEX_INDEXES
+        )
+                .withLines(                Arrays.asList(
+                                asList(
+                                        Pair.of(hexJM_3, FOUR),
+                                        Pair.of(hexAG, THREE),
+                                        Pair.of(hexAG, FOUR),
+                                        Pair.of(hexAG, FIVE),
+                                        Pair.of(hexJM_2, FOUR)
+                                ),
+                                asList(
 
-                                Pair.of(hexJM_4, FOUR),
-                                Pair.of(hexJDRot, ONE),
-                                Pair.of(mainReg, ONE),
-                                Pair.of(hexJD, ONE),
-                                Pair.of(hexJM, FOUR)
+                                        Pair.of(hexJM_4, FOUR),
+                                        Pair.of(hexJDRot, ONE),
+                                        Pair.of(mainReg, ONE),
+                                        Pair.of(hexJD, ONE),
+                                        Pair.of(hexJM, FOUR)
+                                )
                         )
                 )
-                , Hex.ALL_VERTEX_INDEXES
-        );
+                .build();
     }
 
     @DesignSupplier

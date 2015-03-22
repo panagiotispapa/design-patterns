@@ -28,16 +28,18 @@ public class Tile5 {
     public static PayloadSimple getPayloadSimple() {
         Polygon outer = Hex.hex(1 - RATIO_2, VER, Hex.centreTransform(1, VER));
 
-        return new PayloadSimple("hex_tile_05",
-                asList(
+        return new PayloadSimple.Builder("hex_tile_05",
+                 Hex.ALL_VERTEX_INDEXES
+        )
+                .withLines(asList(
                         asList(
                                 Pair.of(outer, FIVE),
                                 Pair.of(outer, FOUR),
                                 Pair.of(outer, THREE)
                         )
 
-                ), Hex.ALL_VERTEX_INDEXES
-        );
+                ))
+                .build();
     }
 
     @DesignSupplier

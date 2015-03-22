@@ -29,8 +29,6 @@ public class Tile9 {
     private static double RATIO_n = HEX.£H().apply(RATIO_m);
     private static double RATIO_s = RECT.£H().andThen(HEX.£H().andThen(DOD.$H().andThen(HEX.£H()))).apply(RATIO_m);
 
-//    private static double RATIO_CD = £H.andThen($1).apply(RATIO_KA);
-
     private static double KA1 = 1;
     private static double KB1 = 1;
     private static double KC1 = RATIO_j;
@@ -99,70 +97,74 @@ public class Tile9 {
         Polygon hexB3S1 = Hex.hex(RATIO_s * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(Polygon.centreTransform(RATIO_s, Hex.Vertex.SIX, HOR)));
         Polygon hexB3S2 = Hex.hex(RATIO_s * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(Polygon.centreTransform(RATIO_s, Hex.Vertex.TWO, HOR)));
 
-        return new PayloadSimple("hex_tile_09",
-                asList(
+        return new PayloadSimple.Builder("hex_tile_09"
+                , Hex.ALL_VERTEX_INDEXES
+        )
+                .withLines(
                         asList(
-                                Pair.of(main, ONE),
-                                Pair.of(main, TWO)
-                        ),
-                        asList(
-                                Pair.of(hexA1N, THREE),
-                                Pair.of(hexA1N, FOUR),
-                                Pair.of(hexA1N, FIVE)
-                        ),
-                        asList(
-                                Pair.of(Hex.hex(KA2, VER), SIX),
-                                Pair.of(hexB3S1, FOUR),
-                                Pair.of(hexPB2, TWO)
-                        ),
-                        asList(
-                                Pair.of(Hex.hex(KA2, VER), ONE),
-                                Pair.of(hexB3S2, FOUR),
-                                Pair.of(hexPB2, FIVE)
-                        ),
-                        asList(
-                                Pair.of(hexPB2, TWO),
-                                Pair.of(hexA1N, FOUR)
-                        ),
-                        asList(
+                                asList(
+                                        Pair.of(main, ONE),
+                                        Pair.of(main, TWO)
+                                ),
+                                asList(
+                                        Pair.of(hexA1N, THREE),
+                                        Pair.of(hexA1N, FOUR),
+                                        Pair.of(hexA1N, FIVE)
+                                ),
+                                asList(
+                                        Pair.of(Hex.hex(KA2, VER), SIX),
+                                        Pair.of(hexB3S1, FOUR),
+                                        Pair.of(hexPB2, TWO)
+                                ),
+                                asList(
+                                        Pair.of(Hex.hex(KA2, VER), ONE),
+                                        Pair.of(hexB3S2, FOUR),
+                                        Pair.of(hexPB2, FIVE)
+                                ),
+                                asList(
+                                        Pair.of(hexPB2, TWO),
+                                        Pair.of(hexA1N, FOUR)
+                                ),
+                                asList(
 
-                                Pair.of(hexPB2_Rot, SIX),
-                                Pair.of(hexA1N, FOUR)
-                        ),
-                        asList(
-                                Pair.of(hexC1H, TWO),
-                                Pair.of(hexA2Q1, FOUR),
-                                Pair.of(hexA3R1, FOUR),
-                                Pair.of(hexA3R3, ONE),
-                                Pair.of(hexKG5, FOUR)
+                                        Pair.of(hexPB2_Rot, SIX),
+                                        Pair.of(hexA1N, FOUR)
+                                ),
+                                asList(
+                                        Pair.of(hexC1H, TWO),
+                                        Pair.of(hexA2Q1, FOUR),
+                                        Pair.of(hexA3R1, FOUR),
+                                        Pair.of(hexA3R3, ONE),
+                                        Pair.of(hexKG5, FOUR)
 
-                        ),
-                        asList(
-                                Pair.of(hexC1H_r, SIX),
-                                Pair.of(hexA2Q2, FOUR),
-                                Pair.of(hexA3R2, FOUR),
-                                Pair.of(hexA3R4, ONE),
-                                Pair.of(Hex.hex(KG4, VER, Polygon.centreTransform(KG3, Hex.Vertex.ONE, HOR)), FOUR)
-                        ),
-                        asList(
-                                Pair.of(hexKG5, FIVE),
-                                Pair.of(hexB3I3, ONE),
-                                Pair.of(hexB3I1, FOUR),
-                                Pair.of(hexC1J3, FOUR),
-                                Pair.of(hexC1H, FIVE)
+                                ),
+                                asList(
+                                        Pair.of(hexC1H_r, SIX),
+                                        Pair.of(hexA2Q2, FOUR),
+                                        Pair.of(hexA3R2, FOUR),
+                                        Pair.of(hexA3R4, ONE),
+                                        Pair.of(Hex.hex(KG4, VER, Polygon.centreTransform(KG3, Hex.Vertex.ONE, HOR)), FOUR)
+                                ),
+                                asList(
+                                        Pair.of(hexKG5, FIVE),
+                                        Pair.of(hexB3I3, ONE),
+                                        Pair.of(hexB3I1, FOUR),
+                                        Pair.of(hexC1J3, FOUR),
+                                        Pair.of(hexC1H, FIVE)
 
-                        ),
-                        asList(
-                                Pair.of(hexKG4, TWO),
-                                Pair.of(hexB3I4, ONE),
-                                Pair.of(hexB3I2, FOUR),
-                                Pair.of(hexC1J4, FOUR),
-                                Pair.of(hexC1H, TWO)
+                                ),
+                                asList(
+                                        Pair.of(hexKG4, TWO),
+                                        Pair.of(hexB3I4, ONE),
+                                        Pair.of(hexB3I2, FOUR),
+                                        Pair.of(hexC1J4, FOUR),
+                                        Pair.of(hexC1H, TWO)
+
+                                )
 
                         )
-
-                ), Hex.ALL_VERTEX_INDEXES
-        );
+                )
+                .build();
     }
 
     @DesignSupplier
