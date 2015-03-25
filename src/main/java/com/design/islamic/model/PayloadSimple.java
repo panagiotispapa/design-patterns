@@ -46,7 +46,6 @@ public class PayloadSimple {
         List<List<Point2D>> linesFull = lines.stream().map(Polygon.mixVertexesFull(allVertexes, ic))
                 .map(Collection::stream).flatMap(s -> s).collect(toList());
 
-        System.out.println("linesSingle.size " + linesSingle.size());
         List<List<Point2D>> linesOne = Mappings.fromListOfLists(Polygon.vertex(ic)).apply(linesSingle);
 
         return ImmutableList.copyOf(Iterables.concat(

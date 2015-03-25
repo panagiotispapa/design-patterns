@@ -1,90 +1,138 @@
 package com.design.islamic.model.hex;
 
-import com.design.islamic.model.Payload;
-import com.design.islamic.model.Payloads;
-import com.design.islamic.model.Tile;
-import com.design.islamic.model.tiles.Grid;
+import com.design.common.DesignHelper;
+import com.design.common.Polygon;
+import com.design.islamic.model.DesignSupplier;
+import com.design.islamic.model.Hex;
+import com.design.islamic.model.PayloadSimple;
+import com.design.islamic.model.TileSupplier;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static com.design.common.PolygonTools.*;
+import static com.design.common.Polygon.Type.VER;
+import static com.design.common.view.SvgFactory.newStyle;
+import static com.design.islamic.model.Hex.DIAGONALS;
+import static com.design.islamic.model.Hex.PERIMETER;
+import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 
-public class Tile19 implements Tile {
+public class Tile19 {
 
-    private List<List<Point2D>> lines;
+    public static double RATIO_m = 1.0 / 5.0;
 
-    private final double newR;
-    private final Point2D centre;
+    @TileSupplier
+    public static PayloadSimple getPayloadSimple() {
+        Polygon main = Hex.hex(1, VER);
+        Polygon hexKA = Hex.hex(RATIO_m, VER);
+        Polygon hexKB = Hex.hex(2 * RATIO_m, VER);
+        Polygon hexKC = Hex.hex(3 * RATIO_m, VER);
+        Polygon hexKD = Hex.hex(4 * RATIO_m, VER);
 
-    public Tile19(final Point2D centre, final double r) {
+        Polygon hexBA = Hex.hex(RATIO_m, VER, Hex.centreTransform(2 * RATIO_m, VER));
+        Polygon hexCB = Hex.hex(RATIO_m, VER, Hex.centreTransform(3 * RATIO_m, VER));
+        Polygon hexDC = Hex.hex(RATIO_m, VER, Hex.centreTransform(4 * RATIO_m, VER));
+        Polygon hexED = Hex.hex(RATIO_m, VER, Hex.centreTransform(1, VER));
+        Polygon hexFG = Hex.hex(RATIO_m, VER, Hex.centreTransform(1, VER).andThen(Polygon.centreTransform(RATIO_m, THREE, VER)));
+        Polygon hexGH = Hex.hex(RATIO_m, VER, Hex.centreTransform(1, VER).andThen(Polygon.centreTransform(2 * RATIO_m, THREE, VER)));
 
-        this.centre = centre;
+        return new PayloadSimple.Builder("hex_tile_19",
+                Hex.ALL_VERTEX_INDEXES
+        )
+                .withLines(asList(
+                        asList(
+                                Pair.of(hexKA, SIX),
+                                Pair.of(hexKB.getRegistered(), ONE),
+                                Pair.of(hexKA, ONE)
+                        ),
+                        asList(
+                                Pair.of(hexBA, THREE),
+                                Pair.of(hexBA, TWO),
+                                Pair.of(hexBA, ONE),
+                                Pair.of(hexCB, FOUR),
+                                Pair.of(hexCB, FIVE),
+                                Pair.of(hexCB, SIX)
+                        ),
+                        asList(
+                                Pair.of(hexDC, SIX),
+                                Pair.of(hexDC, FIVE),
+                                Pair.of(hexCB, ONE),
+                                Pair.of(hexDC, THREE),
+                                Pair.of(hexDC, TWO)
 
-        lines = new ArrayList<>();
-
-        newR = r / 5.0;
-
-        int ur = 5;
-        int um = 4;
-        int ul = 3;
-        int dl = 2;
-        int dm = 1;
-        int dr = 0;
-
-        for (int i = 0; i < HEX_N; i++) {
-            Point2D edge1 = p(centre, 2, i);
-            Point2D edge2 = p(centre, 3, i);
-            Point2D edge3 = p(centre, 4, i);
-            Point2D edge4 = p(edge2, 2, dm + i);
-
-            lines.add(asList(
-                    p(edge1, 1, ur + i),
-                    edge1,
-                    p(edge1, 1, dr + i),
-                    p(edge1, 1, dm + i),
-                    p(edge1, 1, dl + i),
-                    p(edge1, 1, ul + i),
-                    p(edge1, 1, um + i)
-            ));
-
-            lines.add(asList(
-                    p(edge2, 1, um + i),
-                    p(edge2, 1, ur + i)
-            ));
-
-            lines.add(asList(
-                    p(edge3, 1, ur + i),
-                    p(edge3, 1, um + i),
-                    edge3,
-                    p(edge3, 1, dl + i),
-                    p(edge3, 1, dm + i)
-            ));
-
-            lines.add(asList(
-                    p(edge4, 1, um + i),
-                    p(edge4, 1, ul + i),
-                    p(edge4, 1, dl + i),
-                    edge4
-            ));
-
-        }
-
+                        ),
+                        asList(
+                                Pair.of(hexFG, FOUR),
+                                Pair.of(hexGH, FOUR),
+                                Pair.of(hexGH, THREE),
+                                Pair.of(hexFG, THREE)
+                        )
+                ))
+                .build();
     }
 
-    private Point2D p(Point2D centre, int times, int phiIndex) {
-        return newEdgeAt(centre, times * newR, HEX_RADIANS_ROT[toHexIndex(phiIndex)]);
-    }
+    @DesignSupplier
+    public static DesignHelper getDesignHelper() {
+        String black = newStyle("black", 1, 1);
+        String blue = newStyle("blue", 1, 1);
+        String gray = newStyle("gray", 1, 1);
+        String green = newStyle("green", 1, 1);
+        String red = newStyle("red", 2, 1);
 
+        Polygon main = Hex.hex(1, VER);
+        Polygon hexKA = Hex.hex(RATIO_m, VER);
+        Polygon hexKB = Hex.hex(2 * RATIO_m, VER);
+        Polygon hexKC = Hex.hex(3 * RATIO_m, VER);
+        Polygon hexKD = Hex.hex(4 * RATIO_m, VER);
 
+        Polygon hexBA = Hex.hex(RATIO_m, VER, Hex.centreTransform(2 * RATIO_m, VER));
+        Polygon hexCB = Hex.hex(RATIO_m, VER, Hex.centreTransform(3 * RATIO_m, VER));
+        Polygon hexDC = Hex.hex(RATIO_m, VER, Hex.centreTransform(4 * RATIO_m, VER));
+        Polygon hexED = Hex.hex(RATIO_m, VER, Hex.centreTransform(1, VER));
+        Polygon hexFG = Hex.hex(RATIO_m, VER, Hex.centreTransform(1, VER).andThen(Polygon.centreTransform(RATIO_m, THREE, VER)));
+        Polygon hexGH = Hex.hex(RATIO_m, VER, Hex.centreTransform(1, VER).andThen(Polygon.centreTransform(2*RATIO_m, THREE, VER)));
 
-    @Override
-    public Payload getPayload() {
-        return Payloads.newPayloadFromLines(
-                lines,
-                Grid.Configs.HEX_VER.getConfiguration());
+        List<String> equations = Arrays.asList(
+                "KA = 1 / 5"
+
+        );
+
+        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_19_design")
+//                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
+                .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
+                .addEquations(equations)
+                .addImportantPoints(asList(
+                        Triple.of(hexKA, ONE, "A"),
+                        Triple.of(hexKB, ONE, "B"),
+                        Triple.of(hexKC, ONE, "C"),
+                        Triple.of(hexKD, ONE, "D"),
+                        Triple.of(hexED, THREE, "F"),
+                        Triple.of(main, ONE, "E"),
+                        Triple.of(hexFG, THREE, "G"),
+                        Triple.of(hexGH, THREE, "H")
+                ))
+                .addLinesInstructions(asList(
+                        Pair.of(main, PERIMETER),
+                        Pair.of(main, DIAGONALS),
+                        Pair.of(hexKA, PERIMETER),
+                        Pair.of(hexKB, PERIMETER),
+                        Pair.of(hexKC, PERIMETER),
+                        Pair.of(hexKD, PERIMETER),
+                        Pair.of(hexBA, PERIMETER),
+                        Pair.of(hexCB, PERIMETER),
+                        Pair.of(hexDC, PERIMETER),
+                        Pair.of(hexED, PERIMETER),
+                        Pair.of(hexFG, PERIMETER),
+                        Pair.of(hexGH, PERIMETER)
+                ), gray)
+                .addAllVertexesAsImportantPoints(asList(
+//                        main
+
+                ))
+                ;
+
     }
 
 }

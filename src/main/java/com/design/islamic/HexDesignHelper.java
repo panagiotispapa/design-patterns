@@ -234,34 +234,7 @@ public class HexDesignHelper {
 
 
 
-    public String newDesign14() {
-        Double r = initialConditions.getRight();
-        Point2D centre = initialConditions.getLeft();
 
-        Tile14 tile = new Tile14(centre, r);
-
-        double ratio = 1 / 4.0;
-
-        Polygon main = Hex.hex(1, Polygon.Type.HOR);
-
-        return
-                Stream.of(
-                        Stream.of(
-                                Pair.of(main, Hex.PERIMETER),
-                                Pair.of(main, Hex.DIAGONALS)
-                        ).map(toLines.andThen(toPolylines(gray))),
-                        IntStream.range(1, 4).mapToObj(i -> Pair.of(Hex.hex(i * ratio, Polygon.Type.HOR), Hex.PERIMETER)).map(toLines.andThen(toPolylines(gray))),
-                        Stream.of(
-                                tile.getPayload().getPolylines()
-                        ).map(toPolylines(red)),
-                        Stream.of(
-                                asList(tile.getPointsA()),
-                                asList(tile.getPointsB()),
-                                asList(tile.getPointsC())
-                        ).map(highlightPoints())
-                ).flatMap(s -> s).collect(joining());
-
-    }
 
     public String newDesign15() {
         Double r = initialConditions.getRight();
@@ -290,137 +263,13 @@ public class HexDesignHelper {
 
     }
 
-    public String newDesign16() {
-        Double r = initialConditions.getRight();
-        Point2D centre = initialConditions.getLeft();
 
-        Tile tile = new Tile16(centre, r);
 
-        double ratio = 1 / 9.0;
 
-        Polygon main = Hex.hex(1, Polygon.Type.VER);
-        return
-                Stream.of(
-                        Stream.of(
-                                Pair.of(main, Hex.PERIMETER),
-                                Pair.of(main, Hex.DIAGONALS)
-                        ).map(toLines.andThen(toPolylines(gray))),
-                        IntStream.range(1, 9).mapToObj(i -> Pair.of(Hex.hex(i * ratio, Polygon.Type.VER), Hex.PERIMETER)).map(toLines.andThen(toPolylines(gray))),
-                        Stream.of(
-                                tile.getPayload().getPolylines()
-                        ).map(toPolylines(red))
-                ).flatMap(s -> s).collect(joining());
 
-    }
 
-    public String newDesign17() {
-        Double r = initialConditions.getRight();
-        Point2D centre = initialConditions.getLeft();
 
-        Tile tile = new Tile17(centre, r);
 
-        double ratio = 1 / 3.0;
-        double newR = r / 3.0;
-
-        return
-                Stream.of(
-                        Stream.of(
-                                Pair.of(Hex.hex(1, Polygon.Type.HOR), Hex.PERIMETER),
-                                Pair.of(Hex.hex(ratio, Polygon.Type.HOR), Hex.PERIMETER)
-                        ).map(toLines.andThen(toPolylines(gray))),
-                        Stream.of(
-                                Hex.hex(2 * ratio, Polygon.Type.HOR)
-                        ).map(toVertexes.andThen(highlightPoints())),
-                        Stream.of(drawPolygons(tile.getPayload().getPolygons(), red))
-
-                ).flatMap(s -> s).collect(joining());
-
-    }
-
-    public String newDesign19() {
-        Double r = initialConditions.getRight();
-        Point2D centre = initialConditions.getLeft();
-
-        Tile tile = new Tile19(centre, r);
-
-        double ratio = 1 / 5.0;
-        double newR = r / 5.0;
-
-        Polygon main = Hex.hex(1, Polygon.Type.VER);
-        Polygon outer0 = Hex.hex(ratio, Polygon.Type.VER);
-        Polygon outer1 = Hex.hex(2 * ratio, Polygon.Type.VER);
-        Polygon outer2 = Hex.hex(3 * ratio, Polygon.Type.VER);
-        Polygon outer3 = Hex.hex(4 * ratio, Polygon.Type.VER);
-
-        return
-                Stream.of(
-                        Stream.of(
-                                Pair.of(main, Hex.PERIMETER),
-                                Pair.of(outer0, Hex.PERIMETER)
-                        ).map(toLines.andThen(toPolylines(gray))),
-                        Stream.of(
-                                outer1,
-                                outer2,
-                                outer3
-                        ).map(toVertexes.andThen(highlightPoints())),
-                        Stream.of(
-                                tile.getPayload().getPolylines()
-                        ).map(toPolylines(red))
-                ).flatMap(s -> s).collect(joining());
-
-    }
-
-    public String newDesign20() {
-        Double r = initialConditions.getRight();
-        Point2D centre = initialConditions.getLeft();
-
-        double ratio = 1 / 6.0;
-        Polygon main = Hex.hex(1, Polygon.Type.HOR);
-
-        Tile tile = new Tile20(centre, r);
-        return
-                Stream.of(
-                        Stream.concat(
-                                Stream.of(
-                                        Pair.of(main, Hex.PERIMETER),
-                                        Pair.of(main, Hex.DIAGONALS)
-                                ),
-                                IntStream.range(1, 6).mapToObj(i -> Pair.of(Hex.hex(i * ratio, Polygon.Type.HOR), Hex.PERIMETER))
-
-                        ).map(toLines.andThen(toPolylines(gray))),
-                        Stream.of(
-                                tile.getPayload().getPolylines()
-                        ).map(toPolylines(red))
-                ).flatMap(s -> s).collect(joining());
-
-    }
-
-    public String newDesign21() {
-        Double r = initialConditions.getRight();
-        Point2D centre = initialConditions.getLeft();
-
-        double ratio = 1 / 6.0;
-        Polygon main = Hex.hex(1, Polygon.Type.HOR);
-
-        Tile tile = new Tile21(centre, r);
-
-        return
-                Stream.of(
-                        Stream.concat(
-                                Stream.of(
-                                        Pair.of(main, Hex.PERIMETER),
-                                        Pair.of(main, Hex.DIAGONALS),
-                                        Pair.of(main.getRegistered(), Hex.DIAGONALS)
-                                ),
-                                IntStream.range(1, 6).mapToObj(i -> Pair.of(Hex.hex(i * ratio, Polygon.Type.HOR), Hex.PERIMETER))
-                        ).map(toLines.andThen(toPolylines(gray))),
-                        Stream.of(
-                                tile.getPayload().getPolylines()
-                        ).map(toPolylines(red))
-
-                ).flatMap(s -> s).collect(joining());
-
-    }
 
     public String newDesign22() {
         Double r = initialConditions.getRight();
