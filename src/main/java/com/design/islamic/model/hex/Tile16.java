@@ -15,15 +15,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.design.common.Polygon.Type.VER;
-import static com.design.common.Polygon.toLines;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.DIAGONALS;
-import static com.design.islamic.model.Hex.PERIMETER;
+import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -53,7 +51,7 @@ public class Tile16 {
     public static PayloadSimple getPayloadSimple() {
 
         List<Pair<Polygon, Polygon.Vertex>> l1 = asList(
-                Pair.of(h(8), FIVE),
+                h(8, UP),
                 u(5, 8),
                 u(3, 6),
                 u(1, 6),
@@ -61,13 +59,12 @@ public class Tile16 {
                 u(6, 1),
                 u(6, 3),
                 u(8, 5),
-                Pair.of(h(8), ONE),
+                h(8, DR_V),
                 d(3, 8),
                 d(3, 6), //
                 d(5, 6),
-                Pair.of(h(1), TWO)
+                h(1, DOWN)
         );
-
 
         List<Pair<Polygon, Polygon.Vertex>> l2 = asList(
                 u(3, 6),
@@ -108,29 +105,19 @@ public class Tile16 {
 
     }
 
-
     private static Pair<Polygon, Polygon.Vertex> u(int times, int timesCentre) {
-        return Pair.of(h(times, timesCentre, FIVE), ONE);
-
+        return instruction(times * RATIO_m, Hex.centreTransform(timesCentre * RATIO_m, UP), DR_V);
     }
 
     private static Pair<Polygon, Polygon.Vertex> d(int times, int timesCentre) {
-        return Pair.of(h(times, timesCentre, TWO), SIX);
-
+        return instruction(times * RATIO_m, Hex.centreTransform(timesCentre * RATIO_m, DOWN), UR_V);
     }
 
 
-    private static Polygon h(int times) {
-        return Hex.hex(times * RATIO_m, VER);
+    private static Pair<Polygon, Polygon.Vertex> h(int times, Hex.Corner corner) {
+        return instruction(times * RATIO_m, corner);
     }
 
-    private static Polygon h(int times, int timesCentre) {
-        return h(times, timesCentre, ONE);
-    }
-
-    private static Polygon h(int times, int timesCentre, Polygon.Vertex vertex) {
-        return Hex.hex(times * RATIO_m, VER, Polygon.centreTransform(timesCentre * RATIO_m, vertex, VER));
-    }
 
     @DesignSupplier
     public static DesignHelper getDesignHelper() {
@@ -155,9 +142,8 @@ public class Tile16 {
 
         BiFunction<List<Polygon>, Polygon.Vertex, List<Triple<Polygon, ? extends Polygon.Vertex, String>>> indexOnVertexes = (p, v) -> {
             AtomicInteger vIndex2 = new AtomicInteger(1);
-            return p.stream().map(h->Triple.of(h, v, String.valueOf(vIndex2.getAndIncrement()))).collect(toList());
+            return p.stream().map(h -> Triple.of(h, v, String.valueOf(vIndex2.getAndIncrement()))).collect(toList());
         };
-
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_16_design")
                 .addSingleLinesInstructionsList(getPayloadSimple().getLinesSingle(), red)
@@ -182,7 +168,6 @@ public class Tile16 {
                 .addAllVertexesAsImportantPoints(asList(
 //                        main
                 ))
-                
 
                 ;
 

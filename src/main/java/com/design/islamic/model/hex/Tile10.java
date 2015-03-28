@@ -16,6 +16,7 @@ import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
 import static com.design.islamic.model.Hex.*;
+import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 
@@ -29,7 +30,7 @@ public class Tile10 {
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
 
-        Polygon hexAC = Hex.hex(AC, HOR, centreTransform(1, VER));
+        Polygon hexAC = Hex.hex(AC, HOR, centreTransform(1, DR_V));
         Polygon outerReg = hexAC.getRegistered();
 
         Polygon hexKE = Hex.hex(KE, HOR);
@@ -39,18 +40,18 @@ public class Tile10 {
         )
                 .withLines(asList(
                         asList(
-                                Pair.of(outerReg, THREE),
-                                Pair.of(hexAC, FOUR),
-                                Pair.of(hexAC, FIVE),
-                                Pair.of(outerReg, FIVE)
+                                instruction(outerReg, DL_V),
+                                instruction(hexAC, LEFT),
+                                instruction(hexAC, UL_H),
+                                instruction(outerReg, UP)
                         ),
                         asList(
-                                Pair.of(hexKE, ONE),
-                                Pair.of(hexAC, FIVE)
+                                instruction(hexKE, RIGHT),
+                                instruction(hexAC, UL_H)
                         ),
                         asList(
-                                Pair.of(hexKE, Hex.Vertex.TWO),
-                                Pair.of(hexAC, FOUR)
+                                instruction(hexKE, DR_H),
+                                instruction(hexAC, LEFT)
                         )
                 ))
                 .build();
@@ -67,10 +68,10 @@ public class Tile10 {
 
         Polygon main = Hex.hex(1, VER);
         Polygon mainReg = main.getRegistered();
-        Polygon hexAC = Hex.hex(AC, HOR, centreTransform(1, VER));
+        Polygon hexAC = Hex.hex(AC, HOR, centreTransform(1, DR_V));
         Polygon outerReg = hexAC.getRegistered();
         Polygon hexKE = Hex.hex(KE, HOR);
-        Polygon hexEC = Hex.hex(EC, VER, centreTransform(KE, HOR));
+        Polygon hexEC = Hex.hex(EC, VER, centreTransform(KE, RIGHT));
 
         List<String> equations = asList(
                 "AB = 1 / 3",

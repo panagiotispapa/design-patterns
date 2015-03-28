@@ -19,8 +19,8 @@ import java.util.stream.Stream;
 
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.DIAGONALS;
-import static com.design.islamic.model.Hex.PERIMETER;
+import static com.design.islamic.model.Hex.*;
+import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -34,40 +34,38 @@ public class Tile21 {
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
 
-
         return new PayloadSimple.Builder("hex_tile_21",
                 Hex.ALL_VERTEX_INDEXES
         )
-
                 .withLines(asList(
                         asList(
-                                Pair.of(h(1), ONE),
-                                dr(2, 1),
-                                dr(2, 2),
-                                dr(1, 2),
-                                Pair.of(h(1), TWO)
+                                h(1, RIGHT),
+                                r(2, 1, DR_H),
+                                r(2, 2, DR_H),
+                                r(1, 2, DR_H),
+                                h(1, DR_H)
                         ),
                         asList(
-                                dl(1, 3),
-                                Pair.of(h(3), ONE),
-                                drs(5, 8),
-                                drs(3, 10),
-                                drs(1, 10),
-                                drs(1, 15)
+                                r(1, 3, DL_H),
+                                h(3, RIGHT),
+                                rs(5, 8, DR_H),
+                                rs(3, 10, DR_H),
+                                rs(1, 10, DR_H),
+                                rs(1, 15, DR_H)
                         ),
                         asList(
-                                dls(5, 8),
-                                Pair.of(h(3), TWO),
-                                dls(8, 13),
-                                dls(10, 13),
-                                dls(10, 11),
-                                dls(15, 16)
+                                rs(5, 8, DL_H),
+                                h(3, DR_H),
+                                rs(8, 13, DL_H),
+                                rs(10, 13, DL_H),
+                                rs(10, 11, DL_H),
+                                rs(15, 16, DL_H)
                         ),
                         asList(
-                                dls(10, 13),
-                                dls(12, 15),
-                                dls(3, 15),
-                                dls(3, 13)
+                                rs(10, 13, DL_H),
+                                rs(12, 15, DL_H),
+                                rs(3, 15, DL_H),
+                                rs(3, 13, DL_H)
                         )
                 ))
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
@@ -75,60 +73,16 @@ public class Tile21 {
 
     }
 
-
-    private static Pair<Polygon, Polygon.Vertex> u(int times, int timesCentre) {
-        return Pair.of(h(times, timesCentre, FIVE), ONE);
-
+    private static Pair<Polygon, Polygon.Vertex> r(int times, int timesCentre, Hex.Corner corner) {
+        return instruction(times * RATIO_m, Hex.centreTransform(timesCentre * RATIO_m, RIGHT), corner);
     }
 
-    private static Pair<Polygon, Polygon.Vertex> d(int times, int timesCentre) {
-        return Pair.of(h(times, timesCentre, TWO), SIX);
-
+    private static Pair<Polygon, Polygon.Vertex> rs(int times, int timesCentre, Hex.Corner corner) {
+        return instruction(times * RATIO_n, Hex.centreTransform(timesCentre * RATIO_n, RIGHT), corner);
     }
 
-
-    private static Pair<Polygon, Polygon.Vertex> ul(int times, int timesCentre) {
-        return Pair.of(h(times, timesCentre), FIVE);
-    }
-
-    private static Pair<Polygon, Polygon.Vertex> ur(int times, int timesCentre) {
-        return Pair.of(h(times, timesCentre), SIX);
-    }
-
-    private static Pair<Polygon, Polygon.Vertex> dl(int times, int timesCentre) {
-        return Pair.of(h(times, timesCentre), THREE);
-    }
-
-    private static Pair<Polygon, Polygon.Vertex> dr(int times, int timesCentre) {
-        return Pair.of(h(times, timesCentre), TWO);
-    }
-
-    private static Pair<Polygon, Polygon.Vertex> dls(int times, int timesCentre) {
-        return Pair.of(s(times, timesCentre), THREE);
-    }
-
-    private static Pair<Polygon, Polygon.Vertex> drs(int times, int timesCentre) {
-        return Pair.of(s(times, timesCentre), TWO);
-    }
-
-
-    private static Polygon h(int times) {
-        return Hex.hex(times * RATIO_m, HOR);
-    }
-
-    private static Polygon h(int times, int timesCentre) {
-        return h(times, timesCentre, ONE);
-    }
-
-    private static Polygon h(int times, int timesCentre, Polygon.Vertex vertex) {
-        return Hex.hex(times * RATIO_m, HOR, Polygon.centreTransform(timesCentre * RATIO_m, vertex, HOR));
-    }
-
-    private static Polygon s(int times, int timesCentre) {
-        return s(times, timesCentre, ONE);
-    }
-    private static Polygon s(int times, int timesCentre, Polygon.Vertex vertex) {
-        return Hex.hex(times * RATIO_n, HOR, Polygon.centreTransform(timesCentre * RATIO_n, vertex, HOR));
+    private static Pair<Polygon, Polygon.Vertex> h(int times, Corner corner) {
+        return instruction(times * RATIO_m, corner);
     }
 
     @DesignSupplier
@@ -162,7 +116,6 @@ public class Tile21 {
             return p.stream().map(h -> Triple.of(h, v, String.valueOf(vIndex2.getAndIncrement()))).collect(toList());
         };
 
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_21_design")
                 .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
                 .addEquations(equations)
@@ -189,7 +142,6 @@ public class Tile21 {
                 .addAllVertexesAsImportantPoints(asList(
 //                        main
                 ))
-
 
                 ;
 

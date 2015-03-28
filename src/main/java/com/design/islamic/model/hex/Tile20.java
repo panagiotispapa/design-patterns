@@ -18,10 +18,9 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.design.common.Polygon.Type.HOR;
-import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.DIAGONALS;
-import static com.design.islamic.model.Hex.PERIMETER;
+import static com.design.islamic.model.Hex.*;
+import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -29,41 +28,35 @@ import static java.util.stream.Collectors.toList;
 //p.
 public class Tile20 {
 
-
     private static double RATIO_m = 1.0 / 6.0;
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
 
-
         return new PayloadSimple.Builder("hex_tile_20",
                 Hex.ALL_VERTEX_INDEXES
         )
-
                 .withLines(asList(
                         asList(
-                                dl(2, 5),
-                                dl(2, 4),
-                                dl(1, 3),
-                                dl(2, 3),
-                                dl(2, 2),
-                                ur(1, 2),
-                                dr(2, 3)
+                                r(2, 5, DL_H),
+                                r(2, 4, DL_H),
+                                r(1, 3, DL_H),
+                                r(2, 3, DL_H),
+                                r(2, 2, DL_H),
+                                r(1, 2, UR_H),
+                                r(2, 3, DR_H)
                         ),
                         asList(
-                                dl(1, 4),
-                                Pair.of(h(4), ONE),
-                                dr(3, 4),
-                                dl(3, 4),
-                                dl(2, 4)
-
+                                r(1, 4, DL_H),
+                                h(4, RIGHT),
+                                r(3, 4, DR_H),
+                                r(3, 4, DL_H),
+                                r(2, 4, DL_H)
                         ),
                         asList(
-                                dl(4, 4),
-                                dr(4, 2),
-                                dr(3, 2)
-
-
+                                r(4, 4, DL_H),
+                                r(4, 2, DR_H),
+                                r(3, 2, DR_H)
                         )
 
                 ))
@@ -75,45 +68,12 @@ public class Tile20 {
 
     }
 
-
-    private static Pair<Polygon, Polygon.Vertex> u(int times, int timesCentre) {
-        return Pair.of(h(times, timesCentre, FIVE), ONE);
-
+    private static Pair<Polygon, Polygon.Vertex> h(int times, Corner corner) {
+        return instruction(times * RATIO_m, corner);
     }
 
-    private static Pair<Polygon, Polygon.Vertex> d(int times, int timesCentre) {
-        return Pair.of(h(times, timesCentre, TWO), SIX);
-
-    }
-
-
-    private static Pair<Polygon, Polygon.Vertex> ul(int times, int timesCentre) {
-        return Pair.of(h(times, timesCentre), FIVE);
-    }
-
-    private static Pair<Polygon, Polygon.Vertex> ur(int times, int timesCentre) {
-        return Pair.of(h(times, timesCentre), SIX);
-    }
-
-    private static Pair<Polygon, Polygon.Vertex> dl(int times, int timesCentre) {
-        return Pair.of(h(times, timesCentre), THREE);
-    }
-
-    private static Pair<Polygon, Polygon.Vertex> dr(int times, int timesCentre) {
-        return Pair.of(h(times, timesCentre), TWO);
-    }
-
-
-    private static Polygon h(int times) {
-        return Hex.hex(times * RATIO_m, HOR);
-    }
-
-    private static Polygon h(int times, int timesCentre) {
-        return h(times, timesCentre, ONE);
-    }
-
-    private static Polygon h(int times, int timesCentre, Polygon.Vertex vertex) {
-        return Hex.hex(times * RATIO_m, HOR, Polygon.centreTransform(timesCentre * RATIO_m, vertex, HOR));
+    private static Pair<Polygon, Polygon.Vertex> r(int times, int timesCentre, Hex.Corner corner) {
+        return instruction(times * RATIO_m, Hex.centreTransform(timesCentre * RATIO_m, RIGHT), corner);
     }
 
     @DesignSupplier
@@ -142,7 +102,6 @@ public class Tile20 {
             return p.stream().map(h -> Triple.of(h, v, String.valueOf(vIndex2.getAndIncrement()))).collect(toList());
         };
 
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_20_design")
                 .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
                 .addEquations(equations)
@@ -166,7 +125,6 @@ public class Tile20 {
                 .addAllVertexesAsImportantPoints(asList(
 //                        main
                 ))
-
 
                 ;
 

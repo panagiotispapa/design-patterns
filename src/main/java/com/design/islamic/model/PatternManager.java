@@ -68,7 +68,7 @@ public class PatternManager {
 //        hexProviderMap.put(HexPattern.NINETEEN, new Tile19(newCentre(0, 0), r).getPayload());
 //        hexProviderMap.put(HexPattern.TWENTY, new Tile20(newCentre(0, 0), r).getPayload());
 //        hexProviderMap.put(HexPattern.TWENTY_ONE, new Tile21(newCentre(0, 0), r).getPayload());
-        hexProviderMap.put(HexPattern.TWENTY_TWO, new Tile22(newCentre(0, 0), r).getPayload());
+//        hexProviderMap.put(HexPattern.TWENTY_TWO, new Tile22(newCentre(0, 0), r).getPayload());
         hexProviderMap.put(HexPattern.TWENTY_THREE, new Tile23(newCentre(0, 0), r).getPayload());
         hexProviderMap.put(HexPattern.TWENTY_FOUR, new Tile24(newCentre(0, 0), r).getPayload());
         hexProviderMap.put(HexPattern.TWENTY_FIVE, new Tile25(newCentre(0, 0), r).getPayload());

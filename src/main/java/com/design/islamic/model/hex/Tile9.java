@@ -16,6 +16,7 @@ import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.Ratios.*;
 import static com.design.common.view.SvgFactory.newStyle;
 import static com.design.islamic.model.Hex.*;
+import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 
@@ -66,36 +67,36 @@ public class Tile9 {
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
         Polygon main = Hex.hex(1, VER);
-        Polygon hexA1M = Hex.hex(A1M, HOR, centreTransform(1, VER));
+        Polygon hexA1M = Hex.hex(A1M, HOR, centreTransform(1, DR_V));
         Polygon hexA1N = hexA1M.getMirror();
 
-        Polygon hexPB2 = Hex.hex(B2P, VER, centreTransform(KP, HOR));
-        Polygon hexPB2_Rot = Hex.hex(B2P, VER, Polygon.centreTransform(KP, Hex.Vertex.TWO, HOR));
+        Polygon hexPB2 = Hex.hex(B2P, VER, centreTransform(KP, RIGHT));
+        Polygon hexPB2_Rot = Hex.hex(B2P, VER, centreTransform(KP, DR_H));
 
-        Polygon hexA2Q1 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA2, VER).andThen(Polygon.centreTransform(RATIO_n, Hex.Vertex.SIX, VER)));
-        Polygon hexA2Q2 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA2, VER).andThen(Polygon.centreTransform(RATIO_n, Hex.Vertex.TWO, VER)));
+        Polygon hexA2Q1 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA2, DR_V).andThen(centreTransform(RATIO_n, UR_V)));
+        Polygon hexA2Q2 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA2, DR_V).andThen(centreTransform(RATIO_n, DOWN)));
 
-        Polygon hexA3R1 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, VER).andThen(Polygon.centreTransform(RATIO_n, Hex.Vertex.SIX, VER)));
-        Polygon hexA3R2 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, VER).andThen(Polygon.centreTransform(RATIO_n, Hex.Vertex.TWO, VER)));
-        Polygon hexA3R3 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, VER).andThen(Polygon.centreTransform(RATIO_n, Hex.Vertex.THREE, VER)));
-        Polygon hexA3R4 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, VER).andThen(Polygon.centreTransform(RATIO_n, Hex.Vertex.FIVE, VER)));
+        Polygon hexA3R1 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, DR_V).andThen(centreTransform(RATIO_n, UR_V)));
+        Polygon hexA3R2 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, DR_V).andThen(centreTransform(RATIO_n, DOWN)));
+        Polygon hexA3R3 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, DR_V).andThen(centreTransform(RATIO_n, DL_V)));
+        Polygon hexA3R4 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, DR_V).andThen(centreTransform(RATIO_n, UP)));
 
-        Polygon hexC1H = Hex.hex(RATIO_i, VER, centreTransform(KC1, HOR));
-        Polygon hexC1H_r = Hex.hex(RATIO_i, VER, Polygon.centreTransform(KC1, Hex.Vertex.TWO, HOR));
+        Polygon hexC1H = Hex.hex(RATIO_i, VER, centreTransform(KC1, RIGHT));
+        Polygon hexC1H_r = Hex.hex(RATIO_i, VER, centreTransform(KC1, DR_H));
 
-        Polygon hexB3I1 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(Polygon.centreTransform(RATIO_n, Hex.Vertex.SIX, HOR)));
-        Polygon hexB3I2 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(Polygon.centreTransform(RATIO_n, Hex.Vertex.TWO, HOR)));
-        Polygon hexB3I3 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(Polygon.centreTransform(RATIO_n, Hex.Vertex.THREE, HOR)));
-        Polygon hexB3I4 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(Polygon.centreTransform(RATIO_n, Hex.Vertex.FIVE, HOR)));
+        Polygon hexB3I1 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, RIGHT).andThen(centreTransform(RATIO_n, UR_H)));
+        Polygon hexB3I2 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, RIGHT).andThen(centreTransform(RATIO_n, DR_H)));
+        Polygon hexB3I3 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, RIGHT).andThen(centreTransform(RATIO_n, DL_H)));
+        Polygon hexB3I4 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, RIGHT).andThen(centreTransform(RATIO_n, UL_H)));
 
-        Polygon hexC1J3 = Hex.hex(RATIO_i - RATIO_m, HOR, centreTransform(KC1, HOR).andThen(Hex.centreTransform(RATIO_m, Hex.Vertex.FIVE, VER)));
-        Polygon hexC1J4 = Hex.hex(RATIO_i - RATIO_m, HOR, centreTransform(KC1, HOR).andThen(Hex.centreTransform(RATIO_m, Hex.Vertex.TWO, VER)));
+        Polygon hexC1J3 = Hex.hex(RATIO_i - RATIO_m, HOR, centreTransform(KC1, RIGHT).andThen(centreTransform(RATIO_m, UP)));
+        Polygon hexC1J4 = Hex.hex(RATIO_i - RATIO_m, HOR, centreTransform(KC1, RIGHT).andThen(centreTransform(RATIO_m, DOWN)));
 
-        Polygon hexKG4 = Hex.hex(KG4, VER, Polygon.centreTransform(KG3, Hex.Vertex.SIX, HOR));
-        Polygon hexKG5 = Hex.hex(KG4, VER, Polygon.centreTransform(KG3, Hex.Vertex.TWO, HOR));
+        Polygon hexKG4 = Hex.hex(KG4, VER, centreTransform(KG3, UR_H));
+        Polygon hexKG5 = Hex.hex(KG4, VER, centreTransform(KG3, DR_H));
 
-        Polygon hexB3S1 = Hex.hex(RATIO_s * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(Polygon.centreTransform(RATIO_s, Hex.Vertex.SIX, HOR)));
-        Polygon hexB3S2 = Hex.hex(RATIO_s * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(Polygon.centreTransform(RATIO_s, Hex.Vertex.TWO, HOR)));
+        Polygon hexB3S1 = Hex.hex(RATIO_s * RATIO_k, HOR, centreTransform(KB3, RIGHT).andThen(centreTransform(RATIO_s, UR_H)));
+        Polygon hexB3S2 = Hex.hex(RATIO_s * RATIO_k, HOR, centreTransform(KB3, RIGHT).andThen(centreTransform(RATIO_s, DR_H)));
 
         return new PayloadSimple.Builder("hex_tile_09"
                 , Hex.ALL_VERTEX_INDEXES
@@ -103,63 +104,61 @@ public class Tile9 {
                 .withLines(
                         asList(
                                 asList(
-                                        Pair.of(main, ONE),
-                                        Pair.of(main, TWO)
+                                        instruction(main, DR_V),
+                                        instruction(main, DOWN)
                                 ),
                                 asList(
-                                        Pair.of(hexA1N, THREE),
-                                        Pair.of(hexA1N, FOUR),
-                                        Pair.of(hexA1N, FIVE)
+                                        instruction(hexA1N, DL_H),
+                                        instruction(hexA1N, LEFT),
+                                        instruction(hexA1N, UL_H)
                                 ),
                                 asList(
-                                        Pair.of(Hex.hex(KA2, VER), SIX),
-                                        Pair.of(hexB3S1, FOUR),
-                                        Pair.of(hexPB2, TWO)
+                                        instruction(KA2, UR_V),
+                                        instruction(hexB3S1, LEFT),
+                                        instruction(hexPB2, DOWN)
                                 ),
                                 asList(
-                                        Pair.of(Hex.hex(KA2, VER), ONE),
-                                        Pair.of(hexB3S2, FOUR),
-                                        Pair.of(hexPB2, FIVE)
+                                        instruction(KA2, DR_V),
+                                        instruction(hexB3S2, LEFT),
+                                        instruction(hexPB2, UP)
                                 ),
                                 asList(
-                                        Pair.of(hexPB2, TWO),
-                                        Pair.of(hexA1N, FOUR)
+                                        instruction(hexPB2, DOWN),
+                                        instruction(hexA1N, UL_V)
                                 ),
                                 asList(
-
-                                        Pair.of(hexPB2_Rot, SIX),
-                                        Pair.of(hexA1N, FOUR)
+                                        instruction(hexPB2_Rot, UR_V),
+                                        instruction(hexA1N, UL_V)
                                 ),
                                 asList(
-                                        Pair.of(hexC1H, TWO),
-                                        Pair.of(hexA2Q1, FOUR),
-                                        Pair.of(hexA3R1, FOUR),
-                                        Pair.of(hexA3R3, ONE),
-                                        Pair.of(hexKG5, FOUR)
-
-                                ),
-                                asList(
-                                        Pair.of(hexC1H_r, SIX),
-                                        Pair.of(hexA2Q2, FOUR),
-                                        Pair.of(hexA3R2, FOUR),
-                                        Pair.of(hexA3R4, ONE),
-                                        Pair.of(Hex.hex(KG4, VER, Polygon.centreTransform(KG3, Hex.Vertex.ONE, HOR)), FOUR)
-                                ),
-                                asList(
-                                        Pair.of(hexKG5, FIVE),
-                                        Pair.of(hexB3I3, ONE),
-                                        Pair.of(hexB3I1, FOUR),
-                                        Pair.of(hexC1J3, FOUR),
-                                        Pair.of(hexC1H, FIVE)
+                                        instruction(hexC1H, DOWN),
+                                        instruction(hexA2Q1, UL_V),
+                                        instruction(hexA3R1, UL_V),
+                                        instruction(hexA3R3, DR_V),
+                                        instruction(hexKG5, UL_V)
 
                                 ),
                                 asList(
-                                        Pair.of(hexKG4, TWO),
-                                        Pair.of(hexB3I4, ONE),
-                                        Pair.of(hexB3I2, FOUR),
-                                        Pair.of(hexC1J4, FOUR),
-                                        Pair.of(hexC1H, TWO)
+                                        instruction(hexC1H_r, UR_V),
+                                        instruction(hexA2Q2, UL_V),
+                                        instruction(hexA3R2, UL_V),
+                                        instruction(hexA3R4, DR_V),
+                                        instruction(KG4, centreTransform(KG3, RIGHT), UL_V)
+                                ),
+                                asList(
+                                        instruction(hexKG5, UP),
+                                        instruction(hexB3I3, RIGHT),
+                                        instruction(hexB3I1, LEFT),
+                                        instruction(hexC1J3, LEFT),
+                                        instruction(hexC1H, UP)
 
+                                ),
+                                asList(
+                                        instruction(hexKG4, DOWN),
+                                        instruction(hexB3I4, RIGHT),
+                                        instruction(hexB3I2, LEFT),
+                                        instruction(hexC1J4, LEFT),
+                                        instruction(hexC1H, DOWN)
                                 )
 
                         )
@@ -180,7 +179,7 @@ public class Tile9 {
         Polygon mainHor = Hex.hex(1, HOR);
         Polygon hexKC = main.getRegistered();
         Polygon hexKD = Hex.hex(RATIO_l, HOR);
-        Polygon hexAD = Hex.hex(RATIO_k, HOR, centreTransform(1, HOR));
+        Polygon hexAD = Hex.hex(RATIO_k, HOR, centreTransform(1, RIGHT));
         Polygon hexAD_VER = hexAD.getMirror();
 
         List<String> equations = asList(
@@ -252,63 +251,63 @@ public class Tile9 {
         Polygon hexKB3 = Hex.hex(KB3, HOR);
         Polygon hexKA3 = hexKB3.getMirror();
 
-        Polygon hexB1B2 = Hex.hex(B1B2, VER, centreTransform(1, HOR));
+        Polygon hexB1B2 = Hex.hex(B1B2, VER, centreTransform(1, RIGHT));
         Polygon hexB1B2_Hor = hexB1B2.getMirror();
 
-        Polygon hexA1A2 = Hex.hex(A1A2, VER, centreTransform(1, VER));
+        Polygon hexA1A2 = Hex.hex(A1A2, VER, centreTransform(1, DR_V));
         Polygon hexA1A2_Hor = hexA1A2.getMirror();
 
-        Polygon hexB1B3 = Hex.hex(B1B3, VER, centreTransform(1, HOR));
+        Polygon hexB1B3 = Hex.hex(B1B3, VER, centreTransform(1, RIGHT));
         Polygon hexB1B3_Hor = hexB1B3.getMirror();
 
-        Polygon hexA1A3 = Hex.hex(A1A3, VER, centreTransform(1, VER));
+        Polygon hexA1A3 = Hex.hex(A1A3, VER, centreTransform(1, DR_V));
         Polygon hexA1A3_Hor = hexA1A3.getMirror();
 
         Polygon hexKC2 = Hex.hex(KC2, HOR);
         Polygon hexKD2 = Hex.hex(KD2, VER);
 
-        Polygon hexC2E = Hex.hex(C2E, VER, centreTransform(KC2, HOR));
-        Polygon hexD2F = Hex.hex(D2F, HOR, centreTransform(KD2, VER));
-        Polygon hexInnerLine = Hex.hex(1, HOR, centreTransform(C2E, VER));
-        Polygon hexInnerLine2 = Hex.hex(1, VER, centreTransform(C2E, HOR));
+        Polygon hexC2E = Hex.hex(C2E, VER, centreTransform(KC2, RIGHT));
+        Polygon hexD2F = Hex.hex(D2F, HOR, centreTransform(KD2, DR_V));
+        Polygon hexInnerLine = Hex.hex(1, HOR, centreTransform(C2E, DR_V));
+        Polygon hexInnerLine2 = Hex.hex(1, VER, centreTransform(C2E, RIGHT));
 
         Polygon hexKG1 = Hex.hex(RATIO_m, VER);
         Polygon hexKG2 = Hex.hex(RATIO_n, HOR);
         Polygon hexKG3 = Hex.hex(KG3, HOR);
-        Polygon hexKG4 = Hex.hex(KG4, VER, Polygon.centreTransform(KG3, Hex.Vertex.SIX, HOR));
-        Polygon hexKG5 = Hex.hex(KG4, VER, Polygon.centreTransform(KG3, Hex.Vertex.TWO, HOR));
+        Polygon hexKG4 = Hex.hex(KG4, VER, centreTransform(KG3, UR_H));
+        Polygon hexKG5 = Hex.hex(KG4, VER, centreTransform(KG3, DR_H));
 
-        Polygon hexA1M = Hex.hex(A1M, HOR, centreTransform(1, VER));
+        Polygon hexA1M = Hex.hex(A1M, HOR, centreTransform(1, DR_V));
         Polygon hexA1N = hexA1M.getMirror();
         Polygon hexKN = Hex.hex(KN, VER);
         Polygon hexKP = Hex.hex(KP, HOR);
 
-        Polygon hexPB2 = Hex.hex(B2P, VER, centreTransform(KP, HOR));
-        Polygon hexA2Q = Hex.hex(RATIO_n, VER, centreTransform(KA2, VER));
+        Polygon hexPB2 = Hex.hex(B2P, VER, centreTransform(KP, RIGHT));
+        Polygon hexA2Q = Hex.hex(RATIO_n, VER, centreTransform(KA2, DR_V));
         Polygon hexA2Q_m = hexA2Q.getMirror();
-        Polygon hexA2Q1 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA2, VER).andThen(Polygon.centreTransform(RATIO_n, Hex.Vertex.SIX, VER)));
-        Polygon hexA2Q2 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA2, VER).andThen(Polygon.centreTransform(RATIO_n, Hex.Vertex.TWO, VER)));
+        Polygon hexA2Q1 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA2, DR_V).andThen(centreTransform(RATIO_n, UR_V)));
+        Polygon hexA2Q2 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA2, DR_V).andThen(centreTransform(RATIO_n, DOWN)));
 
         Polygon hexA3R = Hex.hex(RATIO_n, VER, centreTransform(KA3, VER));
-        Polygon hexA3R1 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, VER).andThen(Polygon.centreTransform(RATIO_n, Hex.Vertex.SIX, VER)));
-        Polygon hexA3R2 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, VER).andThen(Polygon.centreTransform(RATIO_n, Hex.Vertex.TWO, VER)));
-        Polygon hexA3R3 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, VER).andThen(Polygon.centreTransform(RATIO_n, Hex.Vertex.THREE, VER)));
-        Polygon hexA3R4 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, VER).andThen(Polygon.centreTransform(RATIO_n, Hex.Vertex.FIVE, VER)));
+        Polygon hexA3R1 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, DR_V).andThen(centreTransform(RATIO_n, UR_V)));
+        Polygon hexA3R2 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, DR_V).andThen(centreTransform(RATIO_n, DOWN)));
+        Polygon hexA3R3 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, DR_V).andThen(centreTransform(RATIO_n, DL_V)));
+        Polygon hexA3R4 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, DR_V).andThen(centreTransform(RATIO_n, UP)));
 
         Polygon hexC1H = Hex.hex(RATIO_i, VER, centreTransform(KC1, HOR));
         Polygon hexC1J = Hex.hex(RATIO_m, VER, centreTransform(KC1, HOR));
-        Polygon hexC1J3 = Hex.hex(RATIO_i - RATIO_m, HOR, centreTransform(KC1, HOR).andThen(Hex.centreTransform(RATIO_m, Hex.Vertex.FIVE, VER)));
-        Polygon hexC1J4 = Hex.hex(RATIO_i - RATIO_m, HOR, centreTransform(KC1, HOR).andThen(Hex.centreTransform(RATIO_m, Hex.Vertex.TWO, VER)));
+        Polygon hexC1J3 = Hex.hex(RATIO_i - RATIO_m, HOR, centreTransform(KC1, HOR).andThen(Hex.centreTransform(RATIO_m, UP)));
+        Polygon hexC1J4 = Hex.hex(RATIO_i - RATIO_m, HOR, centreTransform(KC1, HOR).andThen(Hex.centreTransform(RATIO_m, DOWN)));
 
         Polygon hexB3I = Hex.hex(RATIO_n, HOR, centreTransform(KB3, HOR));
-        Polygon hexB3I1 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(Polygon.centreTransform(RATIO_n, Hex.Vertex.SIX, HOR)));
-        Polygon hexB3I2 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(Polygon.centreTransform(RATIO_n, Hex.Vertex.TWO, HOR)));
-        Polygon hexB3I3 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(Polygon.centreTransform(RATIO_n, Hex.Vertex.THREE, HOR)));
-        Polygon hexB3I4 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(Polygon.centreTransform(RATIO_n, Hex.Vertex.FIVE, HOR)));
+        Polygon hexB3I1 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(centreTransform(RATIO_n, UR_H)));
+        Polygon hexB3I2 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(centreTransform(RATIO_n, DR_H)));
+        Polygon hexB3I3 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(centreTransform(RATIO_n, DL_H)));
+        Polygon hexB3I4 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(centreTransform(RATIO_n, UL_H)));
 
         Polygon hexB3S = Hex.hex(RATIO_s, HOR, centreTransform(KB3, HOR));
-        Polygon hexB3S1 = Hex.hex(RATIO_s * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(Polygon.centreTransform(RATIO_s, Hex.Vertex.SIX, HOR)));
-        Polygon hexB3S2 = Hex.hex(RATIO_s * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(Polygon.centreTransform(RATIO_s, Hex.Vertex.TWO, HOR)));
+        Polygon hexB3S1 = Hex.hex(RATIO_s * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(centreTransform(RATIO_s, UR_H)));
+        Polygon hexB3S2 = Hex.hex(RATIO_s * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(centreTransform(RATIO_s, DR_H)));
 
 //        Polygon hexA2Q = Hex.hex(A2Q, VER, centreTransform(KA2, VER));
 //        Polygon hexA2Q_Hor = hexA2Q.getMirror();

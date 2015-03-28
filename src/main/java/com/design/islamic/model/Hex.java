@@ -3,6 +3,7 @@ package com.design.islamic.model;
 import com.design.common.Polygon;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.geom.Point2D;
@@ -32,6 +33,10 @@ public class Hex extends Polygon {
 
     public static Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform(double ratio, Polygon.Type type) {
         return Polygon.centreTransform(ratio, Vertex.ONE, type);
+    }
+
+    public static Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform(double ratio, Corner corner) {
+        return Polygon.centreTransform(ratio, corner.getVertex(), corner.getType());
     }
 
     public static final int N = 6;
@@ -110,6 +115,29 @@ public class Hex extends Polygon {
         return new Hex(ratio, type, centreTransform);
     }
 
+    public static Pair<Polygon, Polygon.Vertex> instruction(Polygon polygon, Corner corner) {
+        return Pair.of(
+                polygon,
+                corner.getVertex()
+        );
+    }
+
+    public static Pair<Polygon, Polygon.Vertex> instruction(double ratio, Corner corner) {
+        return Pair.of(
+                hex(ratio, corner.getType()),
+                corner.getVertex()
+        );
+    }
+
+    public static Pair<Polygon, Polygon.Vertex> instruction(double ratio, Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform, Corner corner) {
+        return Pair.of(
+                hex(ratio, corner.getType(), centreTransform),
+                corner.getVertex()
+
+        );
+
+    }
+
     private Hex(double ratio, Type type, Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform) {
         super(ratio, type, centreTransform);
     }
@@ -133,7 +161,38 @@ public class Hex extends Polygon {
         return new Hex(ratio, type, centreTransform);
     }
 
-    //    Iterables.transform()
+    public static enum Corner {
+        DR_V(Vertex.ONE, Type.VER),
+        DOWN(Vertex.TWO, Type.VER),
+        DL_V(Vertex.THREE, Type.VER),
+        UL_V(Vertex.FOUR, Type.VER),
+        UP(Vertex.FIVE, Type.VER),
+        UR_V(Vertex.SIX, Type.VER),
+
+        RIGHT(Vertex.ONE, Type.HOR),
+        DR_H(Vertex.TWO, Type.HOR),
+        DL_H(Vertex.THREE, Type.HOR),
+        LEFT(Vertex.FOUR, Type.HOR),
+        UL_H(Vertex.FIVE, Type.HOR),
+        UR_H(Vertex.SIX, Type.HOR);
+
+        private final Polygon.Vertex vertex;
+        private final Type type;
+
+        Corner(Polygon.Vertex vertex, Type type) {
+            this.vertex = vertex;
+            this.type = type;
+        }
+
+        public Polygon.Vertex getVertex() {
+            return vertex;
+        }
+
+        public Type getType() {
+            return type;
+        }
+    }
+
     public static enum Vertex implements Polygon.Vertex {
         ONE(0),
         TWO(1),

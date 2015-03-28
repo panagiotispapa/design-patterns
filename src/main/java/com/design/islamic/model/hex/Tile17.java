@@ -15,8 +15,10 @@ import java.util.List;
 
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.Vertex.*;
+import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.islamic.model.Hex.Vertex.ONE;
 import static com.design.islamic.model.Hex.centreTransform;
+import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 
 //p.
@@ -28,24 +30,23 @@ public class Tile17 {
     public static PayloadSimple getPayloadSimple() {
         Polygon hexKB = Hex.hex(RATIO_m, HOR);
 
-        Polygon hexCB = Hex.hex(RATIO_m, HOR, centreTransform(2 * RATIO_m, HOR));
+        Polygon hexCB = Hex.hex(RATIO_m, HOR, centreTransform(2 * RATIO_m, RIGHT));
         return new PayloadSimple.Builder("hex_tile_17",
                 Hex.ALL_VERTEX_INDEXES
         )
                 .withLines(asList(
                         asList(
-                                Pair.of(hexCB, SIX),
-                                Pair.of(hexCB, FIVE),
-                                Pair.of(hexCB, FOUR),
-                                Pair.of(hexCB, THREE),
-                                Pair.of(hexCB, TWO),
-                                Pair.of(hexCB, ONE),
-                                Pair.of(hexCB, SIX)
+                                instruction(hexCB, UR_H),
+                                instruction(hexCB, UL_H),
+                                instruction(hexCB, LEFT),
+                                instruction(hexCB, DL_H),
+                                instruction(hexCB, DR_H),
+                                instruction(hexCB, RIGHT),
+                                instruction(hexCB, UR_H)
                         ),
                         asList(
-                                Pair.of(hexKB, ONE),
-                                Pair.of(hexKB, TWO)
-
+                                instruction(hexKB, RIGHT),
+                                instruction(hexKB, DR_H)
                         )
 
                 ))
@@ -63,9 +64,8 @@ public class Tile17 {
 
         Polygon main = Hex.hex(1, HOR);
         Polygon hexKB = Hex.hex(RATIO_m, HOR);
-        Polygon hexKC = Hex.hex(2*RATIO_m, HOR);
-        Polygon hexCB = Hex.hex(RATIO_m, HOR, centreTransform(2 * RATIO_m, HOR));
-
+        Polygon hexKC = Hex.hex(2 * RATIO_m, HOR);
+        Polygon hexCB = Hex.hex(RATIO_m, HOR, centreTransform(2 * RATIO_m, RIGHT));
 
         List<String> equations = Arrays.asList(
                 "KB = (1/3) * KA"

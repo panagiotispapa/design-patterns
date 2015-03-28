@@ -16,8 +16,10 @@ import java.util.stream.IntStream;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
+import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.centreTransform;
+import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
@@ -29,18 +31,18 @@ public class Tile11 {
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
-        Polygon hexBC = Hex.hex(RATIO_n, HOR, Polygon.centreTransform(3 * RATIO_n, TWO, HOR));
-        Polygon hexDE = Hex.hex(RATIO_n, HOR, centreTransform(3 * RATIO_n, HOR));
+        Polygon hexBC = Hex.hex(RATIO_n, HOR, Hex.centreTransform(3 * RATIO_n, DR_H));
+        Polygon hexDE = Hex.hex(RATIO_n, HOR, centreTransform(3 * RATIO_n, RIGHT));
 
         return new PayloadSimple.Builder("hex_tile_11",
                 Hex.ALL_VERTEX_INDEXES
         )
                 .withLines(asList(
                         asList(
-                        Pair.of(hexDE, SIX),
-                        Pair.of(hexDE, FIVE),
-                        Pair.of(hexBC, FOUR),
-                        Pair.of(hexBC, THREE)
+                                instruction(hexDE, UR_H),
+                                instruction(hexDE, UL_H),
+                                instruction(hexBC, LEFT),
+                                instruction(hexBC, DL_H)
                         )
 
                 ))
@@ -57,8 +59,8 @@ public class Tile11 {
 
         Polygon main = Hex.hex(1, VER);
         Polygon hexKA = Hex.hex(RATIO_n, HOR);
-        Polygon hexBC = Hex.hex(RATIO_n, HOR, Polygon.centreTransform(3 * RATIO_n, TWO, HOR));
-        Polygon hexDE = Hex.hex(RATIO_n, HOR, centreTransform(3 * RATIO_n, HOR));
+        Polygon hexBC = Hex.hex(RATIO_n, HOR, centreTransform(3 * RATIO_n, DR_H));
+        Polygon hexDE = Hex.hex(RATIO_n, HOR, centreTransform(3 * RATIO_n, RIGHT));
 
 //        Polygon inner2 = Hex.hex(RATIO_1, Polygon.Type.HOR);
 //        Polygon inner1 = inner2.getFramed();

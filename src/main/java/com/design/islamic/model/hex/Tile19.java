@@ -14,8 +14,8 @@ import java.util.List;
 
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.DIAGONALS;
-import static com.design.islamic.model.Hex.PERIMETER;
+import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 
@@ -31,43 +31,43 @@ public class Tile19 {
         Polygon hexKC = Hex.hex(3 * RATIO_m, VER);
         Polygon hexKD = Hex.hex(4 * RATIO_m, VER);
 
-        Polygon hexBA = Hex.hex(RATIO_m, VER, Hex.centreTransform(2 * RATIO_m, VER));
-        Polygon hexCB = Hex.hex(RATIO_m, VER, Hex.centreTransform(3 * RATIO_m, VER));
-        Polygon hexDC = Hex.hex(RATIO_m, VER, Hex.centreTransform(4 * RATIO_m, VER));
-        Polygon hexED = Hex.hex(RATIO_m, VER, Hex.centreTransform(1, VER));
-        Polygon hexFG = Hex.hex(RATIO_m, VER, Hex.centreTransform(1, VER).andThen(Polygon.centreTransform(RATIO_m, THREE, VER)));
-        Polygon hexGH = Hex.hex(RATIO_m, VER, Hex.centreTransform(1, VER).andThen(Polygon.centreTransform(2 * RATIO_m, THREE, VER)));
+        Polygon hexBA = Hex.hex(RATIO_m, VER, centreTransform(2 * RATIO_m, DR_V));
+        Polygon hexCB = Hex.hex(RATIO_m, VER, centreTransform(3 * RATIO_m, DR_V));
+        Polygon hexDC = Hex.hex(RATIO_m, VER, centreTransform(4 * RATIO_m, DR_V));
+        Polygon hexED = Hex.hex(RATIO_m, VER, centreTransform(1, DR_V));
+        Polygon hexFG = Hex.hex(RATIO_m, VER, centreTransform(1, VER).andThen(centreTransform(RATIO_m, DL_V)));
+        Polygon hexGH = Hex.hex(RATIO_m, VER, centreTransform(1, VER).andThen(centreTransform(2 * RATIO_m, DL_V)));
 
         return new PayloadSimple.Builder("hex_tile_19",
                 Hex.ALL_VERTEX_INDEXES
         )
                 .withLines(asList(
                         asList(
-                                Pair.of(hexKA, SIX),
-                                Pair.of(hexKB.getRegistered(), ONE),
-                                Pair.of(hexKA, ONE)
+                                instruction(hexKA, UR_V),
+                                instruction(hexKB.getRegistered(), RIGHT),
+                                instruction(hexKA, DR_V)
                         ),
                         asList(
-                                Pair.of(hexBA, THREE),
-                                Pair.of(hexBA, TWO),
-                                Pair.of(hexBA, ONE),
-                                Pair.of(hexCB, FOUR),
-                                Pair.of(hexCB, FIVE),
-                                Pair.of(hexCB, SIX)
+                                instruction(hexBA, DL_V),
+                                instruction(hexBA, DOWN),
+                                instruction(hexBA, DR_V),
+                                instruction(hexCB, UL_V),
+                                instruction(hexCB, UP),
+                                instruction(hexCB, UR_V)
                         ),
                         asList(
-                                Pair.of(hexDC, SIX),
-                                Pair.of(hexDC, FIVE),
-                                Pair.of(hexCB, ONE),
-                                Pair.of(hexDC, THREE),
-                                Pair.of(hexDC, TWO)
+                                instruction(hexDC, UR_V),
+                                instruction(hexDC, UP),
+                                instruction(hexCB, DR_V),
+                                instruction(hexDC, DL_V),
+                                instruction(hexDC, DOWN)
 
                         ),
                         asList(
-                                Pair.of(hexFG, FOUR),
-                                Pair.of(hexGH, FOUR),
-                                Pair.of(hexGH, THREE),
-                                Pair.of(hexFG, THREE)
+                                instruction(hexFG, UL_V),
+                                instruction(hexGH, UL_V),
+                                instruction(hexGH, DL_V),
+                                instruction(hexFG, DL_V)
                         )
                 ))
                 .build();
@@ -87,16 +87,15 @@ public class Tile19 {
         Polygon hexKC = Hex.hex(3 * RATIO_m, VER);
         Polygon hexKD = Hex.hex(4 * RATIO_m, VER);
 
-        Polygon hexBA = Hex.hex(RATIO_m, VER, Hex.centreTransform(2 * RATIO_m, VER));
-        Polygon hexCB = Hex.hex(RATIO_m, VER, Hex.centreTransform(3 * RATIO_m, VER));
-        Polygon hexDC = Hex.hex(RATIO_m, VER, Hex.centreTransform(4 * RATIO_m, VER));
-        Polygon hexED = Hex.hex(RATIO_m, VER, Hex.centreTransform(1, VER));
-        Polygon hexFG = Hex.hex(RATIO_m, VER, Hex.centreTransform(1, VER).andThen(Polygon.centreTransform(RATIO_m, THREE, VER)));
-        Polygon hexGH = Hex.hex(RATIO_m, VER, Hex.centreTransform(1, VER).andThen(Polygon.centreTransform(2*RATIO_m, THREE, VER)));
+        Polygon hexBA = Hex.hex(RATIO_m, VER, centreTransform(2 * RATIO_m, DR_V));
+        Polygon hexCB = Hex.hex(RATIO_m, VER, centreTransform(3 * RATIO_m, DR_V));
+        Polygon hexDC = Hex.hex(RATIO_m, VER, centreTransform(4 * RATIO_m, DR_V));
+        Polygon hexED = Hex.hex(RATIO_m, VER, centreTransform(1, DR_V));
+        Polygon hexFG = Hex.hex(RATIO_m, VER, centreTransform(1, DR_V).andThen(centreTransform(RATIO_m, DL_V)));
+        Polygon hexGH = Hex.hex(RATIO_m, VER, centreTransform(1, DR_V).andThen(centreTransform(2 * RATIO_m, DL_V)));
 
         List<String> equations = Arrays.asList(
                 "KA = 1 / 5"
-
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_19_design")

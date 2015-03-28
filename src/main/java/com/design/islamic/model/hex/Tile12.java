@@ -18,7 +18,9 @@ import java.util.stream.IntStream;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
+import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.Vertex.*;
+import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
@@ -59,29 +61,29 @@ public class Tile12 {
         List<Pair<Polygon, Polygon.Vertex>> l1 = asList(
                 Pair.of(h(2, 6, TWO), SIX),
                 Pair.of(h(2, 4, TWO), SIX),
-                Pair.of(h(4), ONE),
-                Pair.of(h(4), SIX),
-                Pair.of(h(2, 4, FIVE), ONE),
-                Pair.of(h(2, 6, FIVE), ONE)
+                h(4, DR_V),
+                h(4, UR_V),
+                u(2, 4, DR_V),
+                u(2, 6, DR_V)
         );
         List<Pair<Polygon, Polygon.Vertex>> l2 = asList(
-                Pair.of(h(6, 1, FIVE), SIX),
-                Pair.of(h(1, 2, FIVE), ONE),
-                Pair.of(h(1, 3, FIVE), ONE),
-                Pair.of(h(3), FIVE),
-                Pair.of(h(4, 7, FIVE), ONE),
-                Pair.of(h(5, 7, FIVE), ONE),
-                Pair.of(h(5, 5, FIVE), ONE),
-                Pair.of(h(6, 5, FIVE), ONE),
-                Pair.of(h(2, 1, FIVE), ONE),
-                Pair.of(h(6, 1, FIVE), ONE),
-                Pair.of(h(5), ONE),
-                Pair.of(h(5, 2, TWO), ONE),
-                Pair.of(h(4, 3, TWO), ONE),
-                Pair.of(h(3), TWO),
-                Pair.of(h(1, 2, TWO), ONE),
-                Pair.of(h(1, 1, TWO), ONE),
-                Pair.of(h(6, 1, TWO), ONE)
+                u(6, 1, UR_V),
+                u(1, 2, DR_V),
+                u(1, 3, DR_V),
+                h(3, UP),
+                u(4, 7, DR_V),
+                u(5, 7, DR_V),
+                u(5, 5, DR_V),
+                u(6, 5, DR_V),
+                u(2, 1, DR_V),
+                u(6, 1, DR_V),
+                h(5, DR_V),
+                d(5, 2, DR_V),
+                d(4, 3, DR_V),
+                h(3, DOWN),
+                d(1, 2, DR_V),
+                d(1, 1, DR_V),
+                d(6, 1, DR_V)
         );
 
         return new PayloadSimple.Builder("hex_tile_12",
@@ -90,9 +92,9 @@ public class Tile12 {
                 .withLines(
                         asList(
                                 asList(
-                                        Pair.of(hexKA1, SIX),
-                                        Pair.of(hexKA2.getRegistered(), ONE),
-                                        Pair.of(hexKA1, ONE)
+                                        instruction(hexKA1, UR_V),
+                                        instruction(hexKA2.getRegistered(), RIGHT),
+                                        instruction(hexKA1, DR_V)
                                 )
 
                         )
@@ -105,18 +107,30 @@ public class Tile12 {
                                 toLeft(l1)
                         )
                 )
-                .withGridConf(Grid.Configuration.customRect(2*RATIO_w, 2*RATIO_h))
+                .withGridConf(Grid.Configuration.customRect(2 * RATIO_w, 2 * RATIO_h))
 
                 .build();
 
     }
 
-    private static Polygon h(int times) {
-        return Hex.hex(times * RATIO_m, VER);
+//    private static Polygon h(int times) {
+//        return Hex.hex(times * RATIO_m, VER);
+//    }
+
+    private static Pair<Polygon, Polygon.Vertex> h(int times, Hex.Corner corner) {
+        return instruction(times * RATIO_m, corner);
     }
 
     private static Polygon h(int times, int timesCentre) {
         return h(times, timesCentre, ONE);
+    }
+
+    private static Pair<Polygon, Polygon.Vertex> u(int times, int timesCentre, Hex.Corner corner) {
+        return instruction(times * RATIO_m, Hex.centreTransform(timesCentre * RATIO_m, UP), corner);
+    }
+
+    private static Pair<Polygon, Polygon.Vertex> d(int times, int timesCentre, Hex.Corner corner) {
+        return instruction(times * RATIO_m, Hex.centreTransform(timesCentre * RATIO_m, DOWN), corner);
     }
 
     private static Polygon h(int times, int timesCentre, Polygon.Vertex vertex) {
@@ -177,26 +191,26 @@ public class Tile12 {
                         Triple.of(hexKA6, Hex.Vertex.ONE, "A6"),
                         Triple.of(main, Hex.Vertex.ONE, "A7")
                 ))
-                        .addLinesInstructions(asList(
-                                Pair.of(
-                                        Hex.hex(RATIO_w, HOR, Polygon.centreTransform(RATIO_h, FIVE, VER)),
-                                        asList(asList(ONE.cast(), FOUR.cast()))
-                                ),
-                                Pair.of(
-                                        Hex.hex(RATIO_w, HOR, Polygon.centreTransform(RATIO_h, TWO, VER)),
-                                        asList(asList(ONE.cast(), FOUR.cast()))
-                                )
-                        ), green)
-                                .addLinesInstructions(asList(
-                                        Pair.of(
-                                                Hex.hex(RATIO_h, VER, Polygon.centreTransform(RATIO_w, ONE, HOR)),
-                                                asList(asList(TWO.cast(), FIVE.cast()))
-                                        ),
-                                        Pair.of(
-                                                Hex.hex(RATIO_h, VER, Polygon.centreTransform(RATIO_w, FOUR, HOR)),
-                                                asList(asList(TWO.cast(), FIVE.cast()))
-                                        )
-                                ), blue)
+                .addLinesInstructions(asList(
+                        Pair.of(
+                                Hex.hex(RATIO_w, HOR, Hex.centreTransform(RATIO_h, UP)),
+                                asList(asList(ONE.cast(), FOUR.cast()))
+                        ),
+                        Pair.of(
+                                Hex.hex(RATIO_w, HOR, Hex.centreTransform(RATIO_h, DOWN)),
+                                asList(asList(ONE.cast(), FOUR.cast()))
+                        )
+                ), green)
+                .addLinesInstructions(asList(
+                        Pair.of(
+                                Hex.hex(RATIO_h, VER, Hex.centreTransform(RATIO_w, RIGHT)),
+                                asList(asList(TWO.cast(), FIVE.cast()))
+                        ),
+                        Pair.of(
+                                Hex.hex(RATIO_h, VER, Hex.centreTransform(RATIO_w, LEFT)),
+                                asList(asList(TWO.cast(), FIVE.cast()))
+                        )
+                ), blue)
 //                .addMixedLinesInstructionsList(grid, green)
                 .addAllVertexesAsImportantPoints(asList(
                         main

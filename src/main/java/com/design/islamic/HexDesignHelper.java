@@ -271,38 +271,7 @@ public class HexDesignHelper {
 
 
 
-    public String newDesign22() {
-        Double r = initialConditions.getRight();
-        Point2D centre = initialConditions.getLeft();
 
-        double ratioH = 1 / 16.0;
-        double ratio = ratioH / HEX_DIST_HEIGHT;
-
-        double newH = r / 16.0;
-        double newR = newH / HEX_DIST_HEIGHT;
-
-        Polygon main = Hex.hex(1, Polygon.Type.HOR);
-
-        Tile tile = new Tile22(centre, r);
-
-        return
-                Stream.of(
-                        Stream.concat(
-                                Stream.of(
-                                        Pair.of(main, Hex.PERIMETER),
-                                        Pair.of(main, Hex.DIAGONALS),
-                                        Pair.of(main.getRegistered(), Hex.DIAGONALS)
-                                ),
-                                IntStream.range(1, 16).mapToObj(i -> Pair.of(Hex.hex(i * ratio, Polygon.Type.VER), Hex.PERIMETER))
-                        ).map(toLines).map(toPolylines(gray)),
-                        Stream.of(
-                                toPolylines(red).apply(tile.getPayload().getPolylines()),
-                                drawPolygons(tile.getPayload().getPolygons(), blue)
-                        )
-
-                ).flatMap(s -> s).collect(joining());
-
-    }
 
     public String newDesign23() {
         Double r = initialConditions.getRight();
