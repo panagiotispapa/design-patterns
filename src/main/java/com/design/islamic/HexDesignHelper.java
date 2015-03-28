@@ -273,36 +273,7 @@ public class HexDesignHelper {
 
 
 
-    public String newDesign23() {
-        Double r = initialConditions.getRight();
-        Point2D centre = initialConditions.getLeft();
 
-        Tile tile = new Tile23(centre, r);
-
-        double ratioH = 1 / 2.0;
-        double ratio = ratioH / HEX_DIST_HEIGHT;
-
-        Polygon main = Hex.hex(1, Polygon.Type.HOR);
-        Polygon layer1 = Hex.hex(ratio, Polygon.Type.HOR);
-
-        return
-
-                Stream.of(
-                        Stream.of(
-                                Pair.of(main.getMirror(), Hex.PERIMETER)
-                        ).map(toLines).map(toPolylines(gray)),
-                        Stream.of(
-                                Pair.of(Hex.hex(ratio, Polygon.Type.HOR, centreTransform(layer1.getRatio(), layer1.getType())), Hex.PERIMETER)
-                        ).map(toLinesFull).map(toPolylines(gray)),
-                        Stream.of(
-                                tile.getPayload().getPolylines()
-                        ).map(toPolylines(red)),
-                        Stream.of(
-                                layer1
-                        ).map(toVertexes.andThen(highlightPoints()))
-                ).flatMap(s -> s).collect(joining());
-
-    }
 
     public String newDesign24() {
         Double r = initialConditions.getRight();

@@ -6,23 +6,27 @@ import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
 import org.apache.commons.lang3.tuple.Pair;
 
+import static com.design.common.Polygon.Type.VER;
+import static com.design.islamic.model.Hex.Corner.DOWN;
+import static com.design.islamic.model.Hex.Corner.DR_V;
 import static com.design.islamic.model.Hex.Vertex.ONE;
 import static com.design.islamic.model.Hex.Vertex.TWO;
+import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 
 public class Tile1 {
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
-        Polygon main = Hex.hex(1, Polygon.Type.VER);
+        Polygon main = Hex.hex(1, VER);
 
         return new PayloadSimple.Builder("hex_tile_01",
                 Hex.ALL_VERTEX_INDEXES
         )
                 .withLines(asList(
                         asList(
-                                Pair.of(main, ONE),
-                                Pair.of(main, TWO)
+                                instruction(main, DR_V),
+                                instruction(main, DOWN)
                         )
                 ))
                 .build();

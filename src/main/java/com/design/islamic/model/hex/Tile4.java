@@ -16,7 +16,9 @@ import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.$1;
 import static com.design.common.view.SvgFactory.newStyle;
+import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.Vertex.*;
+import static com.design.islamic.model.Hex.instruction;
 import static com.design.islamic.model.Hex.£H;
 import static java.util.Arrays.asList;
 
@@ -28,19 +30,19 @@ public class Tile4 {
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
         Polygon inner = Hex.hex(RATIO_KA, HOR);
-        Polygon outer = Hex.hex(RATIO_CD, VER, Hex.centreTransform(1, VER));
+        Polygon outer = Hex.hex(RATIO_CD, VER, Hex.centreTransform(1, DR_V));
 
         return new PayloadSimple.Builder("hex_tile_04",
                 Hex.ALL_VERTEX_INDEXES
         )
                 .withLines(asList(
                         asList(
-                                Pair.of(outer, FIVE),
-                                Pair.of(inner, TWO)
+                                instruction(outer, UP),
+                                instruction(inner, DR_H)
                         ),
                         asList(
-                                Pair.of(outer, THREE),
-                                Pair.of(inner, ONE)
+                                instruction(outer, DL_V),
+                                instruction(inner, RIGHT)
                         )
 
                 ))

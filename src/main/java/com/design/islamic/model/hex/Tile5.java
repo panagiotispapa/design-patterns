@@ -15,8 +15,10 @@ import java.util.List;
 
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
+import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.HEIGHT_RATIO;
 import static com.design.islamic.model.Hex.Vertex.*;
+import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 
 public class Tile5 {
@@ -26,16 +28,16 @@ public class Tile5 {
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
-        Polygon outer = Hex.hex(1 - RATIO_2, VER, Hex.centreTransform(1, VER));
+        Polygon outer = Hex.hex(1 - RATIO_2, VER, Hex.centreTransform(1, DR_V));
 
         return new PayloadSimple.Builder("hex_tile_05",
                  Hex.ALL_VERTEX_INDEXES
         )
                 .withLines(asList(
                         asList(
-                                Pair.of(outer, FIVE),
-                                Pair.of(outer, FOUR),
-                                Pair.of(outer, THREE)
+                                instruction(outer, UP),
+                                instruction(outer, UL_V),
+                                instruction(outer, DL_V)
                         )
 
                 ))
@@ -54,7 +56,7 @@ public class Tile5 {
         Polygon inner2 = Hex.hex(RATIO_1, Polygon.Type.HOR);
         Polygon inner1 = inner2.getFramed();
         Polygon inner3 = Hex.hex(RATIO_1 * RATIO_1, VER);
-        Polygon outer = Hex.hex(inner3.getRatio(), VER, Hex.centreTransform(1, VER));
+        Polygon outer = Hex.hex(inner3.getRatio(), VER, Hex.centreTransform(1, DR_V));
 //        Polygon innerReg = inner.getRegistered();
 
 //        Polygon outer = Hex.hex(RATIO_2, Polygon.Type.HOR, centreTransform(RATIO_1, Polygon.Type.VER));

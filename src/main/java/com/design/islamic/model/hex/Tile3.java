@@ -15,8 +15,12 @@ import java.util.List;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
+import static com.design.islamic.model.Hex.Corner.DR_H;
+import static com.design.islamic.model.Hex.Corner.DR_V;
+import static com.design.islamic.model.Hex.Corner.RIGHT;
 import static com.design.islamic.model.Hex.HEIGHT_RATIO;
 import static com.design.islamic.model.Hex.Vertex.*;
+import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 
 public class Tile3 {
@@ -38,10 +42,9 @@ public class Tile3 {
                 .withLines(
                         asList(
                                 asList(
-                                        Pair.of(inner, ONE),
-                                        Pair.of(main, ONE),
-                                        Pair.of(inner, TWO)
-
+                                        instruction(inner, RIGHT),
+                                        instruction(main, DR_V),
+                                        instruction(inner, DR_H)
                                 )
                         )
                 )

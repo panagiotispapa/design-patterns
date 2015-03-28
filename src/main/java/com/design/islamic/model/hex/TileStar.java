@@ -12,9 +12,11 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.List;
 
+import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
 import static com.design.islamic.model.Hex.*;
+import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 
@@ -25,14 +27,26 @@ public class TileStar {
     public static double RATIO_3 = (1.5 - HEIGHT_RATIO) * 0.5;
 
     public static List<Pair<Polygon, Polygon.Vertex>> getLines(double ratio) {
-        Polygon main = Hex.hex(HEIGHT_RATIO, Polygon.Type.HOR);
+        Polygon main = Hex.hex(HEIGHT_RATIO, HOR);
         Polygon inner = Hex.hex(ratio, VER);
 
         return
                 asList(
-                        Pair.of(inner, ONE),
-                        Pair.of(main, TWO),
-                        Pair.of(inner, TWO)
+                        instruction(inner, DR_V),
+                        instruction(main, DR_H),
+                        instruction(inner, DOWN)
+                );
+    }
+
+    public static List<Pair<Polygon, Polygon.Vertex>> getLinesB(double ratio) {
+        Polygon main = Hex.hex(HEIGHT_RATIO, VER);
+        Polygon inner = Hex.hex(ratio, HOR);
+
+        return
+                asList(
+                        instruction(main, UP),
+                        instruction(inner, UR_H),
+                        instruction(main, UR_V)
                 );
     }
 
@@ -67,6 +81,45 @@ public class TileStar {
                 .withLines(asList(
                         getLines(RATIO_3)
                 ))
+                .build();
+    }
+
+
+    @TileSupplier
+    public static PayloadSimple getPayloadSimple1b() {
+        return new PayloadSimple
+                .Builder(
+                "hex_tile_star_01b",
+                Hex.ALL_VERTEX_INDEXES
+        ).withLines(asList(
+                getLinesB(RATIO_1)
+        ))
+                .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
+                .build();
+    }
+
+    @TileSupplier
+    public static PayloadSimple getPayloadSimple2b() {
+        return new PayloadSimple
+                .Builder(
+                "hex_tile_star_02b",
+                Hex.ALL_VERTEX_INDEXES
+        ).withLines(asList(
+                getLinesB(RATIO_2)
+        ))
+                .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
+                .build();
+    }
+    @TileSupplier
+    public static PayloadSimple getPayloadSimple3b() {
+        return new PayloadSimple
+                .Builder(
+                "hex_tile_star_03b",
+                Hex.ALL_VERTEX_INDEXES
+        ).withLines(asList(
+                getLinesB(RATIO_3)
+        ))
+                .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
     }
 
@@ -157,10 +210,10 @@ public class TileStar {
 
         Polygon main = Hex.hex(1, VER);
         Polygon registered = main.getRegistered();
-        Polygon outerSmall = Hex.hex(1.5 - HEIGHT_RATIO, VER, Hex.centreTransform(2 * HEIGHT_RATIO, Polygon.Type.HOR));
+        Polygon outerSmall = Hex.hex(1.5 - HEIGHT_RATIO, VER, Hex.centreTransform(2 * HEIGHT_RATIO, RIGHT));
 
-        Polygon inner = Hex.hex(HEIGHT_RATIO * 0.5 + HEIGHT_RATIO * HEIGHT_RATIO, Polygon.Type.HOR, Polygon.centreTransform(RATIO_3, ONE, VER));
-        Polygon outerBig = Hex.hex(2, VER, Polygon.centreTransform(HEIGHT_RATIO, ONE, Polygon.Type.HOR));
+        Polygon inner = Hex.hex(HEIGHT_RATIO * 0.5 + HEIGHT_RATIO * HEIGHT_RATIO, HOR, centreTransform(RATIO_3, DR_V));
+        Polygon outerBig = Hex.hex(2, VER, centreTransform(HEIGHT_RATIO, RIGHT));
         Polygon hexAF = Hex.hex(AF, VER, Hex.centreTransform(1, VER));
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_03_design")
@@ -196,19 +249,19 @@ public class TileStar {
                         Pair.of(registered, Hex.PERIMETER)
                 ), green)
                 .addMixedLinesInstructions(asList(
-                        Pair.of(outerSmall, THREE),
-                        Pair.of(registered, ONE),
-                        Pair.of(outerSmall, FOUR)
+                        instruction(outerSmall, DL_V),
+                        instruction(registered, RIGHT),
+                        instruction(outerSmall, UL_V)
 
                 ), green)
                 .addMixedLinesInstructions(asList(
-                        Pair.of(inner, THREE),
-                        Pair.of(inner, SIX)
+                        instruction(inner, DL_H),
+                        instruction(inner, UR_H)
 
                 ), blue)
                 .addMixedLinesInstructions(asList(
-                        Pair.of(outerBig, TWO),
-                        Pair.of(outerBig, FIVE)
+                        instruction(outerBig, DOWN),
+                        instruction(outerBig, UP)
 
                 ), gray)
                 .addCircle(
@@ -217,6 +270,95 @@ public class TileStar {
                         ), blueLight
                 )
                 ;
+
+    }
+
+
+    @DesignSupplier
+    public static DesignHelper getDesignHelper1b() {
+        String black = newStyle("black", 1, 1);
+        String blue = newStyle("blue", 1, 1);
+        String gray = newStyle("gray", 1, 1);
+        String green = newStyle("green", 1, 1);
+        String red = newStyle("red", 2, 1);
+
+        Polygon main = Hex.hex(1, HOR);
+        Polygon registered = main.getRegistered();
+        Polygon inner = Hex.hex(RATIO_1, HOR);
+
+        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_01b_design")
+                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
+                .addMixedLinesInstructionsList(getPayloadSimple1b().getLines(), red)
+//                .addEquations(equations)
+                .addLinesInstructions(asList(
+                        Pair.of(main, Hex.PERIMETER),
+                        Pair.of(main, Hex.DIAGONALS)
+                ), gray)
+                .addLinesInstructions(asList(
+                        Pair.of(registered, Hex.PERIMETER)
+                ), green)
+                .addLinesInstructions(asList(
+                        Pair.of(inner, Hex.PERIMETER)
+                ), blue);
+
+    }
+
+
+    @DesignSupplier
+    public static DesignHelper getDesignHelper2b() {
+        String black = newStyle("black", 1, 1);
+        String blue = newStyle("blue", 1, 1);
+        String gray = newStyle("gray", 1, 1);
+        String green = newStyle("green", 1, 1);
+        String red = newStyle("red", 2, 1);
+
+        Polygon main = Hex.hex(1, HOR);
+        Polygon registered = main.getRegistered();
+        Polygon inner = Hex.hex(RATIO_2, HOR);
+
+        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_02b_design")
+                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
+                .addMixedLinesInstructionsList(getPayloadSimple2b().getLines(), red)
+//                .addEquations(equations)
+                .addLinesInstructions(asList(
+                        Pair.of(main, Hex.PERIMETER),
+                        Pair.of(main, Hex.DIAGONALS)
+                ), gray)
+                .addLinesInstructions(asList(
+                        Pair.of(registered, Hex.PERIMETER)
+                ), green)
+                .addLinesInstructions(asList(
+                        Pair.of(inner, Hex.PERIMETER)
+                ), blue);
+
+    }
+
+    @DesignSupplier
+    public static DesignHelper getDesignHelper3b() {
+        String black = newStyle("black", 1, 1);
+        String blue = newStyle("blue", 1, 1);
+        String gray = newStyle("gray", 1, 1);
+        String green = newStyle("green", 1, 1);
+        String red = newStyle("red", 2, 1);
+
+        Polygon main = Hex.hex(1, HOR);
+        Polygon registered = main.getRegistered();
+        Polygon inner = Hex.hex(RATIO_3, HOR);
+
+        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_03b_design")
+                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
+                .addMixedLinesInstructionsList(getPayloadSimple3b().getLines(), red)
+//                .addEquations(equations)
+                .addLinesInstructions(asList(
+                        Pair.of(main, Hex.PERIMETER),
+                        Pair.of(main, Hex.DIAGONALS)
+                ), gray)
+                .addLinesInstructions(asList(
+                        Pair.of(registered, Hex.PERIMETER)
+                ), green)
+                .addLinesInstructions(asList(
+                        Pair.of(inner, Hex.PERIMETER)
+                ), blue);
 
     }
 

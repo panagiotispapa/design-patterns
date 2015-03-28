@@ -17,6 +17,7 @@ import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.£2;
 import static com.design.common.view.SvgFactory.newStyle;
 import static com.design.islamic.model.Hex.*;
+import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 
@@ -29,25 +30,25 @@ public class Tile7 {
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
         Polygon inner = Hex.hex(RATIO_KD, HOR);
-        Polygon outer = Hex.hex(RATIO_BE, VER, centreTransform(1, VER));
-        Polygon outerBig = Hex.hex(0.5, VER, centreTransform(1, VER));
+        Polygon outer = Hex.hex(RATIO_BE, VER, centreTransform(1, DR_V));
+        Polygon outerBig = Hex.hex(0.5, VER, centreTransform(1, DR_V));
 
         return new PayloadSimple.Builder("hex_tile_07",
                  Hex.ALL_VERTEX_INDEXES
         )
                 .withLines(                asList(
                                 asList(
-                                        Pair.of(outer, FIVE),
-                                        Pair.of(inner, TWO)
+                                        instruction(outer, UP),
+                                        instruction(inner, DR_H)
                                 ),
                                 asList(
-                                        Pair.of(outer, THREE),
-                                        Pair.of(inner, ONE)
+                                        instruction(outer, DL_V),
+                                        instruction(inner, RIGHT)
                                 ),
                                 asList(
-                                        Pair.of(outerBig, FIVE),
-                                        Pair.of(outerBig, FOUR),
-                                        Pair.of(outerBig, THREE)
+                                        instruction(outerBig, UP),
+                                        instruction(outerBig, UL_V),
+                                        instruction(outerBig, DL_V)
                                 )
                         )
                 )

@@ -13,6 +13,7 @@ import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
 import static com.design.islamic.model.Hex.*;
+import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 
@@ -40,32 +41,32 @@ public class Tile8 {
     public static PayloadSimple getPayloadSimple() {
         Polygon main = Hex.hex(1, VER);
         Polygon mainReg = main.getRegistered();
-        Polygon hexAG = Hex.hex(AC * 0.5, VER, centreTransform(1, VER));
-        Polygon hexJD = Hex.hex(JD, HOR, centreTransform(KJ, VER));
-        Polygon hexJDRot = Hex.hex(JD, HOR, Polygon.centreTransform(KJ, Hex.Vertex.SIX, VER));
-        Polygon hexJM = Hex.hex(JM, HOR, centreTransform(KJ, VER));
-        Polygon hexJM_2 = Hex.hex(JM, VER, Polygon.centreTransform(KJ, Hex.Vertex.ONE, HOR));
-        Polygon hexJM_3 = Hex.hex(JM, VER, Polygon.centreTransform(KJ, Hex.Vertex.TWO, HOR));
-        Polygon hexJM_4 = Hex.hex(JM, HOR, Polygon.centreTransform(KJ, Hex.Vertex.SIX, VER));
+        Polygon hexAG = Hex.hex(AC * 0.5, VER, centreTransform(1, DR_V));
+        Polygon hexJD = Hex.hex(JD, HOR, centreTransform(KJ, DR_V));
+        Polygon hexJDRot = Hex.hex(JD, HOR, centreTransform(KJ, UR_V));
+        Polygon hexJM = Hex.hex(JM, HOR, centreTransform(KJ, DR_V));
+        Polygon hexJM_2 = Hex.hex(JM, VER, centreTransform(KJ, RIGHT));
+        Polygon hexJM_3 = Hex.hex(JM, VER, centreTransform(KJ, DR_H));
+        Polygon hexJM_4 = Hex.hex(JM, HOR, centreTransform(KJ, UR_V));
 
         return new PayloadSimple.Builder("hex_tile_08",
                  Hex.ALL_VERTEX_INDEXES
         )
                 .withLines(                Arrays.asList(
                                 asList(
-                                        Pair.of(hexJM_3, FOUR),
-                                        Pair.of(hexAG, THREE),
-                                        Pair.of(hexAG, FOUR),
-                                        Pair.of(hexAG, FIVE),
-                                        Pair.of(hexJM_2, FOUR)
+                                        instruction(hexJM_3, UL_V),
+                                        instruction(hexAG, DL_V),
+                                        instruction(hexAG, UL_V),
+                                        instruction(hexAG, UP),
+                                        instruction(hexJM_2, UL_V)
                                 ),
                                 asList(
 
-                                        Pair.of(hexJM_4, FOUR),
-                                        Pair.of(hexJDRot, ONE),
-                                        Pair.of(mainReg, ONE),
-                                        Pair.of(hexJD, ONE),
-                                        Pair.of(hexJM, FOUR)
+                                        instruction(hexJM_4, LEFT),
+                                        instruction(hexJDRot, RIGHT),
+                                        instruction(mainReg, RIGHT),
+                                        instruction(hexJD, RIGHT),
+                                        instruction(hexJM, LEFT)
                                 )
                         )
                 )
@@ -89,20 +90,20 @@ public class Tile8 {
         Polygon hexKB = Hex.hex(0.5, VER);
         Polygon hexKC = Hex.hex(hexKB.getRatio() / HEIGHT_RATIO, VER);
         Polygon hexKD = Hex.hex(HEIGHT_RATIO, VER);
-        Polygon hexAE = Hex.hex((1 - hexKC.getRatio()) * HEIGHT_RATIO, HOR, centreTransform(1, VER));
-        Polygon hexAF = Hex.hex(hexAE.getRatio() * HEIGHT_RATIO, VER, centreTransform(1, VER));
+        Polygon hexAE = Hex.hex((1 - hexKC.getRatio()) * HEIGHT_RATIO, HOR, centreTransform(1, DR_V));
+        Polygon hexAF = Hex.hex(hexAE.getRatio() * HEIGHT_RATIO, VER, centreTransform(1, DR_V));
 //        Polygon hexFE = Hex.hex(hexAE.getRatio() * 0.5, VER);
         Polygon hexKF = Hex.hex(KF, HOR);
-        Polygon hexAG = Hex.hex(AC * 0.5, VER, centreTransform(1, VER));
+        Polygon hexAG = Hex.hex(AC * 0.5, VER, centreTransform(1, DR_V));
         Polygon hexKH = Hex.hex(KH, VER);
         Polygon hexKI = Hex.hex(KI, VER);
         Polygon hexKJ = Hex.hex(KJ, VER);
         Polygon hexJD = Hex.hex(JD, HOR, centreTransform(KJ, VER));
-        Polygon hexJARot = Hex.hex(JA, HOR, Polygon.centreTransform(KJ, Hex.Vertex.SIX, VER));
+        Polygon hexJARot = Hex.hex(JA, HOR, centreTransform(KJ, UR_V));
         Polygon hexJM = Hex.hex(JM, HOR, centreTransform(KJ, VER));
-        Polygon hexJM_2 = Hex.hex(JM, VER, Polygon.centreTransform(KJ, Hex.Vertex.ONE, HOR));
-        Polygon hexJM_3 = Hex.hex(JM, VER, Polygon.centreTransform(KJ, Hex.Vertex.TWO, HOR));
-        Polygon hexJM_4 = Hex.hex(JM, HOR, Polygon.centreTransform(KJ, Hex.Vertex.SIX, VER));
+        Polygon hexJM_2 = Hex.hex(JM, VER, centreTransform(KJ, RIGHT));
+        Polygon hexJM_3 = Hex.hex(JM, VER, centreTransform(KJ, DR_H));
+        Polygon hexJM_4 = Hex.hex(JM, HOR, centreTransform(KJ, UR_V));
 
         Polygon hexRot1 = Hex.hex(1, HOR, centreTransform(FE, VER));
         Polygon hexRot2 = Hex.hex(1, VER, centreTransform(FE, HOR));

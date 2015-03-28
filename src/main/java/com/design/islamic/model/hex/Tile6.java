@@ -16,8 +16,10 @@ import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
 import static com.design.islamic.model.Hex.$H;
+import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.HEIGHT_RATIO;
 import static com.design.islamic.model.Hex.Vertex.*;
+import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 
 public class Tile6 {
@@ -28,21 +30,21 @@ public class Tile6 {
     public static PayloadSimple getPayloadSimple() {
         Polygon main = Hex.hex(1, VER);
         Polygon inner = Hex.hex(0.5, VER);
-        Polygon outer = Hex.hex($H.apply(0.5), HOR, Hex.centreTransform(1, VER));
+        Polygon outer = Hex.hex($H.apply(0.5), HOR, Hex.centreTransform(1, DR_V));
 
         return new PayloadSimple.Builder("hex_tile_06",
                 Hex.ALL_VERTEX_INDEXES
         )
                 .withLines(asList(
                         asList(
-                                Pair.of(main, ONE),
-                                Pair.of(outer, FIVE),
-                                Pair.of(inner, TWO)
+                                instruction(main, DR_V),
+                                instruction(outer, UL_H),
+                                instruction(inner, DOWN)
                         ),
                         asList(
-                                Pair.of(main, ONE),
-                                Pair.of(outer, FOUR),
-                                Pair.of(inner, SIX)
+                                instruction(main, DR_V),
+                                instruction(outer, LEFT),
+                                instruction(inner, UR_V)
                         )
 
                 ))
@@ -60,7 +62,7 @@ public class Tile6 {
         Polygon main = Hex.hex(1, VER);
         Polygon inner1 = Hex.hex(RATIO_1, HOR);
         Polygon inner2 = Hex.hex(0.5, VER);
-        Polygon outer = Hex.hex(0.5, VER, Hex.centreTransform(1, VER));
+        Polygon outer = Hex.hex(0.5, VER, Hex.centreTransform(1, DR_V));
         Polygon outerReg = outer.getRegistered();
 
         List<String> equations = asList(
