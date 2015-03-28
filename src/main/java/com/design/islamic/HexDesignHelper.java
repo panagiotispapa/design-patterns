@@ -275,37 +275,7 @@ public class HexDesignHelper {
 
 
 
-    public String newDesign24() {
-        Double r = initialConditions.getRight();
-        Point2D centre = initialConditions.getLeft();
 
-        Tile tile = new Tile24(centre, r);
-
-        double ratio = 1 / 3.0;
-
-        Polygon main = Hex.hex(1, Polygon.Type.VER);
-        Polygon inner = Hex.hex(ratio, Polygon.Type.VER);
-        Polygon outer = Hex.hex(ratio, Polygon.Type.VER, centreTransform(inner.getRatio(), inner.getType()));
-
-        return
-
-                Stream.of(
-                        Stream.of(
-                                Pair.of(main, Hex.PERIMETER),
-                                Pair.of(inner, Hex.PERIMETER),
-                                Pair.of(outer, Hex.PERIMETER)
-
-                        ).map(toLines).map(toPolylines(gray)),
-                        Stream.of(
-                                tile.getPayload().getPolylines()
-                        ).map(toPolylines(red))
-
-                ).flatMap(s -> s).collect(joining());
-
-        //newHexDiag(newEdgeAt(centre,  1* newR, HEX_RADIANS_ROT[0]))
-//        builder.append(drawPolygon(newHexagonRot(newEdgeAt(centre, 3 * newR, HEX_RADIANS_ROT[0]), newR), gray));
-
-    }
 
     public static String newDesign25(final Point2D centre, final double r) {
 
@@ -379,23 +349,7 @@ public class HexDesignHelper {
         return builder.toString();
     }
 
-    public String newDesign26() {
-        Double r = initialConditions.getRight();
-        Point2D centre = initialConditions.getLeft();
 
-        Tile tile = new Tile26(centre, r);
-
-        return Stream.of(
-                Stream.of(
-                        Pair.of(Hex.hex(1, Polygon.Type.VER), Hex.PERIMETER),
-                        Pair.of(Hex.hex(HEX_DIST_DAM, Polygon.Type.VER), Hex.PERIMETER)
-                ).map(toLines.andThen(toPolylines(gray))),
-                Stream.of(
-                        tile.getPayload().getPolylines()
-                ).map(toPolylines(red))
-        ).flatMap(s -> s).collect(joining());
-
-    }
 
     public String newDesign27() {
 

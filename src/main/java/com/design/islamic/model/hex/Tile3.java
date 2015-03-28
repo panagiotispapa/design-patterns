@@ -15,36 +15,58 @@ import java.util.List;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.Corner.DR_H;
-import static com.design.islamic.model.Hex.Corner.DR_V;
-import static com.design.islamic.model.Hex.Corner.RIGHT;
-import static com.design.islamic.model.Hex.HEIGHT_RATIO;
+import static com.design.islamic.model.Hex.*;
+import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.Vertex.*;
-import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 
 public class Tile3 {
 
-    public static double ANGLE_1 = Math.atan(0.25 / HEIGHT_RATIO);
-    public static double ANGLE_2 = Math.PI / 6.0 + ANGLE_1;
+    private static double ANGLE_1 = Math.atan(0.25 / HEIGHT_RATIO);
+    private static double ANGLE_2 = Math.PI / 6.0 + ANGLE_1;
 
-    public static double RATIO_1 = 0.5 * Math.tan(ANGLE_2);
-    public static double RATIO_2 = HEIGHT_RATIO - RATIO_1;
+    private static double IB = 0.5 * Math.tan(ANGLE_2);
+    private static double KI = HEIGHT_RATIO - IB;
+    private static double HL = $P.apply(0.5);
+    private static double EL = $H.apply(0.5);
+    private static double HM = EL + HL;
+    private static double KM = 1 - HM;
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
         Polygon main = Hex.hex(1, VER);
-        Polygon inner = Hex.hex(RATIO_2, HOR);
+        Polygon hexKI = Hex.hex(KI, HOR);
 
         return new PayloadSimple.Builder("hex_tile_03",
-                 Hex.ALL_VERTEX_INDEXES
+                Hex.ALL_VERTEX_INDEXES
         )
                 .withLines(
                         asList(
                                 asList(
-                                        instruction(inner, RIGHT),
+                                        instruction(hexKI, RIGHT),
                                         instruction(main, DR_V),
-                                        instruction(inner, DR_H)
+                                        instruction(hexKI, DR_H)
+                                )
+                        )
+                )
+                .build();
+    }
+
+    @TileSupplier
+    public static PayloadSimple getPayloadSimple2() {
+        Polygon main = Hex.hex(1, VER);
+        Polygon mainReg = main.getRegistered();
+        Polygon hexKM = hex(KM, VER);
+
+        return new PayloadSimple.Builder("hex_tile_03b",
+                Hex.ALL_VERTEX_INDEXES
+        )
+                .withLines(
+                        asList(
+                                asList(
+                                        instruction(mainReg, RIGHT),
+                                        instruction(hexKM, DR_V),
+                                        instruction(mainReg, DR_H)
                                 )
                         )
                 )
@@ -62,12 +84,12 @@ public class Tile3 {
         double atan = Math.atan(0.5 / (2.0 * HEIGHT_RATIO));
 
         Polygon main = Hex.hex(1, VER);
-        Polygon outer = Hex.hex(0.5, VER, Hex.centreTransform(HEIGHT_RATIO, HOR));
-//        Polygon outer2 = Hex.hex(0.5, Polygon.Type.VER, centreTransform(1, Polygon.Type.VER));
         Polygon mainReg = main.getRegistered();
-        Polygon inner = Hex.hex(0.5 * 0.5, VER);
-        Polygon inner2 = Hex.hex(1 - 0.5 * 0.5, VER);
-        Polygon inner3 = Hex.hex(RATIO_2, HOR);
+        Polygon hexBH = Hex.hex(0.5, VER, centreTransform(HEIGHT_RATIO, RIGHT));
+        Polygon hexKA = Hex.hex(0.5 * 0.5, VER);
+        Polygon hexKI = Hex.hex(KI, HOR);
+        Polygon hexHL = Hex.hex(HL, VER, centreTransform(1, DR_V));
+        Polygon hexKM = hex(KM, VER);
 
         List<String> equations = asList(
                 "DC/DB = AK/KB",
@@ -85,36 +107,104 @@ public class Tile3 {
                 .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
-                        Triple.of(inner, TWO, "A"),
+                        Triple.of(hexKA, TWO, "A"),
                         Triple.of(mainReg, ONE, "B"),
                         Triple.of(mainReg, FOUR, "D"),
-                        Triple.of(main, Hex.Vertex.THREE, "C"),
+                        Triple.of(main, THREE, "C"),
                         Triple.of(mainReg, TWO, "E"),
                         Triple.of(main, FOUR, "F"),
-                        Triple.of(inner2, ONE, "G"),
                         Triple.of(main, ONE, "H"),
-                        Triple.of(inner3, ONE, "I")
+                        Triple.of(hexKI, ONE, "I"),
+                        Triple.of(hexHL, FOUR, "L"),
+                        Triple.of(hexKM, ONE, "M")
                 ))
                 .addLinesInstructions(asList(
                         Pair.of(main, Hex.PERIMETER),
+
                         Pair.of(main, Hex.DIAGONALS),
                         Pair.of(mainReg, Hex.DIAGONALS)
                 ), gray)
                 .addLinesInstructions(asList(
-                        Pair.of(outer, Hex.PERIMETER)
+                        Pair.of(hexBH, Hex.PERIMETER),
+                        Pair.of(hexBH, Hex.PERIMETER),
+                        Pair.of(hexKM, Hex.PERIMETER)
+//                        Pair.of(hexKJ, Hex.PERIMETER)
 //                                Pair.of(outer2, Hex.PERIMETER),
 //                                Pair.of(outer2, Hex.INNER_TRIANGLES)
                 ), green)
                 .addLinesInstructions(asList(
-                        Pair.of(inner, Hex.PERIMETER),
-                        Pair.of(inner3, Hex.PERIMETER)
+                        Pair.of(hexKA, Hex.PERIMETER),
+                        Pair.of(hexKI, Hex.PERIMETER)
                 ), blue)
                 .addMixedLinesInstructions(asList(
-                        Pair.of(outer, FIVE),
-                        Pair.of(mainReg, FOUR),
-                        Pair.of(outer, TWO)
+                        instruction(hexBH, UP),
+                        instruction(mainReg, LEFT),
+                        instruction(hexBH, DOWN)
 
-                ), gray);
+                ), gray)
+                .addMixedLinesInstructions(asList(
+                        instruction($P.apply(0.5), centreTransform(1, UP), DOWN),
+                        instruction(mainReg, UR_H)
+                ), gray)
+                ;
+
+    }
+
+    @DesignSupplier
+    public static DesignHelper getDesignHelper2() {
+        String black = newStyle("black", 1, 1);
+        String blue = newStyle("blue", 1, 1);
+        String gray = newStyle("gray", 1, 1);
+        String green = newStyle("green", 1, 1);
+        String red = newStyle("red", 2, 1);
+
+        double atan = Math.atan(0.5 / (2.0 * HEIGHT_RATIO));
+
+        Polygon main = Hex.hex(1, VER);
+        Polygon mainReg = main.getRegistered();
+        Polygon hexHL = Hex.hex(HL, VER, centreTransform(1, DR_V));
+        Polygon hexKM = hex(KM, VER);
+
+        List<String> equations = asList(
+//                "DC/DB = AK/KB",
+//                "KA=1/4",
+//                "HDB=th",
+//                "tan(th)=HB/BD=0.25/h",
+//                "DKH=5*(PI/6)",
+//                "KHD=PI-DKH-th=(PI/6)-th",
+//                "IHB=(PI/6)+th",
+//                "IB=0.5*tan(IHB)"
+        );
+
+        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_03b_design")
+                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
+                .addMixedLinesInstructionsList(getPayloadSimple2().getLines(), red)
+                .addEquations(equations)
+                .addImportantPoints(asList(
+//                        Triple.of(hexKA, TWO, "A"),
+                        Triple.of(mainReg, ONE, "B"),
+                        Triple.of(mainReg, FOUR, "D"),
+                        Triple.of(main, THREE, "C"),
+                        Triple.of(mainReg, TWO, "E"),
+                        Triple.of(main, FOUR, "F"),
+                        Triple.of(main, ONE, "H"),
+                        Triple.of(hexHL, FOUR, "L"),
+                        Triple.of(hexKM, ONE, "M")
+                ))
+                .addLinesInstructions(asList(
+                        Pair.of(main, Hex.PERIMETER),
+
+                        Pair.of(main, Hex.DIAGONALS),
+                        Pair.of(mainReg, Hex.DIAGONALS)
+                ), gray)
+                .addLinesInstructions(asList(
+                        Pair.of(hexKM, Hex.PERIMETER)
+                ), green)
+                .addSingleLinesInstructionsList(asList(asList(
+                        instruction($P.apply(0.5), centreTransform(1, DR_V), UL_V),
+                        instruction(mainReg, DR_H)
+                )), gray)
+                ;
 
     }
 
