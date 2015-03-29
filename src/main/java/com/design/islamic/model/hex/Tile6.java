@@ -90,10 +90,10 @@ public class Tile6 {
                         equations
                 )
                 .addImportantPoints(asList(
-                        Triple.of(inner2, Hex.Vertex.ONE, "A"),
-                        Triple.of(main, Hex.Vertex.ONE, "B"),
-                        Triple.of(outerReg, Hex.Vertex.FOUR, "C"),
-                        Triple.of(outerReg, Hex.Vertex.FIVE, "D")
+                        Triple.of(inner2, DR_V.getVertex(), "A"),
+                        Triple.of(main, DR_V.getVertex(), "B"),
+                        Triple.of(outerReg, LEFT.getVertex(), "C"),
+                        Triple.of(outerReg, UL_H.getVertex(), "D")
                 ))
                 .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
                 ;

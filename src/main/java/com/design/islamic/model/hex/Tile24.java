@@ -81,10 +81,10 @@ public class Tile24 {
                 .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
-                        Triple.of(main, Hex.Vertex.FIVE, "A"),
-                        Triple.of(hexKB, Hex.Vertex.FIVE, "B"),
-                        Triple.of(hexKC, Hex.Vertex.FIVE, "C"),
-                        Triple.of(hex(KD, VER), Hex.Vertex.FIVE, "D")
+                        Triple.of(main, UP.getVertex(), "A"),
+                        Triple.of(hexKB, UP.getVertex(), "B"),
+                        Triple.of(hexKC, UP.getVertex(), "C"),
+                        Triple.of(hex(KD, VER), UP.getVertex(), "D")
                 ))
                 .addLinesInstructions(asList(
                         Pair.of(main, Hex.PERIMETER),

@@ -88,8 +88,8 @@ public class Tile3 {
         Polygon hexBH = Hex.hex(0.5, VER, centreTransform(HEIGHT_RATIO, RIGHT));
         Polygon hexKA = Hex.hex(0.5 * 0.5, VER);
         Polygon hexKI = Hex.hex(KI, HOR);
-        Polygon hexHL = Hex.hex(HL, VER, centreTransform(1, DR_V));
-        Polygon hexKM = hex(KM, VER);
+//        Polygon hexHL = Hex.hex(HL, VER, centreTransform(1, DR_V));
+//        Polygon hexKM = hex(KM, VER);
 
         List<String> equations = asList(
                 "DC/DB = AK/KB",
@@ -107,16 +107,16 @@ public class Tile3 {
                 .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
-                        Triple.of(hexKA, TWO, "A"),
-                        Triple.of(mainReg, ONE, "B"),
-                        Triple.of(mainReg, FOUR, "D"),
-                        Triple.of(main, THREE, "C"),
-                        Triple.of(mainReg, TWO, "E"),
-                        Triple.of(main, FOUR, "F"),
-                        Triple.of(main, ONE, "H"),
-                        Triple.of(hexKI, ONE, "I"),
-                        Triple.of(hexHL, FOUR, "L"),
-                        Triple.of(hexKM, ONE, "M")
+                        Triple.of(hexKA, DOWN.getVertex(), "A"),
+                        Triple.of(mainReg, RIGHT.getVertex(), "B"),
+                        Triple.of(mainReg, LEFT.getVertex(), "D"),
+                        Triple.of(main, DL_V.getVertex(), "C"),
+                        Triple.of(mainReg, DR_H.getVertex(), "E"),
+                        Triple.of(main, UL_V.getVertex(), "F"),
+                        Triple.of(main, DR_V.getVertex(), "H"),
+                        Triple.of(hexKI, RIGHT.getVertex(), "I")
+//                        Triple.of(hexHL, UL_V.getVertex(), "L"),
+//                        Triple.of(hexKM, DR_V.getVertex(), "M")
                 ))
                 .addLinesInstructions(asList(
                         Pair.of(main, Hex.PERIMETER),
@@ -126,8 +126,8 @@ public class Tile3 {
                 ), gray)
                 .addLinesInstructions(asList(
                         Pair.of(hexBH, Hex.PERIMETER),
-                        Pair.of(hexBH, Hex.PERIMETER),
-                        Pair.of(hexKM, Hex.PERIMETER)
+                        Pair.of(hexBH, Hex.PERIMETER)
+//                        Pair.of(hexKM, Hex.PERIMETER)
 //                        Pair.of(hexKJ, Hex.PERIMETER)
 //                                Pair.of(outer2, Hex.PERIMETER),
 //                                Pair.of(outer2, Hex.INNER_TRIANGLES)

@@ -74,9 +74,9 @@ public class Tile2 {
                         "BD=h*(1-KB)"
                 ))
                 .addImportantPoints(asList(
-                        Triple.of(inner, ONE, "B"),
-                        Triple.of(innerReg, ONE, "C"),
-                        Triple.of(outer, ONE, "D")
+                        Triple.of(inner, DR_V.getVertex(), "B"),
+                        Triple.of(innerReg, RIGHT.getVertex(), "C"),
+                        Triple.of(outer, DR_V.getVertex(), "D")
 
                 ))
                 .addLinesInstructions(asList(

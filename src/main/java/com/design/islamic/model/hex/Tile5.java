@@ -17,7 +17,6 @@ import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
 import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.HEIGHT_RATIO;
-import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 
@@ -31,7 +30,7 @@ public class Tile5 {
         Polygon outer = Hex.hex(1 - RATIO_2, VER, Hex.centreTransform(1, DR_V));
 
         return new PayloadSimple.Builder("hex_tile_05",
-                 Hex.ALL_VERTEX_INDEXES
+                Hex.ALL_VERTEX_INDEXES
         )
                 .withLines(asList(
                         asList(
@@ -75,11 +74,11 @@ public class Tile5 {
                 .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
-                        Triple.of(inner2, Hex.Vertex.ONE, "A"),
-                        Triple.of(inner3, Hex.Vertex.ONE, "B"),
-                        Triple.of(inner1, Hex.Vertex.ONE, "C"),
-                        Triple.of(main, Hex.Vertex.ONE, "D"),
-                        Triple.of(outer, Hex.Vertex.THREE, "E")
+                        Triple.of(inner2, RIGHT.getVertex(), "A"),
+                        Triple.of(inner3, DR_V.getVertex(), "B"),
+                        Triple.of(inner1, DR_V.getVertex(), "C"),
+                        Triple.of(main, DR_V.getVertex(), "D"),
+                        Triple.of(outer, DL_V.getVertex(), "E")
                 ))
                 .addLinesInstructions(asList(
                         Pair.of(main, Hex.PERIMETER),

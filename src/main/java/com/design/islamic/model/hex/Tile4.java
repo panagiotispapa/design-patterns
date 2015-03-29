@@ -59,8 +59,8 @@ public class Tile4 {
         String red = newStyle("red", 2, 1);
 
         Polygon main = Hex.hex(1, VER);
-        Polygon inner2 = Hex.hex(RATIO_KA, Polygon.Type.HOR);
-        Polygon inner1 = inner2.getFramed();
+        Polygon hexKA = Hex.hex(RATIO_KA, Polygon.Type.HOR);
+        Polygon hexKA_framed = hexKA.getFramed();
         Polygon inner3 = Hex.hex(RATIO_KA * RATIO_KA, VER);
         Polygon outer = Hex.hex(inner3.getRatio(), VER, Hex.centreTransform(1, VER));
 //        Polygon innerReg = inner.getRegistered();
@@ -81,24 +81,24 @@ public class Tile4 {
                 .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
-                        Triple.of(inner2, Hex.Vertex.ONE, "A"),
-                        Triple.of(inner3, Hex.Vertex.ONE, "B"),
-                        Triple.of(inner1, Hex.Vertex.ONE, "C"),
-                        Triple.of(main, Hex.Vertex.ONE, "D"),
-                        Triple.of(outer, Hex.Vertex.THREE, "E")
+                        Triple.of(hexKA, RIGHT.getVertex(), "A"),
+                        Triple.of(inner3, DR_V.getVertex(), "B"),
+                        Triple.of(hexKA_framed, DR_V.getVertex(), "C"),
+                        Triple.of(main, DR_V.getVertex(), "D"),
+                        Triple.of(outer, DL_V.getVertex(), "E")
                 ))
                 .addLinesInstructions(asList(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(main, Hex.DIAGONALS),
                         Pair.of(main, Hex.INNER_TRIANGLES),
-                        Pair.of(inner2, Hex.INNER_TRIANGLES),
+                        Pair.of(hexKA, Hex.INNER_TRIANGLES),
                         Pair.of(outer, Hex.PERIMETER)
                 ), gray)
                 .addLinesInstructions(asList(
-                        Pair.of(inner2, Hex.PERIMETER)
+                        Pair.of(hexKA, Hex.PERIMETER)
                 ), green)
                 .addLinesInstructions(asList(
-                        Pair.of(inner1, Hex.PERIMETER),
+                        Pair.of(hexKA_framed, Hex.PERIMETER),
                         Pair.of(inner3, Hex.PERIMETER)
                 ), blue)
                 ;

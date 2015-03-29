@@ -351,29 +351,7 @@ public class HexDesignHelper {
 
 
 
-    public String newDesign27() {
 
-        Double r = initialConditions.getRight();
-        Point2D centre = initialConditions.getLeft();
-
-//        double d = (1 / 2.0) * atan(HEX_PHI - RECT_PHI_HALF);
-//        double d2 = r * (HEX_DIST_HEIGHT - d);
-
-        Tile tile = new Tile27(centre, r);
-
-        return Stream.of(
-                Stream.of(
-                        Pair.of(Hex.hex(1, Polygon.Type.VER), Hex.PERIMETER)
-                ).map(toLines.andThen(toPolylines(gray))),
-                Stream.of(
-                        Hex.hex(HEX_DIST_HEX_TO_RECT, Polygon.Type.HOR)
-                ).map(toVertexes.andThen(highlightPoints())),
-                Stream.of(
-                        tile.getPayload().getPolylines()
-                ).map(toPolylines(red))
-        ).flatMap(s -> s).collect(joining());
-
-    }
 
     public String newDesign28() {
         Double r = initialConditions.getRight();

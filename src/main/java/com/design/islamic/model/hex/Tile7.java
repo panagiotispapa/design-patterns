@@ -113,11 +113,11 @@ public class Tile7 {
                 ), green)
                 .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
                 .addImportantPoints(asList(
-                        Triple.of(main, ONE, "B"),
-                        Triple.of(mainHorReg, ONE, "A"),
-                        Triple.of(innerHorReg, ONE, "C"),
-                        Triple.of(inner, ONE, "D"),
-                        Triple.of(outerSmall, FIVE, "E")
+                        Triple.of(main, DR_V.getVertex(), "B"),
+                        Triple.of(mainHorReg, RIGHT.getVertex(), "A"),
+                        Triple.of(innerHorReg, DR_V.getVertex(), "C"),
+                        Triple.of(inner, DR_V.getVertex(), "D"),
+                        Triple.of(outerSmall, UP.getVertex(), "E")
                 ))
                 .addEquations(equations);
 

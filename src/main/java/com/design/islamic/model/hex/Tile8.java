@@ -181,19 +181,19 @@ public class Tile8 {
                         )
                 ), gray)
                 .addImportantPoints(asList(
-                        Triple.of(main, ONE, "A"),
-                        Triple.of(hexKB, ONE, "B"),
-                        Triple.of(hexKC, ONE, "C"),
-                        Triple.of(hexKD, ONE, "D"),
-                        Triple.of(hexAE, FIVE, "E"),
-                        Triple.of(hexAF, FOUR, "F"),
-                        Triple.of(hexKF, ONE, "F"),
-                        Triple.of(hexAG, FOUR, "G"),
-                        Triple.of(hexKH, ONE, "H"),
-                        Triple.of(hexKI, TWO, "I"),
-                        Triple.of(hexKJ, ONE, "J"),
-                        Triple.of(hexJD, TWO, "L"),
-                        Triple.of(hexJM, FIVE, "M")
+                        Triple.of(main, DR_V.getVertex(), "A"),
+                        Triple.of(hexKB, DR_V.getVertex(), "B"),
+                        Triple.of(hexKC, DR_V.getVertex(), "C"),
+                        Triple.of(hexKD, DR_V.getVertex(), "D"),
+                        Triple.of(hexAE, UL_H.getVertex(), "E"),
+                        Triple.of(hexAF, UL_V.getVertex(), "F"),
+                        Triple.of(hexKF, RIGHT.getVertex(), "F"),
+                        Triple.of(hexAG, UL_V.getVertex(), "G"),
+                        Triple.of(hexKH, DR_V.getVertex(), "H"),
+                        Triple.of(hexKI, DOWN.getVertex(), "I"),
+                        Triple.of(hexKJ, DR_V.getVertex(), "J"),
+                        Triple.of(hexJD, DR_H.getVertex(), "L"),
+                        Triple.of(hexJM, UP.getVertex(), "M")
                 ))
 
                 ;

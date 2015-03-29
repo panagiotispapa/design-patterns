@@ -47,7 +47,7 @@ public class TestBed4 {
 //        String testObject = new TileStar(Pair.of(centre, r), TileStar.RATIO_1).design3();
 //        String testObject = new Tile7(Pair.of(centre, r)).design1();
 
-        String testObject = HexDesignHelper.with(Pair.of(centre, r)).newDesign27();
+        String testObject = HexDesignHelper.with(Pair.of(centre, r)).newDesign28();
 //        String testObject = HexDesignHelper.with(Pair.of(centre, r)).newDesign28();
 //        String testObject = HexDesignHelper.with(Pair.of(centre, r)).newStarDesign3();
 //        String testObject = HexDesignHelper.newDesign8(Pair.of(centre, r));

@@ -100,11 +100,11 @@ public class Tile10 {
 
                 ), blue)
                 .addImportantPoints(asList(
-                        Triple.of(main, ONE, "A"),
-                        Triple.of(outerReg, FIVE, "B"),
-                        Triple.of(hexAC, FIVE, "C"),
-                        Triple.of(hexAC, SIX, "D"),
-                        Triple.of(hexKE, ONE, "E")
+                        Triple.of(main, DR_V.getVertex(), "A"),
+                        Triple.of(outerReg, UP.getVertex(), "B"),
+                        Triple.of(hexAC, UL_H.getVertex(), "C"),
+                        Triple.of(hexAC, UR_H.getVertex(), "D"),
+                        Triple.of(hexKE, RIGHT.getVertex(), "E")
                 ))
                 .addAllVertexesAsImportantPoints(asList(
 //                        outer

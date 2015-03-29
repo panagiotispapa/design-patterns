@@ -57,7 +57,7 @@ public class Main implements ActionListener {
         jsvgCanvas.setSize(dim);
         jPanel.setSize(dim);
 
-        refreshCanvas(HexPattern.FIFTEEN);
+        refreshCanvas(HexPattern.TWENTY_SEVEN);
 
     }
 
