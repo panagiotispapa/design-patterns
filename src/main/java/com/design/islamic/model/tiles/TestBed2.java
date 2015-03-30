@@ -69,7 +69,7 @@ public class TestBed2 {
 //                Pair.of("Tile_06", Tile6::getPayloadSimple)
 //                Tile9New::getPayloadSimple
 //                Tile12::getPayloadSimple
-                Tile27::getPayloadSimple
+                Tile15::getPayloadSimple
 //                Pair.of("Tile_07", Tile7::getPayloadSimple)
 //                Tile8::getPayloadSimple
 //                Pair.of("Tile_3", () -> new Tile3(ic).getPayload())
@@ -120,7 +120,7 @@ public class TestBed2 {
 //                Tile9::getDesignHelper,
 //                TileStar::getDesignHelper1,
 //                Tile22::getDesignHelper,
-                Tile27::getDesignHelper,
+                Tile15::getDesignHelper,
 //                Tile3::getDesignHelper,
 //                Tile3::getDesignHelper2,
 //                TileStar::getDesignHelper2,

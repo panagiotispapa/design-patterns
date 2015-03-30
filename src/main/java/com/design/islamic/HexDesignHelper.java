@@ -236,32 +236,7 @@ public class HexDesignHelper {
 
 
 
-    public String newDesign15() {
-        Double r = initialConditions.getRight();
-        Point2D centre = initialConditions.getLeft();
 
-        double ratio = sin(PI_QUARTER) / 2.5;
-
-        Tile tile = new Tile15(centre, r);
-        return
-                Stream.of(
-                        Stream.of(
-                                Pair.of(Hex.hex(ratio, Polygon.Type.VER), Hex.PERIMETER),
-                                Pair.of(Hex.hex(2 * ratio, Polygon.Type.VER), Hex.PERIMETER),
-                                Pair.of(Hex.hex(5 * ratio, Polygon.Type.VER), Hex.PERIMETER),
-                                Pair.of(Hex.hex(5 * ratio, Polygon.Type.VER), Hex.DIAGONALS)
-                        ).map(toLines.andThen(toPolylines(gray))),
-                        Stream.of(
-                                drawPolygon(newRectRot(centre, r), gray),
-                                drawPolygon(newRectRot(centre, r * Tile15.RATIO_W), gray)
-                        ),
-                        Stream.of(
-                                tile.getPayload().getPolylines()
-                        ).map(toPolylines(red))
-
-                ).flatMap(s -> s).collect(joining());
-
-    }
 
 
 
