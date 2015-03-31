@@ -64,17 +64,17 @@ public class PatternManager {
 //        hexProviderMap.put(HexPattern.SIXTEEN, new Tile16(newCentre(0, 0), r).getPayload());
 //        hexProviderMap.put(HexPattern.SIXTEEN, new Tile16(newCentre(0, 0), r).getPayload());
 //        hexProviderMap.put(HexPattern.SEVENTEEN, new Tile17(newCentre(0, 0), r).getPayload());
-        hexProviderMap.put(HexPattern.EIGHTEEN, new Tile18(newCentre(0, 0), r).getPayload());
+//        hexProviderMap.put(HexPattern.EIGHTEEN, new Tile18(newCentre(0, 0), r).getPayload());
 //        hexProviderMap.put(HexPattern.NINETEEN, new Tile19(newCentre(0, 0), r).getPayload());
 //        hexProviderMap.put(HexPattern.TWENTY, new Tile20(newCentre(0, 0), r).getPayload());
 //        hexProviderMap.put(HexPattern.TWENTY_ONE, new Tile21(newCentre(0, 0), r).getPayload());
 //        hexProviderMap.put(HexPattern.TWENTY_TWO, new Tile22(newCentre(0, 0), r).getPayload());
 //        hexProviderMap.put(HexPattern.TWENTY_THREE, new Tile23(newCentre(0, 0), r).getPayload());
 //        hexProviderMap.put(HexPattern.TWENTY_FOUR, new Tile24(newCentre(0, 0), r).getPayload());
-        hexProviderMap.put(HexPattern.TWENTY_FIVE, new Tile25(newCentre(0, 0), r).getPayload());
+//        hexProviderMap.put(HexPattern.TWENTY_FIVE, new Tile25(newCentre(0, 0), r).getPayload());
 //        hexProviderMap.put(HexPattern.TWENTY_SIX, new Tile26(newCentre(0, 0), r).getPayload());
 //        hexProviderMap.put(HexPattern.TWENTY_SEVEN, new Tile27(newCentre(0, 0), r).getPayload());
-        hexProviderMap.put(HexPattern.TWENTY_EIGHT, new Tile28(newCentre(0, 0), r).getPayload());
+//        hexProviderMap.put(HexPattern.TWENTY_EIGHT, new Tile28(newCentre(0, 0), r).getPayload());
         hexProviderMap.put(HexPattern.TWENTY_NINE, new Tile29(newCentre(0, 0), r).getPayload());
         hexProviderMap.put(HexPattern.THIRTY, new Tile30(newCentre(0, 0), r).getPayload());
 

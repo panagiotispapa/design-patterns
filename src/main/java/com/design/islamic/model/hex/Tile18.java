@@ -1,60 +1,80 @@
 package com.design.islamic.model.hex;
 
-import com.design.islamic.model.Payload;
-import com.design.islamic.model.Payloads;
-import com.design.islamic.model.Tile;
+import com.design.common.DesignHelper;
+import com.design.common.Polygon;
+import com.design.islamic.model.DesignSupplier;
+import com.design.islamic.model.Hex;
+import com.design.islamic.model.PayloadSimple;
+import com.design.islamic.model.TileSupplier;
 import com.design.islamic.model.tiles.Grid;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static com.design.common.PolygonTools.newHexagon;
-import static com.design.islamic.model.Payloads.EMPTY;
+import static com.design.common.Polygon.Type.HOR;
+import static com.design.common.Polygon.Type.VER;
+import static com.design.common.view.SvgFactory.newStyle;
+import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.islamic.model.Hex.HEIGHT_RATIO;
+import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 
-public class Tile18 implements Tile {
-    private List<List<Point2D>> polygons;
-    private List<List<Point2D>> lines;
+public class Tile18 {
 
-    private final double newR;
-    private final Point2D centre;
+    @TileSupplier
+    public static PayloadSimple getPayloadSimple() {
+        Polygon main = Hex.hex(1, HOR);
 
-    public Tile18(final Point2D centre, final double r) {
+        return new PayloadSimple.Builder("hex_tile_18",
+                Hex.ALL_VERTEX_INDEXES
+        )
+                .withLinesSingle(asList(
+                        asList(
+                                instruction(main, UL_H),
+                                instruction(main, DR_H)
+                        ),
+                        asList(
+                                instruction(main, UR_H),
+                                instruction(main, DL_H)
+                        )
 
-        this.centre = centre;
-
-        polygons = new ArrayList<>();
-        lines = new ArrayList<>();
-
-        newR = r / 3.0;
-
-
-
-        List<Point2D> mainLayer = newHexagon(centre, r);
-//        polygons.add(mainLayer);
-
-        lines.add(asList(
-                mainLayer.get(1),
-                mainLayer.get(4),
-                mainLayer.get(3),
-                mainLayer.get(2),
-                mainLayer.get(5),
-                mainLayer.get(0),
-                mainLayer.get(1)
-        ));
-//        lines.add(asList(mainLayer.get(2), mainLayer.get(5)));
-
+                ))
+                .build();
     }
 
-    @Override
-    public Payload getPayload() {
-        return Payloads.newPayloadFromPolygonsAndLines(
-                EMPTY,
-                polygons,
-                lines,
-                EMPTY,
-                Grid.Configs.HEX_VER.getConfiguration());
+    @DesignSupplier
+    public static DesignHelper getDesignHelper() {
+        String black = newStyle("black", 1, 1);
+        String blue = newStyle("blue", 1, 1);
+        String gray = newStyle("gray", 1, 1);
+        String green = newStyle("green", 1, 1);
+        String red = newStyle("red", 2, 1);
+
+        Polygon main = Hex.hex(1, HOR);
+
+        List<String> equations = Arrays.asList(
+        );
+
+        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_18_design")
+                .addSingleLinesInstructionsList(getPayloadSimple().getLinesSingle(), red)
+                .addEquations(equations)
+                .addImportantPoints(asList(
+                ))
+                .addLinesInstructions(asList(
+                        Pair.of(main, Hex.PERIMETER)
+//                        Pair.of(main, Hex.DIAGONALS)
+                ), gray)
+                .addLinesInstructions(asList(
+//                        Pair.of(inner2, Hex.PERIMETER)
+                ), green)
+                .addLinesInstructions(asList(
+//                        Pair.of(inner1, Hex.PERIMETER),
+//                        Pair.of(inner3, Hex.PERIMETER)
+                ), blue)
+                ;
+
     }
 
 }

@@ -1,80 +1,104 @@
 package com.design.islamic.model.hex;
 
-import com.design.islamic.model.Payload;
-import com.design.islamic.model.Payloads;
-import com.design.islamic.model.Tile;
+import com.design.common.DesignHelper;
+import com.design.common.Polygon;
+import com.design.islamic.model.DesignSupplier;
+import com.design.islamic.model.Hex;
+import com.design.islamic.model.PayloadSimple;
+import com.design.islamic.model.TileSupplier;
 import com.design.islamic.model.tiles.Grid;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
-import java.awt.geom.Point2D;
+import java.util.Arrays;
 import java.util.List;
 
-import static com.design.common.PolygonTools.*;
-import static com.google.common.collect.Lists.newArrayList;
+import static com.design.common.Polygon.Type.HOR;
+import static com.design.common.view.SvgFactory.newStyle;
+import static com.design.islamic.model.Hex.$H;
+import static com.design.islamic.model.Hex.Corner.DR_V;
+import static com.design.islamic.model.Hex.Corner.RIGHT;
+import static com.design.islamic.model.Hex.Corner.UR_V;
+import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 
-public class Tile25 implements Tile {
+public class Tile25 {
 
-    private List<List<Point2D>> lines;
 
-    private final double newR;
-    private final Point2D centre;
+    private static final double KB = $H.apply(1.0);
+    private static final double KC = $H.apply(KB);
+    private static final double CA = 1 - KC;
+    private static final double CB = 0.5 * KB;
+    private static final double CD = CB;
+    private static final double KD = 1 - CA - CD;
 
-//    private Point2D[] e;
+    @TileSupplier
+    public static PayloadSimple getPayloadSimple() {
+        Polygon main = Hex.hex(1, HOR);
+        Polygon main_Ver = main.getRegistered();
+        Polygon hexKD = Hex.hex(KD, HOR);
+        return new PayloadSimple.Builder("hex_tile_25",
+                Hex.ALL_VERTEX_INDEXES
+        )
+                .withLines(asList(
+                        asList(
+                                instruction(main_Ver, UR_V),
+                                instruction(hexKD, RIGHT),
+                                instruction(main_Ver, DR_V)
+                        )
 
-    public Tile25(final Point2D centre, final double r) {
-
-        this.centre = centre;
-
-        lines = newArrayList();
-
-        double height = r * HEX_DIST_HEIGHT;
-
-        /*
-//        double phi1 = Math.atan((r / 2.0) / (height * 2));
-        double phi1 = Math.atan(1 / (4.0 * sin(HEX_PHI)));
-        double phi2 = HEX_PHI - phi1;
-        double d1 = (HEX_DIST_HEIGHT / 2.0) * tan(phi2);
-
-        newR = r * (HEX_DIST_HEIGHT * HEX_DIST_HEIGHT - d1);
-          */
-
-        newR = r * HEX_DIST_DAM;
-//        lines.add(buildArrow(edges, edgesRot, 0));
-
-        for (int i = 0; i < HEX_N; i++) {
-
-            lines.add(asList(
-                    newEdgeAt(centre, height, toPhiRot(i)),
-                    newEdgeAt(centre, newR, toPhi(i + 1)),
-                    newEdgeAt(centre, height, toPhiRot(i + 1))
-
-            ));
-
-        }
-
+                ))
+                .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
+                .build();
     }
 
-    private double toPhi(int index) {
-        return HEX_RADIANS[toHexIndex(index)];
-    }
+    @DesignSupplier
+    public static DesignHelper getDesignHelper() {
+        String black = newStyle("black", 1, 1);
+        String blue = newStyle("blue", 1, 1);
+        String gray = newStyle("gray", 1, 1);
+        String green = newStyle("green", 1, 1);
+        String red = newStyle("red", 2, 1);
 
-    private double toPhiRot(int index) {
-        return HEX_RADIANS_ROT[toHexIndex(index)];
-    }
+        Polygon main = Hex.hex(1, HOR);
+        Polygon main_Ver = main.getRegistered();
+        Polygon hexKC = Hex.hex(KC, HOR);
+        Polygon hexKD = Hex.hex(KD, HOR);
 
-//    private Point2D e(Point2D centre, double r, int index) {
-//        return newEdgeAt(centre, r, HEX_RADIANS_ROT[index % HEX_N]);
-//    }
-//
-//    private Point2D e(Point2D centre, int index) {
-//        return newEdgeAt(centre, newR, HEX_RADIANS_ROT[index % HEX_N]);
-//    }
+        List<String> equations = Arrays.asList(
+                "KB = h",
+                "KC = h * KB",
+                "BC = 0.5 * KB",
+                "DC = BC",
+                "CA = KA - KC",
+                "KD = KA - KC - DC"
+        );
 
-    @Override
-    public Payload getPayload() {
-        return Payloads.newPayloadFromLines(
-                lines,
-                Grid.Configs.HEX_VER.getConfiguration());
+        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_25_design")
+                .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
+                .addEquations(equations)
+                .addImportantPoints(asList(
+                        Triple.of(main, RIGHT.getVertex(), "A"),
+                        Triple.of(main_Ver, DR_V.getVertex(), "B"),
+                        Triple.of(hexKC, RIGHT.getVertex(), "C"),
+                        Triple.of(hexKD, RIGHT.getVertex(), "D")
+                ))
+                .addLinesInstructions(asList(
+                        Pair.of(main, Hex.PERIMETER),
+                        Pair.of(main, Hex.DIAGONALS),
+                        Pair.of(main_Ver, Hex.PERIMETER),
+                        Pair.of(main_Ver, Hex.DIAGONALS)
+
+                ), gray)
+                .addLinesInstructions(asList(
+                        Pair.of(hexKC, Hex.PERIMETER)
+                ), green)
+                .addLinesInstructions(asList(
+                        Pair.of(hexKD, Hex.PERIMETER)
+//                        Pair.of(inner3, Hex.PERIMETER)
+                ), blue)
+                ;
+
     }
 
 }
