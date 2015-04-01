@@ -259,47 +259,7 @@ public class HexDesignHelper {
 
 
 
-    public String newDesign29() {
-        Double r = initialConditions.getRight();
-        Point2D centre = initialConditions.getLeft();
 
-        Tile tile = new Tile29(centre, r);
-
-        double d1 = HEX_DIST_HEIGHT * HEX_DIST_HEIGHT;
-        double d2 = 1 - d1;
-        double d3 = d2 * cos(PI_QUARTER);
-        double d4 = 2 * d3;
-        double d5 = 0.5 - d4;
-        double d6 = HEX_DIST_HEIGHT - d5;
-
-        Polygon main = Hex.hex(1, Polygon.Type.VER);
-        Polygon hex1 = Hex.hex(HEX_DIST_HEIGHT, Polygon.Type.HOR);
-        List<Point2D> layer1 = newHexagon(centre, r * HEX_DIST_HEIGHT);
-
-        return
-                Stream.of(
-                        Stream.of(
-                                Pair.of(main, Hex.PERIMETER),
-                                Pair.of(main, Hex.DIAGONALS),
-                                Pair.of(main.getRegistered(), Hex.DIAGONALS)
-                        ).map(toLines.andThen(toPolylines(gray))),
-                        Stream.of(
-                                asList(asList(
-                                        layer1.get(0), layer1.get(5)
-                                ))
-                        ).map(toPolylines(gray)),
-                        Stream.of(
-                                Hex.hex(d1, Polygon.Type.VER),
-                                Hex.hex(d6, Polygon.Type.HOR),
-                                Hex.hex(d6 * HEX_DIST_HEX_TO_RECT, Polygon.Type.VER)
-                        ).map(toVertexes.andThen(highlightPoints())),
-                        Stream.of(
-                                tile.getPayload().getPolylines()
-                        ).map(toPolylines(red))
-
-                ).flatMap(s -> s).collect(joining());
-
-    }
 
     public String newDesign30() {
         Double r = initialConditions.getRight();

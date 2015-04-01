@@ -1,6 +1,7 @@
 package com.design.islamic.model;
 
 import com.design.common.Polygon;
+import com.design.common.RatioHelper;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.Pair;
@@ -17,7 +18,6 @@ import java.util.stream.IntStream;
 import static com.design.common.PolygonTools.calcVertexes;
 import static com.design.common.RatioHelper.Ratios.HEX;
 import static java.lang.Math.PI;
-import static java.lang.Math.cos;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
@@ -43,7 +43,6 @@ public class Hex extends Polygon {
 
     public static final double PHI = (2.0 * PI) / 6.0;
 
-    public static final double HEIGHT_RATIO = cos(PHI / 2.0);
     public static List<List<Polygon.Vertex>> NONE = emptyList();
     public static List<List<Polygon.Vertex>> PERIMETER = asList(
             asList(
@@ -148,7 +147,7 @@ public class Hex extends Polygon {
 
     @Override
     protected double getHeightRatio() {
-        return HEIGHT_RATIO;
+        return RatioHelper.Ratios.HEX.$H().apply(1.0);
     }
 
     @Override

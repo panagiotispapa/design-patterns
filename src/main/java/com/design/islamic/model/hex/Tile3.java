@@ -22,11 +22,16 @@ import static java.util.Arrays.asList;
 
 public class Tile3 {
 
-    private static double ANGLE_1 = Math.atan(0.25 / HEIGHT_RATIO);
+
+    private static double KA = 1.0;
+    private static double KB = $H.apply(KA);
+    private static double HEIGHT = KB;
+
+    private static double ANGLE_1 = Math.atan(0.25 / HEIGHT);
     private static double ANGLE_2 = Math.PI / 6.0 + ANGLE_1;
 
     private static double IB = 0.5 * Math.tan(ANGLE_2);
-    private static double KI = HEIGHT_RATIO - IB;
+    private static double KI = KB - IB;
     private static double HL = $P.apply(0.5);
     private static double EL = $H.apply(0.5);
     private static double HM = EL + HL;
@@ -81,11 +86,9 @@ public class Tile3 {
         String green = newStyle("green", 1, 1);
         String red = newStyle("red", 2, 1);
 
-        double atan = Math.atan(0.5 / (2.0 * HEIGHT_RATIO));
-
         Polygon main = Hex.hex(1, VER);
         Polygon mainReg = main.getRegistered();
-        Polygon hexBH = Hex.hex(0.5, VER, centreTransform(HEIGHT_RATIO, RIGHT));
+        Polygon hexBH = Hex.hex(0.5, VER, centreTransform(KB, RIGHT));
         Polygon hexKA = Hex.hex(0.5 * 0.5, VER);
         Polygon hexKI = Hex.hex(KI, HOR);
 //        Polygon hexHL = Hex.hex(HL, VER, centreTransform(1, DR_V));
@@ -157,8 +160,6 @@ public class Tile3 {
         String gray = newStyle("gray", 1, 1);
         String green = newStyle("green", 1, 1);
         String red = newStyle("red", 2, 1);
-
-        double atan = Math.atan(0.5 / (2.0 * HEIGHT_RATIO));
 
         Polygon main = Hex.hex(1, VER);
         Polygon mainReg = main.getRegistered();

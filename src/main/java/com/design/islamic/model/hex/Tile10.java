@@ -22,9 +22,11 @@ import static java.util.Arrays.asList;
 
 public class Tile10 {
 
-    private static double AB = 1.0 / 3.0;
+    private static double KA = 1.0;
+    private static double KF = $H.apply(KA);
+    private static double AB = KA / 3.0;
     private static double AC = £H.apply(AB);
-    private static double KE = HEIGHT_RATIO - 0.5 * AC;
+    private static double KE = KF - 0.5 * AC;
     private static double EC = 0.5 - KE;
 
     @TileSupplier
@@ -104,7 +106,8 @@ public class Tile10 {
                         Triple.of(outerReg, UP.getVertex(), "B"),
                         Triple.of(hexAC, UL_H.getVertex(), "C"),
                         Triple.of(hexAC, UR_H.getVertex(), "D"),
-                        Triple.of(hexKE, RIGHT.getVertex(), "E")
+                        Triple.of(hexKE, RIGHT.getVertex(), "E"),
+                        Triple.of(mainReg, RIGHT.getVertex(), "F")
                 ))
                 .addAllVertexesAsImportantPoints(asList(
 //                        outer

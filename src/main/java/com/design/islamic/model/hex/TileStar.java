@@ -22,12 +22,13 @@ import static java.util.Arrays.asList;
 
 public class TileStar {
 
+    public static double HEIGHT = $H.apply(1.0);
     public static double RATIO_1 = 0.5;
-    public static double RATIO_2 = HEIGHT_RATIO / (HEIGHT_RATIO + 0.5);
-    public static double RATIO_3 = (1.5 - HEIGHT_RATIO) * 0.5;
+    public static double RATIO_2 = HEIGHT / (HEIGHT + 0.5);
+    public static double RATIO_3 = (1.5 - HEIGHT) * 0.5;
 
     public static List<Pair<Polygon, Polygon.Vertex>> getLines(double ratio) {
-        Polygon main = Hex.hex(HEIGHT_RATIO, HOR);
+        Polygon main = Hex.hex(HEIGHT, HOR);
         Polygon inner = Hex.hex(ratio, VER);
 
         return
@@ -39,7 +40,7 @@ public class TileStar {
     }
 
     public static List<Pair<Polygon, Polygon.Vertex>> getLinesB(double ratio) {
-        Polygon main = Hex.hex(HEIGHT_RATIO, VER);
+        Polygon main = Hex.hex(HEIGHT, VER);
         Polygon inner = Hex.hex(ratio, HOR);
 
         return
@@ -84,7 +85,6 @@ public class TileStar {
                 .build();
     }
 
-
     @TileSupplier
     public static PayloadSimple getPayloadSimple1b() {
         return new PayloadSimple
@@ -110,6 +110,7 @@ public class TileStar {
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
     }
+
     @TileSupplier
     public static PayloadSimple getPayloadSimple3b() {
         return new PayloadSimple
@@ -204,16 +205,17 @@ public class TileStar {
 
         final double KA = 1;
         final double KE = $H.apply(KA);
+        final double KD = KE;
         final double EB = KE;
         final double AB = EB - KA * 0.5;
         final double AF = $P.apply(AB);
 
         Polygon main = Hex.hex(1, VER);
         Polygon registered = main.getRegistered();
-        Polygon outerSmall = Hex.hex(1.5 - HEIGHT_RATIO, VER, Hex.centreTransform(2 * HEIGHT_RATIO, RIGHT));
+        Polygon outerSmall = Hex.hex(1.5 - KD, VER, Hex.centreTransform(2 * KD, RIGHT));
 
-        Polygon inner = Hex.hex(HEIGHT_RATIO * 0.5 + HEIGHT_RATIO * HEIGHT_RATIO, HOR, centreTransform(RATIO_3, DR_V));
-        Polygon outerBig = Hex.hex(2, VER, centreTransform(HEIGHT_RATIO, RIGHT));
+        Polygon inner = Hex.hex(HEIGHT * 0.5 + HEIGHT * HEIGHT, HOR, centreTransform(RATIO_3, DR_V));
+        Polygon outerBig = Hex.hex(2, VER, centreTransform(HEIGHT, RIGHT));
         Polygon hexAF = Hex.hex(AF, VER, Hex.centreTransform(1, VER));
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_03_design")
@@ -273,7 +275,6 @@ public class TileStar {
 
     }
 
-
     @DesignSupplier
     public static DesignHelper getDesignHelper1b() {
         String black = newStyle("black", 1, 1);
@@ -302,7 +303,6 @@ public class TileStar {
                 ), blue);
 
     }
-
 
     @DesignSupplier
     public static DesignHelper getDesignHelper2b() {

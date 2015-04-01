@@ -15,22 +15,22 @@ import java.util.List;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.$H;
+import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Corner.*;
-import static com.design.islamic.model.Hex.HEIGHT_RATIO;
-import static com.design.islamic.model.Hex.Vertex.*;
-import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 
 public class Tile6 {
 
-    public static double RATIO_1 = 0.5 / HEIGHT_RATIO;
+    public static double KB = 1.0;
+    public static double KA = KB / 2.0;
+    public static double BA = KA;
+    public static double BC = $H.apply(BA);
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
         Polygon main = Hex.hex(1, VER);
-        Polygon inner = Hex.hex(0.5, VER);
-        Polygon outer = Hex.hex($H.apply(0.5), HOR, Hex.centreTransform(1, DR_V));
+        Polygon hexKA = Hex.hex(KA, VER);
+        Polygon hexBC = Hex.hex(BC, HOR, Hex.centreTransform(1, DR_V));
 
         return new PayloadSimple.Builder("hex_tile_06",
                 Hex.ALL_VERTEX_INDEXES
@@ -38,13 +38,13 @@ public class Tile6 {
                 .withLines(asList(
                         asList(
                                 instruction(main, DR_V),
-                                instruction(outer, UL_H),
-                                instruction(inner, DOWN)
+                                instruction(hexBC, UL_H),
+                                instruction(hexKA, DOWN)
                         ),
                         asList(
                                 instruction(main, DR_V),
-                                instruction(outer, LEFT),
-                                instruction(inner, UR_V)
+                                instruction(hexBC, LEFT),
+                                instruction(hexKA, UR_V)
                         )
 
                 ))
@@ -60,10 +60,9 @@ public class Tile6 {
         String red = newStyle("red", 2, 1);
 
         Polygon main = Hex.hex(1, VER);
-        Polygon inner1 = Hex.hex(RATIO_1, HOR);
-        Polygon inner2 = Hex.hex(0.5, VER);
-        Polygon outer = Hex.hex(0.5, VER, Hex.centreTransform(1, DR_V));
-        Polygon outerReg = outer.getRegistered();
+        Polygon hexKA = Hex.hex(KA, VER);
+        Polygon hexBA = Hex.hex(BA, VER, Hex.centreTransform(1, DR_V));
+        Polygon hexBC = hexBA.getRegistered();
 
         List<String> equations = asList(
                 "KA=AB=0.5",
@@ -76,24 +75,23 @@ public class Tile6 {
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(main, Hex.INNER_TRIANGLES),
                         Pair.of(main.getRegistered(), Hex.INNER_TRIANGLES),
-                        Pair.of(outer, Hex.PERIMETER),
-                        Pair.of(outerReg, Hex.PERIMETER)
+                        Pair.of(hexBA, Hex.PERIMETER),
+                        Pair.of(hexBC, Hex.PERIMETER)
                 ), gray)
                 .addLinesInstructions(asList(
-                        Pair.of(inner2, Hex.PERIMETER)
+                        Pair.of(hexKA, Hex.PERIMETER)
                 ), green)
                 .addLinesInstructions(asList(
-                        Pair.of(inner1, Hex.PERIMETER)
                 ), blue)
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
                 .addEquations(
                         equations
                 )
                 .addImportantPoints(asList(
-                        Triple.of(inner2, DR_V.getVertex(), "A"),
+                        Triple.of(hexKA, DR_V.getVertex(), "A"),
                         Triple.of(main, DR_V.getVertex(), "B"),
-                        Triple.of(outerReg, LEFT.getVertex(), "C"),
-                        Triple.of(outerReg, UL_H.getVertex(), "D")
+                        Triple.of(hexBC, LEFT.getVertex(), "C"),
+                        Triple.of(hexBC, UL_H.getVertex(), "D")
                 ))
                 .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
                 ;

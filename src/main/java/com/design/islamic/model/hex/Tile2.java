@@ -16,15 +16,14 @@ import static com.design.common.RatioHelper.$1;
 import static com.design.common.view.SvgFactory.newStyle;
 import static com.design.islamic.model.Hex.$H;
 import static com.design.islamic.model.Hex.Corner.*;
-import static com.design.islamic.model.Hex.HEIGHT_RATIO;
-import static com.design.islamic.model.Hex.Vertex.ONE;
-import static com.design.islamic.model.Hex.Vertex.TWO;
 import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 
 public class Tile2 {
 
-    private static double RATIO_KB = HEIGHT_RATIO / (HEIGHT_RATIO + 0.5);
+    private static double KA = 1.0;
+    private static double HEIGHT = $H.apply(KA);
+    private static double RATIO_KB = HEIGHT / (HEIGHT + 0.5);
     private static double RATIO_BD = $1.andThen($H).apply(RATIO_KB);
 
     @TileSupplier
@@ -74,6 +73,8 @@ public class Tile2 {
                         "BD=h*(1-KB)"
                 ))
                 .addImportantPoints(asList(
+                        Triple.of(main, DR_V.getVertex(), "A"),
+                        Triple.of(main.getRegistered(), RIGHT.getVertex(), "E"),
                         Triple.of(inner, DR_V.getVertex(), "B"),
                         Triple.of(innerReg, RIGHT.getVertex(), "C"),
                         Triple.of(outer, DR_V.getVertex(), "D")

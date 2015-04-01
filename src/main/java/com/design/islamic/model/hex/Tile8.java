@@ -2,7 +2,10 @@ package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
 import com.design.common.Polygon;
-import com.design.islamic.model.*;
+import com.design.islamic.model.DesignSupplier;
+import com.design.islamic.model.Hex;
+import com.design.islamic.model.PayloadSimple;
+import com.design.islamic.model.TileSupplier;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -17,13 +20,14 @@ import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 
-
 public class Tile8 {
 
+    private static final double KA = 1.0;
+    private static final double KD = $H.apply(KA);
     private static final double KB = 0.5;
     private static final double KC = £H.apply(KB);
     private static final double AC = 1 - KC;
-    private static final double AD = 1 - HEIGHT_RATIO;
+    private static final double AD = 1 - KD;
     private static final double AE = $H.apply(AC);
     private static final double AF = $H.apply(AE);
     private static final double FE = AE * 0.5;
@@ -50,9 +54,9 @@ public class Tile8 {
         Polygon hexJM_4 = Hex.hex(JM, HOR, centreTransform(KJ, UR_V));
 
         return new PayloadSimple.Builder("hex_tile_08",
-                 Hex.ALL_VERTEX_INDEXES
+                Hex.ALL_VERTEX_INDEXES
         )
-                .withLines(                Arrays.asList(
+                .withLines(Arrays.asList(
                                 asList(
                                         instruction(hexJM_3, UL_V),
                                         instruction(hexAG, DL_V),
@@ -81,17 +85,16 @@ public class Tile8 {
         String green = newStyle("green", 1, 1);
         String red = newStyle("red", 2, 1);
 
-
         Polygon main = Hex.hex(1, VER);
         Polygon mainHor = main.getMirror();
         Polygon mainReg = main.getRegistered();
         Polygon mainHorReg = mainHor.getRegistered();
 
-        Polygon hexKB = Hex.hex(0.5, VER);
-        Polygon hexKC = Hex.hex(hexKB.getRatio() / HEIGHT_RATIO, VER);
-        Polygon hexKD = Hex.hex(HEIGHT_RATIO, VER);
-        Polygon hexAE = Hex.hex((1 - hexKC.getRatio()) * HEIGHT_RATIO, HOR, centreTransform(1, DR_V));
-        Polygon hexAF = Hex.hex(hexAE.getRatio() * HEIGHT_RATIO, VER, centreTransform(1, DR_V));
+        Polygon hexKB = Hex.hex(KB, VER);
+        Polygon hexKC = Hex.hex(KC, VER);
+        Polygon hexKD = Hex.hex(KD, VER);
+        Polygon hexAE = Hex.hex(AE, HOR, centreTransform(1, DR_V));
+        Polygon hexAF = Hex.hex(AF, VER, centreTransform(1, DR_V));
 //        Polygon hexFE = Hex.hex(hexAE.getRatio() * 0.5, VER);
         Polygon hexKF = Hex.hex(KF, HOR);
         Polygon hexAG = Hex.hex(AC * 0.5, VER, centreTransform(1, DR_V));
@@ -108,7 +111,6 @@ public class Tile8 {
         Polygon hexRot1 = Hex.hex(1, HOR, centreTransform(FE, VER));
         Polygon hexRot2 = Hex.hex(1, VER, centreTransform(FE, HOR));
         Polygon hexRot3 = Hex.hex(1, VER, centreTransform(KF, HOR));
-
 
         List<String> equations = asList(
                 "KB = 0.5",
@@ -146,7 +148,7 @@ public class Tile8 {
                         Pair.of(mainHor, Hex.PERIMETER)
                 ), blue)
                 .addAllVertexesAsImportantPoints(
-        asList(
+                        asList(
 //                        hexJARot,
 //                        hexKI,
 //                        hexAG,
@@ -154,7 +156,7 @@ public class Tile8 {
 //                        hexJM_2,
 //                        hexJM_3,
 //                                hexJM_4
-                )
+                        )
                 )
                 .addMixedLinesInstructionsList(asList(
                         asList(

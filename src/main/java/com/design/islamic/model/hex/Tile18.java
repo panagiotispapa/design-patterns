@@ -6,18 +6,14 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
-import com.design.islamic.model.tiles.Grid;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static com.design.common.Polygon.Type.HOR;
-import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
 import static com.design.islamic.model.Hex.Corner.*;
-import static com.design.islamic.model.Hex.HEIGHT_RATIO;
 import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 

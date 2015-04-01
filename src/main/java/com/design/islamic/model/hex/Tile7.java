@@ -14,35 +14,38 @@ import java.util.List;
 
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
-import static com.design.common.RatioHelper.£2;
 import static com.design.common.view.SvgFactory.newStyle;
 import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Corner.*;
-import static com.design.islamic.model.Hex.Vertex.*;
+import static com.design.islamic.model.Hex.Vertex.SIX;
+import static com.design.islamic.model.Hex.Vertex.TWO;
 import static java.util.Arrays.asList;
 
 public class Tile7 {
 
-    public static double RATIO_AB = 1.0 - HEIGHT_RATIO;
-    public static double RATIO_BE = $P.apply(RATIO_AB);
-    public static double RATIO_KD = $H.andThen(£2.andThen(£H)).apply(1.0);
+    public static double KB = 1.0;
+    public static double KA = $H.apply(KB);
+    public static double AB = KA - KB;
+    public static double BE = $P.apply(AB);
+    public static double KC = 0.5 * KA;
+    public static double KD = £H.apply(KC);
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
-        Polygon inner = Hex.hex(RATIO_KD, HOR);
-        Polygon outer = Hex.hex(RATIO_BE, VER, centreTransform(1, DR_V));
+        Polygon inner = Hex.hex(KD, HOR);
+        Polygon hexBE = Hex.hex(BE, VER, centreTransform(1, DR_V));
         Polygon outerBig = Hex.hex(0.5, VER, centreTransform(1, DR_V));
 
         return new PayloadSimple.Builder("hex_tile_07",
-                 Hex.ALL_VERTEX_INDEXES
+                Hex.ALL_VERTEX_INDEXES
         )
-                .withLines(                asList(
+                .withLines(asList(
                                 asList(
-                                        instruction(outer, UP),
+                                        Pair.of(hexBE, TWO),
                                         instruction(inner, DR_H)
                                 ),
                                 asList(
-                                        instruction(outer, DL_V),
+                                        Pair.of(hexBE, SIX),
                                         instruction(inner, RIGHT)
                                 ),
                                 asList(
@@ -79,17 +82,17 @@ public class Tile7 {
         Polygon innerHor = inner.getMirror();
         Polygon innerHorReg = innerHor.getRegistered();
 
-        Polygon outerSmall = Hex.hex(RATIO_BE, VER, centreTransform(1, VER));
+        Polygon hexBE = Hex.hex(BE, VER, centreTransform(1, Corner.DR_V));
 //        Polygon inner1 = Hex.hex(RATIO_1, HOR);
 //        Polygon inner2 = Hex.hex(0.5, VER);
 //        Polygon outer = Hex.hex(0.5, VER, centreTransform(1, VER));
 //        Polygon outerReg = outer.getRegistered();
 
         List<String> equations = asList(
-                "AB=1-h",
-                "KC=0.5*h",
-                "KD=KC/h",
-                "BE=0.5*AB"
+                "AB = 1 - h",
+                "KC = 0.5 * h",
+                "KD = KC/h",
+                "BE = 0.5 * AB"
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_07_design")
@@ -109,7 +112,7 @@ public class Tile7 {
                 ), green)
                 .addLinesInstructions(asList(
                         Pair.of(innerHor, Hex.PERIMETER),
-                        Pair.of(outerSmall, Hex.PERIMETER)
+                        Pair.of(hexBE, Hex.PERIMETER)
                 ), green)
                 .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
                 .addImportantPoints(asList(
@@ -117,7 +120,10 @@ public class Tile7 {
                         Triple.of(mainHorReg, RIGHT.getVertex(), "A"),
                         Triple.of(innerHorReg, DR_V.getVertex(), "C"),
                         Triple.of(inner, DR_V.getVertex(), "D"),
-                        Triple.of(outerSmall, UP.getVertex(), "E")
+                        Triple.of(hexBE, TWO, "E")
+                ))
+                .addAllVertexesAsImportantPoints(asList(
+//                        hexBE
                 ))
                 .addEquations(equations);
 

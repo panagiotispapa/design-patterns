@@ -1,13 +1,13 @@
 package com.design.islamic.model.tiles;
 
+import com.design.common.RatioHelper.Ratios;
+
 import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.function.IntFunction;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static com.design.islamic.model.Hex.HEIGHT_RATIO;
 
 //import static com.design.islamic.model.tiles.Hex.HEIGHT_RATIO;
 
@@ -102,13 +102,15 @@ public class Grid {
         }
     }
 
+    private static final double HEX_HEIGHT = Ratios.HEX.$H().apply(1.0);
+
     public static enum Configs {
 
-        HEX_HOR(1, HEIGHT_RATIO, 0.5, 0),
-        HEX_HOR2(2.0 * HEIGHT_RATIO, 1.5, HEIGHT_RATIO, 0),
-        HEX_HOR3(2.0, 2.0 * HEIGHT_RATIO, 1.0, 0),
-        HEX_VER(HEIGHT_RATIO, 1, 0, 0.5),
-        HEX_VER2(1.5, 2.0 * HEIGHT_RATIO, 0, HEIGHT_RATIO),
+        HEX_HOR(1, HEX_HEIGHT, 0.5, 0),
+        HEX_HOR2(2.0 * HEX_HEIGHT, 1.5, HEX_HEIGHT, 0),
+        HEX_HOR3(2.0, 2.0 * HEX_HEIGHT, 1.0, 0),
+        HEX_VER(HEX_HEIGHT, 1, 0, 0.5),
+        HEX_VER2(1.5, 2.0 * HEX_HEIGHT, 0, HEX_HEIGHT),
         RECT(1, 1, 0, 0);
 
         private final Configuration configuration;

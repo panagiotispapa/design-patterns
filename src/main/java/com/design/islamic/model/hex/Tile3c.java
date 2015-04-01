@@ -22,7 +22,7 @@ import static com.design.islamic.model.Hex.Corner.UR_V;
 import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 
-public class Tile25 {
+public class Tile3c {
 
 
     private static final double KB = $H.apply(1.0);
@@ -37,7 +37,7 @@ public class Tile25 {
         Polygon main = Hex.hex(1, HOR);
         Polygon main_Ver = main.getRegistered();
         Polygon hexKD = Hex.hex(KD, HOR);
-        return new PayloadSimple.Builder("hex_tile_25",
+        return new PayloadSimple.Builder("hex_tile_03c",
                 Hex.ALL_VERTEX_INDEXES
         )
                 .withLines(asList(
@@ -74,7 +74,7 @@ public class Tile25 {
                 "KD = KA - KC - DC"
         );
 
-        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_25_design")
+        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_03c_design")
                 .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(

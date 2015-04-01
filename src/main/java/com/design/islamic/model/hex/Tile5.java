@@ -15,15 +15,18 @@ import java.util.List;
 
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
+import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Corner.*;
-import static com.design.islamic.model.Hex.HEIGHT_RATIO;
-import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 
 public class Tile5 {
 
-    public static double RATIO_1 = 0.5 / HEIGHT_RATIO;
-    public static double RATIO_2 = RATIO_1 * RATIO_1;
+    public static double KD = 1.0;
+    public static double KF = $H.apply(KD);
+    public static double KG = KD / 2.0;
+    public static double KA = £H.apply(KG);
+    public static double KB = £H.apply(0.5 * KA);
+    public static double RATIO_2 = KA * KA;
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
@@ -52,21 +55,21 @@ public class Tile5 {
         String red = newStyle("red", 2, 1);
 
         Polygon main = Hex.hex(1, VER);
-        Polygon inner2 = Hex.hex(RATIO_1, Polygon.Type.HOR);
-        Polygon inner1 = inner2.getFramed();
-        Polygon inner3 = Hex.hex(RATIO_1 * RATIO_1, VER);
-        Polygon outer = Hex.hex(inner3.getRatio(), VER, Hex.centreTransform(1, DR_V));
+        Polygon hexKA = Hex.hex(KA, Polygon.Type.HOR);
+        Polygon inner1 = hexKA.getFramed();
+        Polygon hexKB = Hex.hex(KB, VER);
+        Polygon outer = Hex.hex(hexKB.getRatio(), VER, Hex.centreTransform(1, DR_V));
 //        Polygon innerReg = inner.getRegistered();
 
-//        Polygon outer = Hex.hex(RATIO_2, Polygon.Type.HOR, centreTransform(RATIO_1, Polygon.Type.VER));
 
         List<String> equations = Arrays.asList(
-                "i=0.5/h",
-                "KA=i",
-                "KB=i*i",
-                "KC=KA/h=2*KB",
-                "DC=DE=KB",
-                "DB=1-KB"
+                "KF = h",
+                "KG = KD / 2",
+                "KA = KG / h",
+                "KB = (0.5*KA)/h",
+                "KC = KA / h = 2 * KB",
+                "DC = DE = KB",
+                "DB = 1 - KB"
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_05_design")
@@ -74,25 +77,27 @@ public class Tile5 {
                 .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
-                        Triple.of(inner2, RIGHT.getVertex(), "A"),
-                        Triple.of(inner3, DR_V.getVertex(), "B"),
+                        Triple.of(hexKA, RIGHT.getVertex(), "A"),
+                        Triple.of(hexKB, DR_V.getVertex(), "B"),
                         Triple.of(inner1, DR_V.getVertex(), "C"),
                         Triple.of(main, DR_V.getVertex(), "D"),
-                        Triple.of(outer, DL_V.getVertex(), "E")
+                        Triple.of(outer, DL_V.getVertex(), "E"),
+                        Triple.of(main.getRegistered(), RIGHT.getVertex(), "F"),
+                        Triple.of(Hex.hex(KG, VER), DR_V.getVertex(), "G")
                 ))
                 .addLinesInstructions(asList(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(main, Hex.DIAGONALS),
                         Pair.of(main, Hex.INNER_TRIANGLES),
-                        Pair.of(inner2, Hex.INNER_TRIANGLES),
+                        Pair.of(hexKA, Hex.INNER_TRIANGLES),
                         Pair.of(outer, Hex.PERIMETER)
                 ), gray)
                 .addLinesInstructions(asList(
-                        Pair.of(inner2, Hex.PERIMETER)
+                        Pair.of(hexKA, Hex.PERIMETER)
                 ), green)
                 .addLinesInstructions(asList(
                         Pair.of(inner1, Hex.PERIMETER),
-                        Pair.of(inner3, Hex.PERIMETER)
+                        Pair.of(hexKB, Hex.PERIMETER)
                 ), blue)
                 ;
 
