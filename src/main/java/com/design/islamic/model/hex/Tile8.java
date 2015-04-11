@@ -15,31 +15,31 @@ import java.util.List;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 
 public class Tile8 {
 
     private static final double KA = 1.0;
-    private static final double KD = $H.apply(KA);
+    private static final double KD = KA * H;
     private static final double KB = 0.5;
-    private static final double KC = £H.apply(KB);
+    private static final double KC = KB / H;
     private static final double AC = 1 - KC;
     private static final double AD = 1 - KD;
-    private static final double AE = $H.apply(AC);
-    private static final double AF = $H.apply(AE);
+    private static final double AE = AC * H;
+    private static final double AF = AE * H;
     private static final double FE = AE * 0.5;
     private static final double AG = AC * 0.5;
     private static final double KF = 1 - AF;
     private static final double KH = FE;
-    private static final double KI = £H.apply(KH);
+    private static final double KI = KH / H;
     private static final double KJ = 2.0 * KH;
     private static final double JA = 1 - KJ;
     private static final double IJ = KJ - KI;
     private static final double JD = JA - AD;
-    private static final double JM = $H.apply(IJ);
+    private static final double JM = IJ * H;
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {

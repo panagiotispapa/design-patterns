@@ -1,10 +1,8 @@
 package com.design.common.view;
 
-import com.design.common.DesignHelper;
 import com.design.common.Points;
 import com.design.common.model.Arc;
 import com.design.common.model.Circle;
-import com.design.islamic.model.Payload;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.apache.commons.lang3.tuple.Pair;
@@ -96,6 +94,7 @@ public class SvgFactory {
     public static Function<Pair<Point2D, String>, String> drawText() {
         return drawText(18);
     }
+
     public static Function<List<List<Point2D>>, String> toPolylines(final String style) {
         return pointsList -> pointsList.stream().map(toPolyline(style)).collect(joining());
     }
@@ -128,19 +127,6 @@ public class SvgFactory {
 
     }
 
-    public static String drawPayload(Payload payload) {
-
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(drawPolygons(payload.getPolygons(), styleWhiteBold));
-        builder.append(drawPolygons(payload.getPolygonsSecondary(), styleWhite));
-
-        builder.append(drawPolylines(payload.getPolylines(), styleWhiteBold));
-        builder.append(drawPolylines(payload.getPolylinesSecondary(), styleWhite));
-
-        return builder.toString();
-    }
-
     public static Function<Collection<Point2D>, String> highlightPoints() {
         return highlightPoints("red", 3);
     }
@@ -165,18 +151,6 @@ public class SvgFactory {
 
     }
 
-    public static String highlightPoints(Point2D[] points) {
-
-        final String style = newStyle("red", "black", 1, 1, 1);
-        StringBuilder builder = new StringBuilder(points.length);
-
-        for (Point2D centre : points) {
-            builder.append(newCircle(centre, 3, style));
-        }
-
-        return builder.toString();
-
-    }
 
     public static String drawCircles(Collection<Circle> circles, final String style) {
         return circles.stream().map(circle -> drawCircle(circle, style)).collect(joining());

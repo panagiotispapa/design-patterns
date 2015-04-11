@@ -8,11 +8,9 @@ import com.design.islamic.model.Hex.*;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
 import com.design.islamic.model.tiles.Grid;
-import com.google.common.collect.Iterables;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -33,7 +31,7 @@ public class Tile22 {
 
 
     private static double RATIO_x = 1.0 / 16.0;
-    private static double RATIO_y = Hex.£H.apply(RATIO_x);
+    private static double RATIO_y = RATIO_x / H;
 
     private static Double y(double times) {
         return times * RATIO_y;

@@ -15,20 +15,19 @@ import java.util.List;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 
 public class TileStar {
 
-    public static double HEIGHT = $H.apply(1.0);
     public static double RATIO_1 = 0.5;
-    public static double RATIO_2 = HEIGHT / (HEIGHT + 0.5);
-    public static double RATIO_3 = (1.5 - HEIGHT) * 0.5;
+    public static double RATIO_2 = H / (H + 0.5);
+    public static double RATIO_3 = (1.5 - H) * 0.5;
 
     public static List<Pair<Polygon, Polygon.Vertex>> getLines(double ratio) {
-        Polygon main = Hex.hex(HEIGHT, HOR);
+        Polygon main = Hex.hex(H, HOR);
         Polygon inner = Hex.hex(ratio, VER);
 
         return
@@ -40,7 +39,7 @@ public class TileStar {
     }
 
     public static List<Pair<Polygon, Polygon.Vertex>> getLinesB(double ratio) {
-        Polygon main = Hex.hex(HEIGHT, VER);
+        Polygon main = Hex.hex(H, VER);
         Polygon inner = Hex.hex(ratio, HOR);
 
         return
@@ -204,18 +203,18 @@ public class TileStar {
         String red = newStyle("red", 2, 1);
 
         final double KA = 1;
-        final double KE = $H.apply(KA);
+        final double KE = KA * H;
         final double KD = KE;
         final double EB = KE;
         final double AB = EB - KA * 0.5;
-        final double AF = $P.apply(AB);
+        final double AF = AB * P;
 
         Polygon main = Hex.hex(1, VER);
         Polygon registered = main.getRegistered();
         Polygon outerSmall = Hex.hex(1.5 - KD, VER, Hex.centreTransform(2 * KD, RIGHT));
 
-        Polygon inner = Hex.hex(HEIGHT * 0.5 + HEIGHT * HEIGHT, HOR, centreTransform(RATIO_3, DR_V));
-        Polygon outerBig = Hex.hex(2, VER, centreTransform(HEIGHT, RIGHT));
+        Polygon inner = Hex.hex(H * 0.5 + H * H, HOR, centreTransform(RATIO_3, DR_V));
+        Polygon outerBig = Hex.hex(2, VER, centreTransform(H, RIGHT));
         Polygon hexAF = Hex.hex(AF, VER, Hex.centreTransform(1, VER));
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_03_design")

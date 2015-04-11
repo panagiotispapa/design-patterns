@@ -15,10 +15,8 @@ import java.util.List;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.$H;
-import static com.design.islamic.model.Hex.Corner.RIGHT;
-import static com.design.islamic.model.Hex.Corner.UR_H;
-import static com.design.islamic.model.Hex.Corner.UR_V;
+import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.islamic.model.Hex.H;
 import static com.design.islamic.model.Hex.instruction;
 import static java.lang.Math.PI;
 import static java.lang.Math.cos;
@@ -28,11 +26,11 @@ public class Tile27 {
 
     private static double ANGLE_1 = PI / 3.0 - PI / 4.0;
     private static double BC = 0.5 * Math.tan(ANGLE_1);
-    private static double KB = $H.apply(1.0);
+    private static double KB = H;
     private static double KC = KB - BC;
     private static double AC = 0.5 / cos(ANGLE_1);
     private static double AD = 2.0 * Ratios.RECT.$H().apply(AC);
-    private static double KD = 1-AD;
+    private static double KD = 1 - AD;
 //    private static double RATIO_CD = £H.andThen($1).apply(RATIO_KA);
 
     @TileSupplier

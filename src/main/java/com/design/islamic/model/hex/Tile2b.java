@@ -1,113 +1,123 @@
 package com.design.islamic.model.hex;
 
-import com.design.islamic.model.Payload;
-import com.design.islamic.model.Payloads;
-import com.design.islamic.model.Tile;
+import com.design.common.DesignHelper;
+import com.design.common.Mappings;
+import com.design.common.Polygon;
+import com.design.islamic.model.DesignSupplier;
+import com.design.islamic.model.Hex;
+import com.design.islamic.model.PayloadSimple;
+import com.design.islamic.model.TileSupplier;
 import com.design.islamic.model.tiles.Grid;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
-import java.awt.geom.Point2D;
-import java.util.List;
-
-import static com.design.common.PolygonTools.*;
-import static com.design.common.view.SvgFactory.WHITE;
+import static com.design.common.Polygon.Type.HOR;
+import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.google.common.collect.Lists.newArrayList;
+import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.islamic.model.Hex.*;
 import static java.util.Arrays.asList;
 
-public class Tile2b implements Tile {
+public class Tile2b {
 
-    private final List<Point2D> innerEdges;
+    private static double KB = H / (H + 0.5);
+    private static double BD = Mappings.<Double>chain(i -> 1 - i, i -> i * H).apply(KB);
+    private static double KC = KB * H;
+    private static double KF = 0.5 * KB;
+    private static double KG = 0.5 * KB * H;
 
-//    private final List<List<Point2D>> outerRectangles;
-//    private final List<List<Point2D>> outerLines;
 
+    @TileSupplier
+    public static PayloadSimple getPayloadSimple() {
+        Polygon hexKB = Hex.hex(KB, VER);
+        Polygon hexBD = Hex.hex(BD, HOR, Hex.centreTransform(KB, DR_V));
+        Polygon hexKF = Hex.hex(KF, VER);
+        Polygon hexKC = Hex.hex(KC, HOR);
+        Polygon hexBG = Hex.hex(KG, HOR, centreTransform(KB, VER));
 
-    private final Point2D centre;
-    private final double r;
+        return new PayloadSimple.Builder("hex_tile_02b",
+                Hex.ALL_VERTEX_INDEXES
+        )
+                .withLines(
+                        asList(
+                                asList(
+                                        instruction(hexBD, RIGHT),
+                                        instruction(hexKB, DR_V),
+                                        instruction(hexBD, DR_H)
+                                ),
+                                asList(
+                                        instruction(hexKB, DR_V),
+                                        instruction(hexKB, DOWN)
+                                ),
+                                asList(
+                                        instruction(hexKF, DR_V),
+                                        instruction(hexKC, DR_H),
+                                        instruction(hexKF, DOWN)
+                                ),
+                                asList(
+                                        instruction(hexKC, DR_H),
+                                        instruction(hexBG, DL_H),
+                                        instruction(hexBD, DR_H),
+                                        instruction(hexBD, RIGHT),
+                                        instruction(hexBG, UR_H),
+                                        instruction(hexKC, RIGHT)
+                                )
+                        )
+                )
+                .build();
+    }
 
-    private List<List<Point2D>> lines;
-    private List<List<Point2D>> lines2;
+    @DesignSupplier
+    public static DesignHelper getDesignHelper() {
 
-    public Tile2b(Point2D centre, double r) {
+        String black = newStyle("black", 1, 1);
+        String blue = newStyle("blue", 1, 1);
+        String gray = newStyle("gray", 1, 1);
+        String green = newStyle("green", 1, 1);
+        String red = newStyle("red", 2, 1);
 
-        this.centre = centre;
-        this.r = r;
+        Polygon main = Hex.hex(1, VER);
+        Polygon hexKB = Hex.hex(KB, VER);
+        Polygon hexKBReg = hexKB.getRegistered();
+        Polygon hexKF = Hex.hex(KF, VER);
+        Polygon hexBG = Hex.hex(KG, HOR, centreTransform(KB, VER));
 
-        innerEdges = newHexagonRot(centre, r * HEX_DIST_EQ1);
+        Polygon outer = Hex.hex(BD, HOR, Hex.centreTransform(KB, VER));
 
-        buildLines();
+        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_02b_design")
+                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
+                .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
+                .addEquations(asList(
+                        "KB=h/(h+0.5)",
+                        "BD=h*(1-KB)",
+                        "KF=KB/2",
+                        "KG=(KB/2)*h"
+                ))
+                .addImportantPoints(asList(
+                        Triple.of(main, DR_V.getVertex(), "A"),
+                        Triple.of(main.getRegistered(), RIGHT.getVertex(), "E"),
+                        Triple.of(hexKB, DR_V.getVertex(), "B"),
+                        Triple.of(hexKBReg, RIGHT.getVertex(), "C"),
+                        Triple.of(outer, DR_V.getVertex(), "D"),
+                        Triple.of(hexKF, DR_V.getVertex(), "F"),
+                        Triple.of(hexBG, DL_H.getVertex(), "G")
+
+                ))
+                .addLinesInstructions(asList(
+                        Pair.of(main, Hex.PERIMETER),
+                        Pair.of(main, Hex.DIAGONALS),
+                        Pair.of(main.getRegistered(), Hex.DIAGONALS),
+                        Pair.of(outer, Hex.DIAGONALS)
+                ), gray)
+                .addLinesInstructions(asList(
+                        Pair.of(hexKB, Hex.PERIMETER),
+                        Pair.of(hexBG, Hex.PERIMETER)
+                ), green)
+                .addLinesInstructions(asList(
+                        Pair.of(outer, Hex.PERIMETER)
+                ), blue)
+                ;
 
     }
 
-    private void buildLines() {
-
-        final double newR = r * HEX_DIST_EQ1;
-        final double extConfR = r - newR;
-
-        lines = newArrayList();
-        final double height = extConfR * HEX_DIST_HEIGHT;
-
-        int index = 0;
-        for (Point2D innerEdge : innerEdges) {
-
-            lines.add(
-                    asList(
-                            newEdgeAt(innerEdge, height, HEX_RADIANS[toHexIndex(1 + index)]),
-                            innerEdge,
-                            newEdgeAt(innerEdge, height, HEX_RADIANS[index])
-                    )
-            );
-
-            index++;
-        }
-
-        lines2 = newArrayList();
-
-        final double newRHalf = newR * 0.5;
-        final double newRHeight = newR * HEX_DIST_HEIGHT;
-        double extConfRHeight = extConfR * HEX_DIST_HEIGHT;
-        double extConfRDiag = extConfR * HEX_DIST_DIAGONAL;
-
-        for (int i = 0; i < HEX_N; i++) {
-
-            Point2D centre1 = newEdgeAt(centre, newR, HEX_RADIANS_ROT[toHexIndex(5 + i)]);
-            Point2D centre2 = newEdgeAt(centre, newRHeight, HEX_RADIANS[i]);
-            Point2D centre3 = newEdgeAt(centre, newR, HEX_RADIANS_ROT[i]);
-
-            lines2.add(asList(
-                    newEdgeAt(centre1, extConfRHeight, HEX_RADIANS[i]),
-                    newEdgeAt(centre2, extConfRDiag, HEX_RADIANS_ROT[toHexIndex(5 + i)]),
-                    newEdgeAt(centre3, newRHalf, HEX_RADIANS_ROT[toHexIndex(4 + i)]),
-                    newEdgeAt(centre2, extConfRDiag, HEX_RADIANS_ROT[i]),
-                    newEdgeAt(centre3, extConfRHeight, HEX_RADIANS[i]),
-                    newEdgeAt(centre3, extConfRHeight, HEX_RADIANS[toHexIndex(1 + i)])
-
-//                    newHexEdge(innerEdge, extConfRHeight, (1 + index))
-
-            ));
-//            index++;
-        }
-
-    }
-
-    public List<List<Point2D>> getLines() {
-        return lines;
-    }
-
-    public List<List<Point2D>> getLines2() {
-        return lines2;
-    }
-
-    @Override
-    public Payload getPayload() {
-
-        return Payloads.newPayloadFromPolygonsAndLines(
-                asList(newHexStarTileRotated(centre, r * HEX_DIST_EQ1, HEX_DIST_DIAGONAL)),
-                asList(innerEdges),
-                lines2,
-                lines,
-                Grid.Configs.HEX_VER.getConfiguration()
-        );
-
-    }
 }

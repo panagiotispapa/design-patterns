@@ -16,8 +16,8 @@ import java.util.List;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Vertex.SIX;
 import static com.design.islamic.model.Hex.Vertex.TWO;
 import static java.lang.Math.PI;
@@ -26,11 +26,11 @@ import static java.util.Arrays.asList;
 public class Tile28 {
 
     public static double KB = 0.5;
-    public static double KC = £H.apply(KB);
+    public static double KC = KB / H;
     private static double ANGLE_1 = PI / 3.0 - PI / 4.0;
     private static double BD = 0.5 * KC * Math.tan(ANGLE_1);
     private static double KD = KB - BD;
-    private static double KE = $H.apply(1.0);
+    private static double KE = H;
     private static double CE = KC - KE;
     private static double EF = CE;
 
@@ -42,7 +42,7 @@ public class Tile28 {
         Polygon hexKD = Hex.hex(KD, HOR);
         Polygon hexEF = Hex.hex(EF, HOR, centreTransform(KE, DR_V));
         Polygon hexEF_Rot = Hex.hex(EF, HOR, centreTransform(KE, UR_V));
-        
+
         return new PayloadSimple.Builder("hex_tile_28",
                 Hex.ALL_VERTEX_INDEXES
         )

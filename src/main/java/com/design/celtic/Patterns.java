@@ -2,10 +2,10 @@ package com.design.celtic;
 
 import com.design.common.model.Arc;
 import com.design.common.model.Circle;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Set;
 
@@ -13,7 +13,6 @@ import static com.design.celtic.Helper.getCircleFromRow;
 import static com.design.common.model.Shapes.newArc;
 import static com.design.common.model.Shapes.newCircle;
 import static com.design.common.view.SvgFactory.*;
-import static com.design.islamic.model.Centre.newCentre;
 import static com.google.common.collect.Iterables.concat;
 import static java.util.Arrays.asList;
 
@@ -31,7 +30,7 @@ public class Patterns {
         final String styleFrontGray = newStyle(GRAY, BLACK, 2, 0.8, 1);
         final String styleFrontWhite = newStyle(WHITE, BLACK, 2, 1, 1);
 
-        Circle mainCircle = newCircle(newCentre(dim.getWidth() / 2, dim.getHeight() / 2), r);
+        Circle mainCircle = newCircle(new Point2D.Double(dim.getWidth() / 2, dim.getHeight() / 2), r);
 
         Set<Circle> layer1 = Sets.newHashSet(concat(
                 Helper.putInARow(mainCircle, 18, 0),

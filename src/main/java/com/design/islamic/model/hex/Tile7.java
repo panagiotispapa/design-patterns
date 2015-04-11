@@ -24,11 +24,11 @@ import static java.util.Arrays.asList;
 public class Tile7 {
 
     public static double KB = 1.0;
-    public static double KA = $H.apply(KB);
+    public static double KA = KB * H;
     public static double AB = KA - KB;
-    public static double BE = $P.apply(AB);
+    public static double BE = AB * P;
     public static double KC = 0.5 * KA;
-    public static double KD = £H.apply(KC);
+    public static double KD = KC / H;
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
@@ -74,19 +74,13 @@ public class Tile7 {
 //        Set<Point2D> centresConfig = centreConfiguration.getCentresConfig(CentreConfiguration.Conf.HEX_THIRD, 1.0);
 
         Polygon main = Hex.hex(1, VER);
-        Polygon mainReg = main.getRegistered();
         Polygon mainHor = main.getMirror();
         Polygon mainHorReg = mainHor.getRegistered();
         Polygon inner = Hex.hex(0.5, VER);
-        Polygon innerReg = inner.getRegistered();
         Polygon innerHor = inner.getMirror();
         Polygon innerHorReg = innerHor.getRegistered();
 
         Polygon hexBE = Hex.hex(BE, VER, centreTransform(1, Corner.DR_V));
-//        Polygon inner1 = Hex.hex(RATIO_1, HOR);
-//        Polygon inner2 = Hex.hex(0.5, VER);
-//        Polygon outer = Hex.hex(0.5, VER, centreTransform(1, VER));
-//        Polygon outerReg = outer.getRegistered();
 
         List<String> equations = asList(
                 "AB = 1 - h",

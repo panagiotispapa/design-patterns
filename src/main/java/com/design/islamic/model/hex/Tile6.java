@@ -15,8 +15,9 @@ import java.util.List;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.islamic.model.Hex.H;
+import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 
 public class Tile6 {
@@ -24,7 +25,7 @@ public class Tile6 {
     public static double KB = 1.0;
     public static double KA = KB / 2.0;
     public static double BA = KA;
-    public static double BC = $H.apply(BA);
+    public static double BC = BA * H;
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {

@@ -15,8 +15,8 @@ import java.util.List;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 
@@ -24,7 +24,7 @@ public class Tile3 {
 
 
     private static double KA = 1.0;
-    private static double KB = $H.apply(KA);
+    private static double KB = KA * H;
     private static double HEIGHT = KB;
 
     private static double ANGLE_1 = Math.atan(0.25 / HEIGHT);
@@ -32,8 +32,8 @@ public class Tile3 {
 
     private static double IB = 0.5 * Math.tan(ANGLE_2);
     private static double KI = KB - IB;
-    private static double HL = $P.apply(0.5);
-    private static double EL = $H.apply(0.5);
+    private static double HL = 0.5 * P;
+    private static double EL = 0.5 * H;
     private static double HM = EL + HL;
     private static double KM = 1 - HM;
 
@@ -146,7 +146,7 @@ public class Tile3 {
 
                 ), gray)
                 .addMixedLinesInstructions(asList(
-                        instruction($P.apply(0.5), centreTransform(1, UP), DOWN),
+                        instruction(0.5 * P, centreTransform(1, UP), DOWN),
                         instruction(mainReg, UR_H)
                 ), gray)
                 ;
@@ -202,7 +202,7 @@ public class Tile3 {
                         Pair.of(hexKM, Hex.PERIMETER)
                 ), green)
                 .addSingleLinesInstructionsList(asList(asList(
-                        instruction($P.apply(0.5), centreTransform(1, DR_V), UL_V),
+                        instruction(0.5 * P, centreTransform(1, DR_V), UL_V),
                         instruction(mainReg, DR_H)
                 )), gray)
                 ;

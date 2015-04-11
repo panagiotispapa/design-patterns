@@ -18,8 +18,8 @@ import java.util.stream.IntStream;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -27,7 +27,7 @@ import static java.util.stream.Collectors.toList;
 public class Tile15 {
 
     public static double RATIO_y = 1.0 / 5.0;
-    public static double RATIO_x = $H.apply(RATIO_y);
+    public static double RATIO_x = RATIO_y * H;
 
     private static final double RATIO_W = 6.0 * RATIO_x;
     private static final double RATIO_H = 1.0;

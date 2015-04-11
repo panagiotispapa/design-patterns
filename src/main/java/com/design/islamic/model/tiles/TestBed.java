@@ -9,10 +9,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.design.islamic.model.Centre.newCentre;
 import static java.awt.Color.BLACK;
 import static java.lang.System.currentTimeMillis;
 
@@ -25,11 +24,9 @@ public class TestBed extends JComponent {
         this.centre = centre;
         this.r = r;
 
-
-        List<Point2D> hex = PolygonTools.newHexagon(newCentre(0, 0), 30);
+        List<Point2D> hex = PolygonTools.newHexagon(new Point2D.Double(0, 0), 30);
 
         String style = SvgFactory.newStyle("black", 2, 1);
-
 
         int limit = 20000;
         List<List<Point2D>> shapes = new ArrayList<List<Point2D>>(limit);
@@ -41,20 +38,14 @@ public class TestBed extends JComponent {
         long start = currentTimeMillis();
 //        SvgFactory.drawPolylines(shapes, style);
 
-        System.out.println((currentTimeMillis()-start)/1000);
-
+        System.out.println((currentTimeMillis() - start) / 1000);
 
         start = currentTimeMillis();
 
 //        System.out.println(SvgFactory.drawPolylines(shapes, style));
         SvgFactory.drawPolylines(shapes, style);
 
-
-
-        System.out.println((currentTimeMillis()-start)/1000);
-
-
-
+        System.out.println((currentTimeMillis() - start) / 1000);
 
         this.setVisible(true);
     }
@@ -65,9 +56,6 @@ public class TestBed extends JComponent {
         g.setColor(BLACK);
 
         Writer writer = null;
-
-
-
 
         try {
 
@@ -106,7 +94,7 @@ public class TestBed extends JComponent {
         });
         Container contentPane = frame.getContentPane();
 
-        TestBed testObject = new TestBed(newCentre(frame.getWidth() / 2, frame.getHeight() / 2), 50);
+        TestBed testObject = new TestBed(new Point2D.Double(frame.getWidth() / 2, frame.getHeight() / 2), 50);
 
         contentPane.add(testObject);
 

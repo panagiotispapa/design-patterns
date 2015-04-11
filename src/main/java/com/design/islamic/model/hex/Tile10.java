@@ -15,17 +15,16 @@ import java.util.List;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Corner.*;
-import static com.design.islamic.model.Hex.Vertex.*;
+import static com.design.islamic.model.Hex.*;
 import static java.util.Arrays.asList;
 
 public class Tile10 {
 
     private static double KA = 1.0;
-    private static double KF = $H.apply(KA);
+    private static double KF = KA * H;
     private static double AB = KA / 3.0;
-    private static double AC = £H.apply(AB);
+    private static double AC = AB / H;
     private static double KE = KF - 0.5 * AC;
     private static double EC = 0.5 - KE;
 

@@ -11,38 +11,37 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.design.common.Polygon.Type.HOR;
-import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
+import static com.design.islamic.model.Rect.Corner.DR;
+import static com.design.islamic.model.Rect.Corner.UR;
 import static com.design.islamic.model.Rect.*;
-import static com.design.islamic.model.Rect.Corner.*;
 import static java.util.Arrays.asList;
 
-public class Tile2 {
+public class Tile3 {
 
     private static final double KA = 1.0;
     private static final double AB = KA / 4.0;
     private static final double KB = KA - AB;
-    private static final double AC = AB * H;
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
 
         Polygon main = Rect.rect(1, HOR);
+        Polygon rectKA = Rect.rect(KA, HOR);
         Polygon rectKB = Rect.rect(KB, HOR);
         Polygon rectAB = Rect.rect(AB, HOR, centreTransform(KA, DR));
-        Polygon rectAC = Rect.rect(AC, VER, centreTransform(KA, DR));
 
-        return new PayloadSimple.Builder("rect_tile_02",
+        return new PayloadSimple.Builder("rect_tile_03",
                 Hex.ALL_VERTEX_INDEXES
         )
                 .withLines(asList(
                         asList(
-                                instruction(rectAC, UP),
-                                instruction(rectKB, DL)
+                                instruction(rectKB, UR),
+                                instruction(rectKB, DR)
                         ),
                         asList(
-                                instruction(rectAC, LEFT),
-                                instruction(rectKB, UR)
+                                instruction(rectKB, DR),
+                                instruction(rectKA, DR)
                         )
                 ))
                 .withGridConf(Grid.Configs.RECT2.getConfiguration())
@@ -60,19 +59,17 @@ public class Tile2 {
         Polygon main = Rect.rect(1, HOR);
         Polygon rectKB = Rect.rect(KB, HOR);
         Polygon rectAB = Rect.rect(AB, HOR, centreTransform(KA, DR));
-        Polygon rectAC = Rect.rect(AC, VER, centreTransform(KA, DR));
 
         List<String> equations = Arrays.asList(
                 "AB = KA / 4.0"
         );
 
-        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "rect_tile_02_design")
+        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "rect_tile_03_design")
                 .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
                         Triple.of(main, DR.getVertex(), "A"),
-                        Triple.of(rectKB, DR.getVertex(), "B"),
-                        Triple.of(rectAC, UP.getVertex(), "C")
+                        Triple.of(rectKB, DR.getVertex(), "B")
                 ))
                 .addLinesInstructions(asList(
                         Pair.of(main, PERIMETER),
@@ -81,7 +78,7 @@ public class Tile2 {
                         Pair.of(rectAB, PERIMETER)
                 ), gray)
                 .addLinesInstructions(asList(
-                        Pair.of(rectAC, PERIMETER)
+//                        Pair.of(rectAC, PERIMETER)
                 ), green)
                 .addLinesInstructions(asList(
 //                        Pair.of(inner1, ),

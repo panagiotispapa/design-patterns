@@ -7,13 +7,13 @@ import java.awt.geom.Point2D;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
 
 public abstract class Polygon {
-
-    public static final Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> IDENTITY = p -> p;
 
     public static Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform(double ratio, Polygon.Vertex vertex, Polygon.Type type) {
         return p -> Triple.of(Points.translateAndScale(p.getLeft(), p.getMiddle() * ratio).apply(vertex.getPoint(p.getRight(), type)), p.getMiddle(), p.getRight());
@@ -99,19 +99,11 @@ public abstract class Polygon {
 
         int getIndex();
     }
-
+    
     private final double ratio;
     private final Polygon.Type type;
 
     private final Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform;
-
-//    public static Polygon newPolygon(double ratio, Type type) {
-//        return new Polygon(ratio, type, IDENTITY);
-//    }
-//
-//    public static Polygon newPolygon(double ratio, Type type, Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform) {
-//        return new Polygon(ratio, type, centreTransform);
-//    }
 
     public Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> getCentreTransform() {
         return centreTransform;
@@ -126,7 +118,7 @@ public abstract class Polygon {
     }
 
     public Polygon(double ratio, Type type) {
-        this(ratio, type, IDENTITY);
+        this(ratio, type, Function.<Triple<Point2D, Double, Integer>>identity());
     }
 
     public Polygon(double ratio, Type type, Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform) {

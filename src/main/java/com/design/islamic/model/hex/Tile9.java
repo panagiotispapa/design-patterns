@@ -1,6 +1,7 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.Mappings;
 import com.design.common.Polygon;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
@@ -15,8 +16,8 @@ import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.Ratios.*;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 
@@ -27,8 +28,8 @@ public class Tile9 {
     private static double RATIO_k = 2 * RATIO_i;
     private static double RATIO_l = 1 - RATIO_k;
     private static double RATIO_m = 0.5 * (RATIO_l - RATIO_l * RATIO_l);
-    private static double RATIO_n = HEX.£H().apply(RATIO_m);
-    private static double RATIO_s = RECT.£H().andThen(HEX.£H().andThen(DOD.$H().andThen(HEX.£H()))).apply(RATIO_m);
+    private static double RATIO_n = RATIO_m / H;
+    private static double RATIO_s = Mappings.chain(RECT.£H(), HEX.£H(), DOD.$H(), HEX.£H()).apply(RATIO_m);
 
     private static double KA1 = 1;
     private static double KB1 = 1;
@@ -56,12 +57,12 @@ public class Tile9 {
     private static double KG1 = RATIO_m;
     private static double KG2 = RATIO_n;
     private static double KG3 = 2 * KG1;
-    private static double KG4 = $H.apply(KG3 - KG2);
+    private static double KG4 = (KG3 - KG2) * H;
 
     private static double A1M = C2E;
     private static double A1N = A1M;
     private static double KN = 1 - A1N;
-    private static double KP = $H.apply(KN);
+    private static double KP = KN * H;
     private static double B2P = KP - KB2;
 
     @TileSupplier

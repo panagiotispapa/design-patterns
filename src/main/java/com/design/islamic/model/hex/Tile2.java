@@ -1,6 +1,7 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.Mappings;
 import com.design.common.Polygon;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
@@ -12,19 +13,16 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
-import static com.design.common.RatioHelper.$1;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.$H;
 import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.islamic.model.Hex.H;
 import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 
 public class Tile2 {
 
-    private static double KA = 1.0;
-    private static double HEIGHT = $H.apply(KA);
-    private static double RATIO_KB = HEIGHT / (HEIGHT + 0.5);
-    private static double RATIO_BD = $1.andThen($H).apply(RATIO_KB);
+    private static double RATIO_KB = H / (H + 0.5);
+    private static double RATIO_BD = Mappings.<Double>chain(i -> 1 - i, i -> i * H).apply(RATIO_KB);
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
@@ -47,7 +45,6 @@ public class Tile2 {
                         )
                 )
                 .build();
-
     }
 
     @DesignSupplier

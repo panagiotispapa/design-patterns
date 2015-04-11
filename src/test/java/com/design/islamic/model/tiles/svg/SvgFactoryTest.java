@@ -2,8 +2,9 @@ package com.design.islamic.model.tiles.svg;
 
 import org.junit.Test;
 
+import java.awt.geom.Point2D;
+
 import static com.design.common.view.SvgFactory.newCircle;
-import static com.design.islamic.model.Centre.newCentre;
 import static com.design.common.view.SvgFactory.newStyle;
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -30,7 +31,7 @@ public class SvgFactoryTest {
     @Test
     public void testNewCircle() throws Exception {
 
-        assertThat(newCircle(newCentre(1, 2), 10, newStyle("blue", "yellow", 2, 0.3, 1))).
+        assertThat(newCircle(new Point2D.Double(1, 2), 10, newStyle("blue", "yellow", 2, 0.3, 1))).
                 isEqualTo("<circle cx=\"1.0\" cy=\"2.0\" r=\"10.0\" style=\"fill:blue;stroke:yellow;stroke-width:2;fill-opacity:0.3;stroke-opacity:1.0\"/>")
         ;
     }

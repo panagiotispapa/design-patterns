@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Set;
 
 import static com.design.common.view.SvgFactory.*;
-import static com.design.islamic.model.Centre.newCentre;
 import static java.util.Arrays.asList;
 
 public class Export {
@@ -35,7 +34,7 @@ public class Export {
 
     }
 
-    private static Reflections forPackage(String pkg){
+    private static Reflections forPackage(String pkg) {
         return new Reflections(new ConfigurationBuilder()
                 .filterInputsBy(new FilterBuilder().includePackage(pkg))
                 .setUrls(ClasspathHelper.forPackage(pkg))
@@ -44,7 +43,7 @@ public class Export {
     }
 
     public static void exportPayloads() {
-        Set<Method> methods = forPackage("com.design.islamic.model.hex")
+        Set<Method> methods = forPackage("com.design.islamic.model")
                 .getMethodsAnnotatedWith(TileSupplier.class);
 
         System.out.println(methods.size());
@@ -54,7 +53,7 @@ public class Export {
     }
 
     public static void exportDesigns() {
-        Set<Method> methods = forPackage("com.design.islamic.model.hex")
+        Set<Method> methods = forPackage("com.design.islamic.model")
                 .getMethodsAnnotatedWith(DesignSupplier.class);
 
         System.out.println(methods.size());
@@ -62,7 +61,6 @@ public class Export {
         methods.stream().map(m -> Export.invokeMethod(m, DesignHelper.class))
                 .forEach(Export::export);
     }
-
 
     private static void export(PayloadSimple payload) {
 
@@ -85,10 +83,10 @@ public class Export {
 
         final String styleBlack = newStyle(BLACK, BLACK, 1, 1, 1);
         List<Point2D> backGroundRect = asList(
-                newCentre(0, 0),
-                newCentre(dim.getWidth(), 0),
-                newCentre(dim.getWidth(), dim.getHeight()),
-                newCentre(0, dim.getHeight()));
+                new Point2D.Double(0, 0),
+                new Point2D.Double(dim.getWidth(), 0),
+                new Point2D.Double(dim.getWidth(), dim.getHeight()),
+                new Point2D.Double(0, dim.getHeight()));
 
         return drawPolygon(backGroundRect, styleBlack);
         //shapes.append();
@@ -99,7 +97,7 @@ public class Export {
 
         Dimension dim = new Dimension(1024 + 2 * 128 + 32, 768);
 
-        Point2D centre = newCentre(dim.getWidth() / 2.0, dim.getHeight() / 2.0);
+        Point2D centre = new Point2D.Double(dim.getWidth() / 2.0, dim.getHeight() / 2.0);
 
         Pair<Point2D, Double> ic = Pair.of(centre, 300.0);
 
@@ -110,7 +108,6 @@ public class Export {
         saveToFile(buildSvg(dim, designHelper.build(ic)), designHelper.getName());
 
     }
-
 
     private static <T> T invokeMethod(Method method, Class<T> klass) {
         try {

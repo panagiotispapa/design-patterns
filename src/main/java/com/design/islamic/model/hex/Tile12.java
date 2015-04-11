@@ -19,6 +19,7 @@ import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
 import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.islamic.model.Hex.H;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
@@ -44,7 +45,7 @@ public class Tile12 {
     }
 
     private static double RATIO_m = 1.0 / 7.0;
-    private static double RATIO_w = 6 * Hex.$H.apply(RATIO_m);
+    private static double RATIO_w = 6 * H * RATIO_m;
     private static double RATIO_h = 5 * RATIO_m;
 
     @TileSupplier

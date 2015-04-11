@@ -2,10 +2,10 @@ package com.design.islamic.model.tiles;
 
 import com.design.common.DesignHelper;
 import com.design.common.view.SvgFactory;
-import com.design.islamic.CentreConfiguration;
-import com.design.islamic.model.Payload;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.hex.*;
+import com.design.islamic.model.hex.Tile2;
+import com.design.islamic.model.rect.*;
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static com.design.common.view.SvgFactory.*;
-import static com.design.islamic.model.Centre.newCentre;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.asList;
 
@@ -42,7 +41,6 @@ public class TestBed2 {
         jsvgCanvas.setSize(dim);
         jPanel.setSize(dim);
 
-        CentreConfiguration centreConfiguration = new CentreConfiguration(r, 17);
 
         Pair<Point2D, Double> ic = Pair.of(new Point2D.Double(0, 0), r);
 
@@ -69,30 +67,27 @@ public class TestBed2 {
 //                Pair.of("Tile_06", Tile6::getPayloadSimple)
 //                Tile9New::getPayloadSimple
 //                Tile12::getPayloadSimple
-                Tile30New::getPayloadSimple,
+                com.design.islamic.model.rect.Tile2::getPayloadSimple,
+                com.design.islamic.model.rect.Tile3::getPayloadSimple,
+                com.design.islamic.model.rect.Tile4::getPayloadSimple,
+                TileGrid::getPayloadSimple,
+                TileGrid::getPayloadSimple2,
+                TileGrid::getPayloadSimple3,
+//                Tile2b::getPayloadSimple,
+//                Tile30::getPayloadSimple,
                 Tile29::getPayloadSimple
 //                Pair.of("Tile_07", Tile7::getPayloadSimple)
 //                Tile8::getPayloadSimple
 //                Pair.of("Tile_3", () -> new Tile3(ic).getPayload())
         );
 
-        patterns.forEach(p ->{
+        patterns.forEach(p -> {
                     PayloadSimple payloadSimple = p.get();
                     saveToFile(buildSvg(dim, background + buildSvgFromPayloadSimple(payloadSimple, ic)), payloadSimple.getName());
                 }
-                );
+        );
 
         drawDesigns(dim);
-
-//        String mySVG = buildSvg(dim,
-//                background + buildSvgFromPayload(() -> new Tile3(ic).getPayload(), ic));
-//
-//        String mySVG = Patterns.buildHexPatternBlackAndWhite(
-//                buildHexPatterns(centreConfiguration.getCentresConfig(RECT), new com.design.islamic.model.rect.
-//                        Tile1(newCentre(0,0),r).getPayload())
-//                , dim
-//
-//        );
 
 //        saveToFile(mySVG,"out");
 
@@ -106,7 +101,7 @@ public class TestBed2 {
 
     private void drawDesigns(Dimension dim) {
 
-        Point2D centre = newCentre(dim.getWidth() / 2.0, dim.getHeight() / 2.0);
+        Point2D centre = new Point2D.Double(dim.getWidth() / 2.0, dim.getHeight() / 2.0);
 
         Pair<Point2D, Double> ic = Pair.of(centre, 300.0);
 
@@ -121,21 +116,32 @@ public class TestBed2 {
 //                Tile9::getDesignHelper,
 //                TileStar::getDesignHelper1,
 //                Tile22::getDesignHelper,
-                Tile7::getDesignHelper,
-                Tile8::getDesignHelper,
-                Tile29::getDesignHelper,
-                Tile30New::getDesignHelper,
+//                Tile7::getDesignHelper,
+//                Tile8::getDesignHelper,
+//                Tile29::getDesignHelper,
+//                Tile30New::getDesignHelper,
 //                Tile3::getDesignHelper,
 //                Tile3::getDesignHelper2,
+//                TileStar::getDesignHelper1,
+//                TileStar::getDesignHelper1b,
 //                TileStar::getDesignHelper2,
+//                TileStar::getDesignHelper2b,
 //                TileStar::getDesignHelper3,
-//                Tile2::getDesignHelper,
+//                TileStar::getDesignHelper3b,
+                com.design.islamic.model.rect.Tile2::getDesignHelper,
+                com.design.islamic.model.rect.Tile3::getDesignHelper,
+                com.design.islamic.model.rect.Tile4::getDesignHelper,
+                Tile2::getDesignHelper,
+                Tile2b::getDesignHelper,
 //                Tile3::getDesignHelper,
 //                Tile4::getDesignHelper,
 //                Tile5::getDesignHelper,
 //                Tile6::getDesignHelper,
 //                Tile7::getDesignHelper,
 //                Tile8::getDesignHelper,
+//                Tile9::getDesignHelper1,
+//                Tile9::getDesignHelper2,
+//                Tile9::getDesignHelper3,
                 Tile11::getDesignHelper
 //                Tile15::getDesignHelper,
 //                Tile18::getDesignHelper,
@@ -170,14 +176,6 @@ public class TestBed2 {
 
     }
 
-    private String buildSvgFromPayload(Supplier<Payload> supplier, Pair<Point2D, Double> ic) {
-        Payload payload = supplier.get();
-        List<Point2D> gridPoints = Grid.gridFromStart(ic.getLeft(), ic.getRight(), payload.getGridConfiguration(), 17);
-
-        return SvgFactory.drawOnGrid(payload.getPolylines(), gridPoints, newStyle(WHITE, 2, 1));
-
-    }
-
 
     private void saveToFile(String svg, String name) {
 
@@ -195,10 +193,10 @@ public class TestBed2 {
 
         final String styleBlack = newStyle(BLACK, BLACK, 1, 1, 1);
         List<Point2D> backGroundRect = asList(
-                newCentre(0, 0),
-                newCentre(dim.getWidth(), 0),
-                newCentre(dim.getWidth(), dim.getHeight()),
-                newCentre(0, dim.getHeight()));
+                new Point2D.Double(0, 0),
+                new Point2D.Double(dim.getWidth(), 0),
+                new Point2D.Double(dim.getWidth(), dim.getHeight()),
+                new Point2D.Double(0, dim.getHeight()));
 
         return drawPolygon(backGroundRect, styleBlack);
         //shapes.append();

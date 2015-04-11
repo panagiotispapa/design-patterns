@@ -14,23 +14,23 @@ import java.util.List;
 
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
-import static com.design.common.RatioHelper.$1;
 import static com.design.common.view.SvgFactory.newStyle;
 import static com.design.islamic.model.Hex.Corner.*;
-import static com.design.islamic.model.Hex.Vertex.*;
+import static com.design.islamic.model.Hex.H;
 import static com.design.islamic.model.Hex.instruction;
-import static com.design.islamic.model.Hex.£H;
 import static java.util.Arrays.asList;
 
 public class Tile4 {
 
-    private static double RATIO_KA = £H.apply(0.5);
-    private static double RATIO_CD = £H.andThen($1).apply(RATIO_KA);
+    private static double KA = 0.5 / H;
+    private static double KB = KA * KA;
+    private static double KC = 2 * KB;
+    private static double CD = 1 - KC;
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
-        Polygon inner = Hex.hex(RATIO_KA, HOR);
-        Polygon outer = Hex.hex(RATIO_CD, VER, Hex.centreTransform(1, DR_V));
+        Polygon inner = Hex.hex(KA, HOR);
+        Polygon outer = Hex.hex(CD, VER, Hex.centreTransform(1, DR_V));
 
         return new PayloadSimple.Builder("hex_tile_04",
                 Hex.ALL_VERTEX_INDEXES
@@ -59,10 +59,10 @@ public class Tile4 {
         String red = newStyle("red", 2, 1);
 
         Polygon main = Hex.hex(1, VER);
-        Polygon hexKA = Hex.hex(RATIO_KA, Polygon.Type.HOR);
+        Polygon hexKA = Hex.hex(KA, Polygon.Type.HOR);
         Polygon hexKA_framed = hexKA.getFramed();
-        Polygon inner3 = Hex.hex(RATIO_KA * RATIO_KA, VER);
-        Polygon outer = Hex.hex(inner3.getRatio(), VER, Hex.centreTransform(1, VER));
+        Polygon hexKB = Hex.hex(KB, VER);
+        Polygon outer = Hex.hex(hexKB.getRatio(), VER, Hex.centreTransform(1, VER));
 //        Polygon innerReg = inner.getRegistered();
 
 //        Polygon outer = Hex.hex(RATIO_2, Polygon.Type.HOR, centreTransform(RATIO_1, Polygon.Type.VER));
@@ -82,7 +82,7 @@ public class Tile4 {
                 .addEquations(equations)
                 .addImportantPoints(asList(
                         Triple.of(hexKA, RIGHT.getVertex(), "A"),
-                        Triple.of(inner3, DR_V.getVertex(), "B"),
+                        Triple.of(hexKB, DR_V.getVertex(), "B"),
                         Triple.of(hexKA_framed, DR_V.getVertex(), "C"),
                         Triple.of(main, DR_V.getVertex(), "D"),
                         Triple.of(outer, DL_V.getVertex(), "E")
@@ -99,7 +99,7 @@ public class Tile4 {
                 ), green)
                 .addLinesInstructions(asList(
                         Pair.of(hexKA_framed, Hex.PERIMETER),
-                        Pair.of(inner3, Hex.PERIMETER)
+                        Pair.of(hexKB, Hex.PERIMETER)
                 ), blue)
                 ;
 

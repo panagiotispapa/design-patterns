@@ -16,15 +16,6 @@ public class RatioHelper {
         return a -> a / factor;
     }
 
-    public static final Function<Double, Double> $SQ2 = $(Math.sqrt(2));
-    public static final Function<Double, Double> £SQ2 = £(Math.sqrt(2));
-
-    public static final Function<Double, Double> $2 = $(2.0);
-
-    public static final Function<Double, Double> £2 = £(2.0);
-
-    public static final Function<Double, Double> $1 = a -> 1.0 - a;
-
     private static final Map<Double, Double> heightsMap;
     private static final Map<Double, Double> projectionsMap;
 

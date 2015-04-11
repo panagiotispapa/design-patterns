@@ -16,11 +16,9 @@ import java.util.List;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.$H;
 import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Vertex.THREE;
-import static com.design.islamic.model.Hex.centreTransform;
-import static com.design.islamic.model.Hex.instruction;
 import static java.lang.Math.PI;
 import static java.util.Arrays.asList;
 
@@ -30,8 +28,8 @@ public class Tile29 {
     private static double RATIO_M = Math.tan(ANGLE_1);
     private static double RATIO_N = Math.cos(ANGLE_1);
 
-    private static double KB = $H.apply(1.0);
-    private static double KC = $H.apply(KB);
+    private static double KB = H;
+    private static double KC = KB * H;
     private static double CA = 1 - KC;
     private static double CD = RATIO_M * CA;
     private static double DA = CA / RATIO_N;
@@ -41,7 +39,7 @@ public class Tile29 {
     private static double BF = 0.5 - AF;
     private static double BG = BF;
     private static double KG = KB - BG;
-    private static double KH = $H.apply(KG);
+    private static double KH = KG * H;
     private static double HI = 0.5 * KG * RATIO_M;
     private static double KI = KH - HI;
 

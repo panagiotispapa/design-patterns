@@ -17,9 +17,8 @@ import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
 import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Vertex.*;
-import static com.design.islamic.model.Hex.centreTransform;
-import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
@@ -27,7 +26,7 @@ import static java.util.stream.Collectors.toList;
 public class Tile11 {
 
     private static double RATIO_m = 1.0 / 4.0;
-    private static double RATIO_n = Hex.£H.apply(RATIO_m);
+    private static double RATIO_n = RATIO_m / H;
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {

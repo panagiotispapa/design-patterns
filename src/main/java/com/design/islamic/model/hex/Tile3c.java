@@ -15,18 +15,16 @@ import java.util.List;
 
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.$H;
-import static com.design.islamic.model.Hex.Corner.DR_V;
-import static com.design.islamic.model.Hex.Corner.RIGHT;
-import static com.design.islamic.model.Hex.Corner.UR_V;
+import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.islamic.model.Hex.H;
 import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 
 public class Tile3c {
 
 
-    private static final double KB = $H.apply(1.0);
-    private static final double KC = $H.apply(KB);
+    private static final double KB = H;
+    private static final double KC = KB * H;
     private static final double CA = 1 - KC;
     private static final double CB = 0.5 * KB;
     private static final double CD = CB;

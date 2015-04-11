@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -64,9 +65,11 @@ public class Mappings {
         return t -> t.stream().map(Collection::stream).flatMap(s -> s).collect(toList());
     }
 
-//    public static <I, O> Function<I, O> chaining(Function<I, O> first, Function<I, O>... rest) {
-//        return Stream.of(rest).reduce(first, Function::andThen);
-//    }
+    public static <T> Function<T, T> chain(Function<T, T>... ops) {
+        return Stream.of(ops).reduce(t -> t, Function::andThen);
+
+    }
+
 
     public static <T> List<List<T>> concat(List<List<T>>... lists) {
         return Lists.newArrayList(Iterables.concat(lists));

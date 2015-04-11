@@ -1,6 +1,7 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.Mappings;
 import com.design.common.Polygon;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
@@ -15,17 +16,18 @@ import java.util.List;
 
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.view.SvgFactory.newStyle;
-import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.islamic.model.Hex.H;
+import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 
 public class Tile5 {
 
     public static double KD = 1.0;
-    public static double KF = $H.apply(KD);
+    public static double KF = KD * H;
     public static double KG = KD / 2.0;
-    public static double KA = £H.apply(KG);
-    public static double KB = £H.apply(0.5 * KA);
+    public static double KA = KG / H;
+    public static double KB = Mappings.<Double>chain(i -> i / 2.0, i -> i / H).apply(KA);
     public static double RATIO_2 = KA * KA;
 
     @TileSupplier
