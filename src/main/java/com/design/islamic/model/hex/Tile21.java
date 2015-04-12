@@ -68,6 +68,7 @@ public class Tile21 {
                                 rs(3, 13, DL_H)
                         )
                 ))
+                .withSize(PayloadSimple.Size.MEDIUM)
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
 

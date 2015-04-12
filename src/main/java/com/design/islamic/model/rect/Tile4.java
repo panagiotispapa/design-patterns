@@ -28,7 +28,6 @@ public class Tile4 {
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
 
-
         Polygon main = Rect.rect(1, VER);
         Polygon rectKB = Rect.rect(KB, VER);
         Polygon rectKC = Rect.rect(KC, HOR);

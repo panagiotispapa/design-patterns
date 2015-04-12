@@ -6,6 +6,7 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
 import com.design.islamic.model.tiles.Grid;
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.tuple.Pair;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
@@ -23,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static com.design.common.view.SvgFactory.*;
@@ -33,6 +35,12 @@ public class Export {
     public Export() {
 
     }
+
+    private static Map<PayloadSimple.Size, Double> sizeToR = ImmutableMap.of(
+            PayloadSimple.Size.SMALL, 100.0,
+            PayloadSimple.Size.MEDIUM, 150.0,
+            PayloadSimple.Size.LARGE, 200.0
+    );
 
     private static Reflections forPackage(String pkg) {
         return new Reflections(new ConfigurationBuilder()
@@ -64,8 +72,9 @@ public class Export {
 
     private static void export(PayloadSimple payload) {
 
-        Dimension dim = new Dimension(1024 + 2 * 128 + 32, 768);
-        Pair<Point2D, Double> ic = Pair.of(new Point2D.Double(0, 0), 100.0);
+        Double R = sizeToR.get(payload.getSize());
+        Dimension dim = new Dimension((int) (15 * R), (int) (10 * R));
+        Pair<Point2D, Double> ic = Pair.of(new Point2D.Double(0, 0), R);
 
         System.out.println(payload.getName());
         saveToFile(buildSvg(dim, buildBackground(dim) + buildSvgFromPayloadSimple(payload, ic)), payload.getName());

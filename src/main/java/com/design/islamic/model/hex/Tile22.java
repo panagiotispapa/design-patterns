@@ -132,7 +132,7 @@ public class Tile22 {
                 ))
 
 //                .withGridConf(Grid.Configuration.customRect(2*RATIO_w, 2*RATIO_h))
-
+                .withSize(PayloadSimple.Size.LARGE)
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
 

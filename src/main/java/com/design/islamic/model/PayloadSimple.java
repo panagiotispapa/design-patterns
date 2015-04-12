@@ -20,14 +20,19 @@ public class PayloadSimple {
     private final Grid.Configuration gridConfiguration;
     private final List<Integer> allVertexes;
     private final String name;
+    private final Size size;
 
-    public PayloadSimple(String name, List<List<Pair<Polygon, Polygon.Vertex>>> lines, List<Integer> allVertexes, Grid.Configuration gridConfiguration, List<List<Pair<Polygon, Polygon.Vertex>>> linesSingle) {
+    public PayloadSimple(String name, List<List<Pair<Polygon, Polygon.Vertex>>> lines, List<Integer> allVertexes, Grid.Configuration gridConfiguration, List<List<Pair<Polygon, Polygon.Vertex>>> linesSingle, Size size) {
         this.lines = lines;
         this.gridConfiguration = gridConfiguration;
         this.allVertexes = allVertexes;
         this.name = name;
         this.linesSingle = linesSingle;
+        this.size = size;
+    }
 
+    public Size getSize() {
+        return size;
     }
 
     public List<List<Pair<Polygon, Polygon.Vertex>>> getLines() {
@@ -58,7 +63,14 @@ public class PayloadSimple {
         return name;
     }
 
+    public static enum Size {
+        SMALL,
+        MEDIUM,
+        LARGE
+    }
+
     public static class Builder {
+        private Size size = Size.SMALL;
         private List<List<Pair<Polygon, Polygon.Vertex>>> lines = new ArrayList<>();
         private Grid.Configuration gridConfiguration = Grid.Configs.HEX_HOR2.getConfiguration();
         private final List<Integer> allVertexes;
@@ -85,8 +97,12 @@ public class PayloadSimple {
             return this;
         }
 
+        public Builder withSize(Size size) {
+            this.size = size;
+            return this;
+        }
         public PayloadSimple build() {
-            return new PayloadSimple(name, lines, allVertexes, gridConfiguration, linesSingle);
+            return new PayloadSimple(name, lines, allVertexes, gridConfiguration, linesSingle, size);
         }
 
     }

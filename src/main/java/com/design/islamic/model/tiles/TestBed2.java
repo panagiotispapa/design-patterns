@@ -4,8 +4,7 @@ import com.design.common.DesignHelper;
 import com.design.common.view.SvgFactory;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.hex.*;
-import com.design.islamic.model.hex.Tile2;
-import com.design.islamic.model.rect.*;
+import com.google.common.collect.ImmutableMap;
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -19,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import static com.design.common.view.SvgFactory.*;
@@ -30,6 +30,12 @@ public class TestBed2 {
     private JSVGCanvas jsvgCanvas;
     private JPanel jPanel;
 
+    private static Map<PayloadSimple.Size, Double> sizeToR = ImmutableMap.of(
+            PayloadSimple.Size.SMALL, 100.0,
+            PayloadSimple.Size.MEDIUM, 150.0,
+            PayloadSimple.Size.LARGE, 200.0
+    );
+
     public TestBed2(Dimension dim, final double r) {
 
         jPanel = new JPanel();
@@ -40,7 +46,6 @@ public class TestBed2 {
 
         jsvgCanvas.setSize(dim);
         jPanel.setSize(dim);
-
 
         Pair<Point2D, Double> ic = Pair.of(new Point2D.Double(0, 0), r);
 
@@ -72,9 +77,12 @@ public class TestBed2 {
                 com.design.islamic.model.rect.Tile4::getPayloadSimple,
                 TileGrid::getPayloadSimple,
                 TileGrid::getPayloadSimple2,
-                TileGrid::getPayloadSimple3,
-//                Tile2b::getPayloadSimple,
-//                Tile30::getPayloadSimple,
+//                TileGrid::getPayloadSimple3,
+                Tile2b::getPayloadSimple,
+                Tile30::getPayloadSimple,
+                Tile7::getPayloadSimple,
+                Tile8::getPayloadSimple,
+                Tile9::getPayloadSimple,
                 Tile29::getPayloadSimple
 //                Pair.of("Tile_07", Tile7::getPayloadSimple)
 //                Tile8::getPayloadSimple
@@ -83,7 +91,11 @@ public class TestBed2 {
 
         patterns.forEach(p -> {
                     PayloadSimple payloadSimple = p.get();
-                    saveToFile(buildSvg(dim, background + buildSvgFromPayloadSimple(payloadSimple, ic)), payloadSimple.getName());
+                    Pair<Point2D, Double> newIC = Pair.of(ic.getLeft(), sizeToR.get(payloadSimple.getSize()));
+                    Dimension newDim = new Dimension((int) (15 * newIC.getRight()), (int) (10 * newIC.getRight()));
+                    saveToFile(
+                            buildSvg(newDim,
+                                    buildBackground(newDim) + buildSvgFromPayloadSimple(payloadSimple, newIC)), payloadSimple.getName());
                 }
         );
 
@@ -170,12 +182,12 @@ public class TestBed2 {
     }
 
     private String buildSvgFromPayloadSimple(PayloadSimple payload, Pair<Point2D, Double> ic) {
-        List<Point2D> gridPoints = Grid.gridFromStart(ic.getLeft(), ic.getRight(), payload.getGridConfiguration(), 17);
+
+        List<Point2D> gridPoints = Grid.gridFromStart(ic.getLeft(), ic.getRight(), payload.getGridConfiguration(), 20);
 
         return SvgFactory.drawOnGrid(payload.toLines(ic), gridPoints, newStyle(WHITE, 2, 1));
 
     }
-
 
     private void saveToFile(String svg, String name) {
 

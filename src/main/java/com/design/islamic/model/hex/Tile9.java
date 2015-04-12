@@ -164,6 +164,7 @@ public class Tile9 {
 
                         )
                 )
+                .withSize(PayloadSimple.Size.MEDIUM)
                 .build();
     }
 
