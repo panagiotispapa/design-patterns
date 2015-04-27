@@ -1,23 +1,25 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.Grid;
 import com.design.common.Polygon;
-import com.design.islamic.model.DesignSupplier;
-import com.design.islamic.model.Hex;
-import com.design.islamic.model.PayloadSimple;
-import com.design.islamic.model.TileSupplier;
-import com.design.islamic.model.tiles.Grid;
+import com.design.common.model.Style;
+import com.design.islamic.model.*;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
+import java.awt.*;
 import java.util.List;
 
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
+import static com.design.common.RatioHelper.P6.H;
+import static com.design.common.RatioHelper.P6.P;
 import static com.design.common.view.SvgFactory.newStyle;
 import static com.design.islamic.model.Hex.Corner.*;
-import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Vertex.*;
+import static com.design.islamic.model.Hex.centreTransform;
+import static com.design.islamic.model.Hex.instruction;
 import static java.util.Arrays.asList;
 
 public class TileStar {
@@ -52,84 +54,89 @@ public class TileStar {
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple1() {
+        Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
         return new PayloadSimple
                 .Builder(
                 "hex_tile_star_01",
                 Hex.ALL_VERTEX_INDEXES
-        ).withLines(asList(
+        ).withPathsFullFromLines(asList(
                 getLines(RATIO_1)
-        ))
+        ), whiteBold)
                 .build();
     }
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple2() {
+        Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
         return new PayloadSimple.Builder("hex_tile_star_02",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withLines(asList(
+                .withPathsFullFromLines(asList(
                         getLines(RATIO_2)
-                ))
+                ), whiteBold)
                 .build();
     }
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple3() {
+        Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
         return new PayloadSimple.Builder("hex_tile_star_03",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withLines(asList(
+                .withPathsFullFromLines(asList(
                         getLines(RATIO_3)
-                ))
+                ), whiteBold)
                 .build();
     }
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple1b() {
+        Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
         return new PayloadSimple
                 .Builder(
                 "hex_tile_star_01b",
                 Hex.ALL_VERTEX_INDEXES
-        ).withLines(asList(
+        ).withPathsFullFromLines(asList(
                 getLinesB(RATIO_1)
-        ))
+        ), whiteBold)
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
     }
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple2b() {
+        Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
         return new PayloadSimple
                 .Builder(
                 "hex_tile_star_02b",
                 Hex.ALL_VERTEX_INDEXES
-        ).withLines(asList(
+        ).withPathsFullFromLines(asList(
                 getLinesB(RATIO_2)
-        ))
+        ), whiteBold)
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
     }
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple3b() {
+        Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
         return new PayloadSimple
                 .Builder(
                 "hex_tile_star_03b",
                 Hex.ALL_VERTEX_INDEXES
-        ).withLines(asList(
+        ).withPathsFullFromLines(asList(
                 getLinesB(RATIO_3)
-        ))
+        ), whiteBold)
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
     }
 
     @DesignSupplier
     public static DesignHelper getDesignHelper1() {
-        String black = newStyle("black", 1, 1);
-        String blue = newStyle("blue", 1, 1);
-        String gray = newStyle("gray", 1, 1);
-        String green = newStyle("green", 1, 1);
-        String red = newStyle("red", 2, 1);
+        Style blue = new Style.Builder(Color.BLUE, 1).build();
+        Style gray = new Style.Builder(Color.GRAY, 1).build();
+        Style green = new Style.Builder(Color.GREEN, 1).build();
+        Style red = new Style.Builder(Color.RED, 2).build();
 
         Polygon main = Hex.hex(1, VER);
         Polygon registered = main.getRegistered();
@@ -137,16 +144,16 @@ public class TileStar {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_01_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addMixedLinesInstructionsList(getPayloadSimple1().getLines(), red)
+                .addFullPaths(getPayloadSimple1().getPathsFull(), red)
 //                .addEquations(equations)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(main, Hex.DIAGONALS)
                 ), gray)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(registered, Hex.PERIMETER)
                 ), green)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(inner, Hex.PERIMETER)
                 ), blue);
 
@@ -154,12 +161,11 @@ public class TileStar {
 
     @DesignSupplier
     public static DesignHelper getDesignHelper2() {
-        String black = newStyle("black", 1, 1);
-        String blue = newStyle("blue", 1, 1);
-        String blueLight = newStyle("blue", 1, 0.3);
-        String gray = newStyle("gray", 1, 1);
-        String green = newStyle("green", 1, 1);
-        String red = newStyle("red", 2, 1);
+
+        Style blue = new Style.Builder(Color.BLUE, 1).build();
+        Style gray = new Style.Builder(Color.GRAY, 1).build();
+        Style green = new Style.Builder(Color.GREEN, 1).build();
+        Style red = new Style.Builder(Color.RED, 2).build();
 
         Polygon main = Hex.hex(1, VER);
         Polygon registered = main.getRegistered();
@@ -169,7 +175,7 @@ public class TileStar {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_02_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addMixedLinesInstructionsList(getPayloadSimple2().getLines(), red)
+                .addFullPaths(getPayloadSimple2().getPathsFull(), red)
                 .addEquations(asList(
                         "AB=AC",
                         "KB=h/(h+0.5)"
@@ -179,15 +185,15 @@ public class TileStar {
                         Triple.of(inner2Reg, ONE, "A"),
                         Triple.of(registered, ONE, "C")
                 ))
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(registered, Hex.DIAGONALS),
                         Pair.of(main, Hex.DIAGONALS)
                 ), gray)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(inner2, Hex.PERIMETER)
                 ), green)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(inner, Hex.PERIMETER)
                 ), blue);
 
@@ -195,12 +201,13 @@ public class TileStar {
 
     @DesignSupplier
     public static DesignHelper getDesignHelper3() {
-        String black = newStyle("black", 1, 1);
-        String blue = newStyle("blue", 1, 1);
         String blueLight = newStyle("blue", 1, 0.3);
-        String gray = newStyle("gray", 1, 1);
-        String green = newStyle("green", 1, 1);
-        String red = newStyle("red", 2, 1);
+
+        Style blue = new Style.Builder(Color.BLUE, 1).build();
+        Style gray = new Style.Builder(Color.GRAY, 1).build();
+        Style green = new Style.Builder(Color.GREEN, 1).build();
+        Style red = new Style.Builder(Color.RED, 2).build();
+
 
         final double KA = 1;
         final double KE = KA * H;
@@ -219,7 +226,7 @@ public class TileStar {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_03_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addMixedLinesInstructionsList(getPayloadSimple3().getLines(), red)
+                .addFullPaths(getPayloadSimple3().getPathsFull(), red)
                 .addEquations(asList(
                         "KA = 1",
                         "KE = EB = h",
@@ -239,32 +246,32 @@ public class TileStar {
                         Triple.of(registered, TWO, "E"),
                         Triple.of(hexAF, FIVE, "F")
                 ))
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(outerSmall, Hex.PERIMETER),
                         Pair.of(main, Hex.DIAGONALS)
 //                                Pair.of(outer, Hex.DIAGONALS)
 
                 ), gray)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(registered, Hex.PERIMETER)
                 ), green)
-                .addMixedLinesInstructions(asList(
+                .addFullPathsFromLines(asList(asList(
                         instruction(outerSmall, DL_V),
                         instruction(registered, RIGHT),
                         instruction(outerSmall, UL_V)
 
-                ), green)
-                .addMixedLinesInstructions(asList(
+                )), green)
+                .addFullPathsFromLines(asList(asList(
                         instruction(inner, DL_H),
                         instruction(inner, UR_H)
 
-                ), blue)
-                .addMixedLinesInstructions(asList(
+                )), blue)
+                .addFullPathsFromLines(asList(asList(
                         instruction(outerBig, DOWN),
                         instruction(outerBig, UP)
 
-                ), gray)
+                )), gray)
                 .addCircle(
                         asList(
                                 registered
@@ -276,11 +283,10 @@ public class TileStar {
 
     @DesignSupplier
     public static DesignHelper getDesignHelper1b() {
-        String black = newStyle("black", 1, 1);
-        String blue = newStyle("blue", 1, 1);
-        String gray = newStyle("gray", 1, 1);
-        String green = newStyle("green", 1, 1);
-        String red = newStyle("red", 2, 1);
+        Style blue = new Style.Builder(Color.BLUE, 1).build();
+        Style gray = new Style.Builder(Color.GRAY, 1).build();
+        Style green = new Style.Builder(Color.GREEN, 1).build();
+        Style red = new Style.Builder(Color.RED, 2).build();
 
         Polygon main = Hex.hex(1, HOR);
         Polygon registered = main.getRegistered();
@@ -288,16 +294,16 @@ public class TileStar {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_01b_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addMixedLinesInstructionsList(getPayloadSimple1b().getLines(), red)
+                .addFullPaths(getPayloadSimple1b().getPathsFull(), red)
 //                .addEquations(equations)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(main, Hex.DIAGONALS)
                 ), gray)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(registered, Hex.PERIMETER)
                 ), green)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(inner, Hex.PERIMETER)
                 ), blue);
 
@@ -305,11 +311,10 @@ public class TileStar {
 
     @DesignSupplier
     public static DesignHelper getDesignHelper2b() {
-        String black = newStyle("black", 1, 1);
-        String blue = newStyle("blue", 1, 1);
-        String gray = newStyle("gray", 1, 1);
-        String green = newStyle("green", 1, 1);
-        String red = newStyle("red", 2, 1);
+        Style blue = new Style.Builder(Color.BLUE, 1).build();
+        Style gray = new Style.Builder(Color.GRAY, 1).build();
+        Style green = new Style.Builder(Color.GREEN, 1).build();
+        Style red = new Style.Builder(Color.RED, 2).build();
 
         Polygon main = Hex.hex(1, HOR);
         Polygon registered = main.getRegistered();
@@ -317,16 +322,16 @@ public class TileStar {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_02b_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addMixedLinesInstructionsList(getPayloadSimple2b().getLines(), red)
+                .addFullPaths(getPayloadSimple2b().getPathsFull(), red)
 //                .addEquations(equations)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(main, Hex.DIAGONALS)
                 ), gray)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(registered, Hex.PERIMETER)
                 ), green)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(inner, Hex.PERIMETER)
                 ), blue);
 
@@ -334,11 +339,10 @@ public class TileStar {
 
     @DesignSupplier
     public static DesignHelper getDesignHelper3b() {
-        String black = newStyle("black", 1, 1);
-        String blue = newStyle("blue", 1, 1);
-        String gray = newStyle("gray", 1, 1);
-        String green = newStyle("green", 1, 1);
-        String red = newStyle("red", 2, 1);
+        Style blue = new Style.Builder(Color.BLUE, 1).build();
+        Style gray = new Style.Builder(Color.GRAY, 1).build();
+        Style green = new Style.Builder(Color.GREEN, 1).build();
+        Style red = new Style.Builder(Color.RED, 2).build();
 
         Polygon main = Hex.hex(1, HOR);
         Polygon registered = main.getRegistered();
@@ -346,16 +350,16 @@ public class TileStar {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_03b_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addMixedLinesInstructionsList(getPayloadSimple3b().getLines(), red)
+                .addFullPaths(getPayloadSimple3b().getPathsFull(), red)
 //                .addEquations(equations)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(main, Hex.DIAGONALS)
                 ), gray)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(registered, Hex.PERIMETER)
                 ), green)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(inner, Hex.PERIMETER)
                 ), blue);
 

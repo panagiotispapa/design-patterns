@@ -1,20 +1,21 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.Grid;
 import com.design.common.Polygon;
+import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
-import com.design.islamic.model.tiles.Grid;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
 import static com.design.common.Polygon.Type.HOR;
-import static com.design.common.view.SvgFactory.newStyle;
 import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.Vertex.ONE;
 import static com.design.islamic.model.Hex.centreTransform;
@@ -28,13 +29,15 @@ public class Tile17 {
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
+        Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
+
         Polygon hexKB = Hex.hex(RATIO_m, HOR);
 
         Polygon hexCB = Hex.hex(RATIO_m, HOR, centreTransform(2 * RATIO_m, RIGHT));
         return new PayloadSimple.Builder("hex_tile_17",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withLines(asList(
+                .withPathsFullFromLines(asList(
                         asList(
                                 instruction(hexCB, UR_H),
                                 instruction(hexCB, UL_H),
@@ -49,18 +52,17 @@ public class Tile17 {
                                 instruction(hexKB, DR_H)
                         )
 
-                ))
+                ), whiteBold)
                 .withGridConf(Grid.Configs.HEX_HOR3.getConfiguration())
                 .build();
     }
 
     @DesignSupplier
     public static DesignHelper getDesignHelper() {
-        String black = newStyle("black", 1, 1);
-        String blue = newStyle("blue", 1, 1);
-        String gray = newStyle("gray", 1, 1);
-        String green = newStyle("green", 1, 1);
-        String red = newStyle("red", 2, 1);
+        Style blue = new Style.Builder(Color.BLUE, 1).build();
+        Style gray = new Style.Builder(Color.GRAY, 1).build();
+        Style green = new Style.Builder(Color.GREEN, 1).build();
+        Style red = new Style.Builder(Color.RED, 2).build();
 
         Polygon main = Hex.hex(1, HOR);
         Polygon hexKB = Hex.hex(RATIO_m, HOR);
@@ -72,14 +74,14 @@ public class Tile17 {
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_17_design")
-                .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
+                .addFullPaths(getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
                         Triple.of(main, ONE, "A"),
                         Triple.of(hexKB, ONE, "B"),
                         Triple.of(hexKC, ONE, "C")
                 ))
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(main, Hex.DIAGONALS),
                         Pair.of(hexKB, Hex.PERIMETER),

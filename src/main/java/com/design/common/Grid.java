@@ -1,5 +1,8 @@
-package com.design.islamic.model.tiles;
+package com.design.common;
 
+import com.design.common.RatioHelper;
+import com.design.common.RatioHelper.P4;
+import com.design.common.RatioHelper.P6;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Rect;
 
@@ -103,13 +106,13 @@ public class Grid {
 
     public static enum Configs {
 
-        HEX_HOR(1, Hex.H, 0.5, 0),
-        HEX_HOR2(2.0 * Hex.H, 1.5, Hex.H, 0),
-        HEX_HOR3(2.0, 2.0 * Hex.H, 1.0, 0),
-        HEX_VER(Hex.H, 1, 0, 0.5),
-        HEX_VER2(1.5, 2.0 * Hex.H, 0, Hex.H),
+        HEX_HOR(1, P6.H, 0.5, 0),
+        HEX_HOR2(2.0 * P6.H, 1.5, P6.H, 0),
+        HEX_HOR3(2.0, 2.0 * P6.H, 1.0, 0),
+        HEX_VER(P6.H, 1, 0, 0.5),
+        HEX_VER2(1.5, 2.0 * P6.H, 0, P6.H),
         RECT(1, 1, 0, 0),
-        RECT2(2 * Rect.H, 2 * Rect.H, 0, 0),
+        RECT2(2 * P4.H, 2 * P4.H, 0, 0),
         RECT3(1, 2, 0, 1);
 
         private final Configuration configuration;

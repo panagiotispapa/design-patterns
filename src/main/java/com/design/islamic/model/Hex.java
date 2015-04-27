@@ -2,8 +2,7 @@ package com.design.islamic.model;
 
 import com.design.common.Polygon;
 import com.design.common.RatioHelper;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import com.design.common.model.Path;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -12,21 +11,15 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
 import static com.design.common.PolygonTools.calcVertexes;
-import static com.design.common.RatioHelper.Ratios.HEX;
 import static java.lang.Math.PI;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 public class Hex extends Polygon {
-
-    public static final Double H = HEX.$H().apply(1.0);
-    public static final Double P = HEX.$P().apply(1.0);
 
     public static final List<Integer> ALL_VERTEX_INDEXES = IntStream.range(0, 6).boxed().collect(toList());
 
@@ -42,33 +35,96 @@ public class Hex extends Polygon {
 
     public static final double PHI = (2.0 * PI) / 6.0;
 
-    public static List<List<Polygon.Vertex>> NONE = emptyList();
-    public static List<List<Polygon.Vertex>> PERIMETER = asList(
+//    public static List<List<Polygon.Vertex>> PERIMETER = asList(
+//            asList(
+//                    (Polygon.Vertex) Vertex.ONE,
+//                    Vertex.TWO,
+//                    Vertex.THREE,
+//                    Vertex.FOUR,
+//                    Vertex.FIVE,
+//                    Vertex.SIX,
+//                    Vertex.ONE
+//            )
+//    );
+
+    public static Function<Polygon, List<Path>> PERIMETER =
+            p -> asList(new Path.Builder()
+                    .startWith(p, Vertex.ONE)
+                    .lineTo(p, Vertex.TWO)
+                    .lineTo(p, Vertex.THREE)
+                    .lineTo(p, Vertex.FOUR)
+                    .lineTo(p, Vertex.FIVE)
+                    .lineTo(p, Vertex.SIX)
+                    .closed()
+                    .build());
+
+    public static Function<Polygon, List<Path>> INNER_TRIANGLES =
+            p -> asList(
+                    new Path.Builder()
+                            .startWith(p, Vertex.ONE)
+                            .lineTo(p, Vertex.THREE)
+                            .lineTo(p, Vertex.FIVE)
+                            .closed()
+                            .build(),
+                    new Path.Builder()
+                            .startWith(p, Vertex.TWO)
+                            .lineTo(p, Vertex.FOUR)
+                            .lineTo(p, Vertex.SIX)
+                            .closed()
+                            .build()
+            );
+
+//    public static List<List<Polygon.Vertex>> INNER_TRIANGLES = asList(
+//            asList((Polygon.Vertex) Vertex.ONE, Vertex.THREE, Vertex.FIVE, Vertex.ONE),
+//            asList(Vertex.TWO, Vertex.FOUR, Vertex.SIX, Vertex.TWO)
+//    );
+
+
+    public static Function<Polygon, List<Path>> DIAGONAL_ONE = Path.fromListOfVertexes.apply(asList(
             asList(
-                    (Polygon.Vertex) Vertex.ONE,
-                    Vertex.TWO,
-                    Vertex.THREE,
-                    Vertex.FOUR,
-                    Vertex.FIVE,
-                    Vertex.SIX,
-                    Vertex.ONE
+                    Vertex.ONE,
+                    Vertex.FOUR
             )
-    );
+    ));
 
-    public static List<List<Polygon.Vertex>> INNER_TRIANGLES = asList(
-            asList((Polygon.Vertex) Vertex.ONE, Vertex.THREE, Vertex.FIVE, Vertex.ONE),
-            asList(Vertex.TWO, Vertex.FOUR, Vertex.SIX, Vertex.TWO)
-    );
+    public static Function<Polygon, List<Path>> DIAGONAL_TWO =
+            p -> asList(
+                    new Path.Builder()
+                            .startWith(p, Vertex.TWO)
+                            .lineTo(p, Vertex.FIVE)
+                            .build()
+            );
 
-    public static List<List<Polygon.Vertex>> DIAGONALS = asList(
-            Diag.ONE.getVertexes(),
-            Diag.TWO.getVertexes(),
-            Diag.THREE.getVertexes()
-    );
+    public static Function<Polygon, List<Path>> DIAGONAL_THREE =
+            p -> asList(
+                    new Path.Builder()
+                            .startWith(p, Vertex.THREE)
+                            .lineTo(p, Vertex.SIX)
+                            .build()
+            );
 
-    public static List<List<Polygon.Vertex>> ALL_LINES = Lists.newArrayList(
-            Iterables.concat(DIAGONALS, INNER_TRIANGLES, PERIMETER)
-    );
+    public static Function<Polygon, List<Path>> DIAGONALS =
+            p -> asList(
+                    new Path.Builder()
+                            .startWith(p, Vertex.ONE)
+                            .lineTo(p, Vertex.FOUR)
+                            .build(),
+                    new Path.Builder()
+                            .startWith(p, Vertex.TWO)
+                            .lineTo(p, Vertex.FIVE)
+                            .build(),
+                    new Path.Builder()
+                            .startWith(p, Vertex.THREE)
+                            .lineTo(p, Vertex.SIX)
+                            .build()
+            );
+
+
+//    public static List<List<Polygon.Vertex>> DIAGONALS = asList(
+//            Diag.ONE.getVertexes(),
+//            Diag.TWO.getVertexes(),
+//            Diag.THREE.getVertexes()
+//    );
 
 
     public static enum Diag {

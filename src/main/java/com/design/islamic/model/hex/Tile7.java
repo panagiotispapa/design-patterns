@@ -1,20 +1,23 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.Grid;
 import com.design.common.Polygon;
+import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
-import com.design.islamic.model.tiles.Grid;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
+import java.awt.*;
 import java.util.List;
 
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
-import static com.design.common.view.SvgFactory.newStyle;
+import static com.design.common.RatioHelper.P6.H;
+import static com.design.common.RatioHelper.P6.P;
 import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.Vertex.SIX;
@@ -35,11 +38,12 @@ public class Tile7 {
         Polygon inner = Hex.hex(KD, HOR);
         Polygon hexBE = Hex.hex(BE, VER, centreTransform(1, DR_V));
         Polygon outerBig = Hex.hex(0.5, VER, centreTransform(1, DR_V));
+        Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
 
         return new PayloadSimple.Builder("hex_tile_07",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withLines(asList(
+                .withPathsFullFromLines(asList(
                                 asList(
                                         Pair.of(hexBE, TWO),
                                         instruction(inner, DR_H)
@@ -53,18 +57,17 @@ public class Tile7 {
                                         instruction(outerBig, UL_V),
                                         instruction(outerBig, DL_V)
                                 )
-                        )
+                        ), whiteBold
                 )
                 .build();
     }
 
     @DesignSupplier
     public static DesignHelper getDesignHelper() {
-        String black = newStyle("black", 1, 1);
-        String blue = newStyle("blue", 1, 1);
-        String gray = newStyle("gray", 1, 1);
-        String green = newStyle("green", 1, 1);
-        String red = newStyle("red", 2, 1);
+        Style blue = new Style.Builder(Color.BLUE, 1).build();
+        Style gray = new Style.Builder(Color.GRAY, 1).build();
+        Style green = new Style.Builder(Color.GREEN, 1).build();
+        Style red = new Style.Builder(Color.RED, 2).build();
 
 //        List<Point2D> hexGrid = Grid.gridFromStart(new Point2D.Double(0, 0), initialConditions.getRight() / 4.0,
 //                Grid.Configuration.customRect(RECT_DIST_HEIGHT * 2 * 1.2, RECT_DIST_HEIGHT * 2), 24);
@@ -91,7 +94,7 @@ public class Tile7 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_07_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(mainHor, Hex.PERIMETER),
                         Pair.of(main, Hex.DIAGONALS),
@@ -101,14 +104,14 @@ public class Tile7 {
 //                                Pair.of(outer, Hex.PERIMETER),
 //                                Pair.of(outerReg, Hex.PERIMETER)
                 ), gray)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(inner, Hex.PERIMETER)
                 ), green)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(innerHor, Hex.PERIMETER),
                         Pair.of(hexBE, Hex.PERIMETER)
                 ), green)
-                .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
+                .addFullPaths(getPayloadSimple().getPathsFull(), red)
                 .addImportantPoints(asList(
                         Triple.of(main, DR_V.getVertex(), "B"),
                         Triple.of(mainHorReg, RIGHT.getVertex(), "A"),

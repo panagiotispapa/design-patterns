@@ -3,6 +3,7 @@ package com.design.islamic.model.hex;
 import com.design.common.DesignHelper;
 import com.design.common.Polygon;
 import com.design.common.RatioHelper;
+import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.PayloadSimple;
@@ -10,15 +11,17 @@ import com.design.islamic.model.TileSupplier;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
-import static com.design.common.view.SvgFactory.newStyle;
+import static com.design.common.RatioHelper.P6.H;
 import static com.design.islamic.model.Hex.Corner.*;
-import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Vertex.THREE;
+import static com.design.islamic.model.Hex.centreTransform;
+import static com.design.islamic.model.Hex.instruction;
 import static java.lang.Math.PI;
 import static java.util.Arrays.asList;
 
@@ -54,10 +57,11 @@ public class Tile29 {
         Polygon hexKI = Hex.hex(KI, VER);
         Polygon hexBF = Hex.hex(BF, VER, centreTransform(KB, DR_H));
 
+        Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
         return new PayloadSimple.Builder("hex_tile_29",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withLines(asList(
+                .withPathsFullFromLines(asList(
                         asList(
                                 instruction(main, DR_V),
                                 Pair.of(hexCD, THREE),
@@ -70,17 +74,16 @@ public class Tile29 {
                                 instruction(hexKI, DOWN),
                                 instruction(hexKG, DL_H)
                         )
-                ))
+                ), whiteBold)
                 .build();
     }
 
     @DesignSupplier
     public static DesignHelper getDesignHelper() {
-        String black = newStyle("black", 1, 1);
-        String blue = newStyle("blue", 1, 1);
-        String gray = newStyle("gray", 1, 1);
-        String green = newStyle("green", 1, 1);
-        String red = newStyle("red", 2, 1);
+        Style blue = new Style.Builder(Color.BLUE, 1).build();
+        Style gray = new Style.Builder(Color.GRAY, 1).build();
+        Style green = new Style.Builder(Color.GREEN, 1).build();
+        Style red = new Style.Builder(Color.RED, 2).build();
 
         Polygon main = Hex.hex(1, VER);
         Polygon mainReg = main.getRegistered();
@@ -116,7 +119,7 @@ public class Tile29 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_29_design")
 //                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
+                .addFullPaths(getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
                         Triple.of(main, DR_V.getVertex(), "A"),
@@ -130,7 +133,7 @@ public class Tile29 {
                         Triple.of(hexKI, DOWN.getVertex(), "I"),
                         Triple.of(hexBF, THREE, "J")
                 ))
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(main, Hex.DIAGONALS),
                         Pair.of(mainReg, Hex.PERIMETER),
@@ -138,13 +141,9 @@ public class Tile29 {
                         Pair.of(hexBF, Hex.PERIMETER)
 //                        Pair.of(hexAE, Hex.PERIMETER)
                 ), gray)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(hexKG, Hex.PERIMETER)
                 ), green)
-                .addLinesInstructions(asList(
-//                        Pair.of(hexKI, Hex.PERIMETER)
-//                        Pair.of(inner3, Hex.PERIMETER)
-                ), blue)
                 .addAllVertexesAsImportantPoints(asList(
 //                        hexCD
 //                        hexAE

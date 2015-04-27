@@ -1,7 +1,9 @@
 package com.design.islamic.model.tiles;
 
 import com.design.common.DesignHelper;
-import com.design.common.view.SvgFactory;
+import com.design.common.Grid;
+import com.design.deco.Tile4;
+import com.design.deco.Tile5;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.hex.*;
 import com.google.common.collect.ImmutableMap;
@@ -24,13 +26,15 @@ import java.util.function.Supplier;
 import static com.design.common.view.SvgFactory.*;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.joining;
 
 public class TestBed2 {
 
     private JSVGCanvas jsvgCanvas;
     private JPanel jPanel;
 
-    private static Map<PayloadSimple.Size, Double> sizeToR = ImmutableMap.of(
+
+    private static Map<PayloadSimple.Size, Double> sizeToRNew = ImmutableMap.of(
             PayloadSimple.Size.SMALL, 100.0,
             PayloadSimple.Size.MEDIUM, 150.0,
             PayloadSimple.Size.LARGE, 200.0
@@ -61,7 +65,7 @@ public class TestBed2 {
 
         String background = buildBackground(dim);
 
-        List<Supplier<PayloadSimple>> patterns = Arrays.asList(
+//        List<Supplier<PayloadSimple>> patterns = Arrays.asList(
 //                Pair.of("Tile_Star_1", ()-> TileStar.getPayloadSimple(TileStar.RATIO_1)),
 //                Pair.of("Tile_Star_2", ()-> TileStar.getPayloadSimple(TileStar.RATIO_2)),
 //                TileStar::getPayloadSimple3
@@ -72,30 +76,50 @@ public class TestBed2 {
 //                Pair.of("Tile_06", Tile6::getPayloadSimple)
 //                Tile9New::getPayloadSimple
 //                Tile12::getPayloadSimple
-                com.design.islamic.model.rect.Tile2::getPayloadSimple,
-                com.design.islamic.model.rect.Tile3::getPayloadSimple,
-                com.design.islamic.model.rect.Tile4::getPayloadSimple,
-                TileGrid::getPayloadSimple,
-                TileGrid::getPayloadSimple2,
+//                com.design.deco.Tile2::getPayloadSimple,
+//                com.design.deco.Tile3::getPayloadSimple,
+//                com.design.deco.Tile4::getPayloadSimple,
+
+//                TileGrid::getPayloadSimple,
+//                TileGrid::getPayloadSimple2,
 //                TileGrid::getPayloadSimple3,
-                Tile2b::getPayloadSimple,
-                Tile30::getPayloadSimple,
-                Tile7::getPayloadSimple,
-                Tile8::getPayloadSimple,
-                Tile9::getPayloadSimple,
-                Tile29::getPayloadSimple
+//                Tile2b::getPayloadSimple,
+//                Tile30::getPayloadSimple,
+//                Tile7::getPayloadSimple,
+//                Tile8::getPayloadSimple,
+//                Tile9::getPayloadSimple,
+//                Tile29::getPayloadSimple
 //                Pair.of("Tile_07", Tile7::getPayloadSimple)
 //                Tile8::getPayloadSimple
 //                Pair.of("Tile_3", () -> new Tile3(ic).getPayload())
+//        );
+
+//        patterns.forEach(p -> {
+//                    PayloadSimple payloadSimple = p.get();
+//                    Pair<Point2D, Double> newIC = Pair.of(ic.getLeft(), sizeToR.get(payloadSimple.getSize()));
+//                    Dimension newDim = new Dimension((int) (15 * newIC.getRight()), (int) (10 * newIC.getRight()));
+//                    saveToFile(
+//                            buildSvg(newDim,
+//                                    buildBackground(newDim) + buildSvgFromPayloadSimple(payloadSimple, newIC)), payloadSimple.getName());
+//                }
+//        );
+
+
+        List<Supplier<PayloadSimple>> patternsNew = Arrays.asList(
+                com.design.islamic.model.rect.Tile1::getPayloadSimple,
+                Tile4::getPayloadSimple,
+                Tile5::getPayloadSimple,
+                Tile9c::getPayloadSimple,
+                com.design.islamic.model.rect.Tile2::getPayloadSimple
         );
 
-        patterns.forEach(p -> {
-                    PayloadSimple payloadSimple = p.get();
-                    Pair<Point2D, Double> newIC = Pair.of(ic.getLeft(), sizeToR.get(payloadSimple.getSize()));
+        patternsNew.forEach(p -> {
+                    PayloadSimple payload = p.get();
+                    Pair<Point2D, Double> newIC = Pair.of(ic.getLeft(), sizeToRNew.get(payload.getSize()));
                     Dimension newDim = new Dimension((int) (15 * newIC.getRight()), (int) (10 * newIC.getRight()));
                     saveToFile(
                             buildSvg(newDim,
-                                    buildBackground(newDim) + buildSvgFromPayloadSimple(payloadSimple, newIC)), payloadSimple.getName());
+                                    buildBackground(newDim) + buildSvgFromPayloadSimpleNew(payload, newIC)), payload.getName());
                 }
         );
 
@@ -140,11 +164,22 @@ public class TestBed2 {
 //                TileStar::getDesignHelper2b,
 //                TileStar::getDesignHelper3,
 //                TileStar::getDesignHelper3b,
+                com.design.islamic.model.rect.Tile1::getDesignHelper,
+//                com.design.islamic.model.rect.Tile1New::getDesignHelper,
+//                Tile2::getDesignHelper,
+//                Tile3::getDesignHelper,
+//                Tile4::getDesignHelper,
+//                Tile5::getDesignHelper,
+//                Tile5::getDesignHelper,
+                Tile9::getDesignHelper2,
+                Tile9a::getDesignHelperA,
+                Tile9a::getDesignHelperB,
+                Tile9a::getDesignHelperC,
+                Tile9b::getDesignHelperD,
+                Tile9c::getDesignHelperE,
                 com.design.islamic.model.rect.Tile2::getDesignHelper,
-                com.design.islamic.model.rect.Tile3::getDesignHelper,
-                com.design.islamic.model.rect.Tile4::getDesignHelper,
-                Tile2::getDesignHelper,
-                Tile2b::getDesignHelper,
+//                Tile2::getDesignHelper,
+//                Tile2b::getDesignHelper,
 //                Tile3::getDesignHelper,
 //                Tile4::getDesignHelper,
 //                Tile5::getDesignHelper,
@@ -181,11 +216,13 @@ public class TestBed2 {
 
     }
 
-    private String buildSvgFromPayloadSimple(PayloadSimple payload, Pair<Point2D, Double> ic) {
+
+    private String buildSvgFromPayloadSimpleNew(PayloadSimple payload, Pair<Point2D, Double> ic) {
 
         List<Point2D> gridPoints = Grid.gridFromStart(ic.getLeft(), ic.getRight(), payload.getGridConfiguration(), 20);
 
-        return SvgFactory.drawOnGrid(payload.toLines(ic), gridPoints, newStyle(WHITE, 2, 1));
+        return
+                gridPoints.stream().map(p -> Pair.of(p, ic.getRight())).map(payload::draw).collect(joining());
 
     }
 

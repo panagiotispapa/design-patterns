@@ -1,23 +1,26 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.Grid;
 import com.design.common.Polygon;
+import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
-import com.design.islamic.model.tiles.Grid;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
+import java.awt.*;
 import java.util.List;
 
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
-import static com.design.common.view.SvgFactory.newStyle;
+import static com.design.common.RatioHelper.P6.H;
+import static com.design.common.RatioHelper.P6.P;
 import static com.design.islamic.model.Hex.Corner.*;
-import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Vertex.*;
+import static com.design.islamic.model.Hex.*;
 import static java.util.Arrays.asList;
 
 public class Tile3 {
@@ -41,18 +44,18 @@ public class Tile3 {
     public static PayloadSimple getPayloadSimple() {
         Polygon main = Hex.hex(1, VER);
         Polygon hexKI = Hex.hex(KI, HOR);
-
+        Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
         return new PayloadSimple.Builder("hex_tile_03",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withLines(
+                .withPathsFullFromLines(
                         asList(
                                 asList(
                                         instruction(hexKI, RIGHT),
                                         instruction(main, DR_V),
                                         instruction(hexKI, DR_H)
                                 )
-                        )
+                        ), whiteBold
                 )
                 .build();
     }
@@ -62,29 +65,29 @@ public class Tile3 {
         Polygon main = Hex.hex(1, VER);
         Polygon mainReg = main.getRegistered();
         Polygon hexKM = hex(KM, VER);
+        Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
 
         return new PayloadSimple.Builder("hex_tile_03b",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withLines(
+                .withPathsFullFromLines(
                         asList(
                                 asList(
                                         instruction(mainReg, RIGHT),
                                         instruction(hexKM, DR_V),
                                         instruction(mainReg, DR_H)
                                 )
-                        )
+                        ), whiteBold
                 )
                 .build();
     }
 
     @DesignSupplier
     public static DesignHelper getDesignHelper() {
-        String black = newStyle("black", 1, 1);
-        String blue = newStyle("blue", 1, 1);
-        String gray = newStyle("gray", 1, 1);
-        String green = newStyle("green", 1, 1);
-        String red = newStyle("red", 2, 1);
+        Style blue = new Style.Builder(Color.BLUE, 1).build();
+        Style gray = new Style.Builder(Color.GRAY, 1).build();
+        Style green = new Style.Builder(Color.GREEN, 1).build();
+        Style red = new Style.Builder(Color.RED, 2).build();
 
         Polygon main = Hex.hex(1, VER);
         Polygon mainReg = main.getRegistered();
@@ -107,7 +110,7 @@ public class Tile3 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_03_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
+                .addFullPaths(getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
                         Triple.of(hexKA, DOWN.getVertex(), "A"),
@@ -121,13 +124,13 @@ public class Tile3 {
 //                        Triple.of(hexHL, UL_V.getVertex(), "L"),
 //                        Triple.of(hexKM, DR_V.getVertex(), "M")
                 ))
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
 
                         Pair.of(main, Hex.DIAGONALS),
                         Pair.of(mainReg, Hex.DIAGONALS)
                 ), gray)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(hexBH, Hex.PERIMETER),
                         Pair.of(hexBH, Hex.PERIMETER)
 //                        Pair.of(hexKM, Hex.PERIMETER)
@@ -135,31 +138,26 @@ public class Tile3 {
 //                                Pair.of(outer2, Hex.PERIMETER),
 //                                Pair.of(outer2, Hex.INNER_TRIANGLES)
                 ), green)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(hexKA, Hex.PERIMETER),
                         Pair.of(hexKI, Hex.PERIMETER)
                 ), blue)
-                .addMixedLinesInstructions(asList(
-                        instruction(hexBH, UP),
-                        instruction(mainReg, LEFT),
-                        instruction(hexBH, DOWN)
-
-                ), gray)
-                .addMixedLinesInstructions(asList(
-                        instruction(0.5 * P, centreTransform(1, UP), DOWN),
-                        instruction(mainReg, UR_H)
-                ), gray)
-                ;
+                .addFullPathsFromLines(asList(asList(
+                                instruction(hexBH, UP),
+                                instruction(mainReg, LEFT),
+                                instruction(hexBH, DOWN)
+                        )), gray
+                );
 
     }
 
     @DesignSupplier
     public static DesignHelper getDesignHelper2() {
-        String black = newStyle("black", 1, 1);
-        String blue = newStyle("blue", 1, 1);
-        String gray = newStyle("gray", 1, 1);
-        String green = newStyle("green", 1, 1);
-        String red = newStyle("red", 2, 1);
+        Style blue = new Style.Builder(Color.BLUE, 1).build();
+        Style gray = new Style.Builder(Color.GRAY, 1).build();
+        Style green = new Style.Builder(Color.GREEN, 1).build();
+        Style red = new Style.Builder(Color.RED, 2).build();
+
 
         Polygon main = Hex.hex(1, VER);
         Polygon mainReg = main.getRegistered();
@@ -179,7 +177,7 @@ public class Tile3 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_03b_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addMixedLinesInstructionsList(getPayloadSimple2().getLines(), red)
+                .addFullPaths(getPayloadSimple2().getPathsFull(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
 //                        Triple.of(hexKA, TWO, "A"),
@@ -192,19 +190,21 @@ public class Tile3 {
                         Triple.of(hexHL, FOUR, "L"),
                         Triple.of(hexKM, ONE, "M")
                 ))
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
 
                         Pair.of(main, Hex.DIAGONALS),
                         Pair.of(mainReg, Hex.DIAGONALS)
                 ), gray)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(hexKM, Hex.PERIMETER)
                 ), green)
-                .addSingleLinesInstructionsList(asList(asList(
-                        instruction(0.5 * P, centreTransform(1, DR_V), UL_V),
-                        instruction(mainReg, DR_H)
-                )), gray)
+                .addSinglePathsFromLines(asList(
+                                asList(
+                                        instruction(0.5 * P, centreTransform(1, DR_V), UL_V),
+                                        instruction(mainReg, DR_H)
+                                )), gray
+                )
                 ;
 
     }

@@ -1,62 +1,59 @@
 package com.design.islamic.model;
 
-import com.design.common.Mappings;
+import com.design.common.Grid;
 import com.design.common.Polygon;
-import com.design.islamic.model.tiles.Grid;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
+import com.design.common.model.Path;
+import com.design.common.model.Style;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toList;
+import static com.design.common.view.SvgFactory.drawPath;
+import static com.design.common.view.SvgFactory.drawPathFull;
+import static java.util.stream.Collectors.joining;
 
 public class PayloadSimple {
-    private final List<List<Pair<Polygon, Polygon.Vertex>>> lines;
-    private final List<List<Pair<Polygon, Polygon.Vertex>>> linesSingle;
     private final Grid.Configuration gridConfiguration;
     private final List<Integer> allVertexes;
     private final String name;
     private final Size size;
+    private final List<Path> pathsSingle;
+    private final List<Path> pathsFull;
 
-    public PayloadSimple(String name, List<List<Pair<Polygon, Polygon.Vertex>>> lines, List<Integer> allVertexes, Grid.Configuration gridConfiguration, List<List<Pair<Polygon, Polygon.Vertex>>> linesSingle, Size size) {
-        this.lines = lines;
+    public PayloadSimple(String name, List<Integer> allVertexes, Grid.Configuration gridConfiguration, Size size, List<Path> pathsSingle, List<Path> pathsFull) {
         this.gridConfiguration = gridConfiguration;
         this.allVertexes = allVertexes;
         this.name = name;
-        this.linesSingle = linesSingle;
         this.size = size;
+        this.pathsSingle = pathsSingle;
+        this.pathsFull = pathsFull;
     }
 
     public Size getSize() {
         return size;
     }
 
-    public List<List<Pair<Polygon, Polygon.Vertex>>> getLines() {
-        return lines;
+    public List<Path> getPathsSingle() {
+        return pathsSingle;
     }
 
-    public List<List<Pair<Polygon, Polygon.Vertex>>> getLinesSingle() {
-        return linesSingle;
+    public List<Path> getPathsFull() {
+        return pathsFull;
     }
 
     public Grid.Configuration getGridConfiguration() {
         return gridConfiguration;
     }
 
-    public List<List<Point2D>> toLines(Pair<Point2D, Double> ic) {
-        List<List<Point2D>> linesFull = lines.stream().map(Polygon.mixVertexesFull(allVertexes, ic))
-                .map(Collection::stream).flatMap(s -> s).collect(toList());
-
-        List<List<Point2D>> linesOne = Mappings.fromListOfLists(Polygon.vertex(ic)).apply(linesSingle);
-
-        return ImmutableList.copyOf(Iterables.concat(
-                linesFull,
-                linesOne
-        ));
+    public String draw(Pair<Point2D, Double> ic) {
+        return
+                Stream.of(
+                        pathsSingle.stream().map(drawPath(Polygon.vertex(ic))),
+                        pathsFull.stream().map(drawPathFull(allVertexes, Polygon.vertexFull2(ic))).flatMap(s -> s)
+                ).flatMap(s -> s).collect(joining());
     }
 
     public String getName() {
@@ -71,11 +68,11 @@ public class PayloadSimple {
 
     public static class Builder {
         private Size size = Size.SMALL;
-        private List<List<Pair<Polygon, Polygon.Vertex>>> lines = new ArrayList<>();
         private Grid.Configuration gridConfiguration = Grid.Configs.HEX_HOR2.getConfiguration();
         private final List<Integer> allVertexes;
         private final String name;
-        private List<List<Pair<Polygon, Polygon.Vertex>>> linesSingle = new ArrayList<>();
+        private final List<Path> pathsSingle = new ArrayList<>();
+        private final List<Path> pathsFull = new ArrayList<>();
 
         public Builder(String name, List<Integer> allVertexes) {
             this.allVertexes = allVertexes;
@@ -87,13 +84,31 @@ public class PayloadSimple {
             return this;
         }
 
-        public Builder withLines(List<List<Pair<Polygon, Polygon.Vertex>>> lines) {
-            this.lines = lines;
+        public Builder withPathsSingleFromLines(List<List<Pair<Polygon, Polygon.Vertex>>> lines, Style style) {
+            return withPathsSingle(Path.pairsToPaths.apply(lines), style);
+        }
+
+        public Builder withPathsSingle(List<Path> paths, Style style) {
+            paths.forEach(p -> p.setStyle(style));
+            return withPathsSingle(paths);
+        }
+
+        public Builder withPathsSingle(List<Path> paths) {
+            this.pathsSingle.addAll(paths);
             return this;
         }
 
-        public Builder withLinesSingle(List<List<Pair<Polygon, Polygon.Vertex>>> linesSingle) {
-            this.linesSingle = linesSingle;
+        public Builder withPathsFullFromLines(List<List<Pair<Polygon, Polygon.Vertex>>> lines, Style style) {
+            return withPathsFull(Path.pairsToPaths.apply(lines), style);
+        }
+        
+        public Builder withPathsFull(List<Path> paths, Style style) {
+            paths.forEach(p -> p.setStyle(style));
+            return withPathsFull(paths);
+        }
+
+        public Builder withPathsFull(List<Path> paths) {
+            this.pathsFull.addAll(paths);
             return this;
         }
 
@@ -101,8 +116,9 @@ public class PayloadSimple {
             this.size = size;
             return this;
         }
+
         public PayloadSimple build() {
-            return new PayloadSimple(name, lines, allVertexes, gridConfiguration, linesSingle, size);
+            return new PayloadSimple(name, allVertexes, gridConfiguration, size, pathsSingle, pathsFull);
         }
 
     }

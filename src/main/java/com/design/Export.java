@@ -1,11 +1,10 @@
-package com.design.islamic;
+package com.design;
 
 import com.design.common.DesignHelper;
-import com.design.common.view.SvgFactory;
+import com.design.common.Grid;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
-import com.design.islamic.model.tiles.Grid;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.tuple.Pair;
 import org.reflections.Reflections;
@@ -29,6 +28,7 @@ import java.util.Set;
 
 import static com.design.common.view.SvgFactory.*;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.joining;
 
 public class Export {
 
@@ -36,7 +36,7 @@ public class Export {
 
     }
 
-    private static Map<PayloadSimple.Size, Double> sizeToR = ImmutableMap.of(
+    private static Map<PayloadSimple.Size, Double> sizeToRNew = ImmutableMap.of(
             PayloadSimple.Size.SMALL, 100.0,
             PayloadSimple.Size.MEDIUM, 150.0,
             PayloadSimple.Size.LARGE, 200.0
@@ -51,7 +51,7 @@ public class Export {
     }
 
     public static void exportPayloads() {
-        Set<Method> methods = forPackage("com.design.islamic.model")
+        Set<Method> methods = forPackage("com.design")
                 .getMethodsAnnotatedWith(TileSupplier.class);
 
         System.out.println(methods.size());
@@ -61,10 +61,8 @@ public class Export {
     }
 
     public static void exportDesigns() {
-        Set<Method> methods = forPackage("com.design.islamic.model")
+        Set<Method> methods = forPackage("com.design")
                 .getMethodsAnnotatedWith(DesignSupplier.class);
-
-        System.out.println(methods.size());
 
         methods.stream().map(m -> Export.invokeMethod(m, DesignHelper.class))
                 .forEach(Export::export);
@@ -72,7 +70,7 @@ public class Export {
 
     private static void export(PayloadSimple payload) {
 
-        Double R = sizeToR.get(payload.getSize());
+        Double R = sizeToRNew.get(payload.getSize());
         Dimension dim = new Dimension((int) (15 * R), (int) (10 * R));
         Pair<Point2D, Double> ic = Pair.of(new Point2D.Double(0, 0), R);
 
@@ -81,10 +79,12 @@ public class Export {
 
     }
 
+
     private static String buildSvgFromPayloadSimple(PayloadSimple payload, Pair<Point2D, Double> ic) {
         List<Point2D> gridPoints = Grid.gridFromStart(ic.getLeft(), ic.getRight(), payload.getGridConfiguration(), 17);
 
-        return SvgFactory.drawOnGrid(payload.toLines(ic), gridPoints, newStyle(WHITE, 2, 1));
+        return
+                gridPoints.stream().map(p -> Pair.of(p, ic.getRight())).map(payload::draw).collect(joining());
 
     }
 

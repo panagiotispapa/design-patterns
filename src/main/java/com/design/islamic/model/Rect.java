@@ -1,6 +1,7 @@
 package com.design.islamic.model;
 
 import com.design.common.Polygon;
+import com.design.common.model.Path;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -13,13 +14,10 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 
 import static com.design.common.PolygonTools.calcVertexes;
-import static com.design.common.RatioHelper.Ratios.RECT;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 public class Rect extends Polygon {
-
-    public static final double H = RECT.$H().apply(1.0);
 
     public static final List<Integer> ALL_VERTEX_INDEXES = IntStream.range(0, 4).boxed().collect(toList());
 
@@ -30,40 +28,33 @@ public class Rect extends Polygon {
     public static Polygon rect(double ratio, Type type, Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform) {
         return new Rect(ratio, type, centreTransform);
     }
-    
+
     public static Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform(double ratio, Corner corner) {
         return Polygon.centreTransform(ratio, corner.getVertex(), corner.getType());
     }
-    
-    public static List<List<Polygon.Vertex>> PERIMETER = asList(
-            asList(
-                    (Polygon.Vertex) Vertex.ONE,
-                    Vertex.TWO,
-                    Vertex.THREE,
-                    Vertex.FOUR,
-                    Vertex.ONE
-            )
-    );
 
-    public static List<List<Polygon.Vertex>> DIAGONALS = asList(
-            Diag.ONE.getVertexes(),
-            Diag.TWO.getVertexes()
-    );
 
-    public static enum Diag {
-        ONE(asList((Polygon.Vertex) Vertex.ONE, Vertex.THREE)),
-        TWO(asList((Polygon.Vertex) Vertex.TWO, Vertex.FOUR));
+    public static Function<Polygon, List<Path>> PERIMETER =
+            p -> asList(new Path.Builder()
+                    .startWith(p, Vertex.ONE)
+                    .lineTo(p, Vertex.TWO)
+                    .lineTo(p, Vertex.THREE)
+                    .lineTo(p, Vertex.FOUR)
+                    .closed()
+                    .build());
 
-        private final List<Polygon.Vertex> vertexes;
 
-        private Diag(List<Polygon.Vertex> vertexes) {
-            this.vertexes = vertexes;
-        }
-
-        public List<Polygon.Vertex> getVertexes() {
-            return vertexes;
-        }
-    }
+    public static Function<Polygon, List<Path>> DIAGONALS =
+            p -> Arrays.asList(
+                    new Path.Builder()
+                            .startWith(p, Vertex.ONE)
+                            .lineTo(p, Vertex.THREE)
+                            .build(),
+                    new Path.Builder()
+                            .startWith(p, Vertex.TWO)
+                            .lineTo(p, Vertex.FOUR)
+                            .build()
+            );
 
     private Rect(double ratio, Type type, Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform) {
         super(ratio, type, centreTransform);
@@ -71,6 +62,14 @@ public class Rect extends Polygon {
 
     private Rect(double ratio, Type type) {
         super(ratio, type);
+    }
+
+    public static Triple<Polygon, Polygon.Vertex, Path.InstructionType> instruction(Polygon polygon, Corner corner, Path.InstructionType type) {
+        return Triple.of(
+                polygon,
+                corner.getVertex(),
+                type
+        );
     }
 
     public static Pair<Polygon, Polygon.Vertex> instruction(Polygon polygon, Corner corner) {

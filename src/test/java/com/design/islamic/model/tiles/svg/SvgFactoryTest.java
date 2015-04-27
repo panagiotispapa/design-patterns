@@ -1,11 +1,14 @@
 package com.design.islamic.model.tiles.svg;
 
+import com.design.common.model.Path;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
+import java.awt.*;
 import java.awt.geom.Point2D;
+import java.util.Arrays;
 
-import static com.design.common.view.SvgFactory.newCircle;
-import static com.design.common.view.SvgFactory.newStyle;
+import static com.design.common.view.SvgFactory.*;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 public class SvgFactoryTest {
@@ -41,6 +44,34 @@ public class SvgFactoryTest {
         assertThat(newStyle("blue", "yellow", 2, 0.3, 1)).
                 isEqualTo("fill:blue;stroke:yellow;stroke-width:2;fill-opacity:0.3;stroke-opacity:1.0")
         ;
+    }
+
+    @Test
+    public void testColors() throws Exception {
+        assertThat(toHex(Color.BLACK)).isEqualTo("#000000");
+        assertThat(toHex(Color.BLUE)).isEqualTo("#0000ff");
+        assertThat(toHex(Color.RED)).isEqualTo("#ff0000");
+        assertThat(toHex(Color.GREEN)).isEqualTo("#00ff00");
+        assertThat(toHex(null)).isEqualTo("none");
+    }
+//
+//    @Test
+//    public void testFromPathStyle() throws Exception {
+//        assertThat(fromPathStyle().apply(new Path.Style(Color.BLUE, 2))).isEqualTo("stroke:#0000ff; stroke-width:2; fill:none;");
+//        assertThat(fromPathStyle().apply(new Path.Style(Color.BLUE, 3, Color.BLACK))).isEqualTo("stroke:#0000ff; stroke-width:3; fill:#000000;");
+//    }
+
+    @Test
+    public void testDrawPath() throws Exception {
+//        assertThat(
+//                drawPath(
+//                        Arrays.asList(
+//                                Pair.of(new Point2D.Double(40.0, 20.0), Path.InstructionType.STARTING_POINT)
+//                        ),
+//                        new Path.Style(Color.BLUE, 2)
+//                )).isEqualTo("<path d = \"M40,20  A30,30 0 0,1 70,70\" style = \"stroke:#0000ff; stroke-width:2; fill:none;\" />");
+
+//                < path d = "M40,20  A30,30 0 0,1 70,70" style = "stroke:#0000ff; stroke-width:2; fill:none;" / >
 
     }
 }

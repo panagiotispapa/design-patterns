@@ -2,7 +2,9 @@ package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
 import com.design.common.Polygon;
+import com.design.common.RatioHelper.P6;
 import com.design.common.RatioHelper.Ratios;
+import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.PayloadSimple;
@@ -10,13 +12,12 @@ import com.design.islamic.model.TileSupplier;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
+import java.awt.*;
 import java.util.List;
 
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
-import static com.design.common.view.SvgFactory.newStyle;
 import static com.design.islamic.model.Hex.Corner.*;
-import static com.design.islamic.model.Hex.H;
 import static com.design.islamic.model.Hex.instruction;
 import static java.lang.Math.PI;
 import static java.lang.Math.cos;
@@ -26,7 +27,7 @@ public class Tile27 {
 
     private static double ANGLE_1 = PI / 3.0 - PI / 4.0;
     private static double BC = 0.5 * Math.tan(ANGLE_1);
-    private static double KB = H;
+    private static double KB = P6.H;
     private static double KC = KB - BC;
     private static double AC = 0.5 / cos(ANGLE_1);
     private static double AD = 2.0 * Ratios.RECT.$H().apply(AC);
@@ -40,10 +41,11 @@ public class Tile27 {
         Polygon hexKC = Hex.hex(KC, HOR);
         Polygon hexKD = Hex.hex(KD, VER);
 
+        Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
         return new PayloadSimple.Builder("hex_tile_27",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withLines(asList(
+                .withPathsFullFromLines(asList(
                         asList(
                                 instruction(hexKD, UR_V),
                                 instruction(hexKC, RIGHT),
@@ -56,18 +58,17 @@ public class Tile27 {
 //                                instruction(inner, RIGHT)
 //                        )
 
-                ))
+                ), whiteBold)
                 .build();
     }
 
     @DesignSupplier
     public static DesignHelper getDesignHelper() {
 
-        String black = newStyle("black", 1, 1);
-        String blue = newStyle("blue", 1, 1);
-        String gray = newStyle("gray", 1, 1);
-        String green = newStyle("green", 1, 1);
-        String red = newStyle("red", 2, 1);
+        Style blue = new Style.Builder(Color.BLUE, 1).build();
+        Style gray = new Style.Builder(Color.GRAY, 1).build();
+        Style green = new Style.Builder(Color.GREEN, 1).build();
+        Style red = new Style.Builder(Color.RED, 2).build();
 
         Polygon main = Hex.hex(1, VER);
         Polygon mainReg = main.getRegistered();
@@ -84,7 +85,7 @@ public class Tile27 {
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_27_design")
-                .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
+                .addFullPaths(getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
                         Triple.of(main, UR_V.getVertex(), "A"),
@@ -92,15 +93,15 @@ public class Tile27 {
                         Triple.of(hexKC, RIGHT.getVertex(), "C"),
                         Triple.of(hexKD, UR_V.getVertex(), "D")
                 ))
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(main, Hex.DIAGONALS),
                         Pair.of(mainReg, Hex.DIAGONALS)
                 ), gray)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(hexKC, Hex.PERIMETER)
                 ), green)
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(hexKD, Hex.PERIMETER)
                 ), blue)
                 ;

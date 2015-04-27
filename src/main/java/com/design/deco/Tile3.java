@@ -1,17 +1,18 @@
-package com.design.islamic.model.rect;
+package com.design.deco;
 
 import com.design.common.DesignHelper;
+import com.design.common.Grid;
 import com.design.common.Polygon;
+import com.design.common.model.Style;
 import com.design.islamic.model.*;
-import com.design.islamic.model.tiles.Grid;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
 import static com.design.common.Polygon.Type.HOR;
-import static com.design.common.view.SvgFactory.newStyle;
 import static com.design.islamic.model.Rect.Corner.DR;
 import static com.design.islamic.model.Rect.Corner.UR;
 import static com.design.islamic.model.Rect.*;
@@ -25,16 +26,17 @@ public class Tile3 {
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
+        Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
 
         Polygon main = Rect.rect(1, HOR);
         Polygon rectKA = Rect.rect(KA, HOR);
         Polygon rectKB = Rect.rect(KB, HOR);
         Polygon rectAB = Rect.rect(AB, HOR, centreTransform(KA, DR));
 
-        return new PayloadSimple.Builder("rect_tile_03",
+        return new PayloadSimple.Builder("deco_tile_03",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withLines(asList(
+                .withPathsFullFromLines(asList(
                         asList(
                                 instruction(rectKB, UR),
                                 instruction(rectKB, DR)
@@ -43,18 +45,17 @@ public class Tile3 {
                                 instruction(rectKB, DR),
                                 instruction(rectKA, DR)
                         )
-                ))
+                ), whiteBold)
                 .withGridConf(Grid.Configs.RECT2.getConfiguration())
                 .build();
     }
 
     @DesignSupplier
     public static DesignHelper getDesignHelper() {
-        String black = newStyle("black", 1, 1);
-        String blue = newStyle("blue", 1, 1);
-        String gray = newStyle("gray", 1, 1);
-        String green = newStyle("green", 1, 1);
-        String red = newStyle("red", 2, 1);
+        Style red = new Style.Builder(Color.RED, 2).build();
+        Style gray = new Style.Builder(Color.GRAY, 1).build();
+        Style green = new Style.Builder(Color.GREEN, 1).build();
+        Style blue = new Style.Builder(Color.BLUE, 1).build();
 
         Polygon main = Rect.rect(1, HOR);
         Polygon rectKB = Rect.rect(KB, HOR);
@@ -64,26 +65,19 @@ public class Tile3 {
                 "AB = KA / 4.0"
         );
 
-        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "rect_tile_03_design")
-                .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
+        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "deco_tile_03_design")
+                .addFullPaths(getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
                         Triple.of(main, DR.getVertex(), "A"),
                         Triple.of(rectKB, DR.getVertex(), "B")
                 ))
-                .addLinesInstructions(asList(
+                .addSinglePaths(asList(
                         Pair.of(main, PERIMETER),
                         Pair.of(main, DIAGONALS),
                         Pair.of(rectKB, PERIMETER),
                         Pair.of(rectAB, PERIMETER)
                 ), gray)
-                .addLinesInstructions(asList(
-//                        Pair.of(rectAC, PERIMETER)
-                ), green)
-                .addLinesInstructions(asList(
-//                        Pair.of(inner1, ),
-//                        Pair.of(hexKB, )
-                ), blue)
                 ;
 
     }

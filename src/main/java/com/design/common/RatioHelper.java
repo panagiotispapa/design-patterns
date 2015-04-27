@@ -57,7 +57,8 @@ public class RatioHelper {
     public static enum Ratios {
         DOD((2.0 * PI) / 12.0),
         HEX((2.0 * PI) / 6.0),
-        RECT((2.0 * PI) / 4.0);
+        RECT((2.0 * PI) / 4.0),
+        OCT((2.0 * PI) / 8.0);
 
         private final RatioHelper helper;
 
@@ -85,4 +86,25 @@ public class RatioHelper {
             return helper.£P();
         }
     }
+
+    public static class P4 {
+        public static final Double H = Ratios.RECT.$H().apply(1.0);
+        public static final Double P = Ratios.RECT.$P().apply(1.0);
+    }
+
+    public static class P6 {
+        public static final Double H = Ratios.HEX.$H().apply(1.0);
+        public static final Double P = Ratios.HEX.$P().apply(1.0);
+    }
+
+    public static class P8 {
+        public static final Double H = Ratios.OCT.$H().apply(1.0);
+        public static final Double P = Ratios.OCT.$P().apply(1.0);
+    }
+
+    public static class P12 {
+        public static final Double H = Ratios.DOD.$H().apply(1.0);
+        public static final Double P = Ratios.DOD.$P().apply(1.0);
+    }
+
 }

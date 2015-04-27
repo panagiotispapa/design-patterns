@@ -4,11 +4,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.geom.Point2D;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
@@ -27,19 +24,8 @@ public abstract class Polygon {
         return p -> p.getLeft().toPoint(0, ic).apply(p.getLeft().getVertexes().get(p.getRight().getIndex()));
     }
 
-    public static Function<Pair<Polygon, Vertex>, List<Point2D>> vertexesFull(List<Integer> offsets, Pair<Point2D, Double> ic) {
-        return p -> {
-            final Vertex chosen = p.getLeft().getVertexes().get(p.getRight().getIndex());
-            return offsets.stream().map(o -> p.getLeft().toPoint(o, ic))
-                    .map(t -> t.apply(chosen)).collect(toList());
-        };
-    }
-
-    public static Function<List<Pair<Polygon, Vertex>>, List<List<Point2D>>> mixVertexesFull(List<Integer> offsets, Pair<Point2D, Double> ic) {
-        Function<Pair<Polygon, Vertex>, List<Point2D>> toVertexesFull = vertexesFull(offsets, ic);
-        return p -> Mappings.<Point2D>combine().apply(
-                p.stream().map(toVertexesFull).collect(toList())
-        );
+    public static Function<Integer, Function<Pair<Polygon, Vertex>, Point2D>> vertexFull2(Pair<Point2D, Double> ic) {
+        return i -> p -> p.getLeft().toPoint(i, ic).apply(p.getLeft().getVertexes().get(p.getRight().getIndex()));
     }
 
     public static Function<Polygon, List<Pair<Point2D, Double>>> toCircles(Pair<Point2D, Double> ic) {
@@ -48,14 +34,6 @@ public abstract class Polygon {
 
     public static Function<Pair<Polygon, Double>, List<Pair<Point2D, Double>>> toCirclesWithRadius(Pair<Point2D, Double> ic) {
         return p -> vertexes(ic).apply(p.getLeft()).stream().map(v -> Pair.of(v, p.getRight() * ic.getRight())).collect(toList());
-    }
-
-    public static Function<Pair<Polygon, List<List<Vertex>>>, List<List<Point2D>>> toLines(List<Integer> offsets, Pair<Point2D, Double> ic) {
-        return p -> offsets.stream().map(i -> toLines(i, ic).apply(p)).flatMap(Collection::stream).collect(toList());
-    }
-
-    public static Function<Pair<Polygon, List<List<Vertex>>>, List<List<Point2D>>> toLines(int offset, Pair<Point2D, Double> ic) {
-        return pair -> Mappings.fromListOfLists(pair.getLeft().toPoint(offset, ic)).apply(pair.getRight());
     }
 
     public Function<Vertex, Point2D> toPoint(int offset, Pair<Point2D, Double> ic) {
@@ -99,7 +77,7 @@ public abstract class Polygon {
 
         int getIndex();
     }
-    
+
     private final double ratio;
     private final Polygon.Type type;
 
