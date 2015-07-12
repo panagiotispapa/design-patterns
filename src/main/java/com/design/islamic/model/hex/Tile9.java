@@ -105,67 +105,67 @@ public class Tile9 {
         return new PayloadSimple.Builder("hex_tile_09"
                 , Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(
-                        asList(
+                .withPathsFull(() ->
                                 asList(
-                                        instruction(main, DR_V),
-                                        instruction(main, DOWN)
-                                ),
-                                asList(
-                                        instruction(hexA1N, DL_H),
-                                        instruction(hexA1N, LEFT),
-                                        instruction(hexA1N, UL_H)
-                                ),
-                                asList(
-                                        instruction(KA2, UR_V),
-                                        instruction(hexB3S1, LEFT),
-                                        instruction(hexPB2, DOWN)
-                                ),
-                                asList(
-                                        instruction(KA2, DR_V),
-                                        instruction(hexB3S2, LEFT),
-                                        instruction(hexPB2, UP)
-                                ),
-                                asList(
-                                        instruction(hexPB2, DOWN),
-                                        instruction(hexA1N, UL_V)
-                                ),
-                                asList(
-                                        instruction(hexPB2_Rot, UR_V),
-                                        instruction(hexA1N, UL_V)
-                                ),
-                                asList(
-                                        instruction(hexC1H, DOWN),
-                                        instruction(hexA2Q1, UL_V),
-                                        instruction(hexA3R1, UL_V),
-                                        instruction(hexA3R3, DR_V),
-                                        instruction(hexKG5, UL_V)
+                                        () -> asList(
+                                                instruction(main, DR_V),
+                                                instruction(main, DOWN)
+                                        ),
+                                        () -> asList(
+                                                instruction(hexA1N, DL_H),
+                                                instruction(hexA1N, LEFT),
+                                                instruction(hexA1N, UL_H)
+                                        ),
+                                        () -> asList(
+                                                instruction(KA2, UR_V),
+                                                instruction(hexB3S1, LEFT),
+                                                instruction(hexPB2, DOWN)
+                                        ),
+                                        () -> asList(
+                                                instruction(KA2, DR_V),
+                                                instruction(hexB3S2, LEFT),
+                                                instruction(hexPB2, UP)
+                                        ),
+                                        () -> asList(
+                                                instruction(hexPB2, DOWN),
+                                                instruction(hexA1N, UL_V)
+                                        ),
+                                        () -> asList(
+                                                instruction(hexPB2_Rot, UR_V),
+                                                instruction(hexA1N, UL_V)
+                                        ),
+                                        () -> asList(
+                                                instruction(hexC1H, DOWN),
+                                                instruction(hexA2Q1, UL_V),
+                                                instruction(hexA3R1, UL_V),
+                                                instruction(hexA3R3, DR_V),
+                                                instruction(hexKG5, UL_V)
 
-                                ),
-                                asList(
-                                        instruction(hexC1H_r, UR_V),
-                                        instruction(hexA2Q2, UL_V),
-                                        instruction(hexA3R2, UL_V),
-                                        instruction(hexA3R4, DR_V),
-                                        instruction(KG4, centreTransform(KG3, RIGHT), UL_V)
-                                ),
-                                asList(
-                                        instruction(hexKG5, UP),
-                                        instruction(hexB3I3, RIGHT),
-                                        instruction(hexB3I1, LEFT),
-                                        instruction(hexC1J3, LEFT),
-                                        instruction(hexC1H, UP)
+                                        ),
+                                        () -> asList(
+                                                instruction(hexC1H_r, UR_V),
+                                                instruction(hexA2Q2, UL_V),
+                                                instruction(hexA3R2, UL_V),
+                                                instruction(hexA3R4, DR_V),
+                                                instruction(KG4, centreTransform(KG3, RIGHT), UL_V)
+                                        ),
+                                        () -> asList(
+                                                instruction(hexKG5, UP),
+                                                instruction(hexB3I3, RIGHT),
+                                                instruction(hexB3I1, LEFT),
+                                                instruction(hexC1J3, LEFT),
+                                                instruction(hexC1H, UP)
 
-                                ),
-                                asList(
-                                        instruction(hexKG4, DOWN),
-                                        instruction(hexB3I4, RIGHT),
-                                        instruction(hexB3I2, LEFT),
-                                        instruction(hexC1J4, LEFT),
-                                        instruction(hexC1H, DOWN)
-                                )
+                                        ),
+                                        () -> asList(
+                                                instruction(hexKG4, DOWN),
+                                                instruction(hexB3I4, RIGHT),
+                                                instruction(hexB3I2, LEFT),
+                                                instruction(hexC1J4, LEFT),
+                                                instruction(hexC1H, DOWN)
+                                        )
 
-                        ), whiteBold
+                                ), whiteBold
                 )
                 .withSize(PayloadSimple.Size.MEDIUM)
                 .build();
@@ -200,10 +200,10 @@ public class Tile9 {
                         Pair.of(hexAD, PERIMETER),
                         Pair.of(hexAD_VER, PERIMETER)
                 ), gray)
-                .addFullPathsFromLines(asList(asList(
-                        Pair.of(main, THREE),
-                        Pair.of(mainHor, FIVE),
-                        Pair.of(main, SIX)
+                .addFullPaths(() -> asList(() -> asList(
+                        () -> Pair.of(main, THREE),
+                        () -> Pair.of(mainHor, FIVE),
+                        () -> Pair.of(main, SIX)
 
                 )), green)
                 .addImportantPoints(asList(
@@ -230,7 +230,7 @@ public class Tile9 {
         Polygon mainHor = Hex.hex(1, HOR);
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_09_design3")
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .withFontSize(10)
 
                 ;
@@ -316,7 +316,7 @@ public class Tile9 {
 //        Polygon hexQR = Hex.hex(QR, VER, centreTransform(KA2, VER).andThen(Polygon.centreTransform(A2Q, Hex.Vertex.TWO, VER)));
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_09_design2")
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addImportantPoints(asList(
                         Triple.of(main, DR_V.getVertex(), "A1"),
                         Triple.of(mainHor, RIGHT.getVertex(), "B1"),
@@ -420,59 +420,59 @@ public class Tile9 {
                         Pair.of(hexKB3, PERIMETER),
                         Pair.of(hexKA3, PERIMETER)
                 ), blue)
-                .addFullPathsFromLines(asList(asList(
-                        Pair.of(main, SIX),
-                        Pair.of(mainHor, ONE),
-                        Pair.of(main, ONE)
+                .addFullPaths(() -> asList(() -> asList(
+                        () -> Pair.of(main, SIX),
+                        () -> Pair.of(mainHor, ONE),
+                        () -> Pair.of(main, ONE)
                 )), gray)
-                .addFullPathsFromLines(asList(asList(
-                        Pair.of(main, THREE),
-                        Pair.of(mainHor, FIVE),
-                        Pair.of(main, SIX)
+                .addFullPaths(() -> asList(() -> asList(
+                        () -> Pair.of(main, THREE),
+                        () -> Pair.of(mainHor, FIVE),
+                        () -> Pair.of(main, SIX)
 
                 )), gray)
-                .addFullPathsFromLines(asList(asList(
-                        Pair.of(hexKA2, THREE),
-                        Pair.of(hexKB2, FIVE),
-                        Pair.of(hexKA2, SIX)
+                .addFullPaths(() -> asList(() -> asList(
+                        () -> Pair.of(hexKA2, THREE),
+                        () -> Pair.of(hexKB2, FIVE),
+                        () -> Pair.of(hexKA2, SIX)
 
                 )), gray)
-                .addFullPathsFromLines(asList(asList(
-                        Pair.of(hexKA3, THREE),
-                        Pair.of(hexKB3, FIVE),
-                        Pair.of(hexKA3, SIX)
+                .addFullPaths(() -> asList(() -> asList(
+                        () -> Pair.of(hexKA3, THREE),
+                        () -> Pair.of(hexKB3, FIVE),
+                        () -> Pair.of(hexKA3, SIX)
 
                 )), gray)
-                .addFullPathsFromLines(asList(asList(
-                        Pair.of(hexB1B2, TWO),
-                        Pair.of(hexB1B2_Hor, FOUR),
-                        Pair.of(hexB1B2, FIVE)
+                .addFullPaths(() -> asList(() -> asList(
+                        () -> Pair.of(hexB1B2, TWO),
+                        () -> Pair.of(hexB1B2_Hor, FOUR),
+                        () -> Pair.of(hexB1B2, FIVE)
 
                 )), green)
-                .addFullPathsFromLines(asList(asList(
-                        Pair.of(hexB1B3, TWO),
-                        Pair.of(hexB1B3_Hor, FOUR),
-                        Pair.of(hexB1B3, FIVE)
+                .addFullPaths(() -> asList(() -> asList(
+                        () -> Pair.of(hexB1B3, TWO),
+                        () -> Pair.of(hexB1B3_Hor, FOUR),
+                        () -> Pair.of(hexB1B3, FIVE)
 
                 )), green)
-                .addFullPathsFromLines(asList(asList(
-                        Pair.of(hexA1A2_Hor, THREE),
-                        Pair.of(hexA1A2, FOUR),
-                        Pair.of(hexA1A2_Hor, SIX)
+                .addFullPaths(() -> asList(() -> asList(
+                        () -> Pair.of(hexA1A2_Hor, THREE),
+                        () -> Pair.of(hexA1A2, FOUR),
+                        () -> Pair.of(hexA1A2_Hor, SIX)
 
                 )), green)
-                .addFullPathsFromLines(asList(asList(
-                        Pair.of(hexA1A3_Hor, THREE),
-                        Pair.of(hexA1A3, FOUR),
-                        Pair.of(hexA1A3_Hor, SIX)
+                .addFullPaths(() -> asList(() -> asList(
+                        () -> Pair.of(hexA1A3_Hor, THREE),
+                        () -> Pair.of(hexA1A3, FOUR),
+                        () -> Pair.of(hexA1A3_Hor, SIX)
                 )), green)
-                .addFullPathsFromLines(asList(asList(
-                        Pair.of(hexInnerLine, THREE),
-                        Pair.of(hexInnerLine, SIX)
+                .addFullPaths(() -> asList(() -> asList(
+                        () -> Pair.of(hexInnerLine, THREE),
+                        () -> Pair.of(hexInnerLine, SIX)
                 )), gray)
-                .addFullPathsFromLines(asList(asList(
-                        Pair.of(hexInnerLine2, TWO),
-                        Pair.of(hexInnerLine2, FIVE)
+                .addFullPaths(() -> asList(() -> asList(
+                        () -> Pair.of(hexInnerLine2, TWO),
+                        () -> Pair.of(hexInnerLine2, FIVE)
                 )), gray)
                 .addCircleWithRadius(asList(
                         Pair.of(main, A1M)

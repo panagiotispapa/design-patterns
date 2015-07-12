@@ -23,8 +23,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.design.common.Polygon.Type.VER;
-import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.*;
+import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -44,8 +44,9 @@ public class Tile16 {
         toLeft.put(FIVE, FIVE);
     }
 
-    private static List<Pair<Polygon, Polygon.Vertex>> toLeft(List<Pair<Polygon, Polygon.Vertex>> right) {
-        return right.stream().map(r -> Pair.of(r.getLeft(), toLeft.get(r.getRight()))).collect(toList());
+    private static Polygon.VertexPath toLeft(Polygon.VertexPath right) {
+
+        return () -> right.get().stream().map(r -> ActualVertex.of(r.get().getLeft(), toLeft.get(r.get().getRight()))).collect(toList());
     }
 
     private static double RATIO_m = 1.0 / 9.0;
@@ -53,7 +54,7 @@ public class Tile16 {
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
 
-        List<Pair<Polygon, Polygon.Vertex>> l1 = asList(
+        Polygon.VertexPath l1 = () -> asList(
                 h(8, UP),
                 u(5, 8),
                 u(3, 6),
@@ -69,19 +70,19 @@ public class Tile16 {
                 h(1, DOWN)
         );
 
-        List<Pair<Polygon, Polygon.Vertex>> l2 = asList(
+        Polygon.VertexPath l2 = () -> asList(
                 u(3, 6),
                 u(3, 4),
                 u(8, 9)
         );
 
-        List<Pair<Polygon, Polygon.Vertex>> l3 = asList(
+        Polygon.VertexPath l3 = () -> asList(
                 u(6, 3),
                 u(4, 3),
                 u(9, 8)
         );
 
-        List<Pair<Polygon, Polygon.Vertex>> l4 = asList(
+        Polygon.VertexPath l4 = () -> asList(
                 d(3, 6),
                 d(1, 4),
                 d(1, 9)
@@ -90,17 +91,17 @@ public class Tile16 {
         return new PayloadSimple.Builder("hex_tile_16",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsSingleFromLines(
-                        asList(
-                                l1,
-                                toLeft(l1),
-                                l2,
-                                toLeft(l2),
-                                l3,
-                                toLeft(l3),
-                                l4,
-                                toLeft(l4)
-                        ), whiteBold
+                .withPathsSingle(() ->
+                                asList(
+                                        l1,
+                                        toLeft(l1),
+                                        l2,
+                                        toLeft(l2),
+                                        l3,
+                                        toLeft(l3),
+                                        l4,
+                                        toLeft(l4)
+                                ), whiteBold
                 )
 //                .withGridConf(Grid.Configuration.customRect(2*RATIO_w, 2*RATIO_h))
 
@@ -108,16 +109,16 @@ public class Tile16 {
 
     }
 
-    private static Pair<Polygon, Polygon.Vertex> u(int times, int timesCentre) {
+    private static ActualVertex u(int times, int timesCentre) {
         return instruction(times * RATIO_m, Hex.centreTransform(timesCentre * RATIO_m, UP), DR_V);
     }
 
-    private static Pair<Polygon, Polygon.Vertex> d(int times, int timesCentre) {
+    private static ActualVertex d(int times, int timesCentre) {
         return instruction(times * RATIO_m, Hex.centreTransform(timesCentre * RATIO_m, DOWN), UR_V);
     }
 
 
-    private static Pair<Polygon, Polygon.Vertex> h(int times, Hex.Corner corner) {
+    private static ActualVertex h(int times, Hex.Corner corner) {
         return instruction(times * RATIO_m, corner);
     }
 
@@ -135,7 +136,7 @@ public class Tile16 {
                 "r = 1 / 9"
         );
 
-        Function<Polygon, List<Path>> xDiagonals = Path.fromListOfVertexes.apply(asList(
+        Function<Polygon, List<Path>> xDiagonals = p -> Path.vertexPathsToPaths.apply(Polygon.toVertexPaths(p, asList(
                 asList(
                         TWO,
                         FIVE
@@ -144,7 +145,7 @@ public class Tile16 {
                         THREE,
                         SIX
                 )
-        ));
+        )));
 
 
 //        List<List<Polygon.Vertex>> xDiagonals = asList(asList(TWO.cast(), FIVE), asList(THREE, SIX));
@@ -160,7 +161,7 @@ public class Tile16 {
         };
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_16_design")
-                .addSinglePathsList(getPayloadSimple().getPathsSingle(), red)
+                .addSinglePaths(() -> getPayloadSimple().getPathsSingle(), red)
                 .addEquations(equations)
                 .addSinglePaths(asList(
                         Pair.of(main, PERIMETER),

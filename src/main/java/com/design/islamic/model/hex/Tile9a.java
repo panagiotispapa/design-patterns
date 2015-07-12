@@ -54,57 +54,57 @@ public class Tile9a {
 
     protected static Polygon outer = Hex.hex(k, VER, Hex.centreTransform(1, Hex.Corner.UP));
 
-    protected static Function<Double, List<Pair<Polygon, Polygon.Vertex>>> innerLines1 = r -> {
+    protected static Function<Double, Polygon.VertexPath> innerLines1 = r -> {
         Polygon ver = Hex.hex(r, VER);
         Polygon hor = Hex.hex(r, HOR);
         return
-                asList(
-                        Pair.of(ver, Hex.Corner.DL_V.getVertex()),
-                        Pair.of(hor, Hex.Corner.UL_H.getVertex()),
-                        Pair.of(ver, Hex.Corner.UR_V.getVertex())
+                () -> asList(
+                        () -> Pair.of(ver, Hex.Corner.DL_V.getVertex()),
+                        () -> Pair.of(hor, Hex.Corner.UL_H.getVertex()),
+                        () -> Pair.of(ver, Hex.Corner.UR_V.getVertex())
                 );
     };
 
-    protected static Function<Double, List<Pair<Polygon, Polygon.Vertex>>> innerLines2 = (r) -> {
+    protected static Function<Double, Polygon.VertexPath> innerLines2 = (r) -> {
         Polygon hor = Hex.hex(1.0, HOR, Hex.centreTransform(r, Hex.Corner.UP));
         return
-                asList(
-                        Pair.of(hor, Hex.Corner.LEFT.getVertex()),
-                        Pair.of(hor, Hex.Corner.RIGHT.getVertex())
+                () -> asList(
+                        () -> Pair.of(hor, Hex.Corner.LEFT.getVertex()),
+                        () -> Pair.of(hor, Hex.Corner.RIGHT.getVertex())
                 );
     };
 
-    protected static Function<Double, List<Pair<Polygon, Polygon.Vertex>>> innerLines3 = (r) -> {
+    protected static Function<Double, Polygon.VertexPath> innerLines3 = (r) -> {
         Polygon ver = Hex.hex(1.0, VER, Hex.centreTransform(r, Hex.Corner.RIGHT));
         return
-                asList(
-                        Pair.of(ver, Hex.Corner.UP.getVertex()),
-                        Pair.of(ver, Hex.Corner.DOWN.getVertex())
+                () -> asList(
+                        () -> Pair.of(ver, Hex.Corner.UP.getVertex()),
+                        () -> Pair.of(ver, Hex.Corner.DOWN.getVertex())
                 );
     };
 
-    protected static Function<Double, List<Pair<Polygon, Polygon.Vertex>>> outerLines1 = r -> {
+    protected static Function<Double, Polygon.VertexPath> outerLines1 = r -> {
         Polygon ver = Hex.hex(1.0 - l * r, VER, Hex.centreTransform(1, Hex.Corner.UP));
         Polygon hor = ver.getMirror();
 
         return
-                asList(
-                        Pair.of(hor, Hex.Corner.LEFT.getVertex()),
-                        Pair.of(ver, Hex.Corner.DOWN.getVertex()),
-                        Pair.of(hor, Hex.Corner.RIGHT.getVertex())
+                () -> asList(
+                        () -> Pair.of(hor, Hex.Corner.LEFT.getVertex()),
+                        () -> Pair.of(ver, Hex.Corner.DOWN.getVertex()),
+                        () -> Pair.of(hor, Hex.Corner.RIGHT.getVertex())
                 );
     };
 
 
-    protected static Function<Double, List<Pair<Polygon, Polygon.Vertex>>> outerLines2 = r -> {
+    protected static Function<Double, Polygon.VertexPath> outerLines2 = r -> {
         Polygon ver = Hex.hex(1.0 - l * r, VER, Hex.centreTransform(1, Hex.Corner.RIGHT));
         Polygon hor = ver.getMirror();
 
         return
-                asList(
-                        Pair.of(ver, Hex.Corner.UP.getVertex()),
-                        Pair.of(hor, Hex.Corner.LEFT.getVertex()),
-                        Pair.of(ver, Hex.Corner.DOWN.getVertex())
+                () -> asList(
+                        () -> Pair.of(ver, Hex.Corner.UP.getVertex()),
+                        () -> Pair.of(hor, Hex.Corner.LEFT.getVertex()),
+                        () -> Pair.of(ver, Hex.Corner.DOWN.getVertex())
                 );
     };
 
@@ -122,7 +122,7 @@ public class Tile9a {
                 .addImportantPoints(getImportantPointsA())
                 .addSinglePaths(getInstructionsGrayA(), gray)
                 .addSinglePaths(getInstructionsBlueA(), blue)
-                .addFullPathsFromLines(getFullInstructionsGrayA(), gray);
+                .addFullPaths(() -> getFullInstructionsGrayA(), gray);
     }
 
     @DesignSupplier
@@ -149,7 +149,7 @@ public class Tile9a {
 
                         ).collect(toList()),
                         blue)
-                .addFullPathsFromLines(
+                .addFullPaths(() ->
                         Stream.concat(
                                 getFullInstructionsGrayA().stream(),
                                 getFullInstructionsGrayB().stream()
@@ -180,7 +180,7 @@ public class Tile9a {
 
                         ).collect(toList()),
                         blue)
-                .addFullPathsFromLines(
+                .addFullPaths(() ->
                         Stream.of(
                                 getFullInstructionsGrayA().stream(),
                                 getFullInstructionsGrayB().stream(),
@@ -197,13 +197,13 @@ public class Tile9a {
         );
     }
 
-    protected static List<List<Pair<Polygon, Polygon.Vertex>>> getFullInstructionsGrayA() {
+    protected static List<Polygon.VertexPath> getFullInstructionsGrayA() {
         return asList(
                 innerLines1.apply(1.0)
         );
     }
 
-    protected static List<List<Pair<Polygon, Polygon.Vertex>>> getFullInstructionsGrayB() {
+    protected static List<Polygon.VertexPath> getFullInstructionsGrayB() {
         return asList(
                 innerLines1.apply(l),
                 innerLines1.apply(l * l),
@@ -214,7 +214,7 @@ public class Tile9a {
         );
     }
 
-    protected static List<List<Pair<Polygon, Polygon.Vertex>>> getFullInstructionsGrayC() {
+    protected static List<Polygon.VertexPath> getFullInstructionsGrayC() {
         return asList(
                 innerLines2.apply(0.5 * p),
                 innerLines3.apply(0.5 * p)

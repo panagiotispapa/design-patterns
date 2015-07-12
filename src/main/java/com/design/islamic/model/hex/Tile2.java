@@ -35,18 +35,18 @@ public class Tile2 {
         return new PayloadSimple.Builder("hex_tile_02",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(
-                        asList(
+                .withPathsFull(() ->
                                 asList(
-                                        instruction(outer, RIGHT),
-                                        instruction(inner, DR_V),
-                                        instruction(outer, DR_H)
-                                ),
-                                asList(
-                                        instruction(inner, DR_V),
-                                        instruction(inner, DOWN)
-                                )
-                        ), whiteBold
+                                        () -> asList(
+                                                instruction(outer, RIGHT),
+                                                instruction(inner, DR_V),
+                                                instruction(outer, DR_H)
+                                        ),
+                                        () -> asList(
+                                                instruction(inner, DR_V),
+                                                instruction(inner, DOWN)
+                                        )
+                                ), whiteBold
                 )
                 .build();
     }
@@ -67,7 +67,7 @@ public class Tile2 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_02_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(asList(
                         "KB=h/(h+0.5)",
                         "BD=h*(1-KB)"

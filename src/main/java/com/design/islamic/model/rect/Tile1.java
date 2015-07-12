@@ -42,14 +42,14 @@ public class Tile1 {
         return new PayloadSimple.Builder("rect_tile_01",
                 Rect.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(asList(
-                        asList(
+                .withPathsFull(() -> asList(
+                        () -> asList(
                                 instruction(rectDE, RIGHT),
                                 instruction(rectBC, DL),
                                 instruction(rectBC_Rot, DR),
                                 instruction(rectDE, LEFT)
                         ),
-                        asList(
+                        () -> asList(
                                 instruction(rectBC, DL),
                                 instruction(rectBC, UR)
                         )
@@ -75,7 +75,7 @@ public class Tile1 {
         );
 
         return new DesignHelper(Rect.ALL_VERTEX_INDEXES, "rect_tile_01_design")
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
                         Triple.of(main, DR.getVertex(), "A"),

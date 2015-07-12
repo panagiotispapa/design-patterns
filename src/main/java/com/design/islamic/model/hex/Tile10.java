@@ -17,7 +17,6 @@ import java.util.List;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P6.H;
-import static com.design.common.view.SvgFactory.newStyle;
 import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.centreTransform;
 import static com.design.islamic.model.Hex.instruction;
@@ -44,18 +43,18 @@ public class Tile10 {
         return new PayloadSimple.Builder("hex_tile_10",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(asList(
-                        asList(
+                .withPathsFull(() -> asList(
+                        () -> asList(
                                 instruction(outerReg, DL_V),
                                 instruction(hexAC, LEFT),
                                 instruction(hexAC, UL_H),
                                 instruction(outerReg, UP)
                         ),
-                        asList(
+                        () -> asList(
                                 instruction(hexKE, RIGHT),
                                 instruction(hexAC, UL_H)
                         ),
-                        asList(
+                        () -> asList(
                                 instruction(hexKE, DR_H),
                                 instruction(hexAC, LEFT)
                         )
@@ -87,7 +86,7 @@ public class Tile10 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_10_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
                 .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),

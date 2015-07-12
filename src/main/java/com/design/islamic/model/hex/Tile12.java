@@ -20,8 +20,8 @@ import java.util.stream.IntStream;
 
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
-import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.*;
+import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -41,8 +41,8 @@ public class Tile12 {
         toLeft.put(FIVE, FIVE);
     }
 
-    private static List<Pair<Polygon, Polygon.Vertex>> toLeft(List<Pair<Polygon, Polygon.Vertex>> right) {
-        return right.stream().map(r -> Pair.of(r.getLeft(), toLeft.get(r.getRight()))).collect(toList());
+    private static Polygon.VertexPath toLeft(Polygon.VertexPath right) {
+        return () -> right.get().stream().map(r -> ActualVertex.of(r.get().getLeft(), toLeft.get(r.get().getRight()))).collect(toList());
     }
 
     private static double RATIO_m = 1.0 / 7.0;
@@ -62,15 +62,15 @@ public class Tile12 {
         Polygon hexKA5 = Hex.hex(5 * RATIO_m, VER);
         Polygon hexKA6 = Hex.hex(6 * RATIO_m, VER);
 
-        List<Pair<Polygon, Polygon.Vertex>> l1 = asList(
-                Pair.of(h(2, 6, TWO), SIX),
-                Pair.of(h(2, 4, TWO), SIX),
+        Polygon.VertexPath l1 = () -> asList(
+                () -> Pair.of(h(2, 6, TWO), SIX),
+                () -> Pair.of(h(2, 4, TWO), SIX),
                 h(4, DR_V),
                 h(4, UR_V),
                 u(2, 4, DR_V),
                 u(2, 6, DR_V)
         );
-        List<Pair<Polygon, Polygon.Vertex>> l2 = asList(
+        Polygon.VertexPath l2 = () -> asList(
                 u(6, 1, UR_V),
                 u(1, 2, DR_V),
                 u(1, 3, DR_V),
@@ -93,23 +93,23 @@ public class Tile12 {
         return new PayloadSimple.Builder("hex_tile_12",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(
-                        asList(
+                .withPathsFull(() ->
                                 asList(
-                                        instruction(hexKA1, UR_V),
-                                        instruction(hexKA2.getRegistered(), RIGHT),
-                                        instruction(hexKA1, DR_V)
-                                )
+                                        () -> asList(
+                                                instruction(hexKA1, UR_V),
+                                                instruction(hexKA2.getRegistered(), RIGHT),
+                                                instruction(hexKA1, DR_V)
+                                        )
 
-                        ), whiteBold
+                                ), whiteBold
                 )
-                .withPathsSingleFromLines(
-                        asList(
-                                l2,
-                                toLeft(l2),
-                                l1,
-                                toLeft(l1)
-                        ), whiteBold
+                .withPathsSingle(() ->
+                                asList(
+                                        l2,
+                                        toLeft(l2),
+                                        l1,
+                                        toLeft(l1)
+                                ), whiteBold
                 )
                 .withGridConf(Grid.Configuration.customRect(2 * RATIO_w, 2 * RATIO_h))
 
@@ -121,7 +121,7 @@ public class Tile12 {
 //        return Hex.hex(times * RATIO_m, VER);
 //    }
 
-    private static Pair<Polygon, Polygon.Vertex> h(int times, Hex.Corner corner) {
+    private static ActualVertex h(int times, Hex.Corner corner) {
         return instruction(times * RATIO_m, corner);
     }
 
@@ -129,11 +129,11 @@ public class Tile12 {
         return h(times, timesCentre, ONE);
     }
 
-    private static Pair<Polygon, Polygon.Vertex> u(int times, int timesCentre, Hex.Corner corner) {
+    private static ActualVertex u(int times, int timesCentre, Hex.Corner corner) {
         return instruction(times * RATIO_m, Hex.centreTransform(timesCentre * RATIO_m, UP), corner);
     }
 
-    private static Pair<Polygon, Polygon.Vertex> d(int times, int timesCentre, Hex.Corner corner) {
+    private static ActualVertex d(int times, int timesCentre, Hex.Corner corner) {
         return instruction(times * RATIO_m, Hex.centreTransform(timesCentre * RATIO_m, DOWN), corner);
     }
 
@@ -174,8 +174,8 @@ public class Tile12 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_12_design")
 //                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
-                .addSinglePathsList(getPayloadSimple().getPathsSingle(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
+                .addSinglePaths(() -> getPayloadSimple().getPathsSingle(), red)
                 .addEquations(equations)
                 .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),

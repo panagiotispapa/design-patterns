@@ -48,14 +48,14 @@ public class Tile3 {
         return new PayloadSimple.Builder("hex_tile_03",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(
-                        asList(
+                .withPathsFull(() ->
                                 asList(
-                                        instruction(hexKI, RIGHT),
-                                        instruction(main, DR_V),
-                                        instruction(hexKI, DR_H)
-                                )
-                        ), whiteBold
+                                        () -> asList(
+                                                instruction(hexKI, RIGHT),
+                                                instruction(main, DR_V),
+                                                instruction(hexKI, DR_H)
+                                        )
+                                ), whiteBold
                 )
                 .build();
     }
@@ -70,14 +70,14 @@ public class Tile3 {
         return new PayloadSimple.Builder("hex_tile_03b",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(
-                        asList(
+                .withPathsFull(() ->
                                 asList(
-                                        instruction(mainReg, RIGHT),
-                                        instruction(hexKM, DR_V),
-                                        instruction(mainReg, DR_H)
-                                )
-                        ), whiteBold
+                                        () -> asList(
+                                                instruction(mainReg, RIGHT),
+                                                instruction(hexKM, DR_V),
+                                                instruction(mainReg, DR_H)
+                                        )
+                                ), whiteBold
                 )
                 .build();
     }
@@ -110,7 +110,7 @@ public class Tile3 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_03_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
                         Triple.of(hexKA, DOWN.getVertex(), "A"),
@@ -142,7 +142,7 @@ public class Tile3 {
                         Pair.of(hexKA, Hex.PERIMETER),
                         Pair.of(hexKI, Hex.PERIMETER)
                 ), blue)
-                .addFullPathsFromLines(asList(asList(
+                .addFullPaths(() -> asList(() -> asList(
                                 instruction(hexBH, UP),
                                 instruction(mainReg, LEFT),
                                 instruction(hexBH, DOWN)
@@ -177,7 +177,7 @@ public class Tile3 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_03b_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(getPayloadSimple2().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple2().getPathsFull(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
 //                        Triple.of(hexKA, TWO, "A"),
@@ -199,8 +199,8 @@ public class Tile3 {
                 .addSinglePaths(asList(
                         Pair.of(hexKM, Hex.PERIMETER)
                 ), green)
-                .addSinglePathsFromLines(asList(
-                                asList(
+                .addSinglePaths(() -> asList(
+                                () -> asList(
                                         instruction(0.5 * P, centreTransform(1, DR_V), UL_V),
                                         instruction(mainReg, DR_H)
                                 )), gray

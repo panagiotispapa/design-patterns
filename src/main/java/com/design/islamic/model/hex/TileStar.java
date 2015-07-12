@@ -28,7 +28,7 @@ public class TileStar {
     public static double RATIO_2 = H / (H + 0.5);
     public static double RATIO_3 = (1.5 - H) * 0.5;
 
-    public static List<Pair<Polygon, Polygon.Vertex>> getLines(double ratio) {
+    public static List<Polygon.ActualVertex> getLines(double ratio) {
         Polygon main = Hex.hex(H, HOR);
         Polygon inner = Hex.hex(ratio, VER);
 
@@ -40,7 +40,7 @@ public class TileStar {
                 );
     }
 
-    public static List<Pair<Polygon, Polygon.Vertex>> getLinesB(double ratio) {
+    public static List<Polygon.ActualVertex> getLinesB(double ratio) {
         Polygon main = Hex.hex(H, VER);
         Polygon inner = Hex.hex(ratio, HOR);
 
@@ -59,8 +59,8 @@ public class TileStar {
                 .Builder(
                 "hex_tile_star_01",
                 Hex.ALL_VERTEX_INDEXES
-        ).withPathsFullFromLines(asList(
-                getLines(RATIO_1)
+        ).withPathsFull(() -> asList(() ->
+                        getLines(RATIO_1)
         ), whiteBold)
                 .build();
     }
@@ -71,8 +71,8 @@ public class TileStar {
         return new PayloadSimple.Builder("hex_tile_star_02",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(asList(
-                        getLines(RATIO_2)
+                .withPathsFull(() -> asList(
+                        () -> getLines(RATIO_2)
                 ), whiteBold)
                 .build();
     }
@@ -83,8 +83,8 @@ public class TileStar {
         return new PayloadSimple.Builder("hex_tile_star_03",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(asList(
-                        getLines(RATIO_3)
+                .withPathsFull(() -> asList(
+                        () -> getLines(RATIO_3)
                 ), whiteBold)
                 .build();
     }
@@ -96,8 +96,8 @@ public class TileStar {
                 .Builder(
                 "hex_tile_star_01b",
                 Hex.ALL_VERTEX_INDEXES
-        ).withPathsFullFromLines(asList(
-                getLinesB(RATIO_1)
+        ).withPathsFull(() -> asList(
+                () -> getLinesB(RATIO_1)
         ), whiteBold)
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
@@ -110,8 +110,8 @@ public class TileStar {
                 .Builder(
                 "hex_tile_star_02b",
                 Hex.ALL_VERTEX_INDEXES
-        ).withPathsFullFromLines(asList(
-                getLinesB(RATIO_2)
+        ).withPathsFull(() -> asList(
+                () -> getLinesB(RATIO_2)
         ), whiteBold)
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
@@ -124,8 +124,8 @@ public class TileStar {
                 .Builder(
                 "hex_tile_star_03b",
                 Hex.ALL_VERTEX_INDEXES
-        ).withPathsFullFromLines(asList(
-                getLinesB(RATIO_3)
+        ).withPathsFull(() -> asList(
+                () -> getLinesB(RATIO_3)
         ), whiteBold)
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
@@ -144,7 +144,7 @@ public class TileStar {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_01_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(getPayloadSimple1().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple1().getPathsFull(), red)
 //                .addEquations(equations)
                 .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
@@ -175,7 +175,7 @@ public class TileStar {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_02_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(getPayloadSimple2().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple2().getPathsFull(), red)
                 .addEquations(asList(
                         "AB=AC",
                         "KB=h/(h+0.5)"
@@ -226,7 +226,7 @@ public class TileStar {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_03_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(getPayloadSimple3().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple3().getPathsFull(), red)
                 .addEquations(asList(
                         "KA = 1",
                         "KE = EB = h",
@@ -256,18 +256,18 @@ public class TileStar {
                 .addSinglePaths(asList(
                         Pair.of(registered, Hex.PERIMETER)
                 ), green)
-                .addFullPathsFromLines(asList(asList(
+                .addFullPaths(() -> asList(() -> asList(
                         instruction(outerSmall, DL_V),
                         instruction(registered, RIGHT),
                         instruction(outerSmall, UL_V)
 
                 )), green)
-                .addFullPathsFromLines(asList(asList(
+                .addFullPaths(() -> asList(() -> asList(
                         instruction(inner, DL_H),
                         instruction(inner, UR_H)
 
                 )), blue)
-                .addFullPathsFromLines(asList(asList(
+                .addFullPaths(() -> asList(() -> asList(
                         instruction(outerBig, DOWN),
                         instruction(outerBig, UP)
 
@@ -294,7 +294,7 @@ public class TileStar {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_01b_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(getPayloadSimple1b().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple1b().getPathsFull(), red)
 //                .addEquations(equations)
                 .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
@@ -322,7 +322,7 @@ public class TileStar {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_02b_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(getPayloadSimple2b().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple2b().getPathsFull(), red)
 //                .addEquations(equations)
                 .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
@@ -350,7 +350,7 @@ public class TileStar {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_03b_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(getPayloadSimple3b().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple3b().getPathsFull(), red)
 //                .addEquations(equations)
                 .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),

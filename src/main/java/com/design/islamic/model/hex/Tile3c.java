@@ -41,8 +41,8 @@ public class Tile3c {
         return new PayloadSimple.Builder("hex_tile_03c",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(asList(
-                        asList(
+                .withPathsFull(() -> asList(
+                        () -> asList(
                                 instruction(main_Ver, UR_V),
                                 instruction(hexKD, RIGHT),
                                 instruction(main_Ver, DR_V)
@@ -75,7 +75,7 @@ public class Tile3c {
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_03c_design")
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
                         Triple.of(main, RIGHT.getVertex(), "A"),

@@ -39,8 +39,8 @@ public class Tile5 {
         return new PayloadSimple.Builder("hex_tile_05",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(asList(
-                        asList(
+                .withPathsFull(() -> asList(
+                        () -> asList(
                                 instruction(outer, UP),
                                 instruction(outer, UL_V),
                                 instruction(outer, DL_V)
@@ -77,7 +77,7 @@ public class Tile5 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_05_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
                         Triple.of(hexKA, RIGHT.getVertex(), "A"),

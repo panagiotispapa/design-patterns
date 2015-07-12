@@ -2,6 +2,7 @@ package com.design.islamic;
 
 import java.awt.geom.Point2D;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static java.util.stream.Collectors.toList;
 
@@ -22,4 +23,7 @@ public class GenericTools {
         return new Point2D.Double(in.getX(), in.getY());
     }
 
+    public static <T> Supplier<T> s(Supplier<T> supplier) {
+        return supplier;
+    }
 }

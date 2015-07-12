@@ -1,7 +1,7 @@
 package com.design;
 
-import com.design.common.DesignHelper;
-import com.design.common.Grid;
+import com.design.common.*;
+import com.design.common.Polygon.InitialConditions;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
@@ -84,7 +84,7 @@ public class Export {
         List<Point2D> gridPoints = Grid.gridFromStart(ic.getLeft(), ic.getRight(), payload.getGridConfiguration(), 17);
 
         return
-                gridPoints.stream().map(p -> Pair.of(p, ic.getRight())).map(payload::draw).collect(joining());
+                gridPoints.stream().map(p -> InitialConditions.of(p, ic.getRight())).map(payload::draw).collect(joining());
 
     }
 
@@ -110,11 +110,11 @@ public class Export {
 
         Pair<Point2D, Double> ic = Pair.of(centre, 300.0);
 
-        buildSvg(dim, designHelper.build(ic));
+        buildSvg(dim, designHelper.build(()->ic));
 
         System.out.println(designHelper.getName());
 
-        saveToFile(buildSvg(dim, designHelper.build(ic)), designHelper.getName());
+        saveToFile(buildSvg(dim, designHelper.build(()->ic)), designHelper.getName());
 
     }
 

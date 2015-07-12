@@ -38,8 +38,8 @@ public class Tile14 {
         return new PayloadSimple.Builder("hex_tile_14",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(asList(
-                        asList(
+                .withPathsFull(() -> asList(
+                        () -> asList(
                                 instruction(hexAB, UL_H),
                                 instruction(hexAB, LEFT),
                                 instruction(hexAB, DL_H)
@@ -65,7 +65,7 @@ public class Tile14 {
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_14_design")
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
                         Triple.of(main, ONE, "A"),

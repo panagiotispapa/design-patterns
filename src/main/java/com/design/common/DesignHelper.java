@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -93,7 +94,7 @@ public class DesignHelper {
 //        this.importantPoints.addAll(importantPoints);
 //        return this;
 //    }
-    
+
     public DesignHelper addEquations(List<String> equations) {
         IntStream.range(0, equations.size())
                 .forEach(i -> importantPoints.add(Pair.of(new Point2D.Double(1000, (i + 1) * 40), equations.get(i))));
@@ -110,18 +111,17 @@ public class DesignHelper {
         return this;
     }
 
-    public DesignHelper addFullPaths(List<Path> paths) {
-        fullPaths.addAll(paths);
+    public DesignHelper addFullPaths(PathsList paths) {
+        fullPaths.addAll(paths.get());
         return this;
     }
 
-    public DesignHelper addFullPathsFromLines(List<List<Pair<Polygon, Polygon.Vertex>>> lines, Style style) {
-        return addFullPaths(Path.pairsToPaths.apply(lines), style);
+    public DesignHelper addFullPaths(VertexPathsList lines, Style style) {
+        return addFullPaths(() -> Path.vertexPathsToPaths.apply(lines.get()), style);
     }
 
-    public DesignHelper addFullPaths(List<Path> paths, Style style) {
-        paths.forEach(p -> p.setStyle(style));
-        fullPaths.addAll(paths);
+    public DesignHelper addFullPaths(PathsList paths, Style style) {
+        fullPaths.addAll(paths.get().stream().map(Path.fromPathWithStyle(style)).collect(toList()));
         return this;
     }
 
@@ -130,26 +130,25 @@ public class DesignHelper {
     }
 
     public DesignHelper addSinglePaths(List<Polygon> polygons, Function<Polygon, List<Path>> mapper, Style style) {
-        return addSinglePathsList(polygons.stream().map(mapper).map(List::stream).flatMap(s -> s).collect(toList()), style);
+        return addSinglePaths(() -> polygons.stream().map(mapper).map(List::stream).flatMap(s -> s).collect(toList()), style);
     }
 
     public DesignHelper addSinglePaths(List<Pair<Polygon, Function<Polygon, List<Path>>>> instructions, Style style) {
-        instructions.forEach(i -> addSinglePathsList(i.getRight().apply(i.getLeft()), style));
+        instructions.forEach(i -> addSinglePaths(() -> i.getRight().apply(i.getLeft()), style));
         return this;
     }
 
-    public DesignHelper addSinglePaths(List<Path> paths) {
-        singlePaths.addAll(paths);
+    public DesignHelper addSinglePaths(PathsList paths) {
+        singlePaths.addAll(paths.get());
         return this;
     }
 
-    public DesignHelper addSinglePathsFromLines(List<List<Pair<Polygon, Polygon.Vertex>>> lines, Style style) {
-        return addSinglePathsList(Path.pairsToPaths.apply(lines), style);
+    public DesignHelper addSinglePaths(VertexPathsList lines, Style style) {
+        return addSinglePaths(() -> Path.vertexPathsToPaths.apply(lines.get()), style);
     }
 
-    public DesignHelper addSinglePathsList(List<Path> paths, Style style) {
-        paths.forEach(p -> p.setStyle(style));
-        singlePaths.addAll(paths);
+    public DesignHelper addSinglePaths(PathsList paths, Style style) {
+        singlePaths.addAll(paths.get().stream().map(Path.fromPathWithStyle(style)).collect(toList()));
         return this;
     }
 
@@ -175,22 +174,22 @@ public class DesignHelper {
 //        return importantPoints;
 //    }
 
-    public String build(Pair<Point2D, Double> initialConditions) {
+    public String build(Polygon.InitialConditions initialConditions) {
 
-        Function<Pair<Polygon, Polygon.Vertex>, Point2D> toVertex = Polygon.vertex(initialConditions);
+        Function<Polygon.ActualVertex, Point2D> toVertex = Polygon.vertex(initialConditions);
 
-        Function<Triple<Polygon, ? extends Polygon.Vertex, String>, Pair<Point2D, String>> importantPoint = t -> Pair.of(toVertex.apply(Pair.of(t.getLeft(), t.getMiddle())), t.getRight());
+        Function<Triple<Polygon, ? extends Polygon.Vertex, String>, Pair<Point2D, String>> importantPoint = t -> Pair.of(toVertex.apply(() -> Pair.of(t.getLeft(), t.getMiddle())), t.getRight());
 
         Function<Polygon, List<Pair<Point2D, Double>>> toCircle = Polygon.toCircles(initialConditions);
         Function<Pair<Polygon, Double>, List<Pair<Point2D, Double>>> toCirclesWithRadius = Polygon.toCirclesWithRadius(initialConditions);
 
-        importantPoints.add(Pair.of(initialConditions.getLeft(), "K"));
+        importantPoints.add(Pair.of(initialConditions.get().getLeft(), "K"));
 
         importantPoints.addAll(importantVertexes.stream().map(importantPoint).collect(toList()));
 
         List<Point2D> gridPoints = new ArrayList<>();
         if (gridConfig != null) {
-            gridPoints = Grid.grid(initialConditions.getLeft(), initialConditions.getRight() / 4.0, gridConfig, 12);
+            gridPoints = Grid.grid(initialConditions.get().getLeft(), initialConditions.get().getRight() / 4.0, gridConfig, 12);
 
         }
 //        singleLinesInstructions.stream().map(p->Mappings.fromListOfLists(toVertex).apply(p.getLeft())).
@@ -204,10 +203,10 @@ public class DesignHelper {
                                 p.getLeft().stream().map(toCirclesWithRadius.andThen(drawCircles(p.getRight())))
                 ).flatMap(s -> s),
                 circlesCentral.stream().map(p ->
-                                p.getLeft().stream().map(d -> Pair.of(initialConditions.getLeft(), d * initialConditions.getRight())).map(drawCircle(p.getRight()))
+                                p.getLeft().stream().map(d -> Pair.of(initialConditions.get().getLeft(), d * initialConditions.get().getRight())).map(drawCircle(p.getRight()))
                 ).flatMap(s -> s),
                 singlePaths.stream().map(drawPath(toVertex)),
-                fullPaths.stream().map(drawPathFull(allVertexIndexes, Polygon.vertexFull2(initialConditions))).flatMap(s -> s),
+                fullPaths.stream().map(drawPathFull(allVertexIndexes, Polygon.vertexFull(initialConditions))).flatMap(s -> s),
                 Stream.of(highlightPoints("black", 2).apply(gridPoints)),
                 importantPoints.stream().map(drawText(fontSize)),
                 importantPoints.stream().map(Pair::getLeft).map(highlightPoint())
@@ -220,6 +219,12 @@ public class DesignHelper {
     public String getName() {
         return name;
 
+    }
+
+    public interface PathsList extends Supplier<List<Path>> {
+    }
+
+    public interface VertexPathsList extends Supplier<List<Polygon.VertexPath>> {
     }
 
 }

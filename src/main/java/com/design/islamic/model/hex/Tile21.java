@@ -41,15 +41,15 @@ public class Tile21 {
         return new PayloadSimple.Builder("hex_tile_21",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(asList(
-                        asList(
+                .withPathsFull(() -> asList(
+                        () -> asList(
                                 h(1, RIGHT),
                                 r(2, 1, DR_H),
                                 r(2, 2, DR_H),
                                 r(1, 2, DR_H),
                                 h(1, DR_H)
                         ),
-                        asList(
+                        () -> asList(
                                 r(1, 3, DL_H),
                                 h(3, RIGHT),
                                 rs(5, 8, DR_H),
@@ -57,7 +57,7 @@ public class Tile21 {
                                 rs(1, 10, DR_H),
                                 rs(1, 15, DR_H)
                         ),
-                        asList(
+                        () -> asList(
                                 rs(5, 8, DL_H),
                                 h(3, DR_H),
                                 rs(8, 13, DL_H),
@@ -65,7 +65,7 @@ public class Tile21 {
                                 rs(10, 11, DL_H),
                                 rs(15, 16, DL_H)
                         ),
-                        asList(
+                        () -> asList(
                                 rs(10, 13, DL_H),
                                 rs(12, 15, DL_H),
                                 rs(3, 15, DL_H),
@@ -78,15 +78,15 @@ public class Tile21 {
 
     }
 
-    private static Pair<Polygon, Polygon.Vertex> r(int times, int timesCentre, Hex.Corner corner) {
+    private static ActualVertex r(int times, int timesCentre, Hex.Corner corner) {
         return instruction(times * RATIO_m, Hex.centreTransform(timesCentre * RATIO_m, RIGHT), corner);
     }
 
-    private static Pair<Polygon, Polygon.Vertex> rs(int times, int timesCentre, Hex.Corner corner) {
+    private static ActualVertex rs(int times, int timesCentre, Hex.Corner corner) {
         return instruction(times * RATIO_n, Hex.centreTransform(timesCentre * RATIO_n, RIGHT), corner);
     }
 
-    private static Pair<Polygon, Polygon.Vertex> h(int times, Corner corner) {
+    private static ActualVertex h(int times, Corner corner) {
         return instruction(times * RATIO_m, corner);
     }
 
@@ -104,7 +104,7 @@ public class Tile21 {
                 "r2 = 1 / 16"
         );
 
-        Function<Polygon, List<Path>> xDiagonals = Path.fromListOfVertexes.apply(asList(asList(TWO.cast(), FIVE), asList(THREE, SIX)));
+        Function<Polygon, List<Path>> xDiagonals = p -> Path.vertexPathsToPaths.apply(Polygon.toVertexPaths(p, asList(asList(TWO.cast(), FIVE), asList(THREE, SIX))));
 
         int N = 6;
         int N2 = 16;
@@ -121,7 +121,7 @@ public class Tile21 {
         };
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_21_design")
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
                 .addSinglePaths(asList(
                         Pair.of(main, PERIMETER),

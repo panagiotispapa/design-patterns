@@ -43,16 +43,16 @@ public class Tile7 {
         return new PayloadSimple.Builder("hex_tile_07",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(asList(
-                                asList(
-                                        Pair.of(hexBE, TWO),
+                .withPathsFull(() -> asList(
+                                () -> asList(
+                                        () -> Pair.of(hexBE, TWO),
                                         instruction(inner, DR_H)
                                 ),
-                                asList(
-                                        Pair.of(hexBE, SIX),
+                                () -> asList(
+                                        () -> Pair.of(hexBE, SIX),
                                         instruction(inner, RIGHT)
                                 ),
-                                asList(
+                                () -> asList(
                                         instruction(outerBig, UP),
                                         instruction(outerBig, UL_V),
                                         instruction(outerBig, DL_V)
@@ -111,7 +111,7 @@ public class Tile7 {
                         Pair.of(innerHor, Hex.PERIMETER),
                         Pair.of(hexBE, Hex.PERIMETER)
                 ), green)
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addImportantPoints(asList(
                         Triple.of(main, DR_V.getVertex(), "B"),
                         Triple.of(mainHorReg, RIGHT.getVertex(), "A"),

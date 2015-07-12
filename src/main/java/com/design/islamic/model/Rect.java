@@ -72,22 +72,22 @@ public class Rect extends Polygon {
         );
     }
 
-    public static Pair<Polygon, Polygon.Vertex> instruction(Polygon polygon, Corner corner) {
-        return Pair.of(
+    public static ActualVertex instruction(Polygon polygon, Corner corner) {
+        return () -> Pair.of(
                 polygon,
                 corner.getVertex()
         );
     }
 
-    public static Pair<Polygon, Polygon.Vertex> instruction(double ratio, Corner corner) {
-        return Pair.of(
+    public static ActualVertex instruction(double ratio, Corner corner) {
+        return () -> Pair.of(
                 rect(ratio, corner.getType()),
                 corner.getVertex()
         );
     }
 
-    public static Pair<Polygon, Polygon.Vertex> instruction(double ratio, Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform, Corner corner) {
-        return Pair.of(
+    public static ActualVertex instruction(double ratio, Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform, Corner corner) {
+        return () -> Pair.of(
                 rect(ratio, corner.getType(), centreTransform),
                 corner.getVertex()
         );

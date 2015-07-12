@@ -18,8 +18,8 @@ import java.util.stream.IntStream;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P4.H;
-import static com.design.islamic.model.Rect.Corner.*;
 import static com.design.islamic.model.Rect.*;
+import static com.design.islamic.model.Rect.Corner.*;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
@@ -39,44 +39,44 @@ public class Tile5 {
         return new PayloadSimple.Builder("deco_tile_05",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsSingleFromLines(asList(
-                        asList(
+                .withPathsSingle(() -> asList(
+                        () -> asList(
                                 d(1),
                                 dl(1, 2),
                                 dl(2, 2),
                                 d(2),
                                 u(1)
                         ),
-                        asList(
+                        () -> asList(
                                 ul(1, 1),
                                 ur(1, 2)
                         ),
-                        asList(
+                        () -> asList(
                                 instruction(Rect.rect(Ratio_m, VER, centreTransform(Ratio_m, RIGHT)), LEFT),
                                 r(2)
                         ),
-                        asList(
+                        () -> asList(
                                 d(2),
                                 dr(2, 1),
                                 r(1)
                         ),
-                        asList(
+                        () -> asList(
                                 dr(1, 1),
                                 dr(1, 2),
                                 dr(2, 2)
                         ),
-                        asList(
+                        () -> asList(
                                 ul(2, 1),
                                 dl(1, 1)
                         ),
-                        asList(
+                        () -> asList(
                                 l(1),
                                 l(2),
                                 ul(2, 2),
                                 ur(2, 1),
                                 ur(1, 1)
                         ),
-                        asList(
+                        () -> asList(
                                 ur(2, 2),
                                 r(2)
                         )
@@ -86,35 +86,35 @@ public class Tile5 {
                 .build();
     }
 
-    private static Pair<Polygon, Polygon.Vertex> dl(int timesDown, int timesLeft) {
+    private static ActualVertex dl(int timesDown, int timesLeft) {
         return instruction(Rect.rect(timesLeft * Ratio_m, VER, centreTransform(timesDown * Ratio_m, DOWN)), LEFT);
     }
 
-    private static Pair<Polygon, Polygon.Vertex> dr(int timesDown, int timesRight) {
+    private static ActualVertex dr(int timesDown, int timesRight) {
         return instruction(Rect.rect(timesRight * Ratio_m, VER, centreTransform(timesDown * Ratio_m, DOWN)), RIGHT);
     }
 
-    private static Pair<Polygon, Polygon.Vertex> ul(int timesUp, int timesLeft) {
+    private static ActualVertex ul(int timesUp, int timesLeft) {
         return instruction(Rect.rect(timesLeft * Ratio_m, VER, centreTransform(timesUp * Ratio_m, UP)), LEFT);
     }
 
-    private static Pair<Polygon, Polygon.Vertex> ur(int timesUp, int timesRight) {
+    private static ActualVertex ur(int timesUp, int timesRight) {
         return instruction(Rect.rect(timesRight * Ratio_m, VER, centreTransform(timesUp * Ratio_m, UP)), RIGHT);
     }
 
-    private static Pair<Polygon, Polygon.Vertex> l(int times) {
+    private static ActualVertex l(int times) {
         return instruction(Rect.rect(times * Ratio_m, VER), LEFT);
     }
 
-    private static Pair<Polygon, Polygon.Vertex> r(int times) {
+    private static ActualVertex r(int times) {
         return instruction(Rect.rect(times * Ratio_m, VER), RIGHT);
     }
 
-    private static Pair<Polygon, Polygon.Vertex> u(int timesUp) {
+    private static ActualVertex u(int timesUp) {
         return instruction(Rect.rect(timesUp * Ratio_m, VER), UP);
     }
 
-    private static Pair<Polygon, Polygon.Vertex> d(int timesUp) {
+    private static ActualVertex d(int timesUp) {
         return instruction(Rect.rect(timesUp * Ratio_m, VER), DOWN);
     }
 
@@ -132,21 +132,21 @@ public class Tile5 {
                 "KB = KA / 5.0"
         );
 
-        Function<Polygon, List<Path>> diagVer = Path.fromListOfVertexes.apply(asList(
+        Function<Polygon, List<Path>> diagVer = p -> Path.vertexPathsToPaths.apply(Polygon.toVertexPaths(p, asList(
                 asList(
                         UP.getVertex(),
                         DOWN.getVertex()
                 )
-        ));
-        Function<Polygon, List<Path>> diagHor = Path.fromListOfVertexes.apply(asList(
+        )));
+        Function<Polygon, List<Path>> diagHor = p -> Path.vertexPathsToPaths.apply(Polygon.toVertexPaths(p, asList(
                 asList(
                         LEFT.getVertex(),
                         RIGHT.getVertex()
                 )
-        ));
+        )));
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "deco_tile_05_design")
-                .addSinglePathsList(getPayloadSimple().getPathsSingle(), red)
+                .addSinglePaths(() -> getPayloadSimple().getPathsSingle(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
                         Triple.of(main, DR.getVertex(), "A")

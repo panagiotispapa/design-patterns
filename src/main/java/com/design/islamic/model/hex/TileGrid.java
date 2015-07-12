@@ -26,8 +26,8 @@ public class TileGrid {
         return new PayloadSimple.Builder("hex_grid_01",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(asList(
-                        asList(
+                .withPathsFull(() -> asList(
+                        () -> asList(
                                 instruction(main, DR_V),
                                 instruction(main, DOWN)
                         )
@@ -44,8 +44,8 @@ public class TileGrid {
         return new PayloadSimple.Builder("hex_grid_02",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(asList(
-                        asList(
+                .withPathsFull(() -> asList(
+                        () -> asList(
                                 instruction(main, DR_V),
                                 instruction(main, DOWN)
                         )
@@ -62,8 +62,8 @@ public class TileGrid {
         return new PayloadSimple.Builder("hex_grid_03",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(asList(
-                        asList(
+                .withPathsFull(() -> asList(
+                        () -> asList(
                                 instruction(main, DR_V),
                                 instruction(main, DOWN)
                         )

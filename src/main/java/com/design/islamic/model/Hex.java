@@ -79,45 +79,42 @@ public class Hex extends Polygon {
 //            asList(Vertex.TWO, Vertex.FOUR, Vertex.SIX, Vertex.TWO)
 //    );
 
-
-    public static Function<Polygon, List<Path>> DIAGONAL_ONE = Path.fromListOfVertexes.apply(asList(
-            asList(
-                    Vertex.ONE,
-                    Vertex.FOUR
-            )
-    ));
-
-    public static Function<Polygon, List<Path>> DIAGONAL_TWO =
-            p -> asList(
-                    new Path.Builder()
-                            .startWith(p, Vertex.TWO)
-                            .lineTo(p, Vertex.FIVE)
-                            .build()
-            );
-
-    public static Function<Polygon, List<Path>> DIAGONAL_THREE =
-            p -> asList(
-                    new Path.Builder()
-                            .startWith(p, Vertex.THREE)
-                            .lineTo(p, Vertex.SIX)
-                            .build()
-            );
-
-    public static Function<Polygon, List<Path>> DIAGONALS =
-            p -> asList(
-                    new Path.Builder()
-                            .startWith(p, Vertex.ONE)
-                            .lineTo(p, Vertex.FOUR)
-                            .build(),
-                    new Path.Builder()
-                            .startWith(p, Vertex.TWO)
-                            .lineTo(p, Vertex.FIVE)
-                            .build(),
-                    new Path.Builder()
-                            .startWith(p, Vertex.THREE)
-                            .lineTo(p, Vertex.SIX)
-                            .build()
-            );
+    public static Function<Polygon, List<Path>> DIAGONAL_ONE = p -> Path.vertexPathsToPaths.apply(
+            Polygon.toVertexPaths(p, asList(
+                    asList(
+                            Vertex.ONE,
+                            Vertex.FOUR
+                    )
+            )));
+    public static Function<Polygon, List<Path>> DIAGONAL_TWO = p -> Path.vertexPathsToPaths.apply(
+            Polygon.toVertexPaths(p, asList(
+                    asList(
+                            Vertex.TWO,
+                            Vertex.FIVE
+                    )
+            )));
+    public static Function<Polygon, List<Path>> DIAGONAL_THREE = p -> Path.vertexPathsToPaths.apply(
+            Polygon.toVertexPaths(p, asList(
+                    asList(
+                            Vertex.THREE,
+                            Vertex.SIX
+                    )
+            )));
+    public static Function<Polygon, List<Path>> DIAGONALS = p -> Path.vertexPathsToPaths.apply(
+            Polygon.toVertexPaths(p, asList(
+                    asList(
+                            Vertex.ONE,
+                            Vertex.FOUR
+                    ),
+                    asList(
+                            Vertex.TWO,
+                            Vertex.FIVE
+                    ),
+                    asList(
+                            Vertex.THREE,
+                            Vertex.SIX
+                    )
+            )));
 
 
 //    public static List<List<Polygon.Vertex>> DIAGONALS = asList(
@@ -151,22 +148,22 @@ public class Hex extends Polygon {
         return new Hex(ratio, type, centreTransform);
     }
 
-    public static Pair<Polygon, Polygon.Vertex> instruction(Polygon polygon, Corner corner) {
-        return Pair.of(
+    public static ActualVertex instruction(Polygon polygon, Corner corner) {
+        return () -> Pair.of(
                 polygon,
                 corner.getVertex()
         );
     }
 
-    public static Pair<Polygon, Polygon.Vertex> instruction(double ratio, Corner corner) {
-        return Pair.of(
+    public static ActualVertex instruction(double ratio, Corner corner) {
+        return () -> Pair.of(
                 hex(ratio, corner.getType()),
                 corner.getVertex()
         );
     }
 
-    public static Pair<Polygon, Polygon.Vertex> instruction(double ratio, Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform, Corner corner) {
-        return Pair.of(
+    public static ActualVertex instruction(double ratio, Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform, Corner corner) {
+        return () -> Pair.of(
                 hex(ratio, corner.getType(), centreTransform),
                 corner.getVertex()
 

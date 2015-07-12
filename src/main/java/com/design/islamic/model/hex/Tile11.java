@@ -40,8 +40,8 @@ public class Tile11 {
         return new PayloadSimple.Builder("hex_tile_11",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(asList(
-                        asList(
+                .withPathsFull(() -> asList(
+                        () -> asList(
                                 instruction(hexDE, UR_H),
                                 instruction(hexDE, UL_H),
                                 instruction(hexBC, LEFT),
@@ -79,7 +79,7 @@ public class Tile11 {
         Polygon mainRegistered = main.getRegistered();
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_11_design")
 //                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
                         Triple.of(hexKA, ONE, "A"),

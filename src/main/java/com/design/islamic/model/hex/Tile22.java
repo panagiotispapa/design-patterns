@@ -39,7 +39,7 @@ public class Tile22 {
         return times * RATIO_y;
     }
 
-    private static Pair<Polygon, Polygon.Vertex> u(double times, double timesCentre, Corner corner) {
+    private static ActualVertex u(double times, double timesCentre, Corner corner) {
         return instruction(y(times), centreTransform(y(timesCentre), Corner.UP), corner);
     }
 
@@ -49,25 +49,25 @@ public class Tile22 {
         return new PayloadSimple.Builder("hex_tile_22",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(asList(
-                        asList(
+                .withPathsFull(() -> asList(
+                        () -> asList(
                                 u(4, 3, Corner.DL_V),
                                 u(1, 2, Corner.UL_V),
                                 u(1, 2, Corner.DR_V)
                         ),
-                        asList(
+                        () -> asList(
                                 u(1, 3, Corner.UL_V),
                                 u(5, 4, Corner.DL_V)
                         ),
-                        asList(
+                        () -> asList(
                                 u(1, 4, Corner.UL_V),
                                 u(8, 5, Corner.DL_V)
                         ),
-                        asList(
+                        () -> asList(
                                 u(1, 6, Corner.DL_V),
                                 u(9, 6, Corner.DL_V)
                         ),
-                        asList(
+                        () -> asList(
                                 u(1, 5, Corner.UP),
                                 u(1, 6, Corner.UR_V),
                                 u(1, 8.5, Corner.DR_V),
@@ -78,31 +78,31 @@ public class Tile22 {
                                 u(2, 9, Corner.DL_V),
                                 u(2, 10, Corner.DL_V)
                         ),
-                        asList(
+                        () -> asList(
                                 u(1, 12.5, Corner.DR_V),
                                 u(1, 11, Corner.DR_V),
                                 u(7, 10, Corner.DL_V)
                         ),
-                        asList(
+                        () -> asList(
                                 u(1, 7, Corner.UP),
                                 u(0.5, 8, Corner.UL_V),
                                 u(0.5, 9, Corner.DL_V),
                                 u(1, 9, Corner.UR_V),
                                 u(2, 10, Corner.DR_V)
                         ),
-                        asList(
+                        () -> asList(
                                 u(2, 13, Corner.DR_V),
                                 u(2, 7, Corner.DR_V),
                                 u(4, 7, Corner.DR_V),
                                 u(4, 9, Corner.DR_V),
                                 u(6, 9, Corner.DR_V)
                         ),
-                        asList(
+                        () -> asList(
                                 u(3, 13.5, Corner.DR_V),
                                 u(3, 8, Corner.DR_V),
                                 u(5, 8, Corner.DR_V)
                         ),
-                        asList(
+                        () -> asList(
                                 u(4, 14, Corner.DR_V),
                                 u(4, 11, Corner.DR_V),
                                 u(11, 11, Corner.DR_V),
@@ -110,23 +110,23 @@ public class Tile22 {
                                 u(11, 12, Corner.DR_V),
                                 u(11.5, 12.5, Corner.DR_V)
                         ),
-                        asList(
+                        () -> asList(
                                 u(9, 11, Corner.DR_V),
                                 u(11, 13, Corner.DR_V)
                         ),
-                        asList(
+                        () -> asList(
                                 u(5, 14.5, Corner.DR_V),
                                 u(5, 12, Corner.DR_V),
                                 u(9, 12, Corner.DR_V),
                                 u(10.5, 13.5, Corner.DR_V)
                         ),
-                        asList(
+                        () -> asList(
                                 u(6, 15, Corner.DR_V),
                                 u(6, 13, Corner.DR_V),
                                 u(9, 13, Corner.DR_V),
                                 u(10, 14, Corner.DR_V)
                         ),
-                        asList(
+                        () -> asList(
                                 u(7, 14, Corner.DR_V),
                                 u(9, 14, Corner.DR_V),
                                 u(9.5, 14.5, Corner.DR_V)
@@ -167,7 +167,7 @@ public class Tile22 {
 
         Polygon mainRegistered = main.getRegistered();
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_22_design")
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
                 .addSinglePaths(asList(
                         Pair.of(main, PERIMETER),

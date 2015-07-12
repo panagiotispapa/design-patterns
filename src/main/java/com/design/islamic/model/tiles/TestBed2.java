@@ -2,6 +2,7 @@ package com.design.islamic.model.tiles;
 
 import com.design.common.DesignHelper;
 import com.design.common.Grid;
+import com.design.common.Polygon;
 import com.design.deco.Tile4;
 import com.design.deco.Tile5;
 import com.design.islamic.model.PayloadSimple;
@@ -209,7 +210,7 @@ public class TestBed2 {
         designs.forEach(d -> {
             DesignHelper designHelper = d.get();
             saveToFile(
-                    buildSvg(dim, designHelper.build(ic)),
+                    buildSvg(dim, designHelper.build(() -> ic)),
                     designHelper.getName()
             );
         });
@@ -222,7 +223,7 @@ public class TestBed2 {
         List<Point2D> gridPoints = Grid.gridFromStart(ic.getLeft(), ic.getRight(), payload.getGridConfiguration(), 20);
 
         return
-                gridPoints.stream().map(p -> Pair.of(p, ic.getRight())).map(payload::draw).collect(joining());
+                gridPoints.stream().map(p -> Polygon.InitialConditions.of(p, ic.getRight())).map(payload::draw).collect(joining());
 
     }
 

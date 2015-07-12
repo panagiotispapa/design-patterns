@@ -43,31 +43,31 @@ public class Tile2b {
         return new PayloadSimple.Builder("hex_tile_02b",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(
-                        asList(
+                .withPathsFull(() ->
                                 asList(
-                                        instruction(hexBD, RIGHT),
-                                        instruction(hexKB, DR_V),
-                                        instruction(hexBD, DR_H)
-                                ),
-                                asList(
-                                        instruction(hexKB, DR_V),
-                                        instruction(hexKB, DOWN)
-                                ),
-                                asList(
-                                        instruction(hexKF, DR_V),
-                                        instruction(hexKC, DR_H),
-                                        instruction(hexKF, DOWN)
-                                ),
-                                asList(
-                                        instruction(hexKC, DR_H),
-                                        instruction(hexBG, DL_H),
-                                        instruction(hexBD, DR_H),
-                                        instruction(hexBD, RIGHT),
-                                        instruction(hexBG, UR_H),
-                                        instruction(hexKC, RIGHT)
-                                )
-                        ), whiteBold
+                                        () -> asList(
+                                                instruction(hexBD, RIGHT),
+                                                instruction(hexKB, DR_V),
+                                                instruction(hexBD, DR_H)
+                                        ),
+                                        () -> asList(
+                                                instruction(hexKB, DR_V),
+                                                instruction(hexKB, DOWN)
+                                        ),
+                                        () -> asList(
+                                                instruction(hexKF, DR_V),
+                                                instruction(hexKC, DR_H),
+                                                instruction(hexKF, DOWN)
+                                        ),
+                                        () -> asList(
+                                                instruction(hexKC, DR_H),
+                                                instruction(hexBG, DL_H),
+                                                instruction(hexBD, DR_H),
+                                                instruction(hexBD, RIGHT),
+                                                instruction(hexBG, UR_H),
+                                                instruction(hexKC, RIGHT)
+                                        )
+                                ), whiteBold
                 )
                 .build();
     }
@@ -90,7 +90,7 @@ public class Tile2b {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_02b_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(asList(
                         "KB=h/(h+0.5)",
                         "BD=h*(1-KB)",

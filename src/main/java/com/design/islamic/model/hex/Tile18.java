@@ -28,12 +28,12 @@ public class Tile18 {
         return new PayloadSimple.Builder("hex_tile_18",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsSingleFromLines(asList(
-                        asList(
+                .withPathsSingle(() -> asList(
+                        () -> asList(
                                 instruction(main, UL_H),
                                 instruction(main, DR_H)
                         ),
-                        asList(
+                        () -> asList(
                                 instruction(main, UR_H),
                                 instruction(main, DL_H)
                         )
@@ -55,7 +55,7 @@ public class Tile18 {
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_18_design")
-                .addSinglePathsList(getPayloadSimple().getPathsSingle(), red)
+                .addSinglePaths(() -> getPayloadSimple().getPathsSingle(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
                 ))

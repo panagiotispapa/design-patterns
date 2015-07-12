@@ -28,7 +28,7 @@ public class Tile9b extends Tile9a {
     protected static final Double GH = 0.5 * AC - AF;
     protected static final Double KH = l + GH;
 
-    
+
     protected static Polygon hexAF = Hex.hex(0.5 * p, VER, Hex.centreTransform(1.0, Hex.Corner.UP));
     protected static Polygon hexGH = Hex.hex(GH, HOR, Hex.centreTransform(l, Hex.Corner.UR_H));
     protected static Polygon hexHI = Hex.hex(GH, VER, Hex.centreTransform(KH, Hex.Corner.UR_H));
@@ -65,7 +65,7 @@ public class Tile9b extends Tile9a {
 
                         ).collect(toList()),
                         blue)
-                .addFullPathsFromLines(
+                .addFullPaths(() ->
                         Stream.of(
                                 getFullInstructionsGrayA().stream(),
                                 getFullInstructionsGrayB().stream(),
@@ -73,7 +73,7 @@ public class Tile9b extends Tile9a {
                         ).flatMap(s -> s).collect(toList()), gray)
                 .addCircleWithRadius(getCirclesBlueC(), blue)
                 .withFontSize(14)
-                .addFullPathsFromLines(getPathFullLinesD(), red)
+                .addFullPaths(() -> getPathFullLinesD(), red)
                 .addAllVertexesAsImportantPoints(asList(
 //                        hexGH
 //                        Hex.hex(GH, VER, Hex.centreTransform(KH, Hex.Corner.UL_H))
@@ -99,18 +99,18 @@ public class Tile9b extends Tile9a {
         );
     }
 
-    protected static java.util.List<java.util.List<Pair<Polygon, Polygon.Vertex>>> getPathFullLinesD() {
+    protected static java.util.List<Polygon.VertexPath> getPathFullLinesD() {
         return asList(
-                asList(
+                () -> asList(
                         instruction(hexAF, DL_V),
                         instruction(Hex.hex(GH, VER, Hex.centreTransform(KH, Hex.Corner.UR_H)), UL_V)//,
                 ),
-                asList(
+                () -> asList(
                         instruction(hexAF, DR_V),
-                        Pair.of(Hex.hex(GH, VER, Hex.centreTransform(KH, Hex.Corner.UL_H)), Hex.Vertex.SIX)
+                        () -> Pair.of(Hex.hex(GH, VER, Hex.centreTransform(KH, Hex.Corner.UL_H)), Hex.Vertex.SIX)
 
                 ),
-                asList(
+                () -> asList(
                         instruction(main, UP),
                         instruction(main, UR_V)
                 )

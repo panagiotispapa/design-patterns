@@ -61,15 +61,15 @@ public class Tile29 {
         return new PayloadSimple.Builder("hex_tile_29",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(asList(
-                        asList(
+                .withPathsFull(() -> asList(
+                        () -> asList(
                                 instruction(main, DR_V),
-                                Pair.of(hexCD, THREE),
-                                Pair.of(hexAF, THREE)
+                                () -> Pair.of(hexCD, THREE),
+                                () -> Pair.of(hexAF, THREE)
                         ),
-                        asList(
+                        () -> asList(
 
-                                Pair.of(hexBF, THREE),
+                                () -> Pair.of(hexBF, THREE),
                                 instruction(hexKG, DR_H),
                                 instruction(hexKI, DOWN),
                                 instruction(hexKG, DL_H)
@@ -119,7 +119,7 @@ public class Tile29 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_29_design")
 //                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
                         Triple.of(main, DR_V.getVertex(), "A"),

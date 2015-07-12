@@ -44,8 +44,8 @@ public class Tile2 {
 
         return new PayloadSimple.Builder("rect_tile_02",
                 Hex.ALL_VERTEX_INDEXES)
-                .withPathsFullFromLines(asList(
-                                asList(
+                .withPathsFull(() -> asList(
+                                () -> asList(
                                         instruction(rectGF, UL),
                                         instruction(rectGF_ver, LEFT),
                                         instruction(rectGF, DL)
@@ -83,7 +83,7 @@ public class Tile2 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "rect_tile_02_design")
 //                .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
                         Triple.of(main, DR.getVertex(), "A"),
@@ -106,7 +106,7 @@ public class Tile2 {
                 .addCirclesCentral(asList(
                         H
                 ), gray)
-                .addFullPaths(asList(
+                .addFullPaths(() -> asList(
                         new Path.Builder()
                                 .startWith(instruction(rectKC, LEFT))
                                 .lineTo(instruction(rectKB, UR))

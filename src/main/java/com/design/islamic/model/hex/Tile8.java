@@ -60,15 +60,15 @@ public class Tile8 {
         return new PayloadSimple.Builder("hex_tile_08",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(Arrays.asList(
-                                asList(
+                .withPathsFull(() -> Arrays.asList(
+                                () -> asList(
                                         instruction(hexJM_3, UL_V),
                                         instruction(hexAG, DL_V),
                                         instruction(hexAG, UL_V),
                                         instruction(hexAG, UP),
                                         instruction(hexJM_2, UL_V)
                                 ),
-                                asList(
+                                () -> asList(
 
                                         instruction(hexJM_4, LEFT),
                                         instruction(hexJDRot, RIGHT),
@@ -136,7 +136,7 @@ public class Tile8 {
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_08_design")
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
                 .addSinglePaths(asList(
                         Pair.of(main, Hex.DIAGONALS),
@@ -164,28 +164,28 @@ public class Tile8 {
                 )
 
 
-                .addFullPathsFromLines(asList(
-                        asList(
-                                Pair.of(hexRot1, THREE),
-                                Pair.of(hexRot1, SIX)
+                .addFullPaths(() -> asList(
+                        () -> asList(
+                                () -> Pair.of(hexRot1, THREE),
+                                () -> Pair.of(hexRot1, SIX)
                         ),
-                        asList(
-                                Pair.of(hexRot2, TWO),
-                                Pair.of(hexRot2, FIVE)
+                        () -> asList(
+                                () -> Pair.of(hexRot2, TWO),
+                                () -> Pair.of(hexRot2, FIVE)
                         ),
-                        asList(
-                                Pair.of(hexRot3, TWO),
-                                Pair.of(hexRot3, FIVE)
+                        () -> asList(
+                                () -> Pair.of(hexRot3, TWO),
+                                () -> Pair.of(hexRot3, FIVE)
                         ),
-                        asList(
-                                Pair.of(main, SIX),
-                                Pair.of(mainHor, ONE),
-                                Pair.of(main, ONE)
+                        () -> asList(
+                                () -> Pair.of(main, SIX),
+                                () -> Pair.of(mainHor, ONE),
+                                () -> Pair.of(main, ONE)
                         ),
-                        asList(
-                                Pair.of(mainHorReg, SIX),
-                                Pair.of(mainReg, ONE),
-                                Pair.of(mainHorReg, ONE)
+                        () -> asList(
+                                () -> Pair.of(mainHorReg, SIX),
+                                () -> Pair.of(mainReg, ONE),
+                                () -> Pair.of(mainHorReg, ONE)
                         )
                 ), gray)
                 .addImportantPoints(asList(

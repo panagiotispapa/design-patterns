@@ -61,13 +61,13 @@ public class Tile30 {
         return new PayloadSimple.Builder("hex_tile_30",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(asList(
-                        asList(
+                .withPathsFull(() -> asList(
+                        () -> asList(
                                 instruction(Hex.hex(AE, VER, centreTransform(1, UR_V)), DOWN),
                                 instruction(hexKH, DR_V),
                                 instruction(Hex.hex(AE, VER, centreTransform(1, DOWN)), UR_V)
                         ),
-                        asList(
+                        () -> asList(
                                 instruction(hexAE, UP),
                                 instruction(hexKC, DR_V),
                                 instruction(hexAE, DL_V)
@@ -117,7 +117,7 @@ public class Tile30 {
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_30_design")
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
                         Triple.of(main, DR_V.getVertex(), "A"),

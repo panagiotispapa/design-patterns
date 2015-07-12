@@ -49,22 +49,22 @@ public class Tile15 {
         toLeft.put(FIVE, FIVE);
     }
 
-    private static List<Pair<Polygon, Polygon.Vertex>> toLeft(List<Pair<Polygon, Polygon.Vertex>> right) {
-        return right.stream().map(r -> Pair.of(r.getLeft(), toLeft.get(r.getRight()))).collect(toList());
+    private static Polygon.VertexPath toLeft(Polygon.VertexPath right) {
+        return () -> right.get().stream().map(r -> Polygon.ActualVertex.of(r.get().getLeft(), toLeft.get(r.get().getRight()))).collect(toList());
     }
 
-    private static Pair<Polygon, Polygon.Vertex> u(int times, int timesCentre, Hex.Corner corner) {
+    private static Polygon.ActualVertex u(int times, int timesCentre, Hex.Corner corner) {
         return instruction(times * RATIO_y, centreTransform(timesCentre * RATIO_y, UP), corner);
     }
 
-    private static Pair<Polygon, Polygon.Vertex> d(int times, int timesCentre, Hex.Corner corner) {
+    private static Polygon.ActualVertex d(int times, int timesCentre, Hex.Corner corner) {
         return instruction(times * RATIO_y, centreTransform(timesCentre * RATIO_y, DOWN), corner);
     }
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
 
-        List<Pair<Polygon, Polygon.Vertex>> l1 = asList(
+        Polygon.VertexPath l1 = () -> asList(
                 d(6, 1, UR_V),
                 instruction(5 * RATIO_y, UR_V),
                 u(5, 2, UR_V),
@@ -82,12 +82,12 @@ public class Tile15 {
                 d(6, 1, UR_V)
         );
 
-        List<Pair<Polygon, Polygon.Vertex>> l2 = asList(
+        Polygon.VertexPath l2 = () -> asList(
                 instruction(RATIO_y, UP),
                 u(6, 1, UR_V)
         );
 
-        List<Pair<Polygon, Polygon.Vertex>> l3 = asList(
+        Polygon.VertexPath l3 = () -> asList(
                 instruction(RATIO_y, DOWN),
                 d(6, 1, DR_V)
         );
@@ -97,7 +97,7 @@ public class Tile15 {
         return new PayloadSimple.Builder("hex_tile_15",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsSingleFromLines(asList(
+                .withPathsSingle(() -> asList(
                         l1,
                         toLeft(l1),
                         l2,
@@ -124,7 +124,7 @@ public class Tile15 {
                 "w = 6 * Rx"
         );
 
-        Function<Polygon, List<Path>> diag = Path.fromListOfVertexes.apply(asList(
+        Function<Polygon, List<Path>> diag = p -> Path.vertexPathsToPaths.apply(Polygon.toVertexPaths(p, asList(
                 asList(
                         UL_V.getVertex(),
                         DR_V.getVertex()
@@ -134,26 +134,24 @@ public class Tile15 {
                         UR_V.getVertex(),
                         DL_V.getVertex()
                 )
-        ));
+        )));
 
-        Function<Polygon, List<Path>> diag2 = Path.fromListOfVertexes.apply(asList(
-                        asList(
-                                UP.getVertex(),
-                                DOWN.getVertex()
-                        )
+        Function<Polygon, List<Path>> diag2 = p -> Path.vertexPathsToPaths.apply(Polygon.toVertexPaths(p, asList(
+                asList(
+                        UP.getVertex(),
+                        DOWN.getVertex()
                 )
-        );
+        )));
 
-        Function<Polygon, List<Path>> diag3 = Path.fromListOfVertexes.apply(asList(
-                        asList(
-                                RIGHT.getVertex(),
-                                LEFT.getVertex()
-                        )
+        Function<Polygon, List<Path>> diag3 = p -> Path.vertexPathsToPaths.apply(Polygon.toVertexPaths(p, asList(
+                asList(
+                        RIGHT.getVertex(),
+                        LEFT.getVertex()
                 )
-        );
+        )));
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_15_design")
-                .addSinglePathsList(getPayloadSimple().getPathsSingle(), red)
+                .addSinglePaths(() -> getPayloadSimple().getPathsSingle(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
                 ))

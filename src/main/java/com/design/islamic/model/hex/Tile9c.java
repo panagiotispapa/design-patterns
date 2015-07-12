@@ -83,7 +83,7 @@ public class Tile9c extends Tile9b {
 
                         ).collect(toList()),
                         blue)
-                .addFullPathsFromLines(
+                .addFullPaths(() ->
                         Stream.of(
                                 getFullInstructionsGrayA().stream(),
                                 getFullInstructionsGrayB().stream(),
@@ -91,7 +91,7 @@ public class Tile9c extends Tile9b {
                         ).flatMap(s -> s).collect(toList()), gray)
                 .addCircleWithRadius(getCirclesBlueC(), blue)
                 .withFontSize(14)
-                .addFullPathsFromLines(
+                .addFullPaths(() ->
                         Stream.of(
                                 getPathFullLinesD().stream(),
                                 getPathFullLinesE().stream()
@@ -112,11 +112,11 @@ public class Tile9c extends Tile9b {
         return new PayloadSimple.Builder("hex_tile_09b"
                 , Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(
-                        Stream.of(
-                                getPathFullLinesD().stream(),
-                                getPathFullLinesE().stream()
-                        ).flatMap(s -> s).collect(toList()),
+                .withPathsFull(() ->
+                                Stream.of(
+                                        getPathFullLinesD().stream(),
+                                        getPathFullLinesE().stream()
+                                ).flatMap(s -> s).collect(toList()),
                         whiteBold
                 )
                 .withSize(PayloadSimple.Size.MEDIUM)
@@ -152,31 +152,30 @@ public class Tile9c extends Tile9b {
         );
     }
 
-    //
-    protected static java.util.List<java.util.List<Pair<Polygon, Polygon.Vertex>>> getPathFullLinesE() {
+    protected static java.util.List<Polygon.VertexPath> getPathFullLinesE() {
         return asList(
-                asList(
+                () -> asList(
                         instruction(Hex.hex(BC, VER, Hex.centreTransform(KB, UL_H)), UR_V),
                         instruction(Hex.hex(KJ5, VER, Hex.centreTransform(pHalf, Hex.Corner.LEFT)), UP),
                         instruction(Hex.hex(KJ7, VER, Hex.centreTransform(pHalf, Hex.Corner.LEFT)), UP),
                         instruction(Hex.hex(KJ8, VER, Hex.centreTransform(pHalf, Hex.Corner.RIGHT)), UP),
                         instruction(Hex.hex(pHalf, VER, Hex.centreTransform(pHalf, Hex.Corner.RIGHT)), UP)
                 ),
-                asList(
+                () -> asList(
                         instruction(Hex.hex(BC, VER, Hex.centreTransform(KB, UR_H)), UL_V),
                         instruction(Hex.hex(KJ5, VER, Hex.centreTransform(pHalf, Hex.Corner.RIGHT)), UP),
                         instruction(Hex.hex(KJ7, VER, Hex.centreTransform(pHalf, Hex.Corner.RIGHT)), UP),
                         instruction(Hex.hex(KJ8, VER, Hex.centreTransform(pHalf, Hex.Corner.LEFT)), UP),
                         instruction(Hex.hex(pHalf, VER, Hex.centreTransform(pHalf, Hex.Corner.LEFT)), UP)
                 ),
-                asList(
+                () -> asList(
                         instruction(Hex.hex(BC, VER, Hex.centreTransform(KB, RIGHT)), UP),
                         instruction(Hex.hex(KB - GH, HOR, Hex.centreTransform(pHalf, UP)), RIGHT),
                         instruction(Hex.hex(KJ7, HOR, Hex.centreTransform(pHalf, UP)), RIGHT),
                         instruction(Hex.hex(KJ8, HOR, Hex.centreTransform(pHalf, DOWN)), RIGHT),
                         instruction(Hex.hex(pHalf, HOR, Hex.centreTransform(pHalf, DOWN)), RIGHT)
                 ),
-                asList(
+                () -> asList(
                         instruction(Hex.hex(BC, VER, Hex.centreTransform(KB, RIGHT)), DOWN),
                         instruction(Hex.hex(KB - GH, HOR, Hex.centreTransform(pHalf, DOWN)), RIGHT),
                         instruction(Hex.hex(KJ7, HOR, Hex.centreTransform(pHalf, DOWN)), RIGHT),
@@ -184,7 +183,7 @@ public class Tile9c extends Tile9b {
                         instruction(Hex.hex(pHalf, HOR, Hex.centreTransform(pHalf, UP)), RIGHT)
                 ),
 
-                asList(
+                () -> asList(
                         instruction(Hex.hex(GH, VER, Hex.centreTransform(KC + GH, UL_H)), DL_V),
                         instruction(Hex.hex(CL2, HOR, Hex.centreTransform(KL2, UP)), LEFT),
                         instruction(Hex.hex(KC, VER), UP),

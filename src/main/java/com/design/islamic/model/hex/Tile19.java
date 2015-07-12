@@ -45,13 +45,13 @@ public class Tile19 {
         return new PayloadSimple.Builder("hex_tile_19",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(asList(
-                        asList(
+                .withPathsFull(() -> asList(
+                        () -> asList(
                                 instruction(hexKA, UR_V),
                                 instruction(hexKB.getRegistered(), RIGHT),
                                 instruction(hexKA, DR_V)
                         ),
-                        asList(
+                        () -> asList(
                                 instruction(hexBA, DL_V),
                                 instruction(hexBA, DOWN),
                                 instruction(hexBA, DR_V),
@@ -59,7 +59,7 @@ public class Tile19 {
                                 instruction(hexCB, UP),
                                 instruction(hexCB, UR_V)
                         ),
-                        asList(
+                        () -> asList(
                                 instruction(hexDC, UR_V),
                                 instruction(hexDC, UP),
                                 instruction(hexCB, DR_V),
@@ -67,7 +67,7 @@ public class Tile19 {
                                 instruction(hexDC, DOWN)
 
                         ),
-                        asList(
+                        () -> asList(
                                 instruction(hexFG, UL_V),
                                 instruction(hexGH, UL_V),
                                 instruction(hexGH, DL_V),
@@ -103,7 +103,7 @@ public class Tile19 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_19_design")
 //                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
                         Triple.of(hexKA, ONE, "A"),

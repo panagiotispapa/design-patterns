@@ -223,26 +223,26 @@ public class SvgFactory {
 
     }
 
-    public static Function<Path, Stream<String>> drawPathFull(List<Integer> vertexIndexes, Function<Integer, Function<Pair<Polygon, Polygon.Vertex>, Point2D>> toPoint) {
+    public static Function<Path, Stream<String>> drawPathFull(List<Integer> vertexIndexes, Function<Integer, Function<Polygon.ActualVertex, Point2D>> toPoint) {
         return path -> {
 
-            Supplier<Stream<Path.InstructionType>> instructionTypes = () -> path.getInstructions().stream().map(Pair::getRight);
+            Supplier<Stream<Path.InstructionType>> instructionTypes = () -> path.getInstructions().stream().map(p -> p.get().getRight());
 
-            Stream<Function<Pair<Polygon, Polygon.Vertex>, Point2D>> toPointFunctions = vertexIndexes.stream().map(toPoint);
+            Stream<Function<Polygon.ActualVertex, Point2D>> toPointFunctions = vertexIndexes.stream().map(toPoint);
 
-            Supplier<Stream<Pair<Polygon, Polygon.Vertex>>> pairs = () -> path.getInstructions().stream().map(Pair::getLeft);
+            Supplier<Stream<Polygon.ActualVertex>> pairs = () -> path.getInstructions().stream().map(p -> p.get().getLeft());
 
             return
                     toPointFunctions.map(f -> pairs.get().map(f)).map(s -> drawPath(s, instructionTypes.get(), path.isClosed(), path.getStyle()));
         };
     }
 
-    public static Function<Path, String> drawPath(Function<Pair<Polygon, Polygon.Vertex>, Point2D> instructionToPoint) {
+    public static Function<Path, String> drawPath(Function<Polygon.ActualVertex, Point2D> instructionToPoint) {
         return path -> {
 
-            Supplier<Stream<Path.InstructionType>> instructionTypes = () -> path.getInstructions().stream().map(Pair::getRight);
+            Supplier<Stream<Path.InstructionType>> instructionTypes = () -> path.getInstructions().stream().map(p -> p.get().getRight());
 
-            Supplier<Stream<Point2D>> points = () -> path.getInstructions().stream().map(Pair::getLeft).map(instructionToPoint);
+            Supplier<Stream<Point2D>> points = () -> path.getInstructions().stream().map(p -> p.get().getLeft()).map(instructionToPoint);
 
             return drawPath(points.get(), instructionTypes.get(), path.isClosed(), path.getStyle());
         };

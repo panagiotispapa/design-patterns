@@ -39,12 +39,12 @@ public class Tile2 {
         return new PayloadSimple.Builder("deco_tile_02",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(asList(
-                        asList(
+                .withPathsFull(() -> asList(
+                        () -> asList(
                                 instruction(rectAC, UP),
                                 instruction(rectKB, DL)
                         ),
-                        asList(
+                        () -> asList(
                                 instruction(rectAC, LEFT),
                                 instruction(rectKB, UR)
                         )
@@ -69,7 +69,7 @@ public class Tile2 {
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "deco_tile_02_design")
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
                 .addImportantPoints(asList(
                         Triple.of(main, DR.getVertex(), "A"),

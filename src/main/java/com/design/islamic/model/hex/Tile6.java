@@ -38,13 +38,13 @@ public class Tile6 {
         return new PayloadSimple.Builder("hex_tile_06",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFullFromLines(asList(
-                        asList(
+                .withPathsFull(() -> asList(
+                        () -> asList(
                                 instruction(main, DR_V),
                                 instruction(hexBC, UL_H),
                                 instruction(hexKA, DOWN)
                         ),
-                        asList(
+                        () -> asList(
                                 instruction(main, DR_V),
                                 instruction(hexBC, LEFT),
                                 instruction(hexKA, UR_V)
@@ -93,7 +93,7 @@ public class Tile6 {
                         Triple.of(hexBC, LEFT.getVertex(), "C"),
                         Triple.of(hexBC, UL_H.getVertex(), "D")
                 ))
-                .addFullPaths(getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 ;
 
     }
