@@ -1,6 +1,7 @@
 package com.design.islamic.model.rect;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Grid;
 import com.design.common.Polygon;
 import com.design.common.RatioHelper.P4;
@@ -42,18 +43,19 @@ public class Tile1 {
         return new PayloadSimple.Builder("rect_tile_01",
                 Rect.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                        () -> asList(
-                                instruction(rectDE, RIGHT),
-                                instruction(rectBC, DL),
-                                instruction(rectBC_Rot, DR),
-                                instruction(rectDE, LEFT)
-                        ),
-                        () -> asList(
-                                instruction(rectBC, DL),
-                                instruction(rectBC, UR)
-                        )
-                ), whiteBold)
+                .withPathsFull(
+                        VertexPaths.of(
+                                VertexPath.of(
+                                        instruction(rectDE, RIGHT),
+                                        instruction(rectBC, DL),
+                                        instruction(rectBC_Rot, DR),
+                                        instruction(rectDE, LEFT)
+                                ),
+                                VertexPath.of(
+                                        instruction(rectBC, DL),
+                                        instruction(rectBC, UR)
+                                )
+                        ), whiteBold)
                 .withGridConf(Grid.Configs.RECT2.getConfiguration())
                 .build();
     }
@@ -77,15 +79,15 @@ public class Tile1 {
         return new DesignHelper(Rect.ALL_VERTEX_INDEXES, "rect_tile_01_design")
                 .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
-                .addImportantPoints(asList(
-                        Triple.of(main, DR.getVertex(), "A"),
-                        Triple.of(rectKB, DR.getVertex(), "B"),
-                        Triple.of(rectBC, DL.getVertex(), "C"),
-                        Triple.of(rectKD, DOWN.getVertex(), "D"),
-                        Triple.of(rectDE, RIGHT.getVertex(), "E"),
-                        Triple.of(rectDE, LEFT.getVertex(), "F"),
-                        Triple.of(rectBC_Rot, DR.getVertex(), "G")
-                ))
+                .addImportantVertexes(
+                        ImportantVertex.of(main, DR.getVertex(), "A"),
+                        ImportantVertex.of(rectKB, DR.getVertex(), "B"),
+                        ImportantVertex.of(rectBC, DL.getVertex(), "C"),
+                        ImportantVertex.of(rectKD, DOWN.getVertex(), "D"),
+                        ImportantVertex.of(rectDE, RIGHT.getVertex(), "E"),
+                        ImportantVertex.of(rectDE, LEFT.getVertex(), "F"),
+                        ImportantVertex.of(rectBC_Rot, DR.getVertex(), "G")
+                )
                 .addSinglePaths(asList(
                         Pair.of(main, PERIMETER),
                         Pair.of(main, DIAGONALS),

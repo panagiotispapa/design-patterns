@@ -2,6 +2,7 @@ package com.design.islamic.model;
 
 import com.design.common.Polygon;
 import com.design.common.model.Path;
+import com.design.common.model.Path.Paths;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -14,7 +15,6 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 
 import static com.design.common.PolygonTools.calcVertexes;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 public class Rect extends Polygon {
@@ -25,17 +25,17 @@ public class Rect extends Polygon {
         return new Rect(ratio, type);
     }
 
-    public static Polygon rect(double ratio, Type type, Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform) {
+    public static Polygon rect(double ratio, Type type, CentreTransform centreTransform) {
         return new Rect(ratio, type, centreTransform);
     }
 
-    public static Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform(double ratio, Corner corner) {
+    public static CentreTransform centreTransform(double ratio, Corner corner) {
         return Polygon.centreTransform(ratio, corner.getVertex(), corner.getType());
     }
 
 
-    public static Function<Polygon, List<Path>> PERIMETER =
-            p -> asList(new Path.Builder()
+    public static Function<Polygon, Paths> PERIMETER =
+            p -> Paths.of(new Path.Builder()
                     .startWith(p, Vertex.ONE)
                     .lineTo(p, Vertex.TWO)
                     .lineTo(p, Vertex.THREE)
@@ -44,8 +44,8 @@ public class Rect extends Polygon {
                     .build());
 
 
-    public static Function<Polygon, List<Path>> DIAGONALS =
-            p -> Arrays.asList(
+    public static Function<Polygon, Paths> DIAGONALS =
+            p -> Paths.of(
                     new Path.Builder()
                             .startWith(p, Vertex.ONE)
                             .lineTo(p, Vertex.THREE)
@@ -56,7 +56,7 @@ public class Rect extends Polygon {
                             .build()
             );
 
-    private Rect(double ratio, Type type, Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform) {
+    private Rect(double ratio, Type type, CentreTransform centreTransform) {
         super(ratio, type, centreTransform);
     }
 
@@ -86,7 +86,7 @@ public class Rect extends Polygon {
         );
     }
 
-    public static ActualVertex instruction(double ratio, Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform, Corner corner) {
+    public static ActualVertex instruction(double ratio, CentreTransform centreTransform, Corner corner) {
         return () -> Pair.of(
                 rect(ratio, corner.getType(), centreTransform),
                 corner.getVertex()
@@ -104,7 +104,7 @@ public class Rect extends Polygon {
     }
 
     @Override
-    protected Polygon newInstance(double ratio, Type type, Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform) {
+    protected Polygon newInstance(double ratio, Type type, CentreTransform centreTransform) {
         return new Rect(ratio, type, centreTransform);
     }
 

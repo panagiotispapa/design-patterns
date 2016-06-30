@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Set;
 
 import static com.design.celtic.Helper.getCircleFromRow;
-import static com.design.common.model.Shapes.newArc;
-import static com.design.common.model.Shapes.newCircle;
 import static com.design.common.view.SvgFactory.*;
 import static com.google.common.collect.Iterables.concat;
 import static java.util.Arrays.asList;
@@ -30,7 +28,7 @@ public class Patterns {
         final String styleFrontGray = newStyle(GRAY, BLACK, 2, 0.8, 1);
         final String styleFrontWhite = newStyle(WHITE, BLACK, 2, 1, 1);
 
-        Circle mainCircle = newCircle(new Point2D.Double(dim.getWidth() / 2, dim.getHeight() / 2), r);
+        Circle mainCircle = Circle.of(new Point2D.Double(dim.getWidth() / 2, dim.getHeight() / 2), r);
 
         Set<Circle> layer1 = Sets.newHashSet(concat(
                 Helper.putInARow(mainCircle, 18, 0),
@@ -52,24 +50,24 @@ public class Patterns {
         );
 
         List<Arc> layer3 = asList(
-                newArc(Helper.getCircleFromRow(mainCircle, 4.0 * step, 1, 4 * step * r), false),
-                newArc(Helper.getCircleFromRow(mainCircle, 4.0 * step, 1, 12 * step * r), true),
-                newArc(Helper.getCircleFromRow(mainCircle, 4.0 * step, 1, 16 * step * r), false),
-                newArc(Helper.getCircleFromRow(mainCircle, 4.0 * step, 1, 24 * step * r), true)
+                Arc.of(Helper.getCircleFromRow(mainCircle, 4.0 * step, 1, 4 * step * r), false),
+                Arc.of(Helper.getCircleFromRow(mainCircle, 4.0 * step, 1, 12 * step * r), true),
+                Arc.of(Helper.getCircleFromRow(mainCircle, 4.0 * step, 1, 16 * step * r), false),
+                Arc.of(Helper.getCircleFromRow(mainCircle, 4.0 * step, 1, 24 * step * r), true)
         );
 
         List<Arc> layer4 = asList(
-                newArc(getCircleFromRow(mainCircle, 4.0 * step, 1), true),
-                newArc(getCircleFromRow(mainCircle, 12.0 * step, 1), false),
-                newArc(Helper.getCircleFromRow(mainCircle, 4.0 * step, 4, 4 * step * r), false),
-                newArc(Helper.getCircleFromRow(mainCircle, 12.0 * step, 1, 12 * step * r), true)
+                Arc.of(getCircleFromRow(mainCircle, 4.0 * step, 1), true),
+                Arc.of(getCircleFromRow(mainCircle, 12.0 * step, 1), false),
+                Arc.of(Helper.getCircleFromRow(mainCircle, 4.0 * step, 4, 4 * step * r), false),
+                Arc.of(Helper.getCircleFromRow(mainCircle, 12.0 * step, 1, 12 * step * r), true)
         );
 
         List<Arc> layer5 = asList(
-                newArc(getCircleFromRow(mainCircle, 2.0 * step, 2), true),
-                newArc(Helper.getCircleFromRow(mainCircle, 10.0 * step, 1, 4 * step * r), false),
-                newArc(getCircleFromRow(mainCircle, 2.0 * step, 8), false),
-                newArc(Helper.getCircleFromRow(mainCircle, 10.0 * step, 1, 12 * step * r), true)
+                Arc.of(getCircleFromRow(mainCircle, 2.0 * step, 2), true),
+                Arc.of(Helper.getCircleFromRow(mainCircle, 10.0 * step, 1, 4 * step * r), false),
+                Arc.of(getCircleFromRow(mainCircle, 2.0 * step, 8), false),
+                Arc.of(Helper.getCircleFromRow(mainCircle, 10.0 * step, 1, 12 * step * r), true)
         );
 
         shapes.append(drawArcList(layer4, styleFrontGray));

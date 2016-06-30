@@ -66,22 +66,22 @@ public class SvgFactory {
 
     }
 
-    public static Function<List<Pair<Point2D, Double>>, String> drawCircles(final String style) {
+    public static Function<List<Circle>, String> drawCircles(final String style) {
         return
                 c -> c.stream().map(drawCircle(style)).collect(joining());
     }
 
-    public static Function<List<Pair<Point2D, Double>>, String> drawCircles(final Style style) {
+    public static Function<List<Circle>, String> drawCircles(final Style style) {
         return
                 c -> c.stream().map(drawCircle(style)).collect(joining());
     }
 
-    public static Function<Pair<Point2D, Double>, String> drawCircle(final String style) {
-        return p -> newCircle(p.getLeft(), p.getRight(), style);
+    public static Function<Circle, String> drawCircle(final String style) {
+        return p -> newCircle(p.getCentre(), p.getR(), style);
     }
 
-    public static Function<Pair<Point2D, Double>, String> drawCircle(final Style style) {
-        return p -> newCircle(p.getLeft(), p.getRight(), style);
+    public static Function<Circle, String> drawCircle(final Style style) {
+        return p -> newCircle(p.getCentre(), p.getR(), style);
     }
 
     public static Function<List<Pair<Point2D, String>>, String> drawTexts() {

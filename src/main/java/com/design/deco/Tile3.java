@@ -1,6 +1,7 @@
 package com.design.deco;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Grid;
 import com.design.common.Polygon;
 import com.design.common.model.Style;
@@ -36,12 +37,12 @@ public class Tile3 {
         return new PayloadSimple.Builder("deco_tile_03",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                        () -> asList(
+                .withPathsFull(VertexPaths.of(
+                        VertexPath.of(
                                 instruction(rectKB, UR),
                                 instruction(rectKB, DR)
                         ),
-                        () -> asList(
+                        VertexPath.of(
                                 instruction(rectKB, DR),
                                 instruction(rectKA, DR)
                         )
@@ -68,10 +69,10 @@ public class Tile3 {
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "deco_tile_03_design")
                 .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
-                .addImportantPoints(asList(
-                        Triple.of(main, DR.getVertex(), "A"),
-                        Triple.of(rectKB, DR.getVertex(), "B")
-                ))
+                .addImportantVertexes(
+                        ImportantVertex.of(main, DR.getVertex(), "A"),
+                        ImportantVertex.of(rectKB, DR.getVertex(), "B")
+                )
                 .addSinglePaths(asList(
                         Pair.of(main, PERIMETER),
                         Pair.of(main, DIAGONALS),

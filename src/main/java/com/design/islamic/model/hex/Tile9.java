@@ -1,6 +1,7 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Mappings;
 import com.design.common.Polygon;
 import com.design.common.model.Style;
@@ -9,7 +10,6 @@ import com.design.islamic.model.Hex;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
 import java.util.List;
@@ -18,8 +18,8 @@ import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.RatioHelper.Ratios.*;
-import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.*;
+import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 
@@ -76,96 +76,95 @@ public class Tile9 {
         Polygon hexPB2 = Hex.hex(B2P, VER, centreTransform(KP, RIGHT));
         Polygon hexPB2_Rot = Hex.hex(B2P, VER, centreTransform(KP, DR_H));
 
-        Polygon hexA2Q1 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA2, DR_V).andThen(centreTransform(RATIO_n, UR_V)));
-        Polygon hexA2Q2 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA2, DR_V).andThen(centreTransform(RATIO_n, DOWN)));
+        Polygon hexA2Q1 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA2, DR_V), centreTransform(RATIO_n, UR_V)));
+        Polygon hexA2Q2 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA2, DR_V), centreTransform(RATIO_n, DOWN)));
 
-        Polygon hexA3R1 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, DR_V).andThen(centreTransform(RATIO_n, UR_V)));
-        Polygon hexA3R2 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, DR_V).andThen(centreTransform(RATIO_n, DOWN)));
-        Polygon hexA3R3 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, DR_V).andThen(centreTransform(RATIO_n, DL_V)));
-        Polygon hexA3R4 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, DR_V).andThen(centreTransform(RATIO_n, UP)));
+        Polygon hexA3R1 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA3, DR_V), centreTransform(RATIO_n, UR_V)));
+        Polygon hexA3R2 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA3, DR_V), centreTransform(RATIO_n, DOWN)));
+        Polygon hexA3R3 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA3, DR_V), centreTransform(RATIO_n, DL_V)));
+        Polygon hexA3R4 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA3, DR_V), centreTransform(RATIO_n, UP)));
 
         Polygon hexC1H = Hex.hex(RATIO_i, VER, centreTransform(KC1, RIGHT));
         Polygon hexC1H_r = Hex.hex(RATIO_i, VER, centreTransform(KC1, DR_H));
 
-        Polygon hexB3I1 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, RIGHT).andThen(centreTransform(RATIO_n, UR_H)));
-        Polygon hexB3I2 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, RIGHT).andThen(centreTransform(RATIO_n, DR_H)));
-        Polygon hexB3I3 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, RIGHT).andThen(centreTransform(RATIO_n, DL_H)));
-        Polygon hexB3I4 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, RIGHT).andThen(centreTransform(RATIO_n, UL_H)));
+        Polygon hexB3I1 = Hex.hex(RATIO_n * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, RIGHT), centreTransform(RATIO_n, UR_H)));
+        Polygon hexB3I2 = Hex.hex(RATIO_n * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, RIGHT), centreTransform(RATIO_n, DR_H)));
+        Polygon hexB3I3 = Hex.hex(RATIO_n * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, RIGHT), centreTransform(RATIO_n, DL_H)));
+        Polygon hexB3I4 = Hex.hex(RATIO_n * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, RIGHT), centreTransform(RATIO_n, UL_H)));
 
-        Polygon hexC1J3 = Hex.hex(RATIO_i - RATIO_m, HOR, centreTransform(KC1, RIGHT).andThen(centreTransform(RATIO_m, UP)));
-        Polygon hexC1J4 = Hex.hex(RATIO_i - RATIO_m, HOR, centreTransform(KC1, RIGHT).andThen(centreTransform(RATIO_m, DOWN)));
+        Polygon hexC1J3 = Hex.hex(RATIO_i - RATIO_m, HOR, CentreTransform.of(centreTransform(KC1, RIGHT), centreTransform(RATIO_m, UP)));
+        Polygon hexC1J4 = Hex.hex(RATIO_i - RATIO_m, HOR, CentreTransform.of(centreTransform(KC1, RIGHT), centreTransform(RATIO_m, DOWN)));
 
         Polygon hexKG4 = Hex.hex(KG4, VER, centreTransform(KG3, UR_H));
         Polygon hexKG5 = Hex.hex(KG4, VER, centreTransform(KG3, DR_H));
 
-        Polygon hexB3S1 = Hex.hex(RATIO_s * RATIO_k, HOR, centreTransform(KB3, RIGHT).andThen(centreTransform(RATIO_s, UR_H)));
-        Polygon hexB3S2 = Hex.hex(RATIO_s * RATIO_k, HOR, centreTransform(KB3, RIGHT).andThen(centreTransform(RATIO_s, DR_H)));
+        Polygon hexB3S1 = Hex.hex(RATIO_s * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, RIGHT), centreTransform(RATIO_s, UR_H)));
+        Polygon hexB3S2 = Hex.hex(RATIO_s * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, RIGHT), centreTransform(RATIO_s, DR_H)));
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
 
         return new PayloadSimple.Builder("hex_tile_09"
                 , Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() ->
-                                asList(
-                                        () -> asList(
-                                                instruction(main, DR_V),
-                                                instruction(main, DOWN)
-                                        ),
-                                        () -> asList(
-                                                instruction(hexA1N, DL_H),
-                                                instruction(hexA1N, LEFT),
-                                                instruction(hexA1N, UL_H)
-                                        ),
-                                        () -> asList(
-                                                instruction(KA2, UR_V),
-                                                instruction(hexB3S1, LEFT),
-                                                instruction(hexPB2, DOWN)
-                                        ),
-                                        () -> asList(
-                                                instruction(KA2, DR_V),
-                                                instruction(hexB3S2, LEFT),
-                                                instruction(hexPB2, UP)
-                                        ),
-                                        () -> asList(
-                                                instruction(hexPB2, DOWN),
-                                                instruction(hexA1N, UL_V)
-                                        ),
-                                        () -> asList(
-                                                instruction(hexPB2_Rot, UR_V),
-                                                instruction(hexA1N, UL_V)
-                                        ),
-                                        () -> asList(
-                                                instruction(hexC1H, DOWN),
-                                                instruction(hexA2Q1, UL_V),
-                                                instruction(hexA3R1, UL_V),
-                                                instruction(hexA3R3, DR_V),
-                                                instruction(hexKG5, UL_V)
+                .withPathsFull(VertexPaths.of(
+                        VertexPath.of(
+                                instruction(main, DR_V),
+                                instruction(main, DOWN)
+                        ),
+                        VertexPath.of(
+                                instruction(hexA1N, DL_H),
+                                instruction(hexA1N, LEFT),
+                                instruction(hexA1N, UL_H)
+                        ),
+                        VertexPath.of(
+                                instruction(KA2, UR_V),
+                                instruction(hexB3S1, LEFT),
+                                instruction(hexPB2, DOWN)
+                        ),
+                        VertexPath.of(
+                                instruction(KA2, DR_V),
+                                instruction(hexB3S2, LEFT),
+                                instruction(hexPB2, UP)
+                        ),
+                        VertexPath.of(
+                                instruction(hexPB2, DOWN),
+                                instruction(hexA1N, UL_V)
+                        ),
+                        VertexPath.of(
+                                instruction(hexPB2_Rot, UR_V),
+                                instruction(hexA1N, UL_V)
+                        ),
+                        VertexPath.of(
+                                instruction(hexC1H, DOWN),
+                                instruction(hexA2Q1, UL_V),
+                                instruction(hexA3R1, UL_V),
+                                instruction(hexA3R3, DR_V),
+                                instruction(hexKG5, UL_V)
 
-                                        ),
-                                        () -> asList(
-                                                instruction(hexC1H_r, UR_V),
-                                                instruction(hexA2Q2, UL_V),
-                                                instruction(hexA3R2, UL_V),
-                                                instruction(hexA3R4, DR_V),
-                                                instruction(KG4, centreTransform(KG3, RIGHT), UL_V)
-                                        ),
-                                        () -> asList(
-                                                instruction(hexKG5, UP),
-                                                instruction(hexB3I3, RIGHT),
-                                                instruction(hexB3I1, LEFT),
-                                                instruction(hexC1J3, LEFT),
-                                                instruction(hexC1H, UP)
+                        ),
+                        VertexPath.of(
+                                instruction(hexC1H_r, UR_V),
+                                instruction(hexA2Q2, UL_V),
+                                instruction(hexA3R2, UL_V),
+                                instruction(hexA3R4, DR_V),
+                                instruction(KG4, centreTransform(KG3, RIGHT), UL_V)
+                        ),
+                        VertexPath.of(
+                                instruction(hexKG5, UP),
+                                instruction(hexB3I3, RIGHT),
+                                instruction(hexB3I1, LEFT),
+                                instruction(hexC1J3, LEFT),
+                                instruction(hexC1H, UP)
 
-                                        ),
-                                        () -> asList(
-                                                instruction(hexKG4, DOWN),
-                                                instruction(hexB3I4, RIGHT),
-                                                instruction(hexB3I2, LEFT),
-                                                instruction(hexC1J4, LEFT),
-                                                instruction(hexC1H, DOWN)
-                                        )
+                        ),
+                        VertexPath.of(
+                                instruction(hexKG4, DOWN),
+                                instruction(hexB3I4, RIGHT),
+                                instruction(hexB3I2, LEFT),
+                                instruction(hexC1J4, LEFT),
+                                instruction(hexC1H, DOWN)
+                        )
 
-                                ), whiteBold
+                        ), whiteBold
                 )
                 .withSize(PayloadSimple.Size.MEDIUM)
                 .build();
@@ -200,19 +199,20 @@ public class Tile9 {
                         Pair.of(hexAD, PERIMETER),
                         Pair.of(hexAD_VER, PERIMETER)
                 ), gray)
-                .addFullPaths(() -> asList(() -> asList(
-                        () -> Pair.of(main, THREE),
-                        () -> Pair.of(mainHor, FIVE),
-                        () -> Pair.of(main, SIX)
+                .addFullPaths(VertexPaths.of(
+                        VertexPath.of(
+                                ActualVertex.of(main, THREE),
+                                ActualVertex.of(mainHor, FIVE),
+                                ActualVertex.of(main, SIX)
 
-                )), green)
-                .addImportantPoints(asList(
-                        Triple.of(mainHor, ONE, "A"),
-                        Triple.of(main, SIX, "B"),
-                        Triple.of(hexKC, ONE, "C"),
-                        Triple.of(hexKD, ONE, "D"),
-                        Triple.of(hexAD, FIVE, "E")
-                ))
+                        )), green)
+                .addImportantVertexes(
+                        ImportantVertex.of(mainHor, ONE, "A"),
+                        ImportantVertex.of(main, SIX, "B"),
+                        ImportantVertex.of(hexKC, ONE, "C"),
+                        ImportantVertex.of(hexKD, ONE, "D"),
+                        ImportantVertex.of(hexAD, FIVE, "E")
+                )
                 .withFontSize(14)
 
                 ;
@@ -287,29 +287,29 @@ public class Tile9 {
         Polygon hexPB2 = Hex.hex(B2P, VER, centreTransform(KP, RIGHT));
         Polygon hexA2Q = Hex.hex(RATIO_n, VER, centreTransform(KA2, DR_V));
         Polygon hexA2Q_m = hexA2Q.getMirror();
-        Polygon hexA2Q1 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA2, DR_V).andThen(centreTransform(RATIO_n, UR_V)));
-        Polygon hexA2Q2 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA2, DR_V).andThen(centreTransform(RATIO_n, DOWN)));
+        Polygon hexA2Q1 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA2, DR_V), centreTransform(RATIO_n, UR_V)));
+        Polygon hexA2Q2 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA2, DR_V), centreTransform(RATIO_n, DOWN)));
 
         Polygon hexA3R = Hex.hex(RATIO_n, VER, centreTransform(KA3, VER));
-        Polygon hexA3R1 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, DR_V).andThen(centreTransform(RATIO_n, UR_V)));
-        Polygon hexA3R2 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, DR_V).andThen(centreTransform(RATIO_n, DOWN)));
-        Polygon hexA3R3 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, DR_V).andThen(centreTransform(RATIO_n, DL_V)));
-        Polygon hexA3R4 = Hex.hex(RATIO_n * RATIO_k, VER, centreTransform(KA3, DR_V).andThen(centreTransform(RATIO_n, UP)));
+        Polygon hexA3R1 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA3, DR_V), centreTransform(RATIO_n, UR_V)));
+        Polygon hexA3R2 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA3, DR_V), centreTransform(RATIO_n, DOWN)));
+        Polygon hexA3R3 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA3, DR_V), centreTransform(RATIO_n, DL_V)));
+        Polygon hexA3R4 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA3, DR_V), centreTransform(RATIO_n, UP)));
 
         Polygon hexC1H = Hex.hex(RATIO_i, VER, centreTransform(KC1, HOR));
         Polygon hexC1J = Hex.hex(RATIO_m, VER, centreTransform(KC1, HOR));
-        Polygon hexC1J3 = Hex.hex(RATIO_i - RATIO_m, HOR, centreTransform(KC1, HOR).andThen(Hex.centreTransform(RATIO_m, UP)));
-        Polygon hexC1J4 = Hex.hex(RATIO_i - RATIO_m, HOR, centreTransform(KC1, HOR).andThen(Hex.centreTransform(RATIO_m, DOWN)));
+        Polygon hexC1J3 = Hex.hex(RATIO_i - RATIO_m, HOR, CentreTransform.of(centreTransform(KC1, HOR), Hex.centreTransform(RATIO_m, UP)));
+        Polygon hexC1J4 = Hex.hex(RATIO_i - RATIO_m, HOR, CentreTransform.of(centreTransform(KC1, HOR), Hex.centreTransform(RATIO_m, DOWN)));
 
         Polygon hexB3I = Hex.hex(RATIO_n, HOR, centreTransform(KB3, HOR));
-        Polygon hexB3I1 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(centreTransform(RATIO_n, UR_H)));
-        Polygon hexB3I2 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(centreTransform(RATIO_n, DR_H)));
-        Polygon hexB3I3 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(centreTransform(RATIO_n, DL_H)));
-        Polygon hexB3I4 = Hex.hex(RATIO_n * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(centreTransform(RATIO_n, UL_H)));
+        Polygon hexB3I1 = Hex.hex(RATIO_n * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, HOR), centreTransform(RATIO_n, UR_H)));
+        Polygon hexB3I2 = Hex.hex(RATIO_n * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, HOR), centreTransform(RATIO_n, DR_H)));
+        Polygon hexB3I3 = Hex.hex(RATIO_n * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, HOR), centreTransform(RATIO_n, DL_H)));
+        Polygon hexB3I4 = Hex.hex(RATIO_n * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, HOR), centreTransform(RATIO_n, UL_H)));
 
         Polygon hexB3S = Hex.hex(RATIO_s, HOR, centreTransform(KB3, HOR));
-        Polygon hexB3S1 = Hex.hex(RATIO_s * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(centreTransform(RATIO_s, UR_H)));
-        Polygon hexB3S2 = Hex.hex(RATIO_s * RATIO_k, HOR, centreTransform(KB3, HOR).andThen(centreTransform(RATIO_s, DR_H)));
+        Polygon hexB3S1 = Hex.hex(RATIO_s * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, HOR), centreTransform(RATIO_s, UR_H)));
+        Polygon hexB3S2 = Hex.hex(RATIO_s * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, HOR), centreTransform(RATIO_s, DR_H)));
 
 //        Polygon hexA2Q = Hex.hex(A2Q, VER, centreTransform(KA2, VER));
 //        Polygon hexA2Q_Hor = hexA2Q.getMirror();
@@ -317,52 +317,52 @@ public class Tile9 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_09_design2")
                 .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
-                .addImportantPoints(asList(
-                        Triple.of(main, DR_V.getVertex(), "A1"),
-                        Triple.of(mainHor, RIGHT.getVertex(), "B1"),
-                        Triple.of(hexKC1, RIGHT.getVertex(), "C1"),
-                        Triple.of(hexKD1, DR_V.getVertex(), "D1"),
-                        Triple.of(hexKB2, RIGHT.getVertex(), "B2"),
-                        Triple.of(hexKA2, DR_V.getVertex(), "A2"),
-                        Triple.of(hexKB3, RIGHT.getVertex(), "B3"),
-                        Triple.of(hexKA3, DR_V.getVertex(), "A3"),
-                        Triple.of(hexKC2, RIGHT.getVertex(), "C2"),
-                        Triple.of(hexKD2, DR_V.getVertex(), "D2"),
-                        Triple.of(hexC2E, UP.getVertex(), "E"),
-                        Triple.of(hexD2F, UR_H.getVertex(), "F"),
-                        Triple.of(hexKG1, UL_V.getVertex(), "G1"),
-                        Triple.of(hexKG2, RIGHT.getVertex(), "G2"),
-                        Triple.of(hexKG3, RIGHT.getVertex(), "G3"),
-                        Triple.of(hexKG4, DOWN.getVertex(), "G4"),
-                        Triple.of(hexKG5, UP.getVertex(), "G5"),
-                        Triple.of(hexKG5, UL_V.getVertex(), "G6"),
+                .addImportantVertexes(asList(
+                        ImportantVertex.of(main, DR_V.getVertex(), "A1"),
+                        ImportantVertex.of(mainHor, RIGHT.getVertex(), "B1"),
+                        ImportantVertex.of(hexKC1, RIGHT.getVertex(), "C1"),
+                        ImportantVertex.of(hexKD1, DR_V.getVertex(), "D1"),
+                        ImportantVertex.of(hexKB2, RIGHT.getVertex(), "B2"),
+                        ImportantVertex.of(hexKA2, DR_V.getVertex(), "A2"),
+                        ImportantVertex.of(hexKB3, RIGHT.getVertex(), "B3"),
+                        ImportantVertex.of(hexKA3, DR_V.getVertex(), "A3"),
+                        ImportantVertex.of(hexKC2, RIGHT.getVertex(), "C2"),
+                        ImportantVertex.of(hexKD2, DR_V.getVertex(), "D2"),
+                        ImportantVertex.of(hexC2E, UP.getVertex(), "E"),
+                        ImportantVertex.of(hexD2F, UR_H.getVertex(), "F"),
+                        ImportantVertex.of(hexKG1, UL_V.getVertex(), "G1"),
+                        ImportantVertex.of(hexKG2, RIGHT.getVertex(), "G2"),
+                        ImportantVertex.of(hexKG3, RIGHT.getVertex(), "G3"),
+                        ImportantVertex.of(hexKG4, DOWN.getVertex(), "G4"),
+                        ImportantVertex.of(hexKG5, UP.getVertex(), "G5"),
+                        ImportantVertex.of(hexKG5, UL_V.getVertex(), "G6"),
 
-                        Triple.of(hexA1M, UR_H.getVertex(), "M"),
-                        Triple.of(hexKN, DR_V.getVertex(), "N"),
-                        Triple.of(hexKP, RIGHT.getVertex(), "P"),
-                        Triple.of(hexA2Q1, UL_V.getVertex(), "Q1"),
-                        Triple.of(hexA2Q2, UL_V.getVertex(), "Q1"),
+                        ImportantVertex.of(hexA1M, UR_H.getVertex(), "M"),
+                        ImportantVertex.of(hexKN, DR_V.getVertex(), "N"),
+                        ImportantVertex.of(hexKP, RIGHT.getVertex(), "P"),
+                        ImportantVertex.of(hexA2Q1, UL_V.getVertex(), "Q1"),
+                        ImportantVertex.of(hexA2Q2, UL_V.getVertex(), "Q1"),
 
-                        Triple.of(hexA3R1, UL_V.getVertex(), "R1"),
-                        Triple.of(hexA3R2, UL_V.getVertex(), "R2"),
-                        Triple.of(hexA3R3, DR_V.getVertex(), "R3"),
-                        Triple.of(hexA3R4, DR_V.getVertex(), "R4"),
+                        ImportantVertex.of(hexA3R1, UL_V.getVertex(), "R1"),
+                        ImportantVertex.of(hexA3R2, UL_V.getVertex(), "R2"),
+                        ImportantVertex.of(hexA3R3, DR_V.getVertex(), "R3"),
+                        ImportantVertex.of(hexA3R4, DR_V.getVertex(), "R4"),
 
-                        Triple.of(hexC1H, UP.getVertex(), "H1"),
-                        Triple.of(hexC1H, DOWN.getVertex(), "H2"),
+                        ImportantVertex.of(hexC1H, UP.getVertex(), "H1"),
+                        ImportantVertex.of(hexC1H, DOWN.getVertex(), "H2"),
 
-                        Triple.of(hexB3I1, LEFT.getVertex(), "I1"),
-                        Triple.of(hexB3I2, LEFT.getVertex(), "I2"),
-                        Triple.of(hexB3I3, RIGHT.getVertex(), "I3"),
-                        Triple.of(hexB3I4, RIGHT.getVertex(), "I4"),
+                        ImportantVertex.of(hexB3I1, LEFT.getVertex(), "I1"),
+                        ImportantVertex.of(hexB3I2, LEFT.getVertex(), "I2"),
+                        ImportantVertex.of(hexB3I3, RIGHT.getVertex(), "I3"),
+                        ImportantVertex.of(hexB3I4, RIGHT.getVertex(), "I4"),
 
-                        Triple.of(hexB3S1, LEFT.getVertex(), "S1"),
-                        Triple.of(hexB3S2, LEFT.getVertex(), "S2"),
-                        Triple.of(hexC1J, UP.getVertex(), "J1"),
-                        Triple.of(hexC1J, DOWN.getVertex(), "J2"),
-                        Triple.of(hexC1J3, LEFT.getVertex(), "J3"),
-                        Triple.of(hexC1J4, LEFT.getVertex(), "J4")
-//                        Triple.of(hexB3I, TWO, "I2")
+                        ImportantVertex.of(hexB3S1, LEFT.getVertex(), "S1"),
+                        ImportantVertex.of(hexB3S2, LEFT.getVertex(), "S2"),
+                        ImportantVertex.of(hexC1J, UP.getVertex(), "J1"),
+                        ImportantVertex.of(hexC1J, DOWN.getVertex(), "J2"),
+                        ImportantVertex.of(hexC1J3, LEFT.getVertex(), "J3"),
+                        ImportantVertex.of(hexC1J4, LEFT.getVertex(), "J4")
+//                        ImportantVertex.of(hexB3I, TWO, "I2")
                 ))
                 .addSinglePaths(asList(
                         Pair.of(hexB1B2, PERIMETER),
@@ -420,60 +420,72 @@ public class Tile9 {
                         Pair.of(hexKB3, PERIMETER),
                         Pair.of(hexKA3, PERIMETER)
                 ), blue)
-                .addFullPaths(() -> asList(() -> asList(
-                        () -> Pair.of(main, SIX),
-                        () -> Pair.of(mainHor, ONE),
-                        () -> Pair.of(main, ONE)
-                )), gray)
-                .addFullPaths(() -> asList(() -> asList(
-                        () -> Pair.of(main, THREE),
-                        () -> Pair.of(mainHor, FIVE),
-                        () -> Pair.of(main, SIX)
+                .addFullPaths(
+                        VertexPaths.of(
+                                VertexPath.of(
+                                        ActualVertex.of(main, SIX),
+                                        ActualVertex.of(mainHor, ONE),
+                                        ActualVertex.of(main, ONE)
+                                )), gray)
+                .addFullPaths(
+                        VertexPaths.of(
+                                VertexPath.of(
+                                        ActualVertex.of(main, THREE),
+                                        ActualVertex.of(mainHor, FIVE),
+                                        ActualVertex.of(main, SIX)
 
-                )), gray)
-                .addFullPaths(() -> asList(() -> asList(
-                        () -> Pair.of(hexKA2, THREE),
-                        () -> Pair.of(hexKB2, FIVE),
-                        () -> Pair.of(hexKA2, SIX)
+                                )), gray)
+                .addFullPaths(VertexPaths.of(
+                        VertexPath.of(
+                                ActualVertex.of(hexKA2, THREE),
+                                ActualVertex.of(hexKB2, FIVE),
+                                ActualVertex.of(hexKA2, SIX)
 
-                )), gray)
-                .addFullPaths(() -> asList(() -> asList(
-                        () -> Pair.of(hexKA3, THREE),
-                        () -> Pair.of(hexKB3, FIVE),
-                        () -> Pair.of(hexKA3, SIX)
+                        )), gray)
+                .addFullPaths(VertexPaths.of(
+                        VertexPath.of(
+                                ActualVertex.of(hexKA3, THREE),
+                                ActualVertex.of(hexKB3, FIVE),
+                                ActualVertex.of(hexKA3, SIX)
 
-                )), gray)
-                .addFullPaths(() -> asList(() -> asList(
-                        () -> Pair.of(hexB1B2, TWO),
-                        () -> Pair.of(hexB1B2_Hor, FOUR),
-                        () -> Pair.of(hexB1B2, FIVE)
+                        )), gray)
+                .addFullPaths(VertexPaths.of(
+                        VertexPath.of(
+                                ActualVertex.of(hexB1B2, TWO),
+                                ActualVertex.of(hexB1B2_Hor, FOUR),
+                                ActualVertex.of(hexB1B2, FIVE)
 
-                )), green)
-                .addFullPaths(() -> asList(() -> asList(
-                        () -> Pair.of(hexB1B3, TWO),
-                        () -> Pair.of(hexB1B3_Hor, FOUR),
-                        () -> Pair.of(hexB1B3, FIVE)
+                        )), green)
+                .addFullPaths(VertexPaths.of(
+                        VertexPath.of(
+                                ActualVertex.of(hexB1B3, TWO),
+                                ActualVertex.of(hexB1B3_Hor, FOUR),
+                                ActualVertex.of(hexB1B3, FIVE)
 
-                )), green)
-                .addFullPaths(() -> asList(() -> asList(
-                        () -> Pair.of(hexA1A2_Hor, THREE),
-                        () -> Pair.of(hexA1A2, FOUR),
-                        () -> Pair.of(hexA1A2_Hor, SIX)
+                        )), green)
+                .addFullPaths(VertexPaths.of(
+                        VertexPath.of(
+                                ActualVertex.of(hexA1A2_Hor, THREE),
+                                ActualVertex.of(hexA1A2, FOUR),
+                                ActualVertex.of(hexA1A2_Hor, SIX)
 
-                )), green)
-                .addFullPaths(() -> asList(() -> asList(
-                        () -> Pair.of(hexA1A3_Hor, THREE),
-                        () -> Pair.of(hexA1A3, FOUR),
-                        () -> Pair.of(hexA1A3_Hor, SIX)
-                )), green)
-                .addFullPaths(() -> asList(() -> asList(
-                        () -> Pair.of(hexInnerLine, THREE),
-                        () -> Pair.of(hexInnerLine, SIX)
-                )), gray)
-                .addFullPaths(() -> asList(() -> asList(
-                        () -> Pair.of(hexInnerLine2, TWO),
-                        () -> Pair.of(hexInnerLine2, FIVE)
-                )), gray)
+                        )), green)
+                .addFullPaths(VertexPaths.of(
+                        VertexPath.of(
+                                ActualVertex.of(hexA1A3_Hor, THREE),
+                                ActualVertex.of(hexA1A3, FOUR),
+                                ActualVertex.of(hexA1A3_Hor, SIX)
+                        )), green)
+                .addFullPaths(VertexPaths.of(
+                        VertexPath.of(
+                                ActualVertex.of(hexInnerLine, THREE),
+                                ActualVertex.of(hexInnerLine, SIX)
+                        )), gray)
+                .addFullPaths(VertexPaths.of(
+                        VertexPath.of(
+                                ActualVertex.of(hexInnerLine2, TWO),
+                                ActualVertex.of(hexInnerLine2, FIVE)
+                        )), gray)
                 .addCircleWithRadius(asList(
                         Pair.of(main, A1M)
                 ), blue)

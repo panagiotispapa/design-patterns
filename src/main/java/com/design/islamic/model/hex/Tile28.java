@@ -1,15 +1,16 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Grid;
 import com.design.common.Polygon;
+import com.design.common.Polygon.VertexPaths;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -50,12 +51,12 @@ public class Tile28 {
         return new PayloadSimple.Builder("hex_tile_28",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                        () -> asList(
+                .withPathsFull(VertexPaths.of(
+                        Polygon.VertexPath.of(
                                 instruction(hexKD, RIGHT),
                                 () -> Pair.of(hexEF, SIX)
                         ),
-                        () -> asList(
+                        Polygon.VertexPath.of(
                                 instruction(hexKD, RIGHT),
                                 () -> Pair.of(hexEF_Rot, TWO)
                         )
@@ -93,14 +94,14 @@ public class Tile28 {
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_28_design")
                 .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
-                .addImportantPoints(asList(
-                        Triple.of(main, RIGHT.getVertex(), "A"),
-                        Triple.of(hexKB, RIGHT.getVertex(), "B"),
-                        Triple.of(hexKC, DR_V.getVertex(), "C"),
-                        Triple.of(hexKD, RIGHT.getVertex(), "D"),
-                        Triple.of(hexKE, DR_V.getVertex(), "E"),
-                        Triple.of(hexEF, SIX, "F")
-                ))
+                .addImportantVertexes(
+                        ImportantVertex.of(main, RIGHT.getVertex(), "A"),
+                        ImportantVertex.of(hexKB, RIGHT.getVertex(), "B"),
+                        ImportantVertex.of(hexKC, DR_V.getVertex(), "C"),
+                        ImportantVertex.of(hexKD, RIGHT.getVertex(), "D"),
+                        ImportantVertex.of(hexKE, DR_V.getVertex(), "E"),
+                        ImportantVertex.of(hexEF, SIX, "F")
+                )
                 .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(main, Hex.DIAGONALS),

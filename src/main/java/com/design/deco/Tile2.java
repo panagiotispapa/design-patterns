@@ -1,13 +1,13 @@
 package com.design.deco;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Grid;
 import com.design.common.Polygon;
 import com.design.common.RatioHelper.P4;
 import com.design.common.model.Style;
 import com.design.islamic.model.*;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -39,12 +39,12 @@ public class Tile2 {
         return new PayloadSimple.Builder("deco_tile_02",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                        () -> asList(
+                .withPathsFull(VertexPaths.of(
+                        VertexPath.of(
                                 instruction(rectAC, UP),
                                 instruction(rectKB, DL)
                         ),
-                        () -> asList(
+                        VertexPath.of(
                                 instruction(rectAC, LEFT),
                                 instruction(rectKB, UR)
                         )
@@ -71,11 +71,11 @@ public class Tile2 {
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "deco_tile_02_design")
                 .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
-                .addImportantPoints(asList(
-                        Triple.of(main, DR.getVertex(), "A"),
-                        Triple.of(rectKB, DR.getVertex(), "B"),
-                        Triple.of(rectAC, UP.getVertex(), "C")
-                ))
+                .addImportantVertexes(
+                        ImportantVertex.of(main, DR.getVertex(), "A"),
+                        ImportantVertex.of(rectKB, DR.getVertex(), "B"),
+                        ImportantVertex.of(rectAC, UP.getVertex(), "C")
+                )
                 .addSinglePaths(asList(
                         Pair.of(main, PERIMETER),
                         Pair.of(main, DIAGONALS),

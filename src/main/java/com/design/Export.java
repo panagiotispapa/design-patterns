@@ -72,7 +72,7 @@ public class Export {
 
         Double R = sizeToRNew.get(payload.getSize());
         Dimension dim = new Dimension((int) (15 * R), (int) (10 * R));
-        Pair<Point2D, Double> ic = Pair.of(new Point2D.Double(0, 0), R);
+        InitialConditions ic = InitialConditions.of(new Point2D.Double(0, 0), R);
 
         System.out.println(payload.getName());
         saveToFile(buildSvg(dim, buildBackground(dim) + buildSvgFromPayloadSimple(payload, ic)), payload.getName());
@@ -80,11 +80,11 @@ public class Export {
     }
 
 
-    private static String buildSvgFromPayloadSimple(PayloadSimple payload, Pair<Point2D, Double> ic) {
-        List<Point2D> gridPoints = Grid.gridFromStart(ic.getLeft(), ic.getRight(), payload.getGridConfiguration(), 17);
+    private static String buildSvgFromPayloadSimple(PayloadSimple payload, InitialConditions ic) {
+        List<Point2D> gridPoints = Grid.gridFromStart(ic.getCentre(), ic.getR(), payload.getGridConfiguration(), 17);
 
         return
-                gridPoints.stream().map(p -> InitialConditions.of(p, ic.getRight())).map(payload::draw).collect(joining());
+                gridPoints.stream().map(p -> InitialConditions.of(p, ic.getR())).map(payload::draw).collect(joining());
 
     }
 

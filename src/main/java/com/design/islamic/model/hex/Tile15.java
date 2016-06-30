@@ -4,6 +4,7 @@ import com.design.common.DesignHelper;
 import com.design.common.Grid;
 import com.design.common.Polygon;
 import com.design.common.model.Path;
+import com.design.common.model.Path.Paths;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
@@ -124,7 +125,7 @@ public class Tile15 {
                 "w = 6 * Rx"
         );
 
-        Function<Polygon, List<Path>> diag = p -> Path.vertexPathsToPaths.apply(Polygon.toVertexPaths(p, asList(
+        Function<Polygon, Paths> diag = p -> Path.vertexPathsToPaths.apply(Polygon.toVertexPaths(p, asList(
                 asList(
                         UL_V.getVertex(),
                         DR_V.getVertex()
@@ -136,14 +137,14 @@ public class Tile15 {
                 )
         )));
 
-        Function<Polygon, List<Path>> diag2 = p -> Path.vertexPathsToPaths.apply(Polygon.toVertexPaths(p, asList(
+        Function<Polygon, Paths> diag2 = p -> Path.vertexPathsToPaths.apply(Polygon.toVertexPaths(p, asList(
                 asList(
                         UP.getVertex(),
                         DOWN.getVertex()
                 )
         )));
 
-        Function<Polygon, List<Path>> diag3 = p -> Path.vertexPathsToPaths.apply(Polygon.toVertexPaths(p, asList(
+        Function<Polygon, Paths> diag3 = p -> Path.vertexPathsToPaths.apply(Polygon.toVertexPaths(p, asList(
                 asList(
                         RIGHT.getVertex(),
                         LEFT.getVertex()
@@ -153,7 +154,7 @@ public class Tile15 {
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_15_design")
                 .addSinglePaths(() -> getPayloadSimple().getPathsSingle(), red)
                 .addEquations(equations)
-                .addImportantPoints(asList(
+                .addImportantVertexes(asList(
                 ))
                 .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),

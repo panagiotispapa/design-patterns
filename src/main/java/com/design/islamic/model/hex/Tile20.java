@@ -4,6 +4,7 @@ import com.design.common.DesignHelper;
 import com.design.common.Grid;
 import com.design.common.Polygon;
 import com.design.common.model.Path;
+import com.design.common.model.Path.Paths;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
@@ -40,8 +41,8 @@ public class Tile20 {
         return new PayloadSimple.Builder("hex_tile_20",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                        () -> asList(
+                .withPathsFull(VertexPaths.of(
+                        VertexPath.of(
                                 r(2, 5, DL_H),
                                 r(2, 4, DL_H),
                                 r(1, 3, DL_H),
@@ -50,14 +51,14 @@ public class Tile20 {
                                 r(1, 2, UR_H),
                                 r(2, 3, DR_H)
                         ),
-                        () -> asList(
+                        VertexPath.of(
                                 r(1, 4, DL_H),
                                 h(4, RIGHT),
                                 r(3, 4, DR_H),
                                 r(3, 4, DL_H),
                                 r(2, 4, DL_H)
                         ),
-                        () -> asList(
+                        VertexPath.of(
                                 r(4, 4, DL_H),
                                 r(4, 2, DR_H),
                                 r(3, 2, DR_H)
@@ -93,16 +94,16 @@ public class Tile20 {
                 "r = 1 / 6"
         );
 
-        Function<Polygon, List<Path>> xDiagonals = p -> Path.vertexPathsToPaths.apply(Polygon.toVertexPaths(p, asList(asList(TWO.cast(), FIVE), asList(THREE, SIX))));
+        Function<Polygon, Paths> xDiagonals = p -> Path.vertexPathsToPaths.apply(Polygon.toVertexPaths(p, asList(asList(TWO.cast(), FIVE), asList(THREE, SIX))));
 
-        List<Pair<Polygon, Function<Polygon, List<Path>>>> diagonals1 = IntStream.range(1, 6).mapToObj(i -> Pair.of(Hex.hex(1, HOR, Polygon.centreTransform(i * RATIO_m, ONE, HOR)), xDiagonals)).collect(toList());
-        List<Pair<Polygon, Function<Polygon, List<Path>>>> diagonals2 = IntStream.range(1, 6).mapToObj(i -> Pair.of(Hex.hex(1, HOR, Polygon.centreTransform(i * RATIO_m, FOUR, HOR)), xDiagonals)).collect(toList());
+        List<Pair<Polygon, Function<Polygon, Paths>>> diagonals1 = IntStream.range(1, 6).mapToObj(i -> Pair.of(Hex.hex(1, HOR, Polygon.centreTransform(i * RATIO_m, ONE, HOR)), xDiagonals)).collect(toList());
+        List<Pair<Polygon, Function<Polygon, Paths>>> diagonals2 = IntStream.range(1, 6).mapToObj(i -> Pair.of(Hex.hex(1, HOR, Polygon.centreTransform(i * RATIO_m, FOUR, HOR)), xDiagonals)).collect(toList());
 
         List<Polygon> innerHexes = IntStream.range(1, 6).mapToObj(i -> Hex.hex(i * RATIO_m, HOR)).collect(toList());
 
-        BiFunction<List<Polygon>, Polygon.Vertex, List<Triple<Polygon, Polygon.Vertex, String>>> indexOnVertexes = (p, v) -> {
+        BiFunction<List<Polygon>, Polygon.Vertex, List<DesignHelper.ImportantVertex>> indexOnVertexes = (p, v) -> {
             AtomicInteger vIndex2 = new AtomicInteger(1);
-            return p.stream().map(h -> Triple.of(h, v, String.valueOf(vIndex2.getAndIncrement()))).collect(toList());
+            return p.stream().map(h -> DesignHelper.ImportantVertex.of(h, v, String.valueOf(vIndex2.getAndIncrement()))).collect(toList());
         };
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_20_design")
@@ -115,12 +116,12 @@ public class Tile20 {
                 ), gray)
                 .addSinglePaths(diagonals1, gray)
                 .addSinglePaths(diagonals2, gray)
-                .addImportantPoints(asList(
-//                        Triple.of(Hex.hex(RATIO_m, VER), ONE, "A")
+                .addImportantVertexes(asList(
+//                        ImportantVertex.of(Hex.hex(RATIO_m, VER), ONE, "A")
 
                 ))
-//                .addImportantPoints(innerHexes.stream().map(h->Triple.of(h, ONE, String.valueOf(vIndex.getAndIncrement()))).collect(toList()))
-                .addImportantPoints(Stream.of(ONE, TWO, SIX).map(v -> indexOnVertexes.apply(innerHexes, v)).map(Collection::stream).flatMap(s -> s).collect(toList()))
+//                .addImportantVertexes(innerHexes.stream().map(h->ImportantVertex.of(h, ONE, String.valueOf(vIndex.getAndIncrement()))).collect(toList()))
+                .addImportantVertexes(Stream.of(ONE, TWO, SIX).map(v -> indexOnVertexes.apply(innerHexes, v)).map(Collection::stream).flatMap(s -> s).collect(toList()))
                 .addSinglePaths(
                         innerHexes.stream().map(h -> Pair.of(h, PERIMETER)).collect(toList())
                         , gray)

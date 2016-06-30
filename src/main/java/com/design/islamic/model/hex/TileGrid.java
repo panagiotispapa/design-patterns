@@ -2,6 +2,7 @@ package com.design.islamic.model.hex;
 
 import com.design.common.Grid;
 import com.design.common.Polygon;
+import com.design.common.Polygon.VertexPaths;
 import com.design.common.model.Style;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.PayloadSimple;
@@ -14,7 +15,6 @@ import static com.design.common.Polygon.Type.VER;
 import static com.design.islamic.model.Hex.Corner.DOWN;
 import static com.design.islamic.model.Hex.Corner.DR_V;
 import static com.design.islamic.model.Hex.instruction;
-import static java.util.Arrays.asList;
 
 public class TileGrid {
 
@@ -26,12 +26,13 @@ public class TileGrid {
         return new PayloadSimple.Builder("hex_grid_01",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                        () -> asList(
-                                instruction(main, DR_V),
-                                instruction(main, DOWN)
-                        )
-                ), whiteBold)
+                .withPathsFull(
+                        VertexPaths.of(
+                                Polygon.VertexPath.of(
+                                        instruction(main, DR_V),
+                                        instruction(main, DOWN)
+                                )
+                        ), whiteBold)
                 .withGridConf(Grid.Configs.HEX_HOR2.getConfiguration())
                 .build();
     }
@@ -44,12 +45,13 @@ public class TileGrid {
         return new PayloadSimple.Builder("hex_grid_02",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                        () -> asList(
-                                instruction(main, DR_V),
-                                instruction(main, DOWN)
-                        )
-                ), whiteBold)
+                .withPathsFull(
+                        VertexPaths.of(
+                                Polygon.VertexPath.of(
+                                        instruction(main, DR_V),
+                                        instruction(main, DOWN)
+                                )
+                        ), whiteBold)
                 .withGridConf(Grid.Configs.HEX_HOR3.getConfiguration())
                 .build();
     }
@@ -62,12 +64,13 @@ public class TileGrid {
         return new PayloadSimple.Builder("hex_grid_03",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                        () -> asList(
-                                instruction(main, DR_V),
-                                instruction(main, DOWN)
-                        )
-                ), whiteBold)
+                .withPathsFull(
+                        VertexPaths.of(
+                                Polygon.VertexPath.of(
+                                        instruction(main, DR_V),
+                                        instruction(main, DOWN)
+                                )
+                        ), whiteBold)
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
     }

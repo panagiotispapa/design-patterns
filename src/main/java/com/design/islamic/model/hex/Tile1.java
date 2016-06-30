@@ -1,6 +1,7 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.Polygon;
+import com.design.common.Polygon.VertexPaths;
 import com.design.common.model.Style;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.PayloadSimple;
@@ -12,7 +13,6 @@ import static com.design.common.Polygon.Type.VER;
 import static com.design.islamic.model.Hex.Corner.DOWN;
 import static com.design.islamic.model.Hex.Corner.DR_V;
 import static com.design.islamic.model.Hex.instruction;
-import static java.util.Arrays.asList;
 
 public class Tile1 {
 
@@ -24,12 +24,14 @@ public class Tile1 {
         return new PayloadSimple.Builder("hex_tile_01",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                        () -> asList(
-                                instruction(main, DR_V),
-                                instruction(main, DOWN)
-                        )
-                ), whiteBold)
+                .withPathsFull(
+                        VertexPaths.of(
+                                Polygon.VertexPath.of(
+                                        instruction(main, DR_V),
+                                        instruction(main, DOWN))
+
+                        ), whiteBold
+                )
                 .build();
     }
 

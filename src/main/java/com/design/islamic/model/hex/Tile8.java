@@ -1,7 +1,11 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Polygon;
+import com.design.common.Polygon.ActualVertex;
+import com.design.common.Polygon.VertexPath;
+import com.design.common.Polygon.VertexPaths;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
@@ -11,7 +15,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.design.common.Polygon.Type.HOR;
@@ -60,22 +63,22 @@ public class Tile8 {
         return new PayloadSimple.Builder("hex_tile_08",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> Arrays.asList(
-                                () -> asList(
-                                        instruction(hexJM_3, UL_V),
-                                        instruction(hexAG, DL_V),
-                                        instruction(hexAG, UL_V),
-                                        instruction(hexAG, UP),
-                                        instruction(hexJM_2, UL_V)
-                                ),
-                                () -> asList(
+                .withPathsFull(VertexPaths.of(
+                        VertexPath.of(
+                                instruction(hexJM_3, UL_V),
+                                instruction(hexAG, DL_V),
+                                instruction(hexAG, UL_V),
+                                instruction(hexAG, UP),
+                                instruction(hexJM_2, UL_V)
+                        ),
+                        VertexPath.of(
 
-                                        instruction(hexJM_4, LEFT),
-                                        instruction(hexJDRot, RIGHT),
-                                        instruction(mainReg, RIGHT),
-                                        instruction(hexJD, RIGHT),
-                                        instruction(hexJM, LEFT)
-                                )
+                                instruction(hexJM_4, LEFT),
+                                instruction(hexJDRot, RIGHT),
+                                instruction(mainReg, RIGHT),
+                                instruction(hexJD, RIGHT),
+                                instruction(hexJM, LEFT)
+                        )
                         ), whiteBold
                 )
                 .withSize(PayloadSimple.Size.MEDIUM)
@@ -164,45 +167,45 @@ public class Tile8 {
                 )
 
 
-                .addFullPaths(() -> asList(
-                        () -> asList(
-                                () -> Pair.of(hexRot1, THREE),
-                                () -> Pair.of(hexRot1, SIX)
+                .addFullPaths(VertexPaths.of(
+                        VertexPath.of(
+                                ActualVertex.of(hexRot1, THREE),
+                                ActualVertex.of(hexRot1, SIX)
                         ),
-                        () -> asList(
-                                () -> Pair.of(hexRot2, TWO),
-                                () -> Pair.of(hexRot2, FIVE)
+                        VertexPath.of(
+                                ActualVertex.of(hexRot2, TWO),
+                                ActualVertex.of(hexRot2, FIVE)
                         ),
-                        () -> asList(
-                                () -> Pair.of(hexRot3, TWO),
-                                () -> Pair.of(hexRot3, FIVE)
+                        VertexPath.of(
+                                ActualVertex.of(hexRot3, TWO),
+                                ActualVertex.of(hexRot3, FIVE)
                         ),
-                        () -> asList(
-                                () -> Pair.of(main, SIX),
-                                () -> Pair.of(mainHor, ONE),
-                                () -> Pair.of(main, ONE)
+                        VertexPath.of(
+                                ActualVertex.of(main, SIX),
+                                ActualVertex.of(mainHor, ONE),
+                                ActualVertex.of(main, ONE)
                         ),
-                        () -> asList(
-                                () -> Pair.of(mainHorReg, SIX),
-                                () -> Pair.of(mainReg, ONE),
-                                () -> Pair.of(mainHorReg, ONE)
+                        VertexPath.of(
+                                ActualVertex.of(mainHorReg, SIX),
+                                ActualVertex.of(mainReg, ONE),
+                                ActualVertex.of(mainHorReg, ONE)
                         )
                 ), gray)
-                .addImportantPoints(asList(
-                        Triple.of(main, DR_V.getVertex(), "A"),
-                        Triple.of(hexKB, DR_V.getVertex(), "B"),
-                        Triple.of(hexKC, DR_V.getVertex(), "C"),
-                        Triple.of(hexKD, DR_V.getVertex(), "D"),
-                        Triple.of(hexAE, UL_H.getVertex(), "E"),
-                        Triple.of(hexAF, UL_V.getVertex(), "F"),
-                        Triple.of(hexKF, RIGHT.getVertex(), "F"),
-                        Triple.of(hexAG, UL_V.getVertex(), "G"),
-                        Triple.of(hexKH, DR_V.getVertex(), "H"),
-                        Triple.of(hexKI, DOWN.getVertex(), "I"),
-                        Triple.of(hexKJ, DR_V.getVertex(), "J"),
-                        Triple.of(hexJD, DR_H.getVertex(), "L"),
-                        Triple.of(hexJM, UP.getVertex(), "M")
-                ))
+                .addImportantVertexes(
+                        ImportantVertex.of(main, DR_V.getVertex(), "A"),
+                        ImportantVertex.of(hexKB, DR_V.getVertex(), "B"),
+                        ImportantVertex.of(hexKC, DR_V.getVertex(), "C"),
+                        ImportantVertex.of(hexKD, DR_V.getVertex(), "D"),
+                        ImportantVertex.of(hexAE, UL_H.getVertex(), "E"),
+                        ImportantVertex.of(hexAF, UL_V.getVertex(), "F"),
+                        ImportantVertex.of(hexKF, RIGHT.getVertex(), "F"),
+                        ImportantVertex.of(hexAG, UL_V.getVertex(), "G"),
+                        ImportantVertex.of(hexKH, DR_V.getVertex(), "H"),
+                        ImportantVertex.of(hexKI, DOWN.getVertex(), "I"),
+                        ImportantVertex.of(hexKJ, DR_V.getVertex(), "J"),
+                        ImportantVertex.of(hexJD, DR_H.getVertex(), "L"),
+                        ImportantVertex.of(hexJM, UP.getVertex(), "M")
+                )
 
                 ;
 

@@ -1,6 +1,7 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Polygon;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
@@ -8,15 +9,14 @@ import com.design.islamic.model.Hex;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
 import static com.design.common.Polygon.Type.VER;
-import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.*;
+import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.Vertex.ONE;
 import static com.design.islamic.model.Hex.Vertex.THREE;
 import static java.util.Arrays.asList;
@@ -37,21 +37,21 @@ public class Tile19 {
         Polygon hexCB = Hex.hex(RATIO_m, VER, centreTransform(3 * RATIO_m, DR_V));
         Polygon hexDC = Hex.hex(RATIO_m, VER, centreTransform(4 * RATIO_m, DR_V));
         Polygon hexED = Hex.hex(RATIO_m, VER, centreTransform(1, DR_V));
-        Polygon hexFG = Hex.hex(RATIO_m, VER, centreTransform(1, VER).andThen(centreTransform(RATIO_m, DL_V)));
-        Polygon hexGH = Hex.hex(RATIO_m, VER, centreTransform(1, VER).andThen(centreTransform(2 * RATIO_m, DL_V)));
+        Polygon hexFG = Hex.hex(RATIO_m, VER, CentreTransform.of(centreTransform(1, VER), centreTransform(RATIO_m, DL_V)));
+        Polygon hexGH = Hex.hex(RATIO_m, VER, CentreTransform.of(centreTransform(1, VER), centreTransform(2 * RATIO_m, DL_V)));
 
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
 
         return new PayloadSimple.Builder("hex_tile_19",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                        () -> asList(
+                .withPathsFull(VertexPaths.of(
+                        VertexPath.of(
                                 instruction(hexKA, UR_V),
                                 instruction(hexKB.getRegistered(), RIGHT),
                                 instruction(hexKA, DR_V)
                         ),
-                        () -> asList(
+                        VertexPath.of(
                                 instruction(hexBA, DL_V),
                                 instruction(hexBA, DOWN),
                                 instruction(hexBA, DR_V),
@@ -59,7 +59,7 @@ public class Tile19 {
                                 instruction(hexCB, UP),
                                 instruction(hexCB, UR_V)
                         ),
-                        () -> asList(
+                        VertexPath.of(
                                 instruction(hexDC, UR_V),
                                 instruction(hexDC, UP),
                                 instruction(hexCB, DR_V),
@@ -67,7 +67,7 @@ public class Tile19 {
                                 instruction(hexDC, DOWN)
 
                         ),
-                        () -> asList(
+                        VertexPath.of(
                                 instruction(hexFG, UL_V),
                                 instruction(hexGH, UL_V),
                                 instruction(hexGH, DL_V),
@@ -94,8 +94,8 @@ public class Tile19 {
         Polygon hexCB = Hex.hex(RATIO_m, VER, centreTransform(3 * RATIO_m, DR_V));
         Polygon hexDC = Hex.hex(RATIO_m, VER, centreTransform(4 * RATIO_m, DR_V));
         Polygon hexED = Hex.hex(RATIO_m, VER, centreTransform(1, DR_V));
-        Polygon hexFG = Hex.hex(RATIO_m, VER, centreTransform(1, DR_V).andThen(centreTransform(RATIO_m, DL_V)));
-        Polygon hexGH = Hex.hex(RATIO_m, VER, centreTransform(1, DR_V).andThen(centreTransform(2 * RATIO_m, DL_V)));
+        Polygon hexFG = Hex.hex(RATIO_m, VER, CentreTransform.of(centreTransform(1, DR_V), centreTransform(RATIO_m, DL_V)));
+        Polygon hexGH = Hex.hex(RATIO_m, VER, CentreTransform.of(centreTransform(1, DR_V), centreTransform(2 * RATIO_m, DL_V)));
 
         List<String> equations = Arrays.asList(
                 "KA = 1 / 5"
@@ -105,16 +105,16 @@ public class Tile19 {
 //                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
                 .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
-                .addImportantPoints(asList(
-                        Triple.of(hexKA, ONE, "A"),
-                        Triple.of(hexKB, ONE, "B"),
-                        Triple.of(hexKC, ONE, "C"),
-                        Triple.of(hexKD, ONE, "D"),
-                        Triple.of(hexED, THREE, "F"),
-                        Triple.of(main, ONE, "E"),
-                        Triple.of(hexFG, THREE, "G"),
-                        Triple.of(hexGH, THREE, "H")
-                ))
+                .addImportantVertexes(
+                        ImportantVertex.of(hexKA, ONE, "A"),
+                        ImportantVertex.of(hexKB, ONE, "B"),
+                        ImportantVertex.of(hexKC, ONE, "C"),
+                        ImportantVertex.of(hexKD, ONE, "D"),
+                        ImportantVertex.of(hexED, THREE, "F"),
+                        ImportantVertex.of(main, ONE, "E"),
+                        ImportantVertex.of(hexFG, THREE, "G"),
+                        ImportantVertex.of(hexGH, THREE, "H")
+                )
                 .addSinglePaths(asList(
                         Pair.of(main, PERIMETER),
                         Pair.of(main, DIAGONALS),

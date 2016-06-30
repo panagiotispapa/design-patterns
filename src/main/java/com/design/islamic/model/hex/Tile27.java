@@ -1,7 +1,9 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Polygon;
+import com.design.common.Polygon.VertexPaths;
 import com.design.common.RatioHelper.P6;
 import com.design.common.RatioHelper.Ratios;
 import com.design.common.model.Style;
@@ -45,8 +47,8 @@ public class Tile27 {
         return new PayloadSimple.Builder("hex_tile_27",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                        () -> asList(
+                .withPathsFull(VertexPaths.of(
+                        Polygon.VertexPath.of(
                                 instruction(hexKD, UR_V),
                                 instruction(hexKC, RIGHT),
                                 instruction(main, UR_V),
@@ -87,12 +89,12 @@ public class Tile27 {
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_27_design")
                 .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
-                .addImportantPoints(asList(
-                        Triple.of(main, UR_V.getVertex(), "A"),
-                        Triple.of(mainReg, RIGHT.getVertex(), "B"),
-                        Triple.of(hexKC, RIGHT.getVertex(), "C"),
-                        Triple.of(hexKD, UR_V.getVertex(), "D")
-                ))
+                .addImportantVertexes(
+                        ImportantVertex.of(main, UR_V.getVertex(), "A"),
+                        ImportantVertex.of(mainReg, RIGHT.getVertex(), "B"),
+                        ImportantVertex.of(hexKC, RIGHT.getVertex(), "C"),
+                        ImportantVertex.of(hexKD, UR_V.getVertex(), "D")
+                )
                 .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(main, Hex.DIAGONALS),

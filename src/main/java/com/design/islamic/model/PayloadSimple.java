@@ -3,9 +3,12 @@ package com.design.islamic.model;
 import com.design.common.Grid;
 import com.design.common.Polygon;
 import com.design.common.model.Path;
+import com.design.common.model.Path.Paths;
 import com.design.common.model.Style;
+import com.design.islamic.GenericTools;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -13,7 +16,6 @@ import java.util.stream.Stream;
 import static com.design.common.view.SvgFactory.drawPath;
 import static com.design.common.view.SvgFactory.drawPathFull;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 
 public class PayloadSimple {
     private final Grid.Configuration gridConfiguration;
@@ -84,28 +86,32 @@ public class PayloadSimple {
             return this;
         }
 
-        public Builder withPathsSingle(VertexPathsList lines, Style style) {
-            return withPathsSingle(() -> Path.vertexPathsToPaths.apply(lines.get()), style);
+        public Builder withPathsSingle(Polygon.VertexPaths lines, Style style) {
+            return withPathsSingle(Path.vertexPathsToPaths.apply(lines.get()), style);
         }
 
-        public Builder withPathsSingle(PathsList paths, Style style) {
-            return withPathsSingle(() -> paths.get().stream().map(Path.fromPathWithStyle(style)).collect(toList()));
+        public Builder withPathsSingle(Paths paths, Style style) {
+            return withPathsSingle(Paths.of(GenericTools.mapLists(Path.fromPathWithStyle(style)).apply(paths.get())));
         }
 
-        public Builder withPathsSingle(PathsList paths) {
+        public Builder withPathsSingle(Paths paths) {
             this.pathsSingle.addAll(paths.get());
             return this;
         }
 
-        public Builder withPathsFull(VertexPathsList lines, Style style) {
-            return withPathsFull(() -> Path.vertexPathsToPaths.apply(lines.get()), style);
+        public Builder withPathsFull(Polygon.VertexPaths lines, Style style) {
+            return withPathsFull(Path.vertexPathsToPaths.apply(lines.get()), style);
         }
 
-        public Builder withPathsFull(PathsList paths, Style style) {
-            return withPathsFull(() -> paths.get().stream().map(Path.fromPathWithStyle(style)).collect(toList()));
+        public Builder withPathsFull(Paths paths, Style style) {
+            return withPathsFull(
+                    Paths.of(
+                            GenericTools.mapLists(Path.fromPathWithStyle(style)).apply(paths.get())
+                    )
+            );
         }
 
-        public Builder withPathsFull(PathsList paths) {
+        public Builder withPathsFull(Paths paths) {
             this.pathsFull.addAll(paths.get());
             return this;
         }
@@ -121,10 +127,5 @@ public class PayloadSimple {
 
     }
 
-    public interface PathsList extends Supplier<List<Path>> {
-    }
-
-    public interface VertexPathsList extends Supplier<List<Polygon.VertexPath>> {
-    }
 }
 

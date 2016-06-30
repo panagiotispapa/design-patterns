@@ -1,6 +1,7 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Polygon;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
@@ -40,8 +41,8 @@ public class Tile11 {
         return new PayloadSimple.Builder("hex_tile_11",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                        () -> asList(
+                .withPathsFull(VertexPaths.of(
+                        VertexPath.of(
                                 instruction(hexDE, UR_H),
                                 instruction(hexDE, UL_H),
                                 instruction(hexBC, LEFT),
@@ -81,13 +82,13 @@ public class Tile11 {
 //                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
                 .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
-                .addImportantPoints(asList(
-                        Triple.of(hexKA, ONE, "A"),
-                        Triple.of(mainRegistered, TWO, "B"),
-                        Triple.of(hexBC, FIVE, "C"),
-                        Triple.of(mainRegistered, ONE, "D"),
-                        Triple.of(hexDE, FOUR, "E")
-                ))
+                .addImportantVertexes(
+                        ImportantVertex.of(hexKA, ONE, "A"),
+                        ImportantVertex.of(mainRegistered, TWO, "B"),
+                        ImportantVertex.of(hexBC, FIVE, "C"),
+                        ImportantVertex.of(mainRegistered, ONE, "D"),
+                        ImportantVertex.of(hexDE, FOUR, "E")
+                )
                 .addSinglePaths(asList(
                         Pair.of(main, PERIMETER),
                         Pair.of(main, DIAGONALS),

@@ -3,8 +3,7 @@ package com.design.islamic.model;
 import com.design.common.Polygon;
 import com.design.common.RatioHelper;
 import com.design.common.model.Path;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
+import com.design.common.model.Path.Paths;
 
 import java.awt.geom.Point2D;
 import java.util.Arrays;
@@ -23,11 +22,11 @@ public class Hex extends Polygon {
 
     public static final List<Integer> ALL_VERTEX_INDEXES = IntStream.range(0, 6).boxed().collect(toList());
 
-    public static Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform(double ratio, Polygon.Type type) {
+    public static CentreTransform centreTransform(double ratio, Polygon.Type type) {
         return Polygon.centreTransform(ratio, Vertex.ONE, type);
     }
 
-    public static Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform(double ratio, Corner corner) {
+    public static CentreTransform centreTransform(double ratio, Corner corner) {
         return Polygon.centreTransform(ratio, corner.getVertex(), corner.getType());
     }
 
@@ -47,8 +46,8 @@ public class Hex extends Polygon {
 //            )
 //    );
 
-    public static Function<Polygon, List<Path>> PERIMETER =
-            p -> asList(new Path.Builder()
+    public static Function<Polygon, Paths> PERIMETER =
+            p -> Paths.of(new Path.Builder()
                     .startWith(p, Vertex.ONE)
                     .lineTo(p, Vertex.TWO)
                     .lineTo(p, Vertex.THREE)
@@ -58,8 +57,8 @@ public class Hex extends Polygon {
                     .closed()
                     .build());
 
-    public static Function<Polygon, List<Path>> INNER_TRIANGLES =
-            p -> asList(
+    public static Function<Polygon, Paths> INNER_TRIANGLES =
+            p -> Paths.of(
                     new Path.Builder()
                             .startWith(p, Vertex.ONE)
                             .lineTo(p, Vertex.THREE)
@@ -79,28 +78,28 @@ public class Hex extends Polygon {
 //            asList(Vertex.TWO, Vertex.FOUR, Vertex.SIX, Vertex.TWO)
 //    );
 
-    public static Function<Polygon, List<Path>> DIAGONAL_ONE = p -> Path.vertexPathsToPaths.apply(
+    public static Function<Polygon, Paths> DIAGONAL_ONE = p -> Path.vertexPathsToPaths.apply(
             Polygon.toVertexPaths(p, asList(
                     asList(
                             Vertex.ONE,
                             Vertex.FOUR
                     )
             )));
-    public static Function<Polygon, List<Path>> DIAGONAL_TWO = p -> Path.vertexPathsToPaths.apply(
+    public static Function<Polygon, Paths> DIAGONAL_TWO = p -> Path.vertexPathsToPaths.apply(
             Polygon.toVertexPaths(p, asList(
                     asList(
                             Vertex.TWO,
                             Vertex.FIVE
                     )
             )));
-    public static Function<Polygon, List<Path>> DIAGONAL_THREE = p -> Path.vertexPathsToPaths.apply(
+    public static Function<Polygon, Paths> DIAGONAL_THREE = p -> Path.vertexPathsToPaths.apply(
             Polygon.toVertexPaths(p, asList(
                     asList(
                             Vertex.THREE,
                             Vertex.SIX
                     )
             )));
-    public static Function<Polygon, List<Path>> DIAGONALS = p -> Path.vertexPathsToPaths.apply(
+    public static Function<Polygon, Paths> DIAGONALS = p -> Path.vertexPathsToPaths.apply(
             Polygon.toVertexPaths(p, asList(
                     asList(
                             Vertex.ONE,
@@ -124,14 +123,14 @@ public class Hex extends Polygon {
 //    );
 
 
-    public static enum Diag {
+    public enum Diag {
         ONE(asList((Polygon.Vertex) Vertex.ONE, Vertex.FOUR)),
         TWO(asList((Polygon.Vertex) Vertex.TWO, Vertex.FIVE)),
         THREE(asList((Polygon.Vertex) Vertex.THREE, Vertex.SIX));
 
         private final List<Polygon.Vertex> vertexes;
 
-        private Diag(List<Polygon.Vertex> vertexes) {
+        Diag(List<Polygon.Vertex> vertexes) {
             this.vertexes = vertexes;
         }
 
@@ -144,34 +143,29 @@ public class Hex extends Polygon {
         return new Hex(ratio, type);
     }
 
-    public static Polygon hex(double ratio, Type type, Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform) {
+    public static Polygon hex(double ratio, Type type, CentreTransform centreTransform) {
         return new Hex(ratio, type, centreTransform);
     }
 
     public static ActualVertex instruction(Polygon polygon, Corner corner) {
-        return () -> Pair.of(
-                polygon,
-                corner.getVertex()
-        );
+        return ActualVertex.of(polygon, corner.getVertex());
     }
 
     public static ActualVertex instruction(double ratio, Corner corner) {
-        return () -> Pair.of(
+        return ActualVertex.of(
                 hex(ratio, corner.getType()),
-                corner.getVertex()
-        );
+                corner.getVertex());
     }
 
-    public static ActualVertex instruction(double ratio, Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform, Corner corner) {
-        return () -> Pair.of(
+    public static ActualVertex instruction(double ratio, CentreTransform centreTransform, Corner corner) {
+        return ActualVertex.of(
                 hex(ratio, corner.getType(), centreTransform),
                 corner.getVertex()
-
         );
 
     }
 
-    private Hex(double ratio, Type type, Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform) {
+    private Hex(double ratio, Type type, CentreTransform centreTransform) {
         super(ratio, type, centreTransform);
     }
 
@@ -190,11 +184,11 @@ public class Hex extends Polygon {
     }
 
     @Override
-    protected Polygon newInstance(double ratio, Type type, Function<Triple<Point2D, Double, Integer>, Triple<Point2D, Double, Integer>> centreTransform) {
+    protected Polygon newInstance(double ratio, Type type, CentreTransform centreTransform) {
         return new Hex(ratio, type, centreTransform);
     }
 
-    public static enum Corner {
+    public enum Corner {
         DR_V(Vertex.ONE, Type.VER),
         DOWN(Vertex.TWO, Type.VER),
         DL_V(Vertex.THREE, Type.VER),
@@ -226,7 +220,7 @@ public class Hex extends Polygon {
         }
     }
 
-    public static enum Vertex implements Polygon.Vertex {
+    public enum Vertex implements Polygon.Vertex {
         ONE(0),
         TWO(1),
         THREE(2),
@@ -238,7 +232,7 @@ public class Hex extends Polygon {
 
         private final int index;
 
-        private Vertex(int index) {
+        Vertex(int index) {
             this.index = index;
         }
 

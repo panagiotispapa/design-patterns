@@ -1,10 +1,15 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Grid;
 import com.design.common.Polygon;
+import com.design.common.Polygon.VertexPaths;
 import com.design.common.model.Style;
-import com.design.islamic.model.*;
+import com.design.islamic.model.DesignSupplier;
+import com.design.islamic.model.Hex;
+import com.design.islamic.model.PayloadSimple;
+import com.design.islamic.model.TileSupplier;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -59,8 +64,9 @@ public class TileStar {
                 .Builder(
                 "hex_tile_star_01",
                 Hex.ALL_VERTEX_INDEXES
-        ).withPathsFull(() -> asList(() ->
-                        getLines(RATIO_1)
+        ).withPathsFull(VertexPaths.of(
+                Polygon.VertexPath.of(getLines(RATIO_1))
+
         ), whiteBold)
                 .build();
     }
@@ -71,8 +77,8 @@ public class TileStar {
         return new PayloadSimple.Builder("hex_tile_star_02",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                        () -> getLines(RATIO_2)
+                .withPathsFull(VertexPaths.of(
+                        Polygon.VertexPath.of(getLines(RATIO_2))
                 ), whiteBold)
                 .build();
     }
@@ -83,8 +89,8 @@ public class TileStar {
         return new PayloadSimple.Builder("hex_tile_star_03",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                        () -> getLines(RATIO_3)
+                .withPathsFull(VertexPaths.of(
+                        Polygon.VertexPath.of(getLines(RATIO_3))
                 ), whiteBold)
                 .build();
     }
@@ -96,8 +102,8 @@ public class TileStar {
                 .Builder(
                 "hex_tile_star_01b",
                 Hex.ALL_VERTEX_INDEXES
-        ).withPathsFull(() -> asList(
-                () -> getLinesB(RATIO_1)
+        ).withPathsFull(VertexPaths.of(
+                Polygon.VertexPath.of(getLinesB(RATIO_1))
         ), whiteBold)
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
@@ -110,8 +116,8 @@ public class TileStar {
                 .Builder(
                 "hex_tile_star_02b",
                 Hex.ALL_VERTEX_INDEXES
-        ).withPathsFull(() -> asList(
-                () -> getLinesB(RATIO_2)
+        ).withPathsFull(VertexPaths.of(
+                Polygon.VertexPath.of(getLinesB(RATIO_2))
         ), whiteBold)
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
@@ -124,8 +130,8 @@ public class TileStar {
                 .Builder(
                 "hex_tile_star_03b",
                 Hex.ALL_VERTEX_INDEXES
-        ).withPathsFull(() -> asList(
-                () -> getLinesB(RATIO_3)
+        ).withPathsFull(VertexPaths.of(
+                Polygon.VertexPath.of(getLinesB(RATIO_3))
         ), whiteBold)
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
@@ -180,11 +186,11 @@ public class TileStar {
                         "AB=AC",
                         "KB=h/(h+0.5)"
                 ))
-                .addImportantPoints(asList(
-                        Triple.of(inner2, Hex.Vertex.SIX, "B"),
-                        Triple.of(inner2Reg, ONE, "A"),
-                        Triple.of(registered, ONE, "C")
-                ))
+                .addImportantVertexes(
+                        ImportantVertex.of(inner2, Hex.Vertex.SIX, "B"),
+                        ImportantVertex.of(inner2Reg, ONE, "A"),
+                        ImportantVertex.of(registered, ONE, "C")
+                )
                 .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(registered, Hex.DIAGONALS),
@@ -238,14 +244,14 @@ public class TileStar {
                 .addAllVertexesAsImportantPoints(asList(
 //                        hexAF
                 ))
-                .addImportantPoints(asList(
-                        Triple.of(main, ONE, "A"),
-                        Triple.of(outerSmall, THREE, "B"),
-                        Triple.of(outerSmall, FOUR, "C"),
-                        Triple.of(registered, ONE, "D"),
-                        Triple.of(registered, TWO, "E"),
-                        Triple.of(hexAF, FIVE, "F")
-                ))
+                .addImportantVertexes(
+                        ImportantVertex.of(main, ONE, "A"),
+                        ImportantVertex.of(outerSmall, THREE, "B"),
+                        ImportantVertex.of(outerSmall, FOUR, "C"),
+                        ImportantVertex.of(registered, ONE, "D"),
+                        ImportantVertex.of(registered, TWO, "E"),
+                        ImportantVertex.of(hexAF, FIVE, "F")
+                )
                 .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(outerSmall, Hex.PERIMETER),
@@ -256,22 +262,25 @@ public class TileStar {
                 .addSinglePaths(asList(
                         Pair.of(registered, Hex.PERIMETER)
                 ), green)
-                .addFullPaths(() -> asList(() -> asList(
-                        instruction(outerSmall, DL_V),
-                        instruction(registered, RIGHT),
-                        instruction(outerSmall, UL_V)
+                .addFullPaths(VertexPaths.of(
+                        Polygon.VertexPath.of(
+                                instruction(outerSmall, DL_V),
+                                instruction(registered, RIGHT),
+                                instruction(outerSmall, UL_V)
 
-                )), green)
-                .addFullPaths(() -> asList(() -> asList(
-                        instruction(inner, DL_H),
-                        instruction(inner, UR_H)
+                        )), green)
+                .addFullPaths(VertexPaths.of(
+                        Polygon.VertexPath.of(
+                                instruction(inner, DL_H),
+                                instruction(inner, UR_H)
 
-                )), blue)
-                .addFullPaths(() -> asList(() -> asList(
-                        instruction(outerBig, DOWN),
-                        instruction(outerBig, UP)
+                        )), blue)
+                .addFullPaths(VertexPaths.of(
+                        Polygon.VertexPath.of(
+                                instruction(outerBig, DOWN),
+                                instruction(outerBig, UP)
 
-                )), gray)
+                        )), gray)
                 .addCircle(
                         asList(
                                 registered

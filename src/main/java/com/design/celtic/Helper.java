@@ -6,7 +6,6 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.design.common.model.Shapes.newCircle;
 import static java.util.Arrays.asList;
 
 public class Helper {
@@ -16,7 +15,7 @@ public class Helper {
         final double newR = bigR.getR() * part;
         final double startPoint = bigR.getCentre().getX() - bigR.getR() + newR + offset;
 
-        return newCircle(point(startPoint + (index - 1) * 2 * newR, bigR.getCentre().getY()), newR);
+        return Circle.of(point(startPoint + (index - 1) * 2 * newR, bigR.getCentre().getY()), newR);
 
     }
 
@@ -37,7 +36,7 @@ public class Helper {
         final double newR = bigR.getR() * part;
         final double startPoint = bigR.getCentre().getX() - bigR.getR() + newR;
 
-        return newCircle(point(startPoint + (index - 1) * 2 * newR, bigR.getCentre().getY()), newR);
+        return Circle.of(point(startPoint + (index - 1) * 2 * newR, bigR.getCentre().getY()), newR);
 
     }
 
@@ -46,7 +45,7 @@ public class Helper {
         final double newR = bigR.getR() * part;
         final double startPoint = bigR.getCentre().getX() + bigR.getR() - newR;
 
-        return newCircle(point(startPoint - (index - 1) * 2 * newR, bigR.getCentre().getY()), newR);
+        return Circle.of(point(startPoint - (index - 1) * 2 * newR, bigR.getCentre().getY()), newR);
 
     }
 
@@ -73,7 +72,7 @@ public class Helper {
         final double startPoint = bigR.getCentre().getX() - bigR.getR() + offset + newR;
         final double max = bigR.getCentre().getX() + bigR.getR() + 2;
         for (double posX = startPoint; posX + newR < max; posX += 2 * newR) {
-            output.add(newCircle(point(posX, bigR.getCentre().getY()), newR));
+            output.add(Circle.of(point(posX, bigR.getCentre().getY()), newR));
         }
 
         return output;
@@ -87,7 +86,7 @@ public class Helper {
         final double startPoint = bigR.getCentre().getX() + bigR.getR() - newR;
         final double min = bigR.getCentre().getX() - bigR.getR() - 2;
         for (double posX = startPoint; posX - newR > min; posX -= 2 * newR) {
-            output.add(newCircle(point(posX, bigR.getCentre().getY()), newR));
+            output.add(Circle.of(point(posX, bigR.getCentre().getY()), newR));
         }
 
         return output;
@@ -109,8 +108,8 @@ public class Helper {
         final double newR = big.getR() / 2.0;
 
         return asList(
-                newCircle(point(big.getCentre().getX() - newR, big.getCentre().getY()), newR),
-                newCircle(point(big.getCentre().getX() + newR, big.getCentre().getY()), newR)
+                Circle.of(point(big.getCentre().getX() - newR, big.getCentre().getY()), newR),
+                Circle.of(point(big.getCentre().getX() + newR, big.getCentre().getY()), newR)
         );
 
     }

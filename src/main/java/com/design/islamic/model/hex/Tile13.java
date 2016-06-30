@@ -1,8 +1,10 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Grid;
 import com.design.common.Polygon;
+import com.design.common.Polygon.VertexPaths;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
@@ -36,17 +38,18 @@ public class Tile13 {
         return new PayloadSimple.Builder("hex_tile_13",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                        () -> asList(
-                                instruction(hexCB, UR_H),
-                                instruction(hexCB, UL_H),
-                                instruction(hexCB, LEFT),
-                                instruction(hexCB, DL_H),
-                                instruction(hexCB, DR_H),
-                                instruction(hexCB, UR_H)
-                        )
+                .withPathsFull(
+                        VertexPaths.of(
+                                Polygon.VertexPath.of(
+                                        instruction(hexCB, UR_H),
+                                        instruction(hexCB, UL_H),
+                                        instruction(hexCB, LEFT),
+                                        instruction(hexCB, DL_H),
+                                        instruction(hexCB, DR_H),
+                                        instruction(hexCB, UR_H)
+                                )
 
-                ), whiteBold)
+                        ), whiteBold)
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
     }
@@ -71,11 +74,11 @@ public class Tile13 {
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_13_design")
                 .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
-                .addImportantPoints(asList(
-                        Triple.of(main, ONE, "A"),
-                        Triple.of(hexKB, ONE, "B"),
-                        Triple.of(hexKC, ONE, "C")
-                ))
+                .addImportantVertexes(
+                        ImportantVertex.of(main, ONE, "A"),
+                        ImportantVertex.of(hexKB, ONE, "B"),
+                        ImportantVertex.of(hexKC, ONE, "C")
+                )
                 .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(main, Hex.DIAGONALS),

@@ -1,6 +1,7 @@
 package com.design.deco;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Grid;
 import com.design.common.Polygon;
 import com.design.common.model.Style;
@@ -42,8 +43,8 @@ public class Tile4 {
         return new PayloadSimple.Builder("deco_tile_04",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                        () -> asList(
+                .withPathsFull(VertexPaths.of(
+                        VertexPath.of(
                                 instruction(rectKB, LEFT),
                                 instruction(rectCE, DL)
                         )
@@ -72,13 +73,13 @@ public class Tile4 {
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "deco_tile_04_design")
                 .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
-                .addImportantPoints(asList(
-                        Triple.of(main, RIGHT.getVertex(), "A"),
-                        Triple.of(rectKB, RIGHT.getVertex(), "B"),
-                        Triple.of(rectKC, DR.getVertex(), "C"),
-                        Triple.of(rectCD, LEFT.getVertex(), "D"),
-                        Triple.of(rectCE, DL.getVertex(), "E")
-                ))
+                .addImportantVertexes(
+                        ImportantVertex.of(main, RIGHT.getVertex(), "A"),
+                        ImportantVertex.of(rectKB, RIGHT.getVertex(), "B"),
+                        ImportantVertex.of(rectKC, DR.getVertex(), "C"),
+                        ImportantVertex.of(rectCD, LEFT.getVertex(), "D"),
+                        ImportantVertex.of(rectCE, DL.getVertex(), "E")
+                )
                 .addSinglePaths(asList(
                         Pair.of(main, PERIMETER),
                         Pair.of(main, DIAGONALS),

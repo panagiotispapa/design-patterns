@@ -1,8 +1,11 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Grid;
 import com.design.common.Polygon;
+import com.design.common.Polygon.VertexPath;
+import com.design.common.Polygon.VertexPaths;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
@@ -43,18 +46,18 @@ public class Tile10 {
         return new PayloadSimple.Builder("hex_tile_10",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                        () -> asList(
+                .withPathsFull(VertexPaths.of(
+                        VertexPath.of(
                                 instruction(outerReg, DL_V),
                                 instruction(hexAC, LEFT),
                                 instruction(hexAC, UL_H),
                                 instruction(outerReg, UP)
                         ),
-                        () -> asList(
+                        VertexPath.of(
                                 instruction(hexKE, RIGHT),
                                 instruction(hexAC, UL_H)
                         ),
-                        () -> asList(
+                        VertexPath.of(
                                 instruction(hexKE, DR_H),
                                 instruction(hexAC, LEFT)
                         )
@@ -102,14 +105,14 @@ public class Tile10 {
                         Pair.of(hexEC, Hex.PERIMETER)
 
                 ), blue)
-                .addImportantPoints(asList(
-                        Triple.of(main, DR_V.getVertex(), "A"),
-                        Triple.of(outerReg, UP.getVertex(), "B"),
-                        Triple.of(hexAC, UL_H.getVertex(), "C"),
-                        Triple.of(hexAC, UR_H.getVertex(), "D"),
-                        Triple.of(hexKE, RIGHT.getVertex(), "E"),
-                        Triple.of(mainReg, RIGHT.getVertex(), "F")
-                ))
+                .addImportantVertexes(
+                        ImportantVertex.of(main, DR_V.getVertex(), "A"),
+                        ImportantVertex.of(outerReg, UP.getVertex(), "B"),
+                        ImportantVertex.of(hexAC, UL_H.getVertex(), "C"),
+                        ImportantVertex.of(hexAC, UR_H.getVertex(), "D"),
+                        ImportantVertex.of(hexKE, RIGHT.getVertex(), "E"),
+                        ImportantVertex.of(mainReg, RIGHT.getVertex(), "F")
+                )
                 .addAllVertexesAsImportantPoints(asList(
 //                        outer
                 ))

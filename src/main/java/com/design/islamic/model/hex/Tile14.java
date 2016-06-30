@@ -1,8 +1,10 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Grid;
 import com.design.common.Polygon;
+import com.design.common.Polygon.VertexPaths;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
@@ -38,8 +40,8 @@ public class Tile14 {
         return new PayloadSimple.Builder("hex_tile_14",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                        () -> asList(
+                .withPathsFull(VertexPaths.of(
+                        Polygon.VertexPath.of(
                                 instruction(hexAB, UL_H),
                                 instruction(hexAB, LEFT),
                                 instruction(hexAB, DL_H)
@@ -67,10 +69,10 @@ public class Tile14 {
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_14_design")
                 .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
-                .addImportantPoints(asList(
-                        Triple.of(main, ONE, "A"),
-                        Triple.of(hexKB, ONE, "B")
-                ))
+                .addImportantVertexes(
+                        ImportantVertex.of(main, ONE, "A"),
+                        ImportantVertex.of(hexKB, ONE, "B")
+                )
                 .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(hexKB, Hex.PERIMETER),

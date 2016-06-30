@@ -1,9 +1,12 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Grid;
 import com.design.common.Mappings;
 import com.design.common.Polygon;
+import com.design.common.Polygon.VertexPath;
+import com.design.common.Polygon.VertexPaths;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
@@ -35,18 +38,18 @@ public class Tile2 {
         return new PayloadSimple.Builder("hex_tile_02",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() ->
-                                asList(
-                                        () -> asList(
-                                                instruction(outer, RIGHT),
-                                                instruction(inner, DR_V),
-                                                instruction(outer, DR_H)
-                                        ),
-                                        () -> asList(
-                                                instruction(inner, DR_V),
-                                                instruction(inner, DOWN)
-                                        )
-                                ), whiteBold
+                .withPathsFull(
+                        VertexPaths.of(
+                                VertexPath.of(
+                                        instruction(outer, RIGHT),
+                                        instruction(inner, DR_V),
+                                        instruction(outer, DR_H)
+                                ),
+                                VertexPath.of(
+                                        instruction(inner, DR_V),
+                                        instruction(inner, DOWN)
+                                )
+                        ), whiteBold
                 )
                 .build();
     }
@@ -72,14 +75,14 @@ public class Tile2 {
                         "KB=h/(h+0.5)",
                         "BD=h*(1-KB)"
                 ))
-                .addImportantPoints(asList(
-                        Triple.of(main, DR_V.getVertex(), "A"),
-                        Triple.of(main.getRegistered(), RIGHT.getVertex(), "E"),
-                        Triple.of(inner, DR_V.getVertex(), "B"),
-                        Triple.of(innerReg, RIGHT.getVertex(), "C"),
-                        Triple.of(outer, DR_V.getVertex(), "D")
+                .addImportantVertexes(
+                        ImportantVertex.of(main, DR_V.getVertex(), "A"),
+                        ImportantVertex.of(main.getRegistered(), RIGHT.getVertex(), "E"),
+                        ImportantVertex.of(inner, DR_V.getVertex(), "B"),
+                        ImportantVertex.of(innerReg, RIGHT.getVertex(), "C"),
+                        ImportantVertex.of(outer, DR_V.getVertex(), "D")
 
-                ))
+                )
                 .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(main, Hex.DIAGONALS),

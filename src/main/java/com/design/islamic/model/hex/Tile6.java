@@ -1,8 +1,10 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Grid;
 import com.design.common.Polygon;
+import com.design.common.Polygon.VertexPaths;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
@@ -38,19 +40,20 @@ public class Tile6 {
         return new PayloadSimple.Builder("hex_tile_06",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                        () -> asList(
-                                instruction(main, DR_V),
-                                instruction(hexBC, UL_H),
-                                instruction(hexKA, DOWN)
-                        ),
-                        () -> asList(
-                                instruction(main, DR_V),
-                                instruction(hexBC, LEFT),
-                                instruction(hexKA, UR_V)
-                        )
+                .withPathsFull(
+                        VertexPaths.of(
+                                Polygon.VertexPath.of(
+                                        instruction(main, DR_V),
+                                        instruction(hexBC, UL_H),
+                                        instruction(hexKA, DOWN)
+                                ),
+                                Polygon.VertexPath.of(
+                                        instruction(main, DR_V),
+                                        instruction(hexBC, LEFT),
+                                        instruction(hexKA, UR_V)
+                                )
 
-                ), whiteBold)
+                        ), whiteBold)
                 .build();
     }
 
@@ -87,12 +90,12 @@ public class Tile6 {
                 .addEquations(
                         equations
                 )
-                .addImportantPoints(asList(
-                        Triple.of(hexKA, DR_V.getVertex(), "A"),
-                        Triple.of(main, DR_V.getVertex(), "B"),
-                        Triple.of(hexBC, LEFT.getVertex(), "C"),
-                        Triple.of(hexBC, UL_H.getVertex(), "D")
-                ))
+                .addImportantVertexes(
+                        ImportantVertex.of(hexKA, DR_V.getVertex(), "A"),
+                        ImportantVertex.of(main, DR_V.getVertex(), "B"),
+                        ImportantVertex.of(hexBC, LEFT.getVertex(), "C"),
+                        ImportantVertex.of(hexBC, UL_H.getVertex(), "D")
+                )
                 .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 ;
 

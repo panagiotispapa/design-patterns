@@ -1,6 +1,7 @@
 package com.design.islamic.model.rect;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Grid;
 import com.design.common.Polygon;
 import com.design.common.model.Path;
@@ -44,8 +45,9 @@ public class Tile2 {
 
         return new PayloadSimple.Builder("rect_tile_02",
                 Hex.ALL_VERTEX_INDEXES)
-                .withPathsFull(() -> asList(
-                                () -> asList(
+                .withPathsFull(
+                        VertexPaths.of(
+                                VertexPath.of(
                                         instruction(rectGF, UL),
                                         instruction(rectGF_ver, LEFT),
                                         instruction(rectGF, DL)
@@ -85,14 +87,14 @@ public class Tile2 {
 //                .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
                 .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
-                .addImportantPoints(asList(
-                        Triple.of(main, DR.getVertex(), "A"),
-                        Triple.of(rectKB, UR.getVertex(), "B"),
-                        Triple.of(rectKC, LEFT.getVertex(), "C"),
-                        Triple.of(rectKD, RIGHT.getVertex(), "D"),
-                        Triple.of(rectKE, UP.getVertex(), "E"),
-                        Triple.of(rectKE, RIGHT.getVertex(), "F"),
-                        Triple.of(Rect.rect(KG, VER), RIGHT.getVertex(), "G")
+                .addImportantVertexes(asList(
+                        ImportantVertex.of(main, DR.getVertex(), "A"),
+                        ImportantVertex.of(rectKB, UR.getVertex(), "B"),
+                        ImportantVertex.of(rectKC, LEFT.getVertex(), "C"),
+                        ImportantVertex.of(rectKD, RIGHT.getVertex(), "D"),
+                        ImportantVertex.of(rectKE, UP.getVertex(), "E"),
+                        ImportantVertex.of(rectKE, RIGHT.getVertex(), "F"),
+                        ImportantVertex.of(Rect.rect(KG, VER), RIGHT.getVertex(), "G")
                 ))
                 .addSinglePaths(asList(
                         Pair.of(main, PERIMETER),

@@ -1,8 +1,9 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Polygon;
-import com.design.common.model.Path;
+import com.design.common.model.Path.Paths;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
@@ -119,7 +120,7 @@ public class Tile9a {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_09a_design")
                 .addEquations(getEquationsA())
-                .addImportantPoints(getImportantPointsA())
+                .addImportantVertexes(getImportantPointsA())
                 .addSinglePaths(getInstructionsGrayA(), gray)
                 .addSinglePaths(getInstructionsBlueA(), blue)
                 .addFullPaths(() -> getFullInstructionsGrayA(), gray);
@@ -135,7 +136,7 @@ public class Tile9a {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_09b_design")
                 .addEquations(getEquationsA())
-                .addImportantPoints(
+                .addImportantVertexes(
                         Stream.concat(
                                 getImportantPointsA().stream(),
                                 getImportantPointsB().stream()
@@ -166,7 +167,7 @@ public class Tile9a {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_09c_design")
                 .addEquations(getEquationsA())
-                .addImportantPoints(
+                .addImportantVertexes(
                         Stream.concat(
                                 getImportantPointsA().stream(),
                                 getImportantPointsB().stream()
@@ -221,7 +222,7 @@ public class Tile9a {
         );
     }
 
-    protected static List<Pair<Polygon, Function<Polygon, List<Path>>>> getInstructionsBlueA() {
+    protected static List<Pair<Polygon, Function<Polygon, Paths>>> getInstructionsBlueA() {
         return asList(
                 Pair.of(outer, PERIMETER),
                 Pair.of(mainL2, PERIMETER),
@@ -230,14 +231,14 @@ public class Tile9a {
     }
 
 
-    protected static List<Pair<Polygon, Function<Polygon, List<Path>>>> getInstructionsBlueB() {
+    protected static List<Pair<Polygon, Function<Polygon, Paths>>> getInstructionsBlueB() {
         return asList(
                 Pair.of(mainL3, PERIMETER),
                 Pair.of(mainL3Hor, PERIMETER)
         );
     }
 
-    protected static List<Pair<Polygon, Function<Polygon, List<Path>>>> getInstructionsGrayA() {
+    protected static List<Pair<Polygon, Function<Polygon, Paths>>> getInstructionsGrayA() {
         return asList(
                 Pair.of(main, PERIMETER),
                 Pair.of(mainHor, PERIMETER),
@@ -246,19 +247,19 @@ public class Tile9a {
         );
     }
 
-    protected static List<Triple<Polygon, Polygon.Vertex, String>> getImportantPointsA() {
+    protected static List<ImportantVertex> getImportantPointsA() {
         return asList(
-                Triple.of(main, UP.getVertex(), "A"),
-                Triple.of(Hex.hex(H, VER), UP.getVertex(), "B"),
-                Triple.of(mainL2, UP.getVertex(), "C"),
-                Triple.of(outer, DR_V.getVertex(), "D")
+                ImportantVertex.of(main, UP.getVertex(), "A"),
+                ImportantVertex.of(Hex.hex(H, VER), UP.getVertex(), "B"),
+                ImportantVertex.of(mainL2, UP.getVertex(), "C"),
+                ImportantVertex.of(outer, DR_V.getVertex(), "D")
 
         );
     }
 
-    protected static List<Triple<Polygon, Polygon.Vertex, String>> getImportantPointsB() {
+    protected static List<ImportantVertex> getImportantPointsB() {
         return asList(
-                Triple.of(mainL3, UP.getVertex(), "E")
+                ImportantVertex.of(mainL3, UP.getVertex(), "E")
         );
     }
 

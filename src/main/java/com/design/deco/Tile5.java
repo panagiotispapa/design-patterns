@@ -1,13 +1,14 @@
 package com.design.deco;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Grid;
 import com.design.common.Polygon;
 import com.design.common.model.Path;
+import com.design.common.model.Path.Paths;
 import com.design.common.model.Style;
 import com.design.islamic.model.*;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -39,49 +40,50 @@ public class Tile5 {
         return new PayloadSimple.Builder("deco_tile_05",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsSingle(() -> asList(
-                        () -> asList(
-                                d(1),
-                                dl(1, 2),
-                                dl(2, 2),
-                                d(2),
-                                u(1)
-                        ),
-                        () -> asList(
-                                ul(1, 1),
-                                ur(1, 2)
-                        ),
-                        () -> asList(
-                                instruction(Rect.rect(Ratio_m, VER, centreTransform(Ratio_m, RIGHT)), LEFT),
-                                r(2)
-                        ),
-                        () -> asList(
-                                d(2),
-                                dr(2, 1),
-                                r(1)
-                        ),
-                        () -> asList(
-                                dr(1, 1),
-                                dr(1, 2),
-                                dr(2, 2)
-                        ),
-                        () -> asList(
-                                ul(2, 1),
-                                dl(1, 1)
-                        ),
-                        () -> asList(
-                                l(1),
-                                l(2),
-                                ul(2, 2),
-                                ur(2, 1),
-                                ur(1, 1)
-                        ),
-                        () -> asList(
-                                ur(2, 2),
-                                r(2)
-                        )
+                .withPathsSingle(
+                        VertexPaths.of(
+                                VertexPath.of(
+                                        d(1),
+                                        dl(1, 2),
+                                        dl(2, 2),
+                                        d(2),
+                                        u(1)
+                                ),
+                                VertexPath.of(
+                                        ul(1, 1),
+                                        ur(1, 2)
+                                ),
+                                VertexPath.of(
+                                        instruction(Rect.rect(Ratio_m, VER, centreTransform(Ratio_m, RIGHT)), LEFT),
+                                        r(2)
+                                ),
+                                VertexPath.of(
+                                        d(2),
+                                        dr(2, 1),
+                                        r(1)
+                                ),
+                                VertexPath.of(
+                                        dr(1, 1),
+                                        dr(1, 2),
+                                        dr(2, 2)
+                                ),
+                                VertexPath.of(
+                                        ul(2, 1),
+                                        dl(1, 1)
+                                ),
+                                VertexPath.of(
+                                        l(1),
+                                        l(2),
+                                        ul(2, 2),
+                                        ur(2, 1),
+                                        ur(1, 1)
+                                ),
+                                VertexPath.of(
+                                        ur(2, 2),
+                                        r(2)
+                                )
 
-                ), whiteBold)
+                        ), whiteBold)
                 .withGridConf(Grid.Configs.RECT2.getConfiguration())
                 .build();
     }
@@ -132,13 +134,13 @@ public class Tile5 {
                 "KB = KA / 5.0"
         );
 
-        Function<Polygon, List<Path>> diagVer = p -> Path.vertexPathsToPaths.apply(Polygon.toVertexPaths(p, asList(
+        Function<Polygon, Paths> diagVer = p -> Path.vertexPathsToPaths.apply(Polygon.toVertexPaths(p, asList(
                 asList(
                         UP.getVertex(),
                         DOWN.getVertex()
                 )
         )));
-        Function<Polygon, List<Path>> diagHor = p -> Path.vertexPathsToPaths.apply(Polygon.toVertexPaths(p, asList(
+        Function<Polygon, Paths> diagHor = p -> Path.vertexPathsToPaths.apply(Polygon.toVertexPaths(p, asList(
                 asList(
                         LEFT.getVertex(),
                         RIGHT.getVertex()
@@ -148,9 +150,7 @@ public class Tile5 {
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "deco_tile_05_design")
                 .addSinglePaths(() -> getPayloadSimple().getPathsSingle(), red)
                 .addEquations(equations)
-                .addImportantPoints(asList(
-                        Triple.of(main, DR.getVertex(), "A")
-                ))
+                .addImportantVertexes(ImportantVertex.of(main, DR.getVertex(), "A"))
                 .addSinglePaths(asList(
                         Pair.of(main, PERIMETER)
                 ), gray)

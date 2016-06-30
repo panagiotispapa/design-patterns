@@ -1,9 +1,11 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Grid;
 import com.design.common.Mappings;
 import com.design.common.Polygon;
+import com.design.common.Polygon.VertexPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
@@ -43,31 +45,31 @@ public class Tile2b {
         return new PayloadSimple.Builder("hex_tile_02b",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() ->
-                                asList(
-                                        () -> asList(
-                                                instruction(hexBD, RIGHT),
-                                                instruction(hexKB, DR_V),
-                                                instruction(hexBD, DR_H)
-                                        ),
-                                        () -> asList(
-                                                instruction(hexKB, DR_V),
-                                                instruction(hexKB, DOWN)
-                                        ),
-                                        () -> asList(
-                                                instruction(hexKF, DR_V),
-                                                instruction(hexKC, DR_H),
-                                                instruction(hexKF, DOWN)
-                                        ),
-                                        () -> asList(
-                                                instruction(hexKC, DR_H),
-                                                instruction(hexBG, DL_H),
-                                                instruction(hexBD, DR_H),
-                                                instruction(hexBD, RIGHT),
-                                                instruction(hexBG, UR_H),
-                                                instruction(hexKC, RIGHT)
-                                        )
-                                ), whiteBold
+                .withPathsFull(
+                        Polygon.VertexPaths.of(
+                                VertexPath.of(
+                                        instruction(hexBD, RIGHT),
+                                        instruction(hexKB, DR_V),
+                                        instruction(hexBD, DR_H)
+                                ),
+                                VertexPath.of(
+                                        instruction(hexKB, DR_V),
+                                        instruction(hexKB, DOWN)
+                                ),
+                                VertexPath.of(
+                                        instruction(hexKF, DR_V),
+                                        instruction(hexKC, DR_H),
+                                        instruction(hexKF, DOWN)
+                                ),
+                                VertexPath.of(
+                                        instruction(hexKC, DR_H),
+                                        instruction(hexBG, DL_H),
+                                        instruction(hexBD, DR_H),
+                                        instruction(hexBD, RIGHT),
+                                        instruction(hexBG, UR_H),
+                                        instruction(hexKC, RIGHT)
+                                )
+                        ), whiteBold
                 )
                 .build();
     }
@@ -97,14 +99,14 @@ public class Tile2b {
                         "KF=KB/2",
                         "KG=(KB/2)*h"
                 ))
-                .addImportantPoints(asList(
-                        Triple.of(main, DR_V.getVertex(), "A"),
-                        Triple.of(main.getRegistered(), RIGHT.getVertex(), "E"),
-                        Triple.of(hexKB, DR_V.getVertex(), "B"),
-                        Triple.of(hexKBReg, RIGHT.getVertex(), "C"),
-                        Triple.of(outer, DR_V.getVertex(), "D"),
-                        Triple.of(hexKF, DR_V.getVertex(), "F"),
-                        Triple.of(hexBG, DL_H.getVertex(), "G")
+                .addImportantVertexes(asList(
+                        ImportantVertex.of(main, DR_V.getVertex(), "A"),
+                        ImportantVertex.of(main.getRegistered(), RIGHT.getVertex(), "E"),
+                        ImportantVertex.of(hexKB, DR_V.getVertex(), "B"),
+                        ImportantVertex.of(hexKBReg, RIGHT.getVertex(), "C"),
+                        ImportantVertex.of(outer, DR_V.getVertex(), "D"),
+                        ImportantVertex.of(hexKF, DR_V.getVertex(), "F"),
+                        ImportantVertex.of(hexBG, DL_H.getVertex(), "G")
 
                 ))
                 .addSinglePaths(asList(

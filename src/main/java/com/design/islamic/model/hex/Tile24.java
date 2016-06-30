@@ -1,6 +1,7 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Polygon;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
@@ -38,14 +39,14 @@ public class Tile24 {
         return new PayloadSimple.Builder("hex_tile_24",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                        () -> asList(
+                .withPathsFull(VertexPaths.of(
+                        VertexPath.of(
                                 instruction(hexKB, DL_V),
                                 instruction(hexBC, UL_V),
                                 instruction(hexDA_Reg, DL_H),
                                 instruction(hexDA_Reg, UR_H)
                         ),
-                        () -> asList(
+                        VertexPath.of(
                                 instruction(hexKB, UR_V),
                                 instruction(hexBC, UR_V),
                                 instruction(hexDA_Reg, DR_H),
@@ -79,12 +80,12 @@ public class Tile24 {
 //                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
                 .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
-                .addImportantPoints(asList(
-                        Triple.of(main, UP.getVertex(), "A"),
-                        Triple.of(hexKB, UP.getVertex(), "B"),
-                        Triple.of(hexKC, UP.getVertex(), "C"),
-                        Triple.of(hex(KD, VER), UP.getVertex(), "D")
-                ))
+                .addImportantVertexes(
+                        ImportantVertex.of(main, UP.getVertex(), "A"),
+                        ImportantVertex.of(hexKB, UP.getVertex(), "B"),
+                        ImportantVertex.of(hexKC, UP.getVertex(), "C"),
+                        ImportantVertex.of(hex(KD, VER), UP.getVertex(), "D")
+                )
                 .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
                         Pair.of(hexBC, Hex.PERIMETER),

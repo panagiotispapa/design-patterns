@@ -1,6 +1,7 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Grid;
 import com.design.common.Polygon;
 import com.design.common.model.Style;
@@ -48,14 +49,14 @@ public class Tile3 {
         return new PayloadSimple.Builder("hex_tile_03",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() ->
-                                asList(
-                                        () -> asList(
-                                                instruction(hexKI, RIGHT),
-                                                instruction(main, DR_V),
-                                                instruction(hexKI, DR_H)
-                                        )
-                                ), whiteBold
+                .withPathsFull(
+                        VertexPaths.of(
+                                VertexPath.of(
+                                        instruction(hexKI, RIGHT),
+                                        instruction(main, DR_V),
+                                        instruction(hexKI, DR_H)
+                                )
+                        ), whiteBold
                 )
                 .build();
     }
@@ -70,14 +71,14 @@ public class Tile3 {
         return new PayloadSimple.Builder("hex_tile_03b",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() ->
-                                asList(
-                                        () -> asList(
-                                                instruction(mainReg, RIGHT),
-                                                instruction(hexKM, DR_V),
-                                                instruction(mainReg, DR_H)
-                                        )
-                                ), whiteBold
+                .withPathsFull(
+                        VertexPaths.of(
+                                VertexPath.of(
+                                        instruction(mainReg, RIGHT),
+                                        instruction(hexKM, DR_V),
+                                        instruction(mainReg, DR_H)
+                                )
+                        ), whiteBold
                 )
                 .build();
     }
@@ -112,18 +113,18 @@ public class Tile3 {
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
                 .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
-                .addImportantPoints(asList(
-                        Triple.of(hexKA, DOWN.getVertex(), "A"),
-                        Triple.of(mainReg, RIGHT.getVertex(), "B"),
-                        Triple.of(mainReg, LEFT.getVertex(), "D"),
-                        Triple.of(main, DL_V.getVertex(), "C"),
-                        Triple.of(mainReg, DR_H.getVertex(), "E"),
-                        Triple.of(main, UL_V.getVertex(), "F"),
-                        Triple.of(main, DR_V.getVertex(), "H"),
-                        Triple.of(hexKI, RIGHT.getVertex(), "I")
-//                        Triple.of(hexHL, UL_V.getVertex(), "L"),
-//                        Triple.of(hexKM, DR_V.getVertex(), "M")
-                ))
+                .addImportantVertexes(
+                        ImportantVertex.of(hexKA, DOWN.getVertex(), "A"),
+                        ImportantVertex.of(mainReg, RIGHT.getVertex(), "B"),
+                        ImportantVertex.of(mainReg, LEFT.getVertex(), "D"),
+                        ImportantVertex.of(main, DL_V.getVertex(), "C"),
+                        ImportantVertex.of(mainReg, DR_H.getVertex(), "E"),
+                        ImportantVertex.of(main, UL_V.getVertex(), "F"),
+                        ImportantVertex.of(main, DR_V.getVertex(), "H"),
+                        ImportantVertex.of(hexKI, RIGHT.getVertex(), "I")
+//                        ImportantVertex.of(hexHL, UL_V.getVertex(), "L"),
+//                        ImportantVertex.of(hexKM, DR_V.getVertex(), "M")
+                )
                 .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
 
@@ -142,11 +143,14 @@ public class Tile3 {
                         Pair.of(hexKA, Hex.PERIMETER),
                         Pair.of(hexKI, Hex.PERIMETER)
                 ), blue)
-                .addFullPaths(() -> asList(() -> asList(
-                                instruction(hexBH, UP),
-                                instruction(mainReg, LEFT),
-                                instruction(hexBH, DOWN)
-                        )), gray
+                .addFullPaths(
+                        VertexPaths.of(
+                                VertexPath.of(
+                                        instruction(hexBH, UP),
+                                        instruction(mainReg, LEFT),
+                                        instruction(hexBH, DOWN)
+                                )
+                        ), gray
                 );
 
     }
@@ -179,16 +183,16 @@ public class Tile3 {
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
                 .addFullPaths(() -> getPayloadSimple2().getPathsFull(), red)
                 .addEquations(equations)
-                .addImportantPoints(asList(
-//                        Triple.of(hexKA, TWO, "A"),
-                        Triple.of(mainReg, ONE, "B"),
-                        Triple.of(mainReg, FOUR, "D"),
-                        Triple.of(main, THREE, "C"),
-                        Triple.of(mainReg, TWO, "E"),
-                        Triple.of(main, FOUR, "F"),
-                        Triple.of(main, ONE, "H"),
-                        Triple.of(hexHL, FOUR, "L"),
-                        Triple.of(hexKM, ONE, "M")
+                .addImportantVertexes(asList(
+//                        ImportantVertex.of(hexKA, TWO, "A"),
+                        ImportantVertex.of(mainReg, ONE, "B"),
+                        ImportantVertex.of(mainReg, FOUR, "D"),
+                        ImportantVertex.of(main, THREE, "C"),
+                        ImportantVertex.of(mainReg, TWO, "E"),
+                        ImportantVertex.of(main, FOUR, "F"),
+                        ImportantVertex.of(main, ONE, "H"),
+                        ImportantVertex.of(hexHL, FOUR, "L"),
+                        ImportantVertex.of(hexKM, ONE, "M")
                 ))
                 .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER),
@@ -199,11 +203,15 @@ public class Tile3 {
                 .addSinglePaths(asList(
                         Pair.of(hexKM, Hex.PERIMETER)
                 ), green)
-                .addSinglePaths(() -> asList(
-                                () -> asList(
+                .addSinglePaths(
+                        VertexPaths.of(
+                                VertexPath.of(
                                         instruction(0.5 * P, centreTransform(1, DR_V), UL_V),
                                         instruction(mainReg, DR_H)
-                                )), gray
+
+                                )
+                        ), gray
+
                 )
                 ;
 

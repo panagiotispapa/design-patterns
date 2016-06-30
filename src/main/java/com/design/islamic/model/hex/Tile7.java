@@ -1,6 +1,7 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Grid;
 import com.design.common.Polygon;
 import com.design.common.model.Style;
@@ -43,20 +44,20 @@ public class Tile7 {
         return new PayloadSimple.Builder("hex_tile_07",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() -> asList(
-                                () -> asList(
-                                        () -> Pair.of(hexBE, TWO),
-                                        instruction(inner, DR_H)
-                                ),
-                                () -> asList(
-                                        () -> Pair.of(hexBE, SIX),
-                                        instruction(inner, RIGHT)
-                                ),
-                                () -> asList(
-                                        instruction(outerBig, UP),
-                                        instruction(outerBig, UL_V),
-                                        instruction(outerBig, DL_V)
-                                )
+                .withPathsFull(VertexPaths.of(
+                        VertexPath.of(
+                                () -> Pair.of(hexBE, TWO),
+                                instruction(inner, DR_H)
+                        ),
+                        VertexPath.of(
+                                () -> Pair.of(hexBE, SIX),
+                                instruction(inner, RIGHT)
+                        ),
+                        VertexPath.of(
+                                instruction(outerBig, UP),
+                                instruction(outerBig, UL_V),
+                                instruction(outerBig, DL_V)
+                        )
                         ), whiteBold
                 )
                 .build();
@@ -112,13 +113,13 @@ public class Tile7 {
                         Pair.of(hexBE, Hex.PERIMETER)
                 ), green)
                 .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
-                .addImportantPoints(asList(
-                        Triple.of(main, DR_V.getVertex(), "B"),
-                        Triple.of(mainHorReg, RIGHT.getVertex(), "A"),
-                        Triple.of(innerHorReg, DR_V.getVertex(), "C"),
-                        Triple.of(inner, DR_V.getVertex(), "D"),
-                        Triple.of(hexBE, TWO, "E")
-                ))
+                .addImportantVertexes(
+                        ImportantVertex.of(main, DR_V.getVertex(), "B"),
+                        ImportantVertex.of(mainHorReg, RIGHT.getVertex(), "A"),
+                        ImportantVertex.of(innerHorReg, DR_V.getVertex(), "C"),
+                        ImportantVertex.of(inner, DR_V.getVertex(), "D"),
+                        ImportantVertex.of(hexBE, TWO, "E")
+                )
                 .addAllVertexesAsImportantPoints(asList(
 //                        hexBE
                 ))

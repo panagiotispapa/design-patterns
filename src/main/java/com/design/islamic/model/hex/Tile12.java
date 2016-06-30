@@ -1,6 +1,7 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Grid;
 import com.design.common.Polygon;
 import com.design.common.RatioHelper.P6;
@@ -11,7 +12,6 @@ import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
 import java.util.List;
@@ -62,7 +62,7 @@ public class Tile12 {
         Polygon hexKA5 = Hex.hex(5 * RATIO_m, VER);
         Polygon hexKA6 = Hex.hex(6 * RATIO_m, VER);
 
-        Polygon.VertexPath l1 = () -> asList(
+        Polygon.VertexPath l1 = VertexPath.of(
                 () -> Pair.of(h(2, 6, TWO), SIX),
                 () -> Pair.of(h(2, 4, TWO), SIX),
                 h(4, DR_V),
@@ -70,7 +70,8 @@ public class Tile12 {
                 u(2, 4, DR_V),
                 u(2, 6, DR_V)
         );
-        Polygon.VertexPath l2 = () -> asList(
+
+        Polygon.VertexPath l2 = VertexPath.of(
                 u(6, 1, UR_V),
                 u(1, 2, DR_V),
                 u(1, 3, DR_V),
@@ -93,23 +94,22 @@ public class Tile12 {
         return new PayloadSimple.Builder("hex_tile_12",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(() ->
-                                asList(
-                                        () -> asList(
-                                                instruction(hexKA1, UR_V),
-                                                instruction(hexKA2.getRegistered(), RIGHT),
-                                                instruction(hexKA1, DR_V)
-                                        )
-
-                                ), whiteBold
+                .withPathsFull(
+                        VertexPaths.of(
+                                VertexPath.of(
+                                        instruction(hexKA1, UR_V),
+                                        instruction(hexKA2.getRegistered(), RIGHT),
+                                        instruction(hexKA1, DR_V)
+                                )
+                        ), whiteBold
                 )
-                .withPathsSingle(() ->
-                                asList(
-                                        l2,
-                                        toLeft(l2),
-                                        l1,
-                                        toLeft(l1)
-                                ), whiteBold
+                .withPathsSingle(
+                        VertexPaths.of(
+                                l2,
+                                toLeft(l2),
+                                l1,
+                                toLeft(l1)
+                        ), whiteBold
                 )
                 .withGridConf(Grid.Configuration.customRect(2 * RATIO_w, 2 * RATIO_h))
 
@@ -185,15 +185,15 @@ public class Tile12 {
                 .addSinglePaths(
                         IntStream.range(1, 7).mapToObj(i -> Pair.of(Hex.hex(i * RATIO_m, VER), Hex.PERIMETER)).collect(toList())
                         , gray)
-                .addImportantPoints(asList(
-                        Triple.of(hexKA1, Hex.Vertex.ONE, "A1"),
-                        Triple.of(hexKA2, Hex.Vertex.ONE, "A2"),
-                        Triple.of(hexKA3, Hex.Vertex.ONE, "A3"),
-                        Triple.of(hexKA4, Hex.Vertex.ONE, "A4"),
-                        Triple.of(hexKA5, Hex.Vertex.ONE, "A5"),
-                        Triple.of(hexKA6, Hex.Vertex.ONE, "A6"),
-                        Triple.of(main, Hex.Vertex.ONE, "A7")
-                ))
+                .addImportantVertexes(
+                        ImportantVertex.of(hexKA1, Hex.Vertex.ONE, "A1"),
+                        ImportantVertex.of(hexKA2, Hex.Vertex.ONE, "A2"),
+                        ImportantVertex.of(hexKA3, Hex.Vertex.ONE, "A3"),
+                        ImportantVertex.of(hexKA4, Hex.Vertex.ONE, "A4"),
+                        ImportantVertex.of(hexKA5, Hex.Vertex.ONE, "A5"),
+                        ImportantVertex.of(hexKA6, Hex.Vertex.ONE, "A6"),
+                        ImportantVertex.of(main, Hex.Vertex.ONE, "A7")
+                )
                 .addSinglePaths(asList(
                         Pair.of(Hex.hex(RATIO_w, HOR, Hex.centreTransform(RATIO_h, UP)), DIAGONAL_ONE),
                         Pair.of(Hex.hex(RATIO_w, HOR, Hex.centreTransform(RATIO_h, DOWN)), DIAGONAL_ONE)

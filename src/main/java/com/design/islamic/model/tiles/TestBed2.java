@@ -116,8 +116,8 @@ public class TestBed2 {
 
         patternsNew.forEach(p -> {
                     PayloadSimple payload = p.get();
-                    Pair<Point2D, Double> newIC = Pair.of(ic.getLeft(), sizeToRNew.get(payload.getSize()));
-                    Dimension newDim = new Dimension((int) (15 * newIC.getRight()), (int) (10 * newIC.getRight()));
+                    Polygon.InitialConditions newIC = Polygon.InitialConditions.of(ic.getLeft(), sizeToRNew.get(payload.getSize()));
+                    Dimension newDim = new Dimension((int) (15 * newIC.getR()), (int) (10 * newIC.getR()));
                     saveToFile(
                             buildSvg(newDim,
                                     buildBackground(newDim) + buildSvgFromPayloadSimpleNew(payload, newIC)), payload.getName());
@@ -218,12 +218,12 @@ public class TestBed2 {
     }
 
 
-    private String buildSvgFromPayloadSimpleNew(PayloadSimple payload, Pair<Point2D, Double> ic) {
+    private String buildSvgFromPayloadSimpleNew(PayloadSimple payload, Polygon.InitialConditions ic) {
 
-        List<Point2D> gridPoints = Grid.gridFromStart(ic.getLeft(), ic.getRight(), payload.getGridConfiguration(), 20);
+        List<Point2D> gridPoints = Grid.gridFromStart(ic.getCentre(), ic.getR(), payload.getGridConfiguration(), 20);
 
         return
-                gridPoints.stream().map(p -> Polygon.InitialConditions.of(p, ic.getRight())).map(payload::draw).collect(joining());
+                gridPoints.stream().map(p -> Polygon.InitialConditions.of(p, ic.getR())).map(payload::draw).collect(joining());
 
     }
 

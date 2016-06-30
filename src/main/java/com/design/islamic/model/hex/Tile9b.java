@@ -1,8 +1,9 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Polygon;
-import com.design.common.model.Path;
+import com.design.common.model.Path.Paths;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
@@ -45,7 +46,7 @@ public class Tile9b extends Tile9a {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_09d_design")
                 .addEquations(getEquationsA())
-                .addImportantPoints(
+                .addImportantVertexes(
                         Stream.of(
                                 getImportantPointsA().stream(),
                                 getImportantPointsB().stream(),
@@ -81,17 +82,17 @@ public class Tile9b extends Tile9a {
                 ;
     }
 
-    protected static java.util.List<Triple<Polygon, Polygon.Vertex, String>> getImportantPointsD() {
+    protected static java.util.List<ImportantVertex> getImportantPointsD() {
         return asList(
-                Triple.of(hexAF, DOWN.getVertex(), "F"),
-                Triple.of(mainL2Hor, UR_H.getVertex(), "G"),
-                Triple.of(hexGH, UR_H.getVertex(), "H"),
-                Triple.of(hexHI, UL_V.getVertex(), "I")
+                ImportantVertex.of(hexAF, DOWN.getVertex(), "F"),
+                ImportantVertex.of(mainL2Hor, UR_H.getVertex(), "G"),
+                ImportantVertex.of(hexGH, UR_H.getVertex(), "H"),
+                ImportantVertex.of(hexHI, UL_V.getVertex(), "I")
         );
     }
 
 
-    protected static java.util.List<Pair<Polygon, Function<Polygon, java.util.List<Path>>>> getInstructionsGrayD() {
+    protected static java.util.List<Pair<Polygon, Function<Polygon, Paths>>> getInstructionsGrayD() {
         return asList(
                 Pair.of(hexAF, PERIMETER),
                 Pair.of(hexGH, PERIMETER),

@@ -2,6 +2,7 @@ package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
 import com.design.common.Polygon;
+import com.design.common.Polygon.VertexPaths;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
@@ -28,12 +29,12 @@ public class Tile18 {
         return new PayloadSimple.Builder("hex_tile_18",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsSingle(() -> asList(
-                        () -> asList(
+                .withPathsSingle(VertexPaths.of(
+                        Polygon.VertexPath.of(
                                 instruction(main, UL_H),
                                 instruction(main, DR_H)
                         ),
-                        () -> asList(
+                        Polygon.VertexPath.of(
                                 instruction(main, UR_H),
                                 instruction(main, DL_H)
                         )
@@ -57,7 +58,7 @@ public class Tile18 {
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_18_design")
                 .addSinglePaths(() -> getPayloadSimple().getPathsSingle(), red)
                 .addEquations(equations)
-                .addImportantPoints(asList(
+                .addImportantVertexes(asList(
                 ))
                 .addSinglePaths(asList(
                         Pair.of(main, Hex.PERIMETER)

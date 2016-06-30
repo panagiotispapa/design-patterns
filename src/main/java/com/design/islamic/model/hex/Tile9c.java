@@ -1,10 +1,11 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
+import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Polygon;
 import com.design.common.RatioHelper.P4;
 import com.design.common.RatioHelper.P6;
-import com.design.common.model.Path;
+import com.design.common.model.Path.Paths;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
@@ -61,7 +62,7 @@ public class Tile9c extends Tile9b {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_09e_design")
                 .addEquations(getEquationsA())
-                .addImportantPoints(
+                .addImportantVertexes(
                         Stream.of(
                                 getImportantPointsA().stream(),
                                 getImportantPointsB().stream(),
@@ -124,28 +125,28 @@ public class Tile9c extends Tile9b {
 
     }
 
-    protected static java.util.List<Triple<Polygon, Polygon.Vertex, String>> getImportantPointsE() {
+    protected static java.util.List<ImportantVertex> getImportantPointsE() {
         return asList(
-                Triple.of(Hex.hex(pHalf, HOR), LEFT.getVertex(), "J1"),
-                Triple.of(Hex.hex(KE * P6.H, VER), UP.getVertex(), "E1"),
-                Triple.of(Hex.hex(KC * P6.H, VER), UP.getVertex(), "C1"),
-                Triple.of(Hex.hex(KE * P6.H, VER, Hex.centreTransform(pHalf, LEFT)), UP.getVertex(), "J2"),
-                Triple.of(Hex.hex(KC * P6.H, VER, Hex.centreTransform(pHalf, LEFT)), UP.getVertex(), "J3"),
-                Triple.of(Hex.hex(P6.H, VER, Hex.centreTransform(pHalf, LEFT)), UP.getVertex(), "J4"),
-                Triple.of(Hex.hex(J1J5, VER, Hex.centreTransform(pHalf, LEFT)), UP.getVertex(), "J5"),
-                Triple.of(Hex.hex(KJ6, VER, Hex.centreTransform(pHalf, LEFT)), UP.getVertex(), "J6"),
-                Triple.of(Hex.hex(KJ7, VER, Hex.centreTransform(pHalf, LEFT)), UP.getVertex(), "J7"),
-                Triple.of(Hex.hex(KJ8, VER, Hex.centreTransform(pHalf, LEFT)), UP.getVertex(), "J8"),
-                Triple.of(mainHor, UL_H.getVertex(), "A1"),
-                Triple.of(mainL2Hor, UL_H.getVertex(), "G1"),
-                Triple.of(Hex.hex(KL2, VER), UP.getVertex(), "L2"),
-                Triple.of(Hex.hex(CL2, HOR, Hex.centreTransform(KL2, UP)), RIGHT.getVertex(), "L1")
+                ImportantVertex.of(Hex.hex(pHalf, HOR), LEFT.getVertex(), "J1"),
+                ImportantVertex.of(Hex.hex(KE * P6.H, VER), UP.getVertex(), "E1"),
+                ImportantVertex.of(Hex.hex(KC * P6.H, VER), UP.getVertex(), "C1"),
+                ImportantVertex.of(Hex.hex(KE * P6.H, VER, Hex.centreTransform(pHalf, LEFT)), UP.getVertex(), "J2"),
+                ImportantVertex.of(Hex.hex(KC * P6.H, VER, Hex.centreTransform(pHalf, LEFT)), UP.getVertex(), "J3"),
+                ImportantVertex.of(Hex.hex(P6.H, VER, Hex.centreTransform(pHalf, LEFT)), UP.getVertex(), "J4"),
+                ImportantVertex.of(Hex.hex(J1J5, VER, Hex.centreTransform(pHalf, LEFT)), UP.getVertex(), "J5"),
+                ImportantVertex.of(Hex.hex(KJ6, VER, Hex.centreTransform(pHalf, LEFT)), UP.getVertex(), "J6"),
+                ImportantVertex.of(Hex.hex(KJ7, VER, Hex.centreTransform(pHalf, LEFT)), UP.getVertex(), "J7"),
+                ImportantVertex.of(Hex.hex(KJ8, VER, Hex.centreTransform(pHalf, LEFT)), UP.getVertex(), "J8"),
+                ImportantVertex.of(mainHor, UL_H.getVertex(), "A1"),
+                ImportantVertex.of(mainL2Hor, UL_H.getVertex(), "G1"),
+                ImportantVertex.of(Hex.hex(KL2, VER), UP.getVertex(), "L2"),
+                ImportantVertex.of(Hex.hex(CL2, HOR, Hex.centreTransform(KL2, UP)), RIGHT.getVertex(), "L1")
         );
     }
 
     //
 //
-    protected static java.util.List<Pair<Polygon, Function<Polygon, java.util.List<Path>>>> getInstructionsGrayE() {
+    protected static java.util.List<Pair<Polygon, Function<Polygon, Paths>>> getInstructionsGrayE() {
         return asList(
                 Pair.of(Hex.hex(BC, VER, Hex.centreTransform(KB, UL_H)), PERIMETER),
                 Pair.of(Hex.hex(1.0, HOR, Hex.centreTransform(pHalf, Hex.Corner.UR_V)), PERIMETER)
