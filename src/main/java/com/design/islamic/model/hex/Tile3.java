@@ -2,25 +2,26 @@ package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
 import com.design.common.DesignHelper.ImportantVertex;
+import com.design.common.FinalPointTransition;
 import com.design.common.Grid;
-import com.design.common.Polygon;
+import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.List;
 
+import static com.design.common.FinalPointTransition.K;
+import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.RatioHelper.P6.P;
 import static com.design.islamic.model.Hex.Corner.*;
-import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
 import static java.util.Arrays.asList;
 
@@ -31,57 +32,71 @@ public class Tile3 {
     private static double KB = KA * H;
     private static double HEIGHT = KB;
 
+
     private static double ANGLE_1 = Math.atan(0.25 / HEIGHT);
     private static double ANGLE_2 = Math.PI / 6.0 + ANGLE_1;
 
     private static double IB = 0.5 * Math.tan(ANGLE_2);
     private static double KI = KB - IB;
-    private static double HL = 0.5 * P;
-    private static double EL = 0.5 * H;
-    private static double HM = EL + HL;
+    private static double AE = 0.5;
+    private static double AL = AE * P;
+    private static double EL = AE * H;
+    private static double HM = EL + AL;
     private static double KM = 1 - HM;
+    private static double KT = 0.5 * 0.5;
+    private static double KL = 1 - AL;
+
+    public final static FinalPointTransition I = fpt(pt(KI, RIGHT));
+    public final static FinalPointTransition Q = fpt(pt(KI, DR_H));
+    public final static FinalPointTransition T = fpt(pt(KT, DOWN));
+    public final static FinalPointTransition B = fpt(pt(H, RIGHT));
+    public final static FinalPointTransition A = fpt(pt(1, DR_V));
+    public final static FinalPointTransition C = fpt(pt(1, DL_V));
+    public final static FinalPointTransition F = fpt(pt(1, UL_V));
+    public final static FinalPointTransition D = fpt(pt(H, LEFT));
+    public final static FinalPointTransition M = fpt(pt(KM, DR_V));
+    public final static FinalPointTransition L = fpt(pt(KL, DR_V));
+    public final static FinalPointTransition E = fpt(pt(H, DR_H));
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
-        Polygon main = Hex.hex(1, VER);
-        Polygon hexKI = Hex.hex(KI, HOR);
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
         return new PayloadSimple.Builder("hex_tile_03",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(
-                        VertexPaths.of(
-                                VertexPath.of(
-                                        instruction(hexKI, RIGHT),
-                                        instruction(main, DR_V),
-                                        instruction(hexKI, DR_H)
-                                )
-                        ), whiteBold
+                .withPathsNewFull(
+                        whiteBold,
+                        getFullPath()
                 )
                 .build();
     }
 
+    private static List<PointsPath> getFullPath() {
+        return Arrays.asList(
+                PointsPath.of(I, A, Q)
+        );
+    }
+
     @TileSupplier
     public static PayloadSimple getPayloadSimple2() {
-        Polygon main = Hex.hex(1, VER);
-        Polygon mainReg = main.getRegistered();
-        Polygon hexKM = hex(KM, VER);
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
 
         return new PayloadSimple.Builder("hex_tile_03b",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(
-                        VertexPaths.of(
-                                VertexPath.of(
-                                        instruction(mainReg, RIGHT),
-                                        instruction(hexKM, DR_V),
-                                        instruction(mainReg, DR_H)
-                                )
-                        ), whiteBold
+                .withPathsNewFull(
+                        whiteBold,
+                        getFullPathB()
                 )
                 .build();
     }
+
+    private static List<PointsPath> getFullPathB() {
+        return Arrays.asList(
+                PointsPath.of(B, M, E)
+        );
+    }
+
 
     @DesignSupplier
     public static DesignHelper getDesignHelper() {
@@ -90,17 +105,9 @@ public class Tile3 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        Polygon main = Hex.hex(1, VER);
-        Polygon mainReg = main.getRegistered();
-        Polygon hexBH = Hex.hex(0.5, VER, centreTransform(KB, RIGHT));
-        Polygon hexKA = Hex.hex(0.5 * 0.5, VER);
-        Polygon hexKI = Hex.hex(KI, HOR);
-//        Polygon hexHL = Hex.hex(HL, VER, centreTransform(1, DR_V));
-//        Polygon hexKM = hex(KM, VER);
-
         List<String> equations = asList(
                 "DC/DB = AK/KB",
-                "KA=1/4",
+                "KT=1/4",
                 "HDB=th",
                 "tan(th)=HB/BD=0.25/h",
                 "DKH=5*(PI/6)",
@@ -111,47 +118,38 @@ public class Tile3 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_03_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(red, getFullPath())
                 .addEquations(equations)
                 .addImportantVertexes(
-                        ImportantVertex.of(hexKA, DOWN.getVertex(), "A"),
-                        ImportantVertex.of(mainReg, RIGHT.getVertex(), "B"),
-                        ImportantVertex.of(mainReg, LEFT.getVertex(), "D"),
-                        ImportantVertex.of(main, DL_V.getVertex(), "C"),
-                        ImportantVertex.of(mainReg, DR_H.getVertex(), "E"),
-                        ImportantVertex.of(main, UL_V.getVertex(), "F"),
-                        ImportantVertex.of(main, DR_V.getVertex(), "H"),
-                        ImportantVertex.of(hexKI, RIGHT.getVertex(), "I")
-//                        ImportantVertex.of(hexHL, UL_V.getVertex(), "L"),
-//                        ImportantVertex.of(hexKM, DR_V.getVertex(), "M")
+                        ImportantVertex.of("A", A),
+                        ImportantVertex.of("B", B),
+                        ImportantVertex.of("D", D),
+                        ImportantVertex.of("C", C),
+                        ImportantVertex.of("E", E),
+                        ImportantVertex.of("F", F),
+                        ImportantVertex.of("I", I),
+                        ImportantVertex.of("T", T),
+                        ImportantVertex.of("Q", Q)
                 )
-                .addSinglePaths(asList(
-                        Pair.of(main, Hex.PERIMETER),
-
-                        Pair.of(main, Hex.DIAGONALS),
-                        Pair.of(mainReg, Hex.DIAGONALS)
-                ), gray)
-                .addSinglePaths(asList(
-                        Pair.of(hexBH, Hex.PERIMETER),
-                        Pair.of(hexBH, Hex.PERIMETER)
-//                        Pair.of(hexKM, Hex.PERIMETER)
-//                        Pair.of(hexKJ, Hex.PERIMETER)
-//                                Pair.of(outer2, Hex.PERIMETER),
-//                                Pair.of(outer2, Hex.INNER_TRIANGLES)
-                ), green)
-                .addSinglePaths(asList(
-                        Pair.of(hexKA, Hex.PERIMETER),
-                        Pair.of(hexKI, Hex.PERIMETER)
-                ), blue)
-                .addFullPaths(
-                        VertexPaths.of(
-                                VertexPath.of(
-                                        instruction(hexBH, UP),
-                                        instruction(mainReg, LEFT),
-                                        instruction(hexBH, DOWN)
-                                )
-                        ), gray
+                .addSinglePathsLines(
+                        gray,
+                        Hex.perimeter(1.0, VER).apply(K),
+                        Hex.diagonals(1.0, VER).apply(K),
+                        Hex.diagonals(H, HOR).apply(K)
+                )
+                .addSinglePathsLines(
+                        green,
+                        Hex.perimeter(0.5, VER).apply(B)
+                )
+                .addSinglePathsLines(
+                        blue,
+                        Hex.perimeter(KT, VER).apply(K),
+                        Hex.perimeter(KI, HOR).apply(K)
+                )
+                .addFullPaths(gray,
+                        PointsPath.of(C, B, F)
                 );
+
 
     }
 
@@ -163,57 +161,39 @@ public class Tile3 {
         Style red = new Style.Builder(Color.RED, 2).build();
 
 
-        Polygon main = Hex.hex(1, VER);
-        Polygon mainReg = main.getRegistered();
-        Polygon hexHL = Hex.hex(HL, VER, centreTransform(1, DR_V));
-        Polygon hexKM = hex(KM, VER);
-
-        List<String> equations = asList(
-//                "DC/DB = AK/KB",
-//                "KA=1/4",
-//                "HDB=th",
-//                "tan(th)=HB/BD=0.25/h",
-//                "DKH=5*(PI/6)",
-//                "KHD=PI-DKH-th=(PI/6)-th",
-//                "IHB=(PI/6)+th",
-//                "IB=0.5*tan(IHB)"
-        );
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_03b_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(() -> getPayloadSimple2().getPathsFull(), red)
-                .addEquations(equations)
-                .addImportantVertexes(asList(
-//                        ImportantVertex.of(hexKA, TWO, "A"),
-                        ImportantVertex.of(mainReg, ONE, "B"),
-                        ImportantVertex.of(mainReg, FOUR, "D"),
-                        ImportantVertex.of(main, THREE, "C"),
-                        ImportantVertex.of(mainReg, TWO, "E"),
-                        ImportantVertex.of(main, FOUR, "F"),
-                        ImportantVertex.of(main, ONE, "H"),
-                        ImportantVertex.of(hexHL, FOUR, "L"),
-                        ImportantVertex.of(hexKM, ONE, "M")
-                ))
-                .addSinglePaths(asList(
-                        Pair.of(main, Hex.PERIMETER),
-
-                        Pair.of(main, Hex.DIAGONALS),
-                        Pair.of(mainReg, Hex.DIAGONALS)
-                ), gray)
-                .addSinglePaths(asList(
-                        Pair.of(hexKM, Hex.PERIMETER)
-                ), green)
-                .addSinglePaths(
-                        VertexPaths.of(
-                                VertexPath.of(
-                                        instruction(0.5 * P, centreTransform(1, DR_V), UL_V),
-                                        instruction(mainReg, DR_H)
-
-                                )
-                        ), gray
-
+                .addFullPaths(red, getFullPathB())
+                .addEquations(
+                        "AE = 0.5",
+                        "AL = AE * P",
+                        "EL = AE * H",
+                        "HM = EL + AL",
+                        "KM = 1 - HM"
                 )
-                ;
+                .addImportantVertexes(
+                        ImportantVertex.of("A", A),
+                        ImportantVertex.of("B", B),
+                        ImportantVertex.of("D", D),
+                        ImportantVertex.of("C", C),
+                        ImportantVertex.of("E", E),
+                        ImportantVertex.of("F", F),
+                        ImportantVertex.of("L", L),
+                        ImportantVertex.of("M", M)
+                )
+                .addSinglePathsLines(
+                        gray,
+                        Hex.perimeter(1.0, VER).apply(K),
+                        Hex.diagonals(1.0, VER).apply(K),
+                        Hex.diagonals(H, HOR).apply(K)
+                )
+                .addSinglePathsLines(
+                        green,
+                        Hex.perimeter(KM, VER).apply(K)
+                )
+                .addSinglePathsLines(gray,
+                        PointsPath.of(E, L)
+                );
 
     }
 

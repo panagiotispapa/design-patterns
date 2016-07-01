@@ -1,29 +1,26 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
-import com.design.common.DesignHelper.ImportantVertex;
+import com.design.common.FinalPointTransition;
 import com.design.common.Grid;
-import com.design.common.Polygon;
-import com.design.common.Polygon.VertexPaths;
+import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.design.common.FinalPointTransition.K;
+import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P6.H;
 import static com.design.islamic.model.Hex.Corner.*;
-import static com.design.islamic.model.Hex.Vertex.SIX;
-import static com.design.islamic.model.Hex.Vertex.TWO;
-import static com.design.islamic.model.Hex.centreTransform;
-import static com.design.islamic.model.Hex.instruction;
+import static com.design.islamic.model.Hex.*;
 import static java.lang.Math.PI;
 import static java.util.Arrays.asList;
 
@@ -38,30 +35,23 @@ public class Tile28 {
     private static double CE = KC - KE;
     private static double EF = CE;
 
+    public final static FinalPointTransition A = fpt(pt(1.0, RIGHT));
+    public final static FinalPointTransition B = fpt(pt(KB, RIGHT));
+    public final static FinalPointTransition D = fpt(pt(KD, RIGHT));
+    public final static FinalPointTransition C = fpt(pt(KC, DR_V));
+    public final static FinalPointTransition E = fpt(pt(KE, DR_V));
+    public final static FinalPointTransition F = E.append(pt(CE, UR_H));
+    public final static FinalPointTransition E2 = fpt(pt(KE, UR_V));
+    public final static FinalPointTransition F2 = E2.append(pt(CE, DR_H));
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
-        Polygon main = Hex.hex(1, HOR);
-
-        Polygon hexKD = Hex.hex(KD, HOR);
-        Polygon hexEF = Hex.hex(EF, HOR, centreTransform(KE, DR_V));
-        Polygon hexEF_Rot = Hex.hex(EF, HOR, centreTransform(KE, UR_V));
 
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
         return new PayloadSimple.Builder("hex_tile_28",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(VertexPaths.of(
-                        Polygon.VertexPath.of(
-                                instruction(hexKD, RIGHT),
-                                () -> Pair.of(hexEF, SIX)
-                        ),
-                        Polygon.VertexPath.of(
-                                instruction(hexKD, RIGHT),
-                                () -> Pair.of(hexEF_Rot, TWO)
-                        )
-
-                ), whiteBold)
+                .withPathsNewFull(whiteBold, getFullPath())
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
     }
@@ -72,14 +62,6 @@ public class Tile28 {
         Style gray = new Style.Builder(Color.GRAY, 1).build();
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
-
-        Polygon main = Hex.hex(1, HOR);
-        Polygon hexKB = Hex.hex(KB, HOR);
-        Polygon hexKC = Hex.hex(KC, VER);
-        Polygon hexKD = Hex.hex(KD, HOR);
-        Polygon hexKE = Hex.hex(KE, VER);
-        Polygon hexEF = Hex.hex(EF, HOR, centreTransform(KE, DR_V));
-        Polygon hexEF_Rot = Hex.hex(EF, HOR, centreTransform(KE, UR_V));
 
         List<String> equations = Arrays.asList(
                 "KE = h",
@@ -92,33 +74,27 @@ public class Tile28 {
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_28_design")
-                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
-                .addImportantVertexes(
-                        ImportantVertex.of(main, RIGHT.getVertex(), "A"),
-                        ImportantVertex.of(hexKB, RIGHT.getVertex(), "B"),
-                        ImportantVertex.of(hexKC, DR_V.getVertex(), "C"),
-                        ImportantVertex.of(hexKD, RIGHT.getVertex(), "D"),
-                        ImportantVertex.of(hexKE, DR_V.getVertex(), "E"),
-                        ImportantVertex.of(hexEF, SIX, "F")
+                .addImportantVertexes(Tile28.class)
+                .addSinglePathsLines(
+                        gray,
+                        perimeter(1.0, HOR).apply(K),
+                        diagonals(1.0, HOR).apply(K),
+                        diagonals(H, VER).apply(K),
+                        innerTriangles(1.0, HOR).apply(K)
                 )
-                .addSinglePaths(asList(
-                        Pair.of(main, Hex.PERIMETER),
-                        Pair.of(main, Hex.DIAGONALS),
-                        Pair.of(main, Hex.INNER_TRIANGLES),
-                        Pair.of(main.getRegistered(), Hex.DIAGONALS)
-                ), gray)
-                .addSinglePaths(asList(
-                        Pair.of(hexEF, Hex.PERIMETER)
-                ), green)
-                .addSinglePaths(asList(
-                ), blue)
-                .addAllVertexesAsImportantPoints(asList(
-//                        hexEF,
-//                        hexEF_Rot
-                ))
+                .addSinglePathsLines(
+                        green,
+                        perimeter(EF, HOR).apply(E)
+                )
+                .addFullPaths(red, getFullPath())
                 ;
 
     }
 
+    private static List<PointsPath> getFullPath() {
+        return asList(
+                PointsPath.of(F, D, F2)
+        );
+    }
 }

@@ -1,59 +1,59 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
-import com.design.common.DesignHelper.ImportantVertex;
-import com.design.common.Polygon;
+import com.design.common.FinalPointTransition;
+import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.design.common.FinalPointTransition.K;
+import static com.design.common.FinalPointTransition.fpt;
+import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
+import static com.design.common.RatioHelper.P6.H;
 import static com.design.islamic.model.Hex.Corner.*;
 import static com.design.islamic.model.Hex.*;
 import static java.util.Arrays.asList;
 
 public class Tile24 {
 
-    public static double KB = 1.0 / 3.0;
-    public static double BC = KB;
-    public static double AD = BC / 2.0;
-    public static double KD = 1 - AD;
-    public static double KC = KB + BC;
+    private static final double KA = 1.0;
+    private static final double KB = 1.0 / 3.0;
+    private static final double BC = KB;
+    private static final double AD = BC / 2.0;
+    private static final double DE = AD * H;
+    private static final double KD = 1 - AD;
+    private static final double KC = KB + BC;
+
+    public final static FinalPointTransition A = fpt(pt(KA, UP));
+    public final static FinalPointTransition B = fpt(pt(KB, UP));
+    public final static FinalPointTransition C = fpt(pt(KC, UP));
+    public final static FinalPointTransition D = fpt(pt(KD, UP));
+    public final static FinalPointTransition E = D.append(pt(DE, UR_H));
+    public final static FinalPointTransition F = D.append(pt(DE, UL_H));
+    public final static FinalPointTransition G = D.append(pt(DE, DL_H));
+    public final static FinalPointTransition I = D.append(pt(DE, DR_H));
+    public final static FinalPointTransition J = C.append(pt(BC, UR_V));
+    public final static FinalPointTransition L = C.append(pt(BC, UL_V));
+    public final static FinalPointTransition M = C.append(pt(BC, DL_V));
+    public final static FinalPointTransition N = C.append(pt(BC, DR_V));
+    public final static FinalPointTransition P = fpt(pt(KB, UL_V));
+
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
-        Polygon hexKB = Hex.hex(KB, VER);
-        Polygon hexBC = Hex.hex(BC, VER, centreTransform(KC, UP));
-        Polygon hexDA = Hex.hex(AD, VER, centreTransform(KD, UP));
-        Polygon hexDA_Reg = hexDA.getRegistered();
-
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
         return new PayloadSimple.Builder("hex_tile_24",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(VertexPaths.of(
-                        VertexPath.of(
-                                instruction(hexKB, DL_V),
-                                instruction(hexBC, UL_V),
-                                instruction(hexDA_Reg, DL_H),
-                                instruction(hexDA_Reg, UR_H)
-                        ),
-                        VertexPath.of(
-                                instruction(hexKB, UR_V),
-                                instruction(hexBC, UR_V),
-                                instruction(hexDA_Reg, DR_H),
-                                instruction(hexDA_Reg, UL_H)
-                        )
-
-                ), whiteBold)
+                .withPathsNewFull(whiteBold, getFullPath())
                 .build();
     }
 
@@ -64,12 +64,6 @@ public class Tile24 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        Polygon main = Hex.hex(1, VER);
-        Polygon hexKB = Hex.hex(KB, VER);
-        Polygon hexKC = Hex.hex(KC, VER);
-        Polygon hexBC = Hex.hex(BC, VER, centreTransform(KC, UP));
-        Polygon hexDA = Hex.hex(AD, VER, centreTransform(KD, UP));
-
         List<String> equations = Arrays.asList(
                 "KB = KA/3",
                 "BC = KB",
@@ -78,23 +72,25 @@ public class Tile24 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_24_design")
 //                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(red, getFullPath())
                 .addEquations(equations)
-                .addImportantVertexes(
-                        ImportantVertex.of(main, UP.getVertex(), "A"),
-                        ImportantVertex.of(hexKB, UP.getVertex(), "B"),
-                        ImportantVertex.of(hexKC, UP.getVertex(), "C"),
-                        ImportantVertex.of(hex(KD, VER), UP.getVertex(), "D")
+                .addImportantVertexes(Tile24.class)
+                .addSinglePathsLines(gray,
+                        perimeter(1.0, VER).apply(K),
+                        perimeter(AD, VER).apply(D),
+                        diagonals(DE, HOR).apply(D)
                 )
-                .addSinglePaths(asList(
-                        Pair.of(main, Hex.PERIMETER),
-                        Pair.of(hexBC, Hex.PERIMETER),
-                        Pair.of(hexDA, Hex.PERIMETER),
-                        Pair.of(hexDA.getRegistered(), Hex.DIAGONALS),
-                        Pair.of(hexKB, Hex.PERIMETER)
-                ), gray)
                 ;
 
     }
+
+    private static List<PointsPath> getFullPath() {
+        return asList(
+                PointsPath.of(F, I, J, N, B, M, L, G, E),
+                PointsPath.of(B, P)
+
+        );
+    }
+
 
 }

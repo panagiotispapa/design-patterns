@@ -1,18 +1,21 @@
 package com.design.deco;
 
 import com.design.common.DesignHelper;
-import com.design.common.DesignHelper.ImportantVertex;
+import com.design.common.FinalPointTransition;
 import com.design.common.Grid;
-import com.design.common.Polygon;
+import com.design.common.PointsPath;
 import com.design.common.model.Style;
-import com.design.islamic.model.*;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
+import com.design.islamic.model.DesignSupplier;
+import com.design.islamic.model.Hex;
+import com.design.islamic.model.PayloadSimple;
+import com.design.islamic.model.TileSupplier;
 
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.design.common.FinalPointTransition.K;
+import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.islamic.model.Rect.Corner.DR;
 import static com.design.islamic.model.Rect.Corner.UR;
@@ -25,28 +28,21 @@ public class Tile3 {
     private static final double AB = KA / 4.0;
     private static final double KB = KA - AB;
 
+    public final static FinalPointTransition A = fpt(pt(KA, DR));
+    public final static FinalPointTransition B = fpt(pt(KB, DR));
+    public final static FinalPointTransition C = fpt(pt(KA, UR));
+    public final static FinalPointTransition D = fpt(pt(KB, UR));
+
+
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
 
-        Polygon main = Rect.rect(1, HOR);
-        Polygon rectKA = Rect.rect(KA, HOR);
-        Polygon rectKB = Rect.rect(KB, HOR);
-        Polygon rectAB = Rect.rect(AB, HOR, centreTransform(KA, DR));
 
         return new PayloadSimple.Builder("deco_tile_03",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(VertexPaths.of(
-                        VertexPath.of(
-                                instruction(rectKB, UR),
-                                instruction(rectKB, DR)
-                        ),
-                        VertexPath.of(
-                                instruction(rectKB, DR),
-                                instruction(rectKA, DR)
-                        )
-                ), whiteBold)
+                .withPathsNewFull(whiteBold, getFullPath())
                 .withGridConf(Grid.Configs.RECT2.getConfiguration())
                 .build();
     }
@@ -58,29 +54,30 @@ public class Tile3 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style blue = new Style.Builder(Color.BLUE, 1).build();
 
-        Polygon main = Rect.rect(1, HOR);
-        Polygon rectKB = Rect.rect(KB, HOR);
-        Polygon rectAB = Rect.rect(AB, HOR, centreTransform(KA, DR));
-
         List<String> equations = Arrays.asList(
                 "AB = KA / 4.0"
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "deco_tile_03_design")
-                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(red, getFullPath())
                 .addEquations(equations)
-                .addImportantVertexes(
-                        ImportantVertex.of(main, DR.getVertex(), "A"),
-                        ImportantVertex.of(rectKB, DR.getVertex(), "B")
+                .addImportantVertexes(Tile3.class)
+                .addSinglePathsLines(
+                        gray,
+                        perimeter(1.0, HOR).apply(K),
+                        diagonals(1.0, HOR).apply(K),
+                        perimeter(KB, HOR).apply(K),
+                        perimeter(AB, HOR).apply(A)
                 )
-                .addSinglePaths(asList(
-                        Pair.of(main, PERIMETER),
-                        Pair.of(main, DIAGONALS),
-                        Pair.of(rectKB, PERIMETER),
-                        Pair.of(rectAB, PERIMETER)
-                ), gray)
                 ;
 
     }
+
+    private static List<PointsPath> getFullPath() {
+        return asList(
+                PointsPath.of(A, B, D, C)
+        );
+    }
+
 
 }

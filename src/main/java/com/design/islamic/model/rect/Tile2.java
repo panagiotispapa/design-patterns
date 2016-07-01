@@ -1,19 +1,18 @@
 package com.design.islamic.model.rect;
 
 import com.design.common.DesignHelper;
-import com.design.common.DesignHelper.ImportantVertex;
+import com.design.common.FinalPointTransition;
 import com.design.common.Grid;
-import com.design.common.Polygon;
-import com.design.common.model.Path;
+import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.*;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.design.common.FinalPointTransition.K;
+import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P4.H;
@@ -34,26 +33,25 @@ public class Tile2 {
     private static final double KF = KE;
     private static final double KG = FG + KF;
 
+    public final static FinalPointTransition A = fpt(pt(KA, DR));
+    public final static FinalPointTransition B = fpt(pt(KB, UR));
+    public final static FinalPointTransition P = fpt(pt(KB, DR));
+    public final static FinalPointTransition C = fpt(pt(KC, LEFT));
+    public final static FinalPointTransition D = fpt(pt(KD, RIGHT));
+    public final static FinalPointTransition E = fpt(pt(KE, UP));
+    public final static FinalPointTransition F = fpt(pt(KF, RIGHT));
+    public final static FinalPointTransition G = fpt(pt(KG, RIGHT));
+    public final static FinalPointTransition I = G.append(pt(FG, DL));
+    public final static FinalPointTransition J = G.append(pt(FG, UL));
+
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
-        Polygon main = Rect.rect(1, VER);
-        Polygon rectGF = Rect.rect(FG, HOR, centreTransform(KG, RIGHT));
-        Polygon rectGF_ver = Rect.rect(FG, VER, centreTransform(KG, RIGHT));
-
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
 
         return new PayloadSimple.Builder("rect_tile_02",
                 Hex.ALL_VERTEX_INDEXES)
-                .withPathsFull(
-                        VertexPaths.of(
-                                VertexPath.of(
-                                        instruction(rectGF, UL),
-                                        instruction(rectGF_ver, LEFT),
-                                        instruction(rectGF, DL)
-                                ))
-                        , whiteBold
-                )
+                .withPathsNewFull(whiteBold, getFullPath())
                 .withGridConf(Grid.Configs.RECT3.getConfiguration())
                 .build();
     }
@@ -62,14 +60,6 @@ public class Tile2 {
     public static DesignHelper getDesignHelper() {
         Style red = new Style.Builder(Color.RED, 2).build();
         Style gray = new Style.Builder(Color.GRAY, 1).build();
-
-        Polygon main = Rect.rect(KA, HOR);
-        Polygon rectKC = Rect.rect(H, VER);
-        Polygon rectKB = Rect.rect(H, HOR);
-        Polygon rectKD = Rect.rect(KD, VER);
-        Polygon rectKE = Rect.rect(KE, VER);
-        Polygon rectGF = Rect.rect(FG, HOR, centreTransform(KG, RIGHT));
-        Polygon rectGF_ver = Rect.rect(FG, VER, centreTransform(KG, RIGHT));
 
         List<String> equations = Arrays.asList(
                 "KC = h",
@@ -84,56 +74,33 @@ public class Tile2 {
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "rect_tile_02_design")
-//                .addMixedLinesInstructionsList(getPayloadSimple().getLines(), red)
-                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
-                .addImportantVertexes(asList(
-                        ImportantVertex.of(main, DR.getVertex(), "A"),
-                        ImportantVertex.of(rectKB, UR.getVertex(), "B"),
-                        ImportantVertex.of(rectKC, LEFT.getVertex(), "C"),
-                        ImportantVertex.of(rectKD, RIGHT.getVertex(), "D"),
-                        ImportantVertex.of(rectKE, UP.getVertex(), "E"),
-                        ImportantVertex.of(rectKE, RIGHT.getVertex(), "F"),
-                        ImportantVertex.of(Rect.rect(KG, VER), RIGHT.getVertex(), "G")
-                ))
-                .addSinglePaths(asList(
-                        Pair.of(main, PERIMETER),
-                        Pair.of(main, DIAGONALS),
-                        Pair.of(rectKB, PERIMETER),
-                        Pair.of(rectGF, PERIMETER),
-                        Pair.of(rectGF_ver, PERIMETER),
-                        Pair.of(rectKC, DIAGONALS)
-
-                ), gray)
+                .addImportantVertexes(Tile2.class)
+                .addSinglePathsLines(
+                        gray,
+                        perimeter(1.0, HOR).apply(K),
+                        diagonals(1.0, HOR).apply(K),
+                        diagonals(H, VER).apply(K),
+                        perimeter(KB, HOR).apply(K),
+                        perimeter(FG, HOR).apply(G),
+                        perimeter(FG, VER).apply(G)
+                )
+                .addFullPaths(
+                        gray,
+                        PointsPath.of(B, C, P)
+                )
                 .addCirclesCentral(asList(
                         H
                 ), gray)
-                .addFullPaths(() -> asList(
-                        new Path.Builder()
-                                .startWith(instruction(rectKC, LEFT))
-                                .lineTo(instruction(rectKB, UR))
-                                .build(),
-                        new Path.Builder()
-                                .startWith(instruction(rectKC, RIGHT))
-                                .lineTo(instruction(rectKB, UL))
-                                .build()
-
-                ), gray)
-
-//
-//
-//                .addSinglePath(
-//                        new Path.Builder()
-//                                .startWith(main, DL.getVertex())
-//                                .arcLargerTo(main, UR.getVertex())
-//                                .lineTo(main, DR.getVertex())
-//                                .withStyle(new Style.Builder(Color.BLUE, 2).build())
-//                                .build()
-//                )
-
-
+                .addFullPaths(red, getFullPath())
                 ;
 
+    }
+
+    private static List<PointsPath> getFullPath() {
+        return asList(
+                PointsPath.of(I, F, J)
+        );
     }
 
 }

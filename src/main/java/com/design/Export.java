@@ -1,7 +1,8 @@
 package com.design;
 
-import com.design.common.*;
-import com.design.common.Polygon.InitialConditions;
+import com.design.common.DesignHelper;
+import com.design.common.Grid;
+import com.design.common.InitialConditions;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
@@ -110,11 +111,11 @@ public class Export {
 
         Pair<Point2D, Double> ic = Pair.of(centre, 300.0);
 
-        buildSvg(dim, designHelper.build(()->ic));
+        buildSvg(dim, designHelper.build(() -> ic));
 
         System.out.println(designHelper.getName());
 
-        saveToFile(buildSvg(dim, designHelper.build(()->ic)), designHelper.getName());
+        saveToFile(buildSvg(dim, designHelper.build(() -> ic)), designHelper.getName());
 
     }
 
@@ -147,5 +148,7 @@ public class Export {
     public static void main(String[] args) throws InvocationTargetException, IllegalAccessException {
         Export.exportDesigns();
         Export.exportPayloads();
+
+
     }
 }

@@ -1,11 +1,6 @@
 package com.design.common.view;
 
-import com.design.common.Polygon;
-import com.design.common.StreamUtils;
-import com.design.common.model.Arc;
-import com.design.common.model.Circle;
-import com.design.common.model.Path;
-import com.design.common.model.Style;
+import com.design.common.model.*;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.apache.commons.lang3.tuple.Pair;
@@ -20,11 +15,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
@@ -205,67 +197,15 @@ public class SvgFactory {
         return String.format("%f,%f", point.getX(), point.getY());
     }
 
-    public static BiFunction<Point2D, Path.InstructionType, String> fromPathInstruction() {
-        return (point, instructionType) -> {
 
-            if (instructionType == Path.InstructionType.LINE) {
-                return format("L%s", commaSep(point));
-            } else if (instructionType == Path.InstructionType.STARTING_POINT) {
-                return format("M%s", commaSep(point));
-            } else if (instructionType == Path.InstructionType.ARC_LARGER) {
-                return format("A1,1 0 0,1 %s", commaSep(point));
-            } else if (instructionType == Path.InstructionType.ARC_SMALLER) {
-                return format("A1,1 0 0,0 %s", commaSep(point));
-            } else {
-                throw new IllegalArgumentException();
-            }
-        };
 
+    public static String toSVG(Point2D point, Supplier<String> instructionType) {
+        return format("%s%s", instructionType.get(), commaSep(point));
     }
 
-    public static Function<Path, Stream<String>> drawPathFull(List<Integer> vertexIndexes, Function<Integer, Function<Polygon.ActualVertex, Point2D>> toPoint) {
-        return path -> {
 
-            Supplier<Stream<Path.InstructionType>> instructionTypes = () -> path.getInstructions().stream().map(p -> p.get().getRight());
 
-            Stream<Function<Polygon.ActualVertex, Point2D>> toPointFunctions = vertexIndexes.stream().map(toPoint);
 
-            Supplier<Stream<Polygon.ActualVertex>> pairs = () -> path.getInstructions().stream().map(p -> p.get().getLeft());
-
-            return
-                    toPointFunctions.map(f -> pairs.get().map(f)).map(s -> drawPath(s, instructionTypes.get(), path.isClosed(), path.getStyle()));
-        };
-    }
-
-    public static Function<Path, String> drawPath(Function<Polygon.ActualVertex, Point2D> instructionToPoint) {
-        return path -> {
-
-            Supplier<Stream<Path.InstructionType>> instructionTypes = () -> path.getInstructions().stream().map(p -> p.get().getRight());
-
-            Supplier<Stream<Point2D>> points = () -> path.getInstructions().stream().map(p -> p.get().getLeft()).map(instructionToPoint);
-
-            return drawPath(points.get(), instructionTypes.get(), path.isClosed(), path.getStyle());
-        };
-    }
-
-    public static String drawPath(Stream<Point2D> points, Stream<Path.InstructionType> instructions, boolean isClosed, Style style) {
-
-        StringBuilder builder = new StringBuilder("<path d=\"");
-
-        builder.append(StreamUtils.zip(points, instructions, fromPathInstruction()).collect(Collectors.joining(" ")));
-
-        if (isClosed) {
-            builder.append(" z\" style=\"");
-        } else {
-            builder.append("\" style=\"");
-        }
-
-        builder.append(toSVGString(style));
-        builder.append("\"/>");
-
-        return builder.toString();
-
-    }
 
 //    private static String toPointsString(Collection<Line2D> points) {
 //        return points.stream().map(point -> format("%s,%s", point.getX(), point.getY())).collect(joining(" "));

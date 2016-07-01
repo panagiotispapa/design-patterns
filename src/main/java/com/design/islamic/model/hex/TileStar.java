@@ -2,29 +2,28 @@ package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
 import com.design.common.DesignHelper.ImportantVertex;
+import com.design.common.FinalPointTransition;
 import com.design.common.Grid;
-import com.design.common.Polygon;
-import com.design.common.Polygon.VertexPaths;
+import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
 import java.util.List;
+import java.util.stream.Stream;
 
+import static com.design.common.FinalPointTransition.K;
+import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.RatioHelper.P6.P;
-import static com.design.common.view.SvgFactory.newStyle;
 import static com.design.islamic.model.Hex.Corner.*;
-import static com.design.islamic.model.Hex.Vertex.*;
-import static com.design.islamic.model.Hex.centreTransform;
-import static com.design.islamic.model.Hex.instruction;
+import static com.design.islamic.model.Hex.*;
 import static java.util.Arrays.asList;
 
 public class TileStar {
@@ -33,29 +32,32 @@ public class TileStar {
     public static double RATIO_2 = H / (H + 0.5);
     public static double RATIO_3 = (1.5 - H) * 0.5;
 
-    public static List<Polygon.ActualVertex> getLines(double ratio) {
-        Polygon main = Hex.hex(H, HOR);
-        Polygon inner = Hex.hex(ratio, VER);
+    private static final double KB = 0.5;
+    private static final double KC = H;
 
-        return
-                asList(
-                        instruction(inner, DR_V),
-                        instruction(main, DR_H),
-                        instruction(inner, DOWN)
-                );
-    }
+    public final static FinalPointTransition A = fpt(pt(1.0, DR_V));
+    public final static FinalPointTransition B = fpt(pt(KB, DR_V));
+    public final static FinalPointTransition C = fpt(pt(KC, RIGHT));
+    public final static FinalPointTransition D = fpt(pt(KC, DR_H));
 
-    public static List<Polygon.ActualVertex> getLinesB(double ratio) {
-        Polygon main = Hex.hex(H, VER);
-        Polygon inner = Hex.hex(ratio, HOR);
+    public final static FinalPointTransition A1 = fpt(pt(1.0, RIGHT));
+    public final static FinalPointTransition B1 = fpt(pt(H, DR_V));
+    public final static FinalPointTransition C1 = fpt(pt(H, UR_V));
+    public final static FinalPointTransition D1 = fpt(pt(RATIO_1, RIGHT));
 
-        return
-                asList(
-                        instruction(main, UP),
-                        instruction(inner, UR_H),
-                        instruction(main, UR_V)
-                );
-    }
+    public final static FinalPointTransition A2 = fpt(pt(RATIO_2 * H, RIGHT));
+    public final static FinalPointTransition B2 = fpt(pt(RATIO_2, UR_V));
+    public final static FinalPointTransition C2 = fpt(pt(H, RIGHT));
+    public final static FinalPointTransition D2 = fpt(pt(RATIO_2, DR_V));
+
+    public final static FinalPointTransition A3 = fpt(pt(1.0, DR_V));
+    public final static FinalPointTransition B3 = A3.append(pt(H - 0.5, UR_V));
+    public final static FinalPointTransition F3 = A3.append(pt(0.5 * (H - 0.5), UP));
+    public final static FinalPointTransition C3 = B3.append(pt(1.5 - H, UP));
+    public final static FinalPointTransition D3 = fpt(pt(H, RIGHT));
+    public final static FinalPointTransition E3 = fpt(pt(H, DR_H));
+    public final static FinalPointTransition G3 = fpt(pt(RATIO_3, DOWN));
+
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple1() {
@@ -64,10 +66,7 @@ public class TileStar {
                 .Builder(
                 "hex_tile_star_01",
                 Hex.ALL_VERTEX_INDEXES
-        ).withPathsFull(VertexPaths.of(
-                Polygon.VertexPath.of(getLines(RATIO_1))
-
-        ), whiteBold)
+        ).withPathsNewFull(whiteBold, getFullPath1())
                 .build();
     }
 
@@ -77,9 +76,7 @@ public class TileStar {
         return new PayloadSimple.Builder("hex_tile_star_02",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(VertexPaths.of(
-                        Polygon.VertexPath.of(getLines(RATIO_2))
-                ), whiteBold)
+                .withPathsNewFull(whiteBold, getFullPath2())
                 .build();
     }
 
@@ -89,9 +86,7 @@ public class TileStar {
         return new PayloadSimple.Builder("hex_tile_star_03",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(VertexPaths.of(
-                        Polygon.VertexPath.of(getLines(RATIO_3))
-                ), whiteBold)
+                .withPathsNewFull(whiteBold, getFullPath3())
                 .build();
     }
 
@@ -102,9 +97,8 @@ public class TileStar {
                 .Builder(
                 "hex_tile_star_01b",
                 Hex.ALL_VERTEX_INDEXES
-        ).withPathsFull(VertexPaths.of(
-                Polygon.VertexPath.of(getLinesB(RATIO_1))
-        ), whiteBold)
+        )
+                .withPathsNewFull(whiteBold, getFullPath1b())
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
     }
@@ -116,9 +110,7 @@ public class TileStar {
                 .Builder(
                 "hex_tile_star_02b",
                 Hex.ALL_VERTEX_INDEXES
-        ).withPathsFull(VertexPaths.of(
-                Polygon.VertexPath.of(getLinesB(RATIO_2))
-        ), whiteBold)
+        ).withPathsNewFull(whiteBold, getFullPath2b())
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
     }
@@ -130,9 +122,7 @@ public class TileStar {
                 .Builder(
                 "hex_tile_star_03b",
                 Hex.ALL_VERTEX_INDEXES
-        ).withPathsFull(VertexPaths.of(
-                Polygon.VertexPath.of(getLinesB(RATIO_3))
-        ), whiteBold)
+        ).withPathsNewFull(whiteBold, getFullPath3b())
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
     }
@@ -144,25 +134,67 @@ public class TileStar {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        Polygon main = Hex.hex(1, VER);
-        Polygon registered = main.getRegistered();
-        Polygon inner = Hex.hex(RATIO_1, VER);
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_01_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(() -> getPayloadSimple1().getPathsFull(), red)
+                .addImportantVertexes(
+                        ImportantVertex.of("A", A),
+                        ImportantVertex.of("B", B),
+                        ImportantVertex.of("C", C),
+                        ImportantVertex.of("D", D)
+                )
 //                .addEquations(equations)
-                .addSinglePaths(asList(
-                        Pair.of(main, Hex.PERIMETER),
-                        Pair.of(main, Hex.DIAGONALS)
-                ), gray)
-                .addSinglePaths(asList(
-                        Pair.of(registered, Hex.PERIMETER)
-                ), green)
-                .addSinglePaths(asList(
-                        Pair.of(inner, Hex.PERIMETER)
-                ), blue);
+                .addSinglePathsLines(
+                        gray,
+                        perimeter(1.0, VER).apply(K),
+                        diagonals(1.0, VER).apply(K)
+                )
+                .addSinglePathsLines(
+                        green,
+                        perimeter(KC, HOR).apply(K)
+                )
+                .addSinglePathsLines(
+                        blue,
+                        perimeter(KB, VER).apply(K)
+                )
+                .addFullPaths(red, getFullPath1())
+                ;
 
+    }
+
+    private static List<PointsPath> getFullPath2() {
+        return asList(
+                PointsPath.of(D2, C2, B2)
+        );
+    }
+
+    private static List<PointsPath> getFullPath3() {
+        return asList(
+                PointsPath.of(fpt(pt(RATIO_3, DR_V)), fpt(pt(H, RIGHT)), fpt(pt(RATIO_3, UR_V)))
+        );
+    }
+
+    private static List<PointsPath> getFullPath1() {
+        return asList(
+                PointsPath.of(D, B, C)
+        );
+    }
+
+    private static List<PointsPath> getFullPath1b() {
+        return asList(
+                PointsPath.of(B1, D1, C1)
+        );
+    }
+
+    private static List<PointsPath> getFullPath2b() {
+        return asList(
+                PointsPath.of(fpt(pt(H, UR_V)), fpt(pt(RATIO_2, RIGHT)), fpt(pt(H, DR_V)))
+        );
+    }
+
+    private static List<PointsPath> getFullPath3b() {
+        return asList(
+                PointsPath.of(fpt(pt(RATIO_3, RIGHT)), fpt(pt(H, DR_V)), fpt(pt(RATIO_3, DR_H)))
+        );
     }
 
     @DesignSupplier
@@ -173,42 +205,40 @@ public class TileStar {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        Polygon main = Hex.hex(1, VER);
-        Polygon registered = main.getRegistered();
-        Polygon inner = Hex.hex(1.0 / 2.0, VER);
-        Polygon inner2 = Hex.hex(RATIO_2, VER);
-        Polygon inner2Reg = inner2.getRegistered();
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_02_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(() -> getPayloadSimple2().getPathsFull(), red)
                 .addEquations(asList(
                         "AB=AC",
                         "KB=h/(h+0.5)"
                 ))
                 .addImportantVertexes(
-                        ImportantVertex.of(inner2, Hex.Vertex.SIX, "B"),
-                        ImportantVertex.of(inner2Reg, ONE, "A"),
-                        ImportantVertex.of(registered, ONE, "C")
+                        ImportantVertex.of("A", A2),
+                        ImportantVertex.of("B", B2),
+                        ImportantVertex.of("C", C2),
+                        ImportantVertex.of("D", D2)
                 )
-                .addSinglePaths(asList(
-                        Pair.of(main, Hex.PERIMETER),
-                        Pair.of(registered, Hex.DIAGONALS),
-                        Pair.of(main, Hex.DIAGONALS)
-                ), gray)
-                .addSinglePaths(asList(
-                        Pair.of(inner2, Hex.PERIMETER)
-                ), green)
-                .addSinglePaths(asList(
-                        Pair.of(inner, Hex.PERIMETER)
-                ), blue);
+                .addSinglePathsLines(
+                        gray,
+                        perimeter(1.0, VER).apply(K),
+                        diagonals(1.0, VER).apply(K),
+                        diagonals(H, HOR).apply(K)
+                )
+                .addSinglePathsLines(
+                        blue,
+                        perimeter(0.5, VER).apply(K)
+                )
+                .addSinglePathsLines(
+                        green,
+                        perimeter(RATIO_2, VER).apply(K)
+                )
+                .addFullPaths(red, getFullPath2())
+                ;
 
     }
 
     @DesignSupplier
     public static DesignHelper getDesignHelper3() {
-        String blueLight = newStyle("blue", 1, 0.3);
-
+        Style blueLight = new Style.Builder(Color.BLUE, 1).withStrokeOpcacity(0.3).build();
         Style blue = new Style.Builder(Color.BLUE, 1).build();
         Style gray = new Style.Builder(Color.GRAY, 1).build();
         Style green = new Style.Builder(Color.GREEN, 1).build();
@@ -222,17 +252,9 @@ public class TileStar {
         final double AB = EB - KA * 0.5;
         final double AF = AB * P;
 
-        Polygon main = Hex.hex(1, VER);
-        Polygon registered = main.getRegistered();
-        Polygon outerSmall = Hex.hex(1.5 - KD, VER, Hex.centreTransform(2 * KD, RIGHT));
-
-        Polygon inner = Hex.hex(H * 0.5 + H * H, HOR, centreTransform(RATIO_3, DR_V));
-        Polygon outerBig = Hex.hex(2, VER, centreTransform(H, RIGHT));
-        Polygon hexAF = Hex.hex(AF, VER, Hex.centreTransform(1, VER));
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_03_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(() -> getPayloadSimple3().getPathsFull(), red)
+                .addFullPaths(red, getFullPath3())
                 .addEquations(asList(
                         "KA = 1",
                         "KE = EB = h",
@@ -241,50 +263,42 @@ public class TileStar {
                         "DF = AD - AF = 0.5 - 0.5 * AB",
                         "BC = 2 * DF = 1 - AB = 1.5 - h"
                 ))
-                .addAllVertexesAsImportantPoints(asList(
-//                        hexAF
-                ))
                 .addImportantVertexes(
-                        ImportantVertex.of(main, ONE, "A"),
-                        ImportantVertex.of(outerSmall, THREE, "B"),
-                        ImportantVertex.of(outerSmall, FOUR, "C"),
-                        ImportantVertex.of(registered, ONE, "D"),
-                        ImportantVertex.of(registered, TWO, "E"),
-                        ImportantVertex.of(hexAF, FIVE, "F")
+                        ImportantVertex.of("A", A3),
+                        ImportantVertex.of("B", B3),
+                        ImportantVertex.of("C", C3),
+                        ImportantVertex.of("D", D3),
+                        ImportantVertex.of("E", E3),
+                        ImportantVertex.of("F", F3),
+                        ImportantVertex.of("G", G3)
                 )
-                .addSinglePaths(asList(
-                        Pair.of(main, Hex.PERIMETER),
-                        Pair.of(outerSmall, Hex.PERIMETER),
-                        Pair.of(main, Hex.DIAGONALS)
-//                                Pair.of(outer, Hex.DIAGONALS)
+                .addSinglePathsLines(gray,
+                        diagonals(1.0, VER).apply(K),
+                        perimeter(1.5 - H, VER).apply(fpt(pt(2 * H, RIGHT))),
+                        diagonals(1.5 - H, VER).apply(fpt(pt(2 * H, RIGHT)))
 
-                ), gray)
-                .addSinglePaths(asList(
-                        Pair.of(registered, Hex.PERIMETER)
-                ), green)
-                .addFullPaths(VertexPaths.of(
-                        Polygon.VertexPath.of(
-                                instruction(outerSmall, DL_V),
-                                instruction(registered, RIGHT),
-                                instruction(outerSmall, UL_V)
-
-                        )), green)
-                .addFullPaths(VertexPaths.of(
-                        Polygon.VertexPath.of(
-                                instruction(inner, DL_H),
-                                instruction(inner, UR_H)
-
-                        )), blue)
-                .addFullPaths(VertexPaths.of(
-                        Polygon.VertexPath.of(
-                                instruction(outerBig, DOWN),
-                                instruction(outerBig, UP)
-
-                        )), gray)
-                .addCircle(
-                        asList(
-                                registered
-                        ), blueLight
+                )
+                .addSinglePathsLines(
+                        green,
+                        perimeter(H, HOR).apply(K),
+                        Stream.of(PointsPath.of(C3, D3, B3))
+                )
+                .addFullPaths(
+                        gray,
+                        diagonalVertical(1.0).apply(D3)
+                )
+                .addFullPaths(
+                        blue,
+                        diagonalHorizontal((H + H * (H - 0.5))).apply(G3)
+                )
+                .addCircleWithRadius(
+                        blueLight,
+                        Pair.of(fpt(pt(H, RIGHT)), H),
+                        Pair.of(fpt(pt(H, LEFT)), H),
+                        Pair.of(fpt(pt(H, UL_H)), H),
+                        Pair.of(fpt(pt(H, UR_H)), H),
+                        Pair.of(fpt(pt(H, DL_H)), H),
+                        Pair.of(fpt(pt(H, DR_H)), H)
                 )
                 ;
 
@@ -297,24 +311,29 @@ public class TileStar {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        Polygon main = Hex.hex(1, HOR);
-        Polygon registered = main.getRegistered();
-        Polygon inner = Hex.hex(RATIO_1, HOR);
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_01b_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(() -> getPayloadSimple1b().getPathsFull(), red)
+//                .addFullPaths(() -> getPayloadSimple1b().getPathsFull(), red)
 //                .addEquations(equations)
-                .addSinglePaths(asList(
-                        Pair.of(main, Hex.PERIMETER),
-                        Pair.of(main, Hex.DIAGONALS)
-                ), gray)
-                .addSinglePaths(asList(
-                        Pair.of(registered, Hex.PERIMETER)
-                ), green)
-                .addSinglePaths(asList(
-                        Pair.of(inner, Hex.PERIMETER)
-                ), blue);
+                .addImportantVertexes(
+                        ImportantVertex.of("A1", A1),
+                        ImportantVertex.of("B1", B1),
+                        ImportantVertex.of("C1", C1),
+                        ImportantVertex.of("D1", D1)
+                )
+                .addSinglePathsLines(
+                        gray,
+                        perimeter(1.0, HOR).apply(K),
+                        diagonals(1.0, HOR).apply(K)
+                )
+                .addSinglePathsLines(
+                        green,
+                        perimeter(H, VER).apply(K)
+                )
+                .addSinglePathsLines(
+                        blue,
+                        perimeter(RATIO_1, HOR).apply(K)
+                ).addFullPaths(red, getFullPath1b());
 
     }
 
@@ -325,24 +344,24 @@ public class TileStar {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        Polygon main = Hex.hex(1, HOR);
-        Polygon registered = main.getRegistered();
-        Polygon inner = Hex.hex(RATIO_2, HOR);
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_02b_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(() -> getPayloadSimple2b().getPathsFull(), red)
+                .addFullPaths(red, getFullPath2b())
 //                .addEquations(equations)
-                .addSinglePaths(asList(
-                        Pair.of(main, Hex.PERIMETER),
-                        Pair.of(main, Hex.DIAGONALS)
-                ), gray)
-                .addSinglePaths(asList(
-                        Pair.of(registered, Hex.PERIMETER)
-                ), green)
-                .addSinglePaths(asList(
-                        Pair.of(inner, Hex.PERIMETER)
-                ), blue);
+                .addSinglePathsLines(
+                        gray,
+                        perimeter(1.0, HOR).apply(K),
+                        diagonals(1.0, HOR).apply(K)
+                )
+                .addSinglePathsLines(
+                        green,
+                        perimeter(H, VER).apply(K)
+                )
+                .addSinglePathsLines(
+                        blue,
+                        perimeter(RATIO_2, HOR).apply(K)
+                )
+                ;
 
     }
 
@@ -353,24 +372,24 @@ public class TileStar {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        Polygon main = Hex.hex(1, HOR);
-        Polygon registered = main.getRegistered();
-        Polygon inner = Hex.hex(RATIO_3, HOR);
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_03b_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(() -> getPayloadSimple3b().getPathsFull(), red)
+                .addFullPaths(red, getFullPath3b())
 //                .addEquations(equations)
-                .addSinglePaths(asList(
-                        Pair.of(main, Hex.PERIMETER),
-                        Pair.of(main, Hex.DIAGONALS)
-                ), gray)
-                .addSinglePaths(asList(
-                        Pair.of(registered, Hex.PERIMETER)
-                ), green)
-                .addSinglePaths(asList(
-                        Pair.of(inner, Hex.PERIMETER)
-                ), blue);
+                .addSinglePathsLines(
+                        gray,
+                        perimeter(1.0, HOR).apply(K),
+                        diagonals(1.0, HOR).apply(K)
+                )
+                .addSinglePathsLines(
+                        green,
+                        perimeter(H, VER).apply(K)
+                )
+                .addSinglePathsLines(
+                        blue,
+                        perimeter(RATIO_3, HOR).apply(K)
+                )
+                ;
 
     }
 

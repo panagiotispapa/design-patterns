@@ -1,45 +1,44 @@
 package com.design.common.model;
 
+import com.design.common.InitialConditions;
 import com.design.common.Polygon;
-import com.design.islamic.GenericTools;
+import com.design.common.PointsPath;
+import com.design.common.view.SvgFactory;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.design.common.view.SvgFactory.toSVGString;
+
 
 public class Path {
 
-    private final List<Instruction> instructions;
-
+    private final PointsPath path;
     private final boolean closed;
     private Style style;
 
-    public interface Instruction extends Supplier<Pair<Polygon.ActualVertex, InstructionType>> {
-        static Instruction of(Polygon.ActualVertex actualVertex, InstructionType instructionType) {
-            return of(Pair.of(actualVertex, instructionType));
-        }
-
-        static Instruction of(Pair<Polygon.ActualVertex, InstructionType> p) {
-            return () -> p;
-        }
+    public static Function<PointsPath, Path> fromPath(Style style) {
+        return path -> new Path(style, path);
     }
 
-    public Path(List<Instruction> instructions, boolean closed, Style style) {
-        this.instructions = instructions;
+    public Path(Style style, PointsPath path) {
+        this(false, style, path);
+    }
+
+    public Path(boolean closed, Style style, PointsPath path) {
         this.closed = closed;
         this.style = style;
+        this.path = path;
     }
 
-    public static Function<Path, Path> fromPathWithStyle(Style style) {
-        return path -> new Path(path.getInstructions(), path.isClosed(), style);
-    }
-
-    public List<Instruction> getInstructions() {
-        return instructions;
+    public PointsPath getPath() {
+        return path;
     }
 
     public boolean isClosed() {
@@ -50,104 +49,66 @@ public class Path {
         return style;
     }
 
-    public enum InstructionType {
-        STARTING_POINT,
-        LINE,
-        ARC_LARGER,
-        ARC_SMALLER
+    public Stream<String> draw(List<Integer> offsets, InitialConditions ic) {
+        return offsets.stream().map(i -> draw(i, ic));
     }
 
-    public static Function<Polygon.VertexPath, Path> vertexPathToPath =
-            l -> new Path.Builder().justLines(l).build();
+    public String draw(InitialConditions ic) {
+        return draw(0, ic);
+    }
 
-    public static Function<List<Polygon.VertexPath>, Paths> vertexPathsToPaths =
-            GenericTools.mapLists(vertexPathToPath).andThen(Paths::of);
+    private static Function<Pair<Point2D, InstructionType>, String> toSvg() {
+        return p -> SvgFactory.toSVG(p.getLeft(), p.getRight()::getSvgInstruction);
+    }
 
-    public static class Builder {
+    public String draw(int offset, InitialConditions ic) {
+        StringBuilder builder = new StringBuilder("<path d=\"");
 
-        private boolean closed = false;
-        private List<Instruction> instructions = new ArrayList<>();
-        private Style style;
+        builder.append(fromPath(path, offset, ic).stream().map(toSvg()).collect(Collectors.joining(" ")));
 
-        public Builder closed() {
-            closed = true;
-            return this;
+//        builder.append(getRealPointInstructions(offset, ic).stream().map(fromPathRealPointInstruction()).collect(Collectors.joining(" ")));
+
+        if (isClosed()) {
+            builder.append(" z\" style=\"");
+        } else {
+            builder.append("\" style=\"");
         }
 
-        public Builder justLines(Polygon.VertexPath vertexPath) {
-            AtomicInteger counter = new AtomicInteger(0);
-            vertexPath.get().stream().forEach(p -> {
-                if (counter.getAndIncrement() == 0) {
-                    startWith(p);
-                } else {
-                    lineTo(p);
-                }
-            });
-            return this;
+        builder.append(toSVGString(getStyle()));
+        builder.append("\"/>");
+
+        return builder.toString();
+    }
+
+    private enum InstructionType {
+        STARTING_POINT("M"),
+        LINE("L");
+
+        private final String svgInstruction;
+
+        InstructionType(String svgInstruction) {
+            this.svgInstruction = svgInstruction;
         }
 
-        public Builder startWith(Polygon.ActualVertex actualVertex) {
-            instructions.add(Instruction.of(Pair.of(actualVertex, InstructionType.STARTING_POINT)));
-            return this;
-        }
-
-        public Builder startWith(Polygon polygon, Polygon.Vertex vertex) {
-            instructions.add(Instruction.of(Polygon.ActualVertex.of(polygon, vertex), InstructionType.STARTING_POINT));
-            return this;
-        }
-
-        public Builder lineTo(Polygon.ActualVertex actualVertex) {
-            instructions.add(Instruction.of(actualVertex, InstructionType.LINE));
-            return this;
-        }
-
-        public Builder lineTo(Polygon polygon, Polygon.Vertex vertex) {
-            instructions.add(Instruction.of(Polygon.ActualVertex.of(polygon, vertex), InstructionType.LINE));
-            return this;
-        }
-
-        public Builder arcLargerTo(Polygon.ActualVertex actualVertex) {
-            instructions.add(() -> Pair.of(actualVertex, InstructionType.ARC_LARGER));
-            return this;
-        }
-
-        public Builder arcLargerTo(Polygon polygon, Polygon.Vertex vertex) {
-            instructions.add(() -> Pair.of(() -> Pair.of(polygon, vertex), InstructionType.ARC_LARGER));
-            return this;
-        }
-
-        public Builder arcSmallerTo(Polygon.ActualVertex actualVertex) {
-            instructions.add(() -> Pair.of(actualVertex, InstructionType.ARC_SMALLER));
-            return this;
-        }
-
-        public Builder arcSmallerTo(Polygon polygon, Polygon.Vertex vertex) {
-            instructions.add(Instruction.of(Pair.of(Polygon.ActualVertex.of(Pair.of(polygon, vertex)), InstructionType.ARC_SMALLER)));
-            return this;
-        }
-
-
-        public Builder withStyle(Style style) {
-            this.style = style;
-            return this;
-        }
-
-        public Path build() {
-            return new Path(instructions, closed, style);
+        public String getSvgInstruction() {
+            return svgInstruction;
         }
     }
 
 
-    public interface Paths extends Supplier<List<Path>> {
-        static Paths of(List<Path> paths) {
-            return () -> paths;
-        }
-
-        static Paths of(Path... paths) {
-            return of(Arrays.asList(paths));
-        }
-
+    private List<Pair<Point2D, InstructionType>> fromPath(PointsPath path, int offset, InitialConditions ic) {
+        List<Pair<Point2D, InstructionType>> instructions = Lists.newArrayList();
+        AtomicInteger counter = new AtomicInteger(0);
+        path.get().stream().map(p -> p.toPoint(offset, ic)).forEach(p -> {
+            if (counter.getAndIncrement() == 0) {
+                instructions.add(Pair.of(p, InstructionType.STARTING_POINT));
+            } else {
+                instructions.add(Pair.of(p, InstructionType.LINE));
+            }
+        });
+        return instructions;
 
     }
+
 
 }

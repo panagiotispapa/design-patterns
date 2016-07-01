@@ -4,54 +4,57 @@ import com.design.common.DesignHelper;
 import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.Grid;
 import com.design.common.Mappings;
-import com.design.common.Polygon;
-import com.design.common.Polygon.VertexPath;
-import com.design.common.Polygon.VertexPaths;
+import com.design.common.FinalPointTransition;
+import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
 
+import static com.design.common.FinalPointTransition.K;
+import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P6.H;
 import static com.design.islamic.model.Hex.Corner.*;
-import static com.design.islamic.model.Hex.instruction;
-import static java.util.Arrays.asList;
+import static com.design.islamic.model.Hex.pt;
 
 public class Tile2 {
 
     private static double RATIO_KB = H / (H + 0.5);
     private static double RATIO_BD = Mappings.<Double>chain(i -> 1 - i, i -> i * H).apply(RATIO_KB);
 
+    private final static FinalPointTransition G = fpt(pt(RATIO_KB, DOWN));
+    private final static FinalPointTransition B = fpt(pt(RATIO_KB, DR_V));
+    private final static FinalPointTransition D = B.append(pt(RATIO_BD, RIGHT));
+    private final static FinalPointTransition F = B.append(pt(RATIO_BD, DR_H));
+
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
-        Polygon inner = Hex.hex(RATIO_KB, VER);
-        Polygon outer = Hex.hex(RATIO_BD, HOR, Hex.centreTransform(RATIO_KB, DR_V));
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
+
 
         return new PayloadSimple.Builder("hex_tile_02",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(
-                        VertexPaths.of(
-                                VertexPath.of(
-                                        instruction(outer, RIGHT),
-                                        instruction(inner, DR_V),
-                                        instruction(outer, DR_H)
-                                ),
-                                VertexPath.of(
-                                        instruction(inner, DR_V),
-                                        instruction(inner, DOWN)
-                                )
-                        ), whiteBold
+                .withPathsNewFull(
+                        whiteBold,
+                        getFullPath()
                 )
                 .build();
+    }
+
+    private static List<PointsPath> getFullPath() {
+        return Arrays.asList(
+                PointsPath.of(D, B, F),
+                PointsPath.of(B, G)
+
+        );
     }
 
     @DesignSupplier
@@ -62,41 +65,37 @@ public class Tile2 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        Polygon main = Hex.hex(1, VER);
-        Polygon inner = Hex.hex(RATIO_KB, VER);
-        Polygon innerReg = inner.getRegistered();
-
-        Polygon outer = Hex.hex(RATIO_BD, HOR, Hex.centreTransform(RATIO_KB, VER));
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_02_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
-                .addEquations(asList(
+                .addFullPaths(red, getFullPath())
+                .addEquations(
                         "KB=h/(h+0.5)",
                         "BD=h*(1-KB)"
-                ))
-                .addImportantVertexes(
-                        ImportantVertex.of(main, DR_V.getVertex(), "A"),
-                        ImportantVertex.of(main.getRegistered(), RIGHT.getVertex(), "E"),
-                        ImportantVertex.of(inner, DR_V.getVertex(), "B"),
-                        ImportantVertex.of(innerReg, RIGHT.getVertex(), "C"),
-                        ImportantVertex.of(outer, DR_V.getVertex(), "D")
-
                 )
-                .addSinglePaths(asList(
-                        Pair.of(main, Hex.PERIMETER),
-                        Pair.of(main, Hex.DIAGONALS),
-                        Pair.of(main.getRegistered(), Hex.DIAGONALS),
-                        Pair.of(outer, Hex.DIAGONALS)
-//                                Pair.of(inner, Hex.PERIMETER)
-                ), gray)
-                .addSinglePaths(asList(
-                        Pair.of(inner, Hex.PERIMETER)
-                ), green)
-                .addSinglePaths(asList(
-                        Pair.of(outer, Hex.PERIMETER)
-                ), blue)
-                ;
+                .addImportantVertexes(
+                        ImportantVertex.of("A", pt(1, DR_V)),
+                        ImportantVertex.of("E", pt(H, RIGHT)),
+                        ImportantVertex.of("B", B),
+                        ImportantVertex.of("G", pt(RATIO_KB, DOWN)),
+                        ImportantVertex.of("C", pt(RATIO_KB * H, RIGHT)),
+                        ImportantVertex.of("D", B.append(pt(RATIO_BD, RIGHT))),
+                        ImportantVertex.of("F", B.append(pt(RATIO_BD, DR_H)))
+                )
+                .addSinglePathsLines(
+                        gray,
+                        Hex.perimeter(1.0, VER).apply(K),
+                        Hex.diagonals(1.0, VER).apply(K),
+                        Hex.diagonals(H, HOR).apply(K),
+                        Hex.diagonals(RATIO_BD, HOR).apply(B)
+                )
+                .addSinglePathsLines(
+                        green,
+                        Hex.perimeter(RATIO_KB, VER).apply(K)
+                )
+                .addSinglePathsLines(
+                        blue,
+                        Hex.perimeter(RATIO_BD, HOR).apply(B)
+                );
 
     }
 

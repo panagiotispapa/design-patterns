@@ -1,18 +1,22 @@
 package com.design.deco;
 
 import com.design.common.DesignHelper;
-import com.design.common.DesignHelper.ImportantVertex;
+import com.design.common.FinalPointTransition;
 import com.design.common.Grid;
-import com.design.common.Polygon;
+import com.design.common.PointsPath;
 import com.design.common.RatioHelper.P4;
 import com.design.common.model.Style;
-import com.design.islamic.model.*;
-import org.apache.commons.lang3.tuple.Pair;
+import com.design.islamic.model.DesignSupplier;
+import com.design.islamic.model.Hex;
+import com.design.islamic.model.PayloadSimple;
+import com.design.islamic.model.TileSupplier;
 
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.design.common.FinalPointTransition.K;
+import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.islamic.model.Rect.Corner.*;
@@ -26,29 +30,22 @@ public class Tile2 {
     private static final double KB = KA - AB;
     private static final double AC = AB * P4.H;
 
+    public final static FinalPointTransition A = fpt(pt(KA, DR));
+    public final static FinalPointTransition B = fpt(pt(KB, DR));
+    public final static FinalPointTransition C = B.append(pt(AC, RIGHT));
+    public final static FinalPointTransition D = fpt(pt(KA, DL));
+    public final static FinalPointTransition E = D.append(pt(AC, UP));
+
+
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
-
-        Polygon main = Rect.rect(1, HOR);
-        Polygon rectKB = Rect.rect(KB, HOR);
-        Polygon rectAB = Rect.rect(AB, HOR, centreTransform(KA, DR));
-        Polygon rectAC = Rect.rect(AC, VER, centreTransform(KA, DR));
 
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
 
         return new PayloadSimple.Builder("deco_tile_02",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(VertexPaths.of(
-                        VertexPath.of(
-                                instruction(rectAC, UP),
-                                instruction(rectKB, DL)
-                        ),
-                        VertexPath.of(
-                                instruction(rectAC, LEFT),
-                                instruction(rectKB, UR)
-                        )
-                ), whiteBold)
+                .withPathsNewFull(whiteBold, getFullPath())
                 .withGridConf(Grid.Configs.RECT2.getConfiguration())
                 .build();
     }
@@ -59,34 +56,33 @@ public class Tile2 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        Polygon main = Rect.rect(1, HOR);
-        Polygon rectKB = Rect.rect(KB, HOR);
-        Polygon rectAB = Rect.rect(AB, HOR, centreTransform(KA, DR));
-        Polygon rectAC = Rect.rect(AC, VER, centreTransform(KA, DR));
-
         List<String> equations = Arrays.asList(
                 "AB = KA / 4.0"
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "deco_tile_02_design")
-                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
-                .addImportantVertexes(
-                        ImportantVertex.of(main, DR.getVertex(), "A"),
-                        ImportantVertex.of(rectKB, DR.getVertex(), "B"),
-                        ImportantVertex.of(rectAC, UP.getVertex(), "C")
+                .addImportantVertexes(Tile2.class)
+                .addSinglePathsLines(
+                        gray,
+                        perimeter(1.0, HOR).apply(K),
+                        diagonals(1.0, HOR).apply(K),
+                        perimeter(KB, HOR).apply(K),
+                        perimeter(AB, HOR).apply(A)
                 )
-                .addSinglePaths(asList(
-                        Pair.of(main, PERIMETER),
-                        Pair.of(main, DIAGONALS),
-                        Pair.of(rectKB, PERIMETER),
-                        Pair.of(rectAB, PERIMETER)
-                ), gray)
-                .addSinglePaths(asList(
-                        Pair.of(rectAC, PERIMETER)
-                ), green)
+                .addSinglePathsLines(
+                        green,
+                        perimeter(AC, VER).apply(A)
+                )
+                .addFullPaths(red, getFullPath())
                 ;
 
+    }
+
+    private static List<PointsPath> getFullPath() {
+        return asList(
+                PointsPath.of(E, C)
+        );
     }
 
 }
