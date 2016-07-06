@@ -4,7 +4,6 @@ import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 

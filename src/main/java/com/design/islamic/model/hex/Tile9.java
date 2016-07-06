@@ -2,8 +2,9 @@ package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
 import com.design.common.DesignHelper.ImportantVertex;
+import com.design.common.FinalPointTransition;
 import com.design.common.Mappings;
-import com.design.common.Polygon;
+import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
@@ -13,33 +14,36 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.awt.*;
 import java.util.List;
+import java.util.stream.Stream;
 
+import static com.design.common.FinalPointTransition.K;
+import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.RatioHelper.Ratios.*;
-import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Corner.*;
-import static com.design.islamic.model.Hex.Vertex.*;
+import static com.design.islamic.model.Hex.*;
 import static java.util.Arrays.asList;
 
 public class Tile9 {
 
     private static double RATIO_i = 0.5 * Math.tan(Math.PI / 12);
     private static double RATIO_j = 1 - RATIO_i;
-    private static double RATIO_k = 2 * RATIO_i;
-    private static double RATIO_l = 1 - RATIO_k;
-    private static double RATIO_m = 0.5 * (RATIO_l - RATIO_l * RATIO_l);
+    private static double AD = 2 * RATIO_i;
+    private static double KD = 1 - AD;
+    private static double RATIO_m = 0.5 * (KD - KD * KD);
     private static double RATIO_n = RATIO_m / H;
     private static double RATIO_s = Mappings.chain(RECT.£H(), HEX.£H(), DOD.$H(), HEX.£H()).apply(RATIO_m);
 
-    private static double KA1 = 1;
+    private static double KA = 1;
+    private static double KC = H;
     private static double KB1 = 1;
     private static double KC1 = RATIO_j;
     private static double KD1 = KC1;
-    private static double KB2 = RATIO_l;
+    private static double KB2 = KD;
     private static double KA2 = KB2;
-    private static double KB3 = RATIO_l * RATIO_l;
+    private static double KB3 = KD * KD;
     private static double KA3 = KB3;
 
     private static double B1B2 = 1 - KB2;
@@ -59,115 +63,112 @@ public class Tile9 {
     private static double KG1 = RATIO_m;
     private static double KG2 = RATIO_n;
     private static double KG3 = 2 * KG1;
-    private static double KG4 = (KG3 - KG2) * H;
+    private static double G2G3 = KG3 - KG2;
+    private static double G8G4 = G2G3 * H;
+    private static double KG4 = G2G3 * H;
 
     private static double A1M = C2E;
     private static double A1N = A1M;
     private static double KN = 1 - A1N;
     private static double KP = KN * H;
     private static double B2P = KP - KB2;
+    private static double J1J3 = RATIO_i - RATIO_m;
+    private static double C1H1 = RATIO_i;
+    private static double B3B4 = RATIO_s;
+    private static double B3B5 = B3B4 * H;
+    private static double G9Q1 = KA2 + KG1 / 4.0;
+
+
+    public final static FinalPointTransition A = fpt(pt(KA, RIGHT));
+    public final static FinalPointTransition B = fpt(pt(KA, UR_V));
+    public final static FinalPointTransition C = fpt(pt(KC, RIGHT));
+    public final static FinalPointTransition D = fpt(pt(KD, RIGHT));
+    public final static FinalPointTransition E_1 = A.append(pt(AD, UL_H));
+
+    public final static FinalPointTransition A1 = fpt(pt(KA, DR_V));
+    public final static FinalPointTransition A5 = fpt(pt(KA, UR_V));
+    public final static FinalPointTransition B1 = fpt(pt(KA, RIGHT));
+    public final static FinalPointTransition C1 = fpt(pt(H, RIGHT));
+    public final static FinalPointTransition D1 = fpt(pt(H, DR_V));
+    public final static FinalPointTransition B2 = fpt(pt(KB2, RIGHT));
+    public final static FinalPointTransition B3 = fpt(pt(KB3, RIGHT));
+    public final static FinalPointTransition A2 = fpt(pt(KA2, DR_V));
+    public final static FinalPointTransition A3 = fpt(pt(KA3, DR_V));
+    public final static FinalPointTransition C2 = fpt(pt(KC2, RIGHT));
+    public final static FinalPointTransition D2 = fpt(pt(KD2, DR_V));
+    public final static FinalPointTransition E = C2.append(pt(C2E, UP));
+    public final static FinalPointTransition F = D2.append(pt(D2F, UR_H));
+    public final static FinalPointTransition G1 = fpt(pt(KG1, UL_V));
+    public final static FinalPointTransition G8 = fpt(pt(KG3, UR_H));
+    public final static FinalPointTransition G2 = fpt(pt(KG2, RIGHT));
+    public final static FinalPointTransition G3 = fpt(pt(KG3, RIGHT));
+    public final static FinalPointTransition G4 = G8.append(pt(G8G4, DOWN));
+    public final static FinalPointTransition G7 = fpt(pt(KG3, DR_H));
+    public final static FinalPointTransition G5 = G7.append(pt(G8G4, UP));
+    public final static FinalPointTransition G6 = G7.append(pt(G8G4, UL_V));
+    public final static FinalPointTransition G9 = fpt(pt(KG1, UR_H));
+    public final static FinalPointTransition G10 = G3.append(pt(G8G4, UL_V));
+    public final static FinalPointTransition G11 = G3.append(pt(G8G4, DL_V));
+    public final static FinalPointTransition M = A1.append(pt(A1M, UR_H));
+    public final static FinalPointTransition M1 = A1.append(pt(A1M, UP));
+    public final static FinalPointTransition M2 = A1.append(pt(A1M, DL_V));
+    public final static FinalPointTransition M3 = fpt(pt(KA, UR_V), pt(A1M, DOWN));
+    public final static FinalPointTransition M4 = fpt(pt(KA, UR_V), pt(A1M, UL_V));
+    public final static FinalPointTransition M5 = fpt(pt(KA, DOWN), pt(A1M, UL_V));
+    public final static FinalPointTransition M6 = fpt(pt(KA, DOWN), pt(A1M, UR_V));
+    public final static FinalPointTransition N = fpt(pt(KN, DR_V));
+    public final static FinalPointTransition P = fpt(pt(KP, RIGHT));
+    public final static FinalPointTransition Q1 = G9.append(pt(G9Q1, DR_V));
+    public final static FinalPointTransition Q2 = fpt(pt(KG1, DL_H), pt(G9Q1, DR_V));
+    public final static FinalPointTransition Q3 = fpt(pt(KG1, DR_H), pt(G9Q1, UR_V));
+
+    public final static FinalPointTransition I1 = fpt(pt(KG1, UP), pt(KB3 + KG1 / 4.0, RIGHT));
+    public final static FinalPointTransition I4 = fpt(pt(KG1, UP), pt(KB3 - KG1 / 4.0, RIGHT));
+    public final static FinalPointTransition I2 = fpt(pt(KG1, DOWN), pt(KB3 + KG1 / 4.0, RIGHT));
+    public final static FinalPointTransition I3 = fpt(pt(KG1, DOWN), pt(KB3 - KG1 / 4.0, RIGHT));
+
+    public final static FinalPointTransition R1 = G9.append(pt(KA3 + KG1 / 4.0, DR_V));
+    public final static FinalPointTransition R4 = G9.append(pt(KA3 - KG1 / 4.0, DR_V));
+    public final static FinalPointTransition R2 = fpt(pt(KG1, DL_H), pt(KA3 + KG1 / 4.0, DR_V));
+    public final static FinalPointTransition R3 = fpt(pt(KG1, DL_H), pt(KA3 - KG1 / 4.0, DR_V));
+    public final static FinalPointTransition H1 = C1.append(pt(C1H1, UP));
+    public final static FinalPointTransition H2 = C1.append(pt(C1H1, DOWN));
+    public final static FinalPointTransition J1 = C1.append(pt(KG1, UP));
+    public final static FinalPointTransition J2 = C1.append(pt(KG1, DOWN));
+    public final static FinalPointTransition J3 = J1.append(pt(J1J3, LEFT));
+    public final static FinalPointTransition J4 = J2.append(pt(J1J3, LEFT));
+    public final static FinalPointTransition B4 = B3.append(pt(B3B4, LEFT));
+    public final static FinalPointTransition B5 = B3.append(pt(B3B5, UP));
+
+    public final static FinalPointTransition S1 = fpt(pt(B3B5, UP), pt(KB3 + B3B5 / 4.0, RIGHT));
+    public final static FinalPointTransition S2 = fpt(pt(B3B5, DOWN), pt(KB3 + B3B5 / 4.0, RIGHT));
+    public final static FinalPointTransition P1 = P.append(pt(B2P, UP));
+    public final static FinalPointTransition P2 = P.append(pt(B2P, DOWN));
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
-        Polygon main = Hex.hex(1, VER);
-        Polygon hexA1M = Hex.hex(A1M, HOR, centreTransform(1, DR_V));
-        Polygon hexA1N = hexA1M.getMirror();
-
-        Polygon hexPB2 = Hex.hex(B2P, VER, centreTransform(KP, RIGHT));
-        Polygon hexPB2_Rot = Hex.hex(B2P, VER, centreTransform(KP, DR_H));
-
-        Polygon hexA2Q1 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA2, DR_V), centreTransform(RATIO_n, UR_V)));
-        Polygon hexA2Q2 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA2, DR_V), centreTransform(RATIO_n, DOWN)));
-
-        Polygon hexA3R1 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA3, DR_V), centreTransform(RATIO_n, UR_V)));
-        Polygon hexA3R2 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA3, DR_V), centreTransform(RATIO_n, DOWN)));
-        Polygon hexA3R3 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA3, DR_V), centreTransform(RATIO_n, DL_V)));
-        Polygon hexA3R4 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA3, DR_V), centreTransform(RATIO_n, UP)));
-
-        Polygon hexC1H = Hex.hex(RATIO_i, VER, centreTransform(KC1, RIGHT));
-        Polygon hexC1H_r = Hex.hex(RATIO_i, VER, centreTransform(KC1, DR_H));
-
-        Polygon hexB3I1 = Hex.hex(RATIO_n * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, RIGHT), centreTransform(RATIO_n, UR_H)));
-        Polygon hexB3I2 = Hex.hex(RATIO_n * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, RIGHT), centreTransform(RATIO_n, DR_H)));
-        Polygon hexB3I3 = Hex.hex(RATIO_n * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, RIGHT), centreTransform(RATIO_n, DL_H)));
-        Polygon hexB3I4 = Hex.hex(RATIO_n * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, RIGHT), centreTransform(RATIO_n, UL_H)));
-
-        Polygon hexC1J3 = Hex.hex(RATIO_i - RATIO_m, HOR, CentreTransform.of(centreTransform(KC1, RIGHT), centreTransform(RATIO_m, UP)));
-        Polygon hexC1J4 = Hex.hex(RATIO_i - RATIO_m, HOR, CentreTransform.of(centreTransform(KC1, RIGHT), centreTransform(RATIO_m, DOWN)));
-
-        Polygon hexKG4 = Hex.hex(KG4, VER, centreTransform(KG3, UR_H));
-        Polygon hexKG5 = Hex.hex(KG4, VER, centreTransform(KG3, DR_H));
-
-        Polygon hexB3S1 = Hex.hex(RATIO_s * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, RIGHT), centreTransform(RATIO_s, UR_H)));
-        Polygon hexB3S2 = Hex.hex(RATIO_s * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, RIGHT), centreTransform(RATIO_s, DR_H)));
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
 
         return new PayloadSimple.Builder("hex_tile_09"
                 , Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(VertexPaths.of(
-                        VertexPath.of(
-                                instruction(main, DR_V),
-                                instruction(main, DOWN)
-                        ),
-                        VertexPath.of(
-                                instruction(hexA1N, DL_H),
-                                instruction(hexA1N, LEFT),
-                                instruction(hexA1N, UL_H)
-                        ),
-                        VertexPath.of(
-                                instruction(KA2, UR_V),
-                                instruction(hexB3S1, LEFT),
-                                instruction(hexPB2, DOWN)
-                        ),
-                        VertexPath.of(
-                                instruction(KA2, DR_V),
-                                instruction(hexB3S2, LEFT),
-                                instruction(hexPB2, UP)
-                        ),
-                        VertexPath.of(
-                                instruction(hexPB2, DOWN),
-                                instruction(hexA1N, UL_V)
-                        ),
-                        VertexPath.of(
-                                instruction(hexPB2_Rot, UR_V),
-                                instruction(hexA1N, UL_V)
-                        ),
-                        VertexPath.of(
-                                instruction(hexC1H, DOWN),
-                                instruction(hexA2Q1, UL_V),
-                                instruction(hexA3R1, UL_V),
-                                instruction(hexA3R3, DR_V),
-                                instruction(hexKG5, UL_V)
-
-                        ),
-                        VertexPath.of(
-                                instruction(hexC1H_r, UR_V),
-                                instruction(hexA2Q2, UL_V),
-                                instruction(hexA3R2, UL_V),
-                                instruction(hexA3R4, DR_V),
-                                instruction(KG4, centreTransform(KG3, RIGHT), UL_V)
-                        ),
-                        VertexPath.of(
-                                instruction(hexKG5, UP),
-                                instruction(hexB3I3, RIGHT),
-                                instruction(hexB3I1, LEFT),
-                                instruction(hexC1J3, LEFT),
-                                instruction(hexC1H, UP)
-
-                        ),
-                        VertexPath.of(
-                                instruction(hexKG4, DOWN),
-                                instruction(hexB3I4, RIGHT),
-                                instruction(hexB3I2, LEFT),
-                                instruction(hexC1J4, LEFT),
-                                instruction(hexC1H, DOWN)
-                        )
-
-                        ), whiteBold
-                )
+                .withPathsNewFull(
+                        whiteBold,
+                        getFullPath())
                 .withSize(PayloadSimple.Size.MEDIUM)
                 .build();
+    }
+
+
+    private static List<PointsPath> getFullPath() {
+        return asList(
+                PointsPath.of(G4, I4, I2, J4, H2, Q1, R1, R3, G6),
+                PointsPath.of(G5, I3, I1, J3, H1, Q3),
+                PointsPath.of(G10, R4, R2, Q2),
+                PointsPath.of(M4, P1, S2, A2),
+                PointsPath.of(M2, P2, S1, fpt(pt(KA2, UR_V))),
+                PointsPath.of(A1, A5)
+        );
     }
 
     @DesignSupplier
@@ -177,14 +178,6 @@ public class Tile9 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-
-        Polygon main = Hex.hex(1, VER);
-        Polygon mainHor = Hex.hex(1, HOR);
-        Polygon hexKC = main.getRegistered();
-        Polygon hexKD = Hex.hex(RATIO_l, HOR);
-        Polygon hexAD = Hex.hex(RATIO_k, HOR, centreTransform(1, RIGHT));
-        Polygon hexAD_VER = hexAD.getMirror();
-
         List<String> equations = asList(
                 "AC = 0.5 * tan(15)",
                 "AD = 2 * AC",
@@ -193,25 +186,25 @@ public class Tile9 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_09_design1")
                 .addEquations(equations)
-                .addSinglePaths(asList(
-                        Pair.of(main, PERIMETER),
-                        Pair.of(mainHor, PERIMETER),
-                        Pair.of(hexAD, PERIMETER),
-                        Pair.of(hexAD_VER, PERIMETER)
-                ), gray)
-                .addFullPaths(VertexPaths.of(
-                        VertexPath.of(
-                                ActualVertex.of(main, THREE),
-                                ActualVertex.of(mainHor, FIVE),
-                                ActualVertex.of(main, SIX)
-
-                        )), green)
+                .addSinglePathsLines(
+                        gray,
+                        perimeter(1.0, VER).apply(K),
+                        perimeter(1.0, HOR).apply(K),
+                        perimeter(AD, VER).apply(A),
+                        perimeter(AD, HOR).apply(A)
+                )
+                .addFullPaths(
+                        green,
+                        Stream.of(
+                                PointsPath.of(fpt(pt(KA, UR_V)), fpt(pt(KA, DR_H)), fpt(pt(KA, DL_V)))
+                        )
+                )
                 .addImportantVertexes(
-                        ImportantVertex.of(mainHor, ONE, "A"),
-                        ImportantVertex.of(main, SIX, "B"),
-                        ImportantVertex.of(hexKC, ONE, "C"),
-                        ImportantVertex.of(hexKD, ONE, "D"),
-                        ImportantVertex.of(hexAD, FIVE, "E")
+                        ImportantVertex.of("A", A),
+                        ImportantVertex.of("B", B),
+                        ImportantVertex.of("C", C),
+                        ImportantVertex.of("D", D),
+                        ImportantVertex.of("E", E_1)
                 )
                 .withFontSize(14)
 
@@ -226,11 +219,8 @@ public class Tile9 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        Polygon main = Hex.hex(1, VER);
-        Polygon mainHor = Hex.hex(1, HOR);
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_09_design3")
-                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
+                .addFullPaths(red, getFullPath())
                 .withFontSize(10)
 
                 ;
@@ -243,255 +233,162 @@ public class Tile9 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-
-        Polygon main = Hex.hex(1, VER);
-        Polygon mainHor = Hex.hex(1, HOR);
-        Polygon hexKC1 = Hex.hex(KC1, HOR);
-        Polygon hexKD1 = Hex.hex(KD1, VER);
-        Polygon hexKB2 = Hex.hex(KB2, HOR);
-        Polygon hexKA2 = hexKB2.getMirror();
-        Polygon hexKB3 = Hex.hex(KB3, HOR);
-        Polygon hexKA3 = hexKB3.getMirror();
-
-        Polygon hexB1B2 = Hex.hex(B1B2, VER, centreTransform(1, RIGHT));
-        Polygon hexB1B2_Hor = hexB1B2.getMirror();
-
-        Polygon hexA1A2 = Hex.hex(A1A2, VER, centreTransform(1, DR_V));
-        Polygon hexA1A2_Hor = hexA1A2.getMirror();
-
-        Polygon hexB1B3 = Hex.hex(B1B3, VER, centreTransform(1, RIGHT));
-        Polygon hexB1B3_Hor = hexB1B3.getMirror();
-
-        Polygon hexA1A3 = Hex.hex(A1A3, VER, centreTransform(1, DR_V));
-        Polygon hexA1A3_Hor = hexA1A3.getMirror();
-
-        Polygon hexKC2 = Hex.hex(KC2, HOR);
-        Polygon hexKD2 = Hex.hex(KD2, VER);
-
-        Polygon hexC2E = Hex.hex(C2E, VER, centreTransform(KC2, RIGHT));
-        Polygon hexD2F = Hex.hex(D2F, HOR, centreTransform(KD2, DR_V));
-        Polygon hexInnerLine = Hex.hex(1, HOR, centreTransform(C2E, DR_V));
-        Polygon hexInnerLine2 = Hex.hex(1, VER, centreTransform(C2E, RIGHT));
-
-        Polygon hexKG1 = Hex.hex(RATIO_m, VER);
-        Polygon hexKG2 = Hex.hex(RATIO_n, HOR);
-        Polygon hexKG3 = Hex.hex(KG3, HOR);
-        Polygon hexKG4 = Hex.hex(KG4, VER, centreTransform(KG3, UR_H));
-        Polygon hexKG5 = Hex.hex(KG4, VER, centreTransform(KG3, DR_H));
-
-        Polygon hexA1M = Hex.hex(A1M, HOR, centreTransform(1, DR_V));
-        Polygon hexA1N = hexA1M.getMirror();
-        Polygon hexKN = Hex.hex(KN, VER);
-        Polygon hexKP = Hex.hex(KP, HOR);
-
-        Polygon hexPB2 = Hex.hex(B2P, VER, centreTransform(KP, RIGHT));
-        Polygon hexA2Q = Hex.hex(RATIO_n, VER, centreTransform(KA2, DR_V));
-        Polygon hexA2Q_m = hexA2Q.getMirror();
-        Polygon hexA2Q1 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA2, DR_V), centreTransform(RATIO_n, UR_V)));
-        Polygon hexA2Q2 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA2, DR_V), centreTransform(RATIO_n, DOWN)));
-
-        Polygon hexA3R = Hex.hex(RATIO_n, VER, centreTransform(KA3, VER));
-        Polygon hexA3R1 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA3, DR_V), centreTransform(RATIO_n, UR_V)));
-        Polygon hexA3R2 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA3, DR_V), centreTransform(RATIO_n, DOWN)));
-        Polygon hexA3R3 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA3, DR_V), centreTransform(RATIO_n, DL_V)));
-        Polygon hexA3R4 = Hex.hex(RATIO_n * RATIO_k, VER, CentreTransform.of(centreTransform(KA3, DR_V), centreTransform(RATIO_n, UP)));
-
-        Polygon hexC1H = Hex.hex(RATIO_i, VER, centreTransform(KC1, HOR));
-        Polygon hexC1J = Hex.hex(RATIO_m, VER, centreTransform(KC1, HOR));
-        Polygon hexC1J3 = Hex.hex(RATIO_i - RATIO_m, HOR, CentreTransform.of(centreTransform(KC1, HOR), Hex.centreTransform(RATIO_m, UP)));
-        Polygon hexC1J4 = Hex.hex(RATIO_i - RATIO_m, HOR, CentreTransform.of(centreTransform(KC1, HOR), Hex.centreTransform(RATIO_m, DOWN)));
-
-        Polygon hexB3I = Hex.hex(RATIO_n, HOR, centreTransform(KB3, HOR));
-        Polygon hexB3I1 = Hex.hex(RATIO_n * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, HOR), centreTransform(RATIO_n, UR_H)));
-        Polygon hexB3I2 = Hex.hex(RATIO_n * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, HOR), centreTransform(RATIO_n, DR_H)));
-        Polygon hexB3I3 = Hex.hex(RATIO_n * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, HOR), centreTransform(RATIO_n, DL_H)));
-        Polygon hexB3I4 = Hex.hex(RATIO_n * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, HOR), centreTransform(RATIO_n, UL_H)));
-
-        Polygon hexB3S = Hex.hex(RATIO_s, HOR, centreTransform(KB3, HOR));
-        Polygon hexB3S1 = Hex.hex(RATIO_s * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, HOR), centreTransform(RATIO_s, UR_H)));
-        Polygon hexB3S2 = Hex.hex(RATIO_s * RATIO_k, HOR, CentreTransform.of(centreTransform(KB3, HOR), centreTransform(RATIO_s, DR_H)));
-
-//        Polygon hexA2Q = Hex.hex(A2Q, VER, centreTransform(KA2, VER));
-//        Polygon hexA2Q_Hor = hexA2Q.getMirror();
-//        Polygon hexQR = Hex.hex(QR, VER, centreTransform(KA2, VER).andThen(Polygon.centreTransform(A2Q, Hex.Vertex.TWO, VER)));
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_09_design2")
-                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
-                .addImportantVertexes(asList(
-                        ImportantVertex.of(main, DR_V.getVertex(), "A1"),
-                        ImportantVertex.of(mainHor, RIGHT.getVertex(), "B1"),
-                        ImportantVertex.of(hexKC1, RIGHT.getVertex(), "C1"),
-                        ImportantVertex.of(hexKD1, DR_V.getVertex(), "D1"),
-                        ImportantVertex.of(hexKB2, RIGHT.getVertex(), "B2"),
-                        ImportantVertex.of(hexKA2, DR_V.getVertex(), "A2"),
-                        ImportantVertex.of(hexKB3, RIGHT.getVertex(), "B3"),
-                        ImportantVertex.of(hexKA3, DR_V.getVertex(), "A3"),
-                        ImportantVertex.of(hexKC2, RIGHT.getVertex(), "C2"),
-                        ImportantVertex.of(hexKD2, DR_V.getVertex(), "D2"),
-                        ImportantVertex.of(hexC2E, UP.getVertex(), "E"),
-                        ImportantVertex.of(hexD2F, UR_H.getVertex(), "F"),
-                        ImportantVertex.of(hexKG1, UL_V.getVertex(), "G1"),
-                        ImportantVertex.of(hexKG2, RIGHT.getVertex(), "G2"),
-                        ImportantVertex.of(hexKG3, RIGHT.getVertex(), "G3"),
-                        ImportantVertex.of(hexKG4, DOWN.getVertex(), "G4"),
-                        ImportantVertex.of(hexKG5, UP.getVertex(), "G5"),
-                        ImportantVertex.of(hexKG5, UL_V.getVertex(), "G6"),
 
-                        ImportantVertex.of(hexA1M, UR_H.getVertex(), "M"),
-                        ImportantVertex.of(hexKN, DR_V.getVertex(), "N"),
-                        ImportantVertex.of(hexKP, RIGHT.getVertex(), "P"),
-                        ImportantVertex.of(hexA2Q1, UL_V.getVertex(), "Q1"),
-                        ImportantVertex.of(hexA2Q2, UL_V.getVertex(), "Q1"),
+                .addImportantVertexes(
+                        ImportantVertex.of("A1", A1),
+                        ImportantVertex.of("B1", B1),
+                        ImportantVertex.of("C1", C1),
+                        ImportantVertex.of("D1", D1),
+                        ImportantVertex.of("B2", B2),
+                        ImportantVertex.of("A2", A2),
+                        ImportantVertex.of("B3", B3),
+                        ImportantVertex.of("B4", B4),
+                        ImportantVertex.of("B5", B5),
+                        ImportantVertex.of("A3", A3),
+                        ImportantVertex.of("C2", C2),
+                        ImportantVertex.of("D2", D2),
+                        ImportantVertex.of("E", E),
+                        ImportantVertex.of("F", F),
+                        ImportantVertex.of("G1", G1),
+                        ImportantVertex.of("G2", G2),
+                        ImportantVertex.of("G3", G3),
+                        ImportantVertex.of("G4", G4),
+                        ImportantVertex.of("G5", G5),
+                        ImportantVertex.of("G6", G6),
+                        ImportantVertex.of("G7", G7),
+                        ImportantVertex.of("G8", G8),
+                        ImportantVertex.of("G9", G9),
+                        ImportantVertex.of("G10", G10),
+                        ImportantVertex.of("G11", G11),
 
-                        ImportantVertex.of(hexA3R1, UL_V.getVertex(), "R1"),
-                        ImportantVertex.of(hexA3R2, UL_V.getVertex(), "R2"),
-                        ImportantVertex.of(hexA3R3, DR_V.getVertex(), "R3"),
-                        ImportantVertex.of(hexA3R4, DR_V.getVertex(), "R4"),
+                        ImportantVertex.of("M", M),
+                        ImportantVertex.of("M1", M1),
+                        ImportantVertex.of("M2", M2),
+                        ImportantVertex.of("M3", M3),
+                        ImportantVertex.of("M4", M4),
+                        ImportantVertex.of("M5", M5),
+                        ImportantVertex.of("M6", M6),
+                        ImportantVertex.of("N", N),
+                        ImportantVertex.of("P", P),
+                        ImportantVertex.of("Q1", Q1),
+                        ImportantVertex.of("Q2", Q2),
+                        ImportantVertex.of("Q3", Q3),
+                        ImportantVertex.of("R1", R1),
+                        ImportantVertex.of("R2", R2),
+                        ImportantVertex.of("R3", R3),
+                        ImportantVertex.of("R4", R4),
+                        ImportantVertex.of("H1", H1),
+                        ImportantVertex.of("H2", H2),
 
-                        ImportantVertex.of(hexC1H, UP.getVertex(), "H1"),
-                        ImportantVertex.of(hexC1H, DOWN.getVertex(), "H2"),
+                        ImportantVertex.of("J1", J1),
+                        ImportantVertex.of("J2", J2),
+                        ImportantVertex.of("J3", J3),
+                        ImportantVertex.of("J4", J4),
+                        ImportantVertex.of("I1", I1),
+                        ImportantVertex.of("I2", I2),
+                        ImportantVertex.of("I3", I3),
+                        ImportantVertex.of("I4", I4),
+                        ImportantVertex.of("S1", S1),
+                        ImportantVertex.of("S2", S2),
 
-                        ImportantVertex.of(hexB3I1, LEFT.getVertex(), "I1"),
-                        ImportantVertex.of(hexB3I2, LEFT.getVertex(), "I2"),
-                        ImportantVertex.of(hexB3I3, RIGHT.getVertex(), "I3"),
-                        ImportantVertex.of(hexB3I4, RIGHT.getVertex(), "I4"),
+                        ImportantVertex.of("P1", P1),
+                        ImportantVertex.of("P2", P2)
+                )
 
-                        ImportantVertex.of(hexB3S1, LEFT.getVertex(), "S1"),
-                        ImportantVertex.of(hexB3S2, LEFT.getVertex(), "S2"),
-                        ImportantVertex.of(hexC1J, UP.getVertex(), "J1"),
-                        ImportantVertex.of(hexC1J, DOWN.getVertex(), "J2"),
-                        ImportantVertex.of(hexC1J3, LEFT.getVertex(), "J3"),
-                        ImportantVertex.of(hexC1J4, LEFT.getVertex(), "J4")
-//                        ImportantVertex.of(hexB3I, TWO, "I2")
-                ))
-                .addSinglePaths(asList(
-                        Pair.of(hexB1B2, PERIMETER),
-                        Pair.of(hexB1B2_Hor, PERIMETER),
-//                        Pair.of(hexA1A2, PERIMETER),
-//                        Pair.of(hexA1A2_Hor, PERIMETER),
-//                        Pair.of(hexInnerLine2, DIAGONALS),
-                        Pair.of(hexA1M, PERIMETER),
-                        Pair.of(hexA1N, PERIMETER),
-                        Pair.of(hexC2E, PERIMETER),
-                        Pair.of(hexD2F, PERIMETER),
+                .addSinglePathsLines(
+                        gray,
+                        perimeter(B1B2, VER).apply(A),
+                        perimeter(B1B2, HOR).apply(A),
+                        perimeter(A1M, HOR).apply(A1),
+                        perimeter(A1M, VER).apply(A1),
+                        perimeter(C2E, VER).apply(C2),
+                        perimeter(D2F, HOR).apply(D2),
+                        perimeter(RATIO_n, VER).apply(A2),
+                        perimeter(RATIO_n, HOR).apply(A2),
+                        perimeter(RATIO_n, VER).apply(A3),
+                        perimeter(KG1 / 4.0, VER).apply(A2.append(pt(KG2, UR_V))),
+                        perimeter(KG1 / 4.0, VER).apply(A2.append(pt(KG2, DOWN))),
 
-                        Pair.of(hexA2Q, PERIMETER),
-                        Pair.of(hexA2Q_m, PERIMETER),
-                        Pair.of(hexA2Q1, PERIMETER),
-                        Pair.of(hexA2Q2, PERIMETER),
 
-                        Pair.of(hexA3R, PERIMETER),
-                        Pair.of(hexA3R1, PERIMETER),
-                        Pair.of(hexA3R2, PERIMETER),
-                        Pair.of(hexA3R3, PERIMETER),
-                        Pair.of(hexA3R4, PERIMETER),
+                        perimeter(KG1 / 4.0, VER).apply(A3.append(pt(KG2, UP))),
+                        perimeter(KG1 / 4.0, VER).apply(A3.append(pt(KG2, UR_V))),
+                        perimeter(KG1 / 4.0, VER).apply(A3.append(pt(KG2, DOWN))),
+                        perimeter(KG1 / 4.0, VER).apply(A3.append(pt(KG2, DL_V))),
 
-                        Pair.of(hexB3I, PERIMETER),
-                        Pair.of(hexB3I1, PERIMETER),
-                        Pair.of(hexB3I2, PERIMETER),
-                        Pair.of(hexB3I3, PERIMETER),
-                        Pair.of(hexB3I4, PERIMETER),
+                        perimeter(RATIO_n, HOR).apply(B3),
+                        perimeter(KG1 / 4.0, HOR).apply(B3.append(pt(KG2, UL_H))),
+                        perimeter(KG1 / 4.0, HOR).apply(B3.append(pt(KG2, UR_H))),
+                        perimeter(KG1 / 4.0, HOR).apply(B3.append(pt(KG2, DL_H))),
+                        perimeter(KG1 / 4.0, HOR).apply(B3.append(pt(KG2, DR_H))),
 
-                        Pair.of(hexC1H, PERIMETER),
-                        Pair.of(hexC1J, PERIMETER),
-                        Pair.of(hexC1J3, PERIMETER),
-                        Pair.of(hexC1J4, PERIMETER),
+                        perimeter(RATIO_i, VER).apply(C1),
+                        perimeter(RATIO_m, VER).apply(C1),
 
-                        Pair.of(hexB3S, PERIMETER),
-                        Pair.of(hexB3S1, PERIMETER),
-                        Pair.of(hexB3S2, PERIMETER),
+                        perimeter(J1J3, HOR).apply(J1),
+                        perimeter(J1J3, HOR).apply(J2),
+                        perimeter(B3B4, HOR).apply(B3),
 
-                        Pair.of(hexKG3, PERIMETER),
-                        Pair.of(hexKG4, PERIMETER),
-                        Pair.of(hexKG5, PERIMETER),
+                        perimeter(B3B5 / 4.0, HOR).apply(B3.append(pt(B3B4, UR_H))),
+                        perimeter(B3B5 / 4.0, HOR).apply(B3.append(pt(B3B4, DR_H))),
 
-                        Pair.of(main, DIAGONALS),
-                        Pair.of(mainHor, DIAGONALS)
-                ), gray)
-                .addSinglePaths(asList(
-                        Pair.of(hexKN, PERIMETER),
-                        Pair.of(hexPB2, PERIMETER)
-                ), green)
-                .addSinglePaths(asList(
-                        Pair.of(main, PERIMETER),
-                        Pair.of(mainHor, PERIMETER),
-                        Pair.of(hexKB2, PERIMETER),
-                        Pair.of(hexKA2, PERIMETER),
-                        Pair.of(hexKB3, PERIMETER),
-                        Pair.of(hexKA3, PERIMETER)
-                ), blue)
+                        perimeter(KG3, HOR).apply(K),
+                        perimeter(G8G4, VER).apply(G7),
+                        perimeter(G8G4, VER).apply(G8),
+
+                        diagonals(1.0, VER).apply(K),
+                        diagonals(1.0, HOR).apply(K),
+                        diagonals(KG1 / H, HOR).apply(A2)
+
+                )
+                .addSinglePathsLines(
+                        green,
+                        perimeter(B2P, VER).apply(P),
+                        perimeter(KN, VER).apply(K)
+                )
+                .addSinglePathsLines(
+                        blue,
+                        perimeter(1.0, VER).apply(K),
+                        perimeter(1.0, HOR).apply(K),
+                        perimeter(KB2, HOR).apply(K),
+                        perimeter(KB2, VER).apply(K),
+                        perimeter(KB3, HOR).apply(K),
+                        perimeter(KB3, VER).apply(K)
+                )
                 .addFullPaths(
-                        VertexPaths.of(
-                                VertexPath.of(
-                                        ActualVertex.of(main, SIX),
-                                        ActualVertex.of(mainHor, ONE),
-                                        ActualVertex.of(main, ONE)
-                                )), gray)
+                        gray,
+                        diagonalHorizontal(1.0).apply(fpt(pt(KG1, UP))),
+                        diagonalVertical(1.0).apply(fpt(pt(KG1, RIGHT))),
+                        Stream.of(
+                                PointsPath.of(B1, A1, fpt(pt(1.0, DR_H))),
+                                PointsPath.of(A1, fpt(pt(1.0, DL_H)), fpt(pt(1.0, UL_V))),
+                                PointsPath.of(fpt(pt(KA2, DR_V)), fpt(pt(KA2, DL_H)), fpt(pt(KA2, UL_V))),
+                                PointsPath.of(fpt(pt(KA3, DR_V)), fpt(pt(KA3, DL_H)), fpt(pt(KA3, UL_V)))
+                        )
+                )
                 .addFullPaths(
-                        VertexPaths.of(
-                                VertexPath.of(
-                                        ActualVertex.of(main, THREE),
-                                        ActualVertex.of(mainHor, FIVE),
-                                        ActualVertex.of(main, SIX)
-
-                                )), gray)
-                .addFullPaths(VertexPaths.of(
-                        VertexPath.of(
-                                ActualVertex.of(hexKA2, THREE),
-                                ActualVertex.of(hexKB2, FIVE),
-                                ActualVertex.of(hexKA2, SIX)
-
-                        )), gray)
-                .addFullPaths(VertexPaths.of(
-                        VertexPath.of(
-                                ActualVertex.of(hexKA3, THREE),
-                                ActualVertex.of(hexKB3, FIVE),
-                                ActualVertex.of(hexKA3, SIX)
-
-                        )), gray)
-                .addFullPaths(VertexPaths.of(
-                        VertexPath.of(
-                                ActualVertex.of(hexB1B2, TWO),
-                                ActualVertex.of(hexB1B2_Hor, FOUR),
-                                ActualVertex.of(hexB1B2, FIVE)
-
-                        )), green)
-                .addFullPaths(VertexPaths.of(
-                        VertexPath.of(
-                                ActualVertex.of(hexB1B3, TWO),
-                                ActualVertex.of(hexB1B3_Hor, FOUR),
-                                ActualVertex.of(hexB1B3, FIVE)
-
-                        )), green)
-                .addFullPaths(VertexPaths.of(
-                        VertexPath.of(
-                                ActualVertex.of(hexA1A2_Hor, THREE),
-                                ActualVertex.of(hexA1A2, FOUR),
-                                ActualVertex.of(hexA1A2_Hor, SIX)
-
-                        )), green)
-                .addFullPaths(VertexPaths.of(
-                        VertexPath.of(
-                                ActualVertex.of(hexA1A3_Hor, THREE),
-                                ActualVertex.of(hexA1A3, FOUR),
-                                ActualVertex.of(hexA1A3_Hor, SIX)
-                        )), green)
-                .addFullPaths(VertexPaths.of(
-                        VertexPath.of(
-                                ActualVertex.of(hexInnerLine, THREE),
-                                ActualVertex.of(hexInnerLine, SIX)
-                        )), gray)
-                .addFullPaths(VertexPaths.of(
-                        VertexPath.of(
-                                ActualVertex.of(hexInnerLine2, TWO),
-                                ActualVertex.of(hexInnerLine2, FIVE)
-                        )), gray)
-                .addCircleWithRadius(asList(
-                        Pair.of(main, A1M)
-                ), blue)
+                        green,
+                        Stream.of(
+                                PointsPath.of(B1.append(pt(B1B2, UP)), B1.append(pt(B1B2, LEFT)), B1.append(pt(B1B2, DOWN))),
+                                PointsPath.of(B1.append(pt(B1B3, UP)), B1.append(pt(B1B3, LEFT)), B1.append(pt(B1B3, DOWN))),
+                                PointsPath.of(A1.append(pt(A1A2, UR_H)), A1.append(pt(A1A2, UL_V)), A1.append(pt(A1A2, DL_H))),
+                                PointsPath.of(A1.append(pt(A1A3, UR_H)), A1.append(pt(A1A3, UL_V)), A1.append(pt(A1A3, DL_H)))
+                        )
+                )
+                .addCircleWithRadius(
+                        blue,
+                        Pair.of(fpt(pt(1.0, UR_V)), A1M),
+                        Pair.of(A1, A1M)
+                )
+                .addFullPaths(red, getFullPath())
                 .withFontSize(10)
                 ;
 
     }
+
+
+//    public static void main(String[] args) {
+//        Export.export(Tile9c.getDesignHelperE());
+//    }
 
 }

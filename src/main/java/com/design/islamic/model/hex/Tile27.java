@@ -1,9 +1,8 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
-import com.design.common.DesignHelper.ImportantVertex;
-import com.design.common.Polygon;
-import com.design.common.Polygon.VertexPaths;
+import com.design.common.FinalPointTransition;
+import com.design.common.PointsPath;
 import com.design.common.RatioHelper.P6;
 import com.design.common.RatioHelper.Ratios;
 import com.design.common.model.Style;
@@ -11,16 +10,16 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
 import java.util.List;
 
+import static com.design.common.FinalPointTransition.K;
+import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.islamic.model.Hex.Corner.*;
-import static com.design.islamic.model.Hex.instruction;
+import static com.design.islamic.model.Hex.*;
 import static java.lang.Math.PI;
 import static java.lang.Math.cos;
 import static java.util.Arrays.asList;
@@ -36,31 +35,20 @@ public class Tile27 {
     private static double KD = 1 - AD;
 //    private static double RATIO_CD = £H.andThen($1).apply(RATIO_KA);
 
+    public final static FinalPointTransition A = fpt(pt(1.0, UR_V));
+    public final static FinalPointTransition B = fpt(pt(KB, RIGHT));
+    public final static FinalPointTransition C = fpt(pt(KC, RIGHT));
+    public final static FinalPointTransition D = fpt(pt(KD, UR_V));
+    public final static FinalPointTransition E = fpt(pt(KC, UR_H));
+
+
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
-        Polygon main = Hex.hex(1, VER);
-        Polygon mainReg = main.getRegistered();
-        Polygon hexKC = Hex.hex(KC, HOR);
-        Polygon hexKD = Hex.hex(KD, VER);
-
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
         return new PayloadSimple.Builder("hex_tile_27",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsFull(VertexPaths.of(
-                        Polygon.VertexPath.of(
-                                instruction(hexKD, UR_V),
-                                instruction(hexKC, RIGHT),
-                                instruction(main, UR_V),
-                                instruction(hexKC, UR_H),
-                                instruction(hexKD, UR_V)
-                        )
-//                        asList(
-//                                instruction(outer, DL_V),
-//                                instruction(inner, RIGHT)
-//                        )
-
-                ), whiteBold)
+                .withPathsNewFull(whiteBold, getFullPath())
                 .build();
     }
 
@@ -72,11 +60,6 @@ public class Tile27 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        Polygon main = Hex.hex(1, VER);
-        Polygon mainReg = main.getRegistered();
-        Polygon hexKC = Hex.hex(KC, HOR);
-        Polygon hexKD = Hex.hex(KD, VER);
-
         List<String> equations = asList(
                 "CAB = 60 - 45 = 15 = th",
                 "BC = tan(th) * AB",
@@ -87,27 +70,32 @@ public class Tile27 {
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_27_design")
-                .addFullPaths(() -> getPayloadSimple().getPathsFull(), red)
                 .addEquations(equations)
-                .addImportantVertexes(
-                        ImportantVertex.of(main, UR_V.getVertex(), "A"),
-                        ImportantVertex.of(mainReg, RIGHT.getVertex(), "B"),
-                        ImportantVertex.of(hexKC, RIGHT.getVertex(), "C"),
-                        ImportantVertex.of(hexKD, UR_V.getVertex(), "D")
+                .addImportantVertexes(Tile27.class)
+                .addSinglePathsLines(
+                        gray,
+                        perimeter(1.0, VER).apply(K),
+                        diagonals(1.0, VER).apply(K),
+                        diagonals(KB, HOR).apply(K)
                 )
-                .addSinglePaths(asList(
-                        Pair.of(main, Hex.PERIMETER),
-                        Pair.of(main, Hex.DIAGONALS),
-                        Pair.of(mainReg, Hex.DIAGONALS)
-                ), gray)
-                .addSinglePaths(asList(
-                        Pair.of(hexKC, Hex.PERIMETER)
-                ), green)
-                .addSinglePaths(asList(
-                        Pair.of(hexKD, Hex.PERIMETER)
-                ), blue)
+                .addSinglePathsLines(
+                        green,
+                        perimeter(KC, HOR).apply(K)
+                )
+                .addSinglePathsLines(
+                        blue,
+                        perimeter(KD, VER).apply(K)
+                )
+                .addFullPaths(red, getFullPath())
                 ;
 
     }
+
+    private static List<PointsPath> getFullPath() {
+        return asList(
+                PointsPath.of(C, D, E, A, C)
+        );
+    }
+
 
 }

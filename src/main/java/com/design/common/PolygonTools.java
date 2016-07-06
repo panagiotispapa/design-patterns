@@ -46,6 +46,11 @@ public class PolygonTools {
         return Arrays.stream(radians).mapToObj(PolygonTools::newEdgeAt).collect(toList());
     }
 
+    public static Point2D newEdgeAt(int n, double offset, int N) {
+        final double phi = (2.0 * PI) / N;
+        return newEdgeAt(phi * (n + offset));
+    }
+
     public static Point2D newEdgeAt(double phi) {
         return new Point2D.Double(
                 cos(phi),

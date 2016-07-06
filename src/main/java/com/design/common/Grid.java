@@ -1,10 +1,7 @@
 package com.design.common;
 
-import com.design.common.RatioHelper;
 import com.design.common.RatioHelper.P4;
 import com.design.common.RatioHelper.P6;
-import com.design.islamic.model.Hex;
-import com.design.islamic.model.Rect;
 
 import java.awt.geom.Point2D;
 import java.util.List;

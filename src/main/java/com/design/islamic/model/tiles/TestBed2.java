@@ -2,6 +2,7 @@ package com.design.islamic.model.tiles;
 
 import com.design.common.DesignHelper;
 import com.design.common.Grid;
+import com.design.common.InitialConditions;
 import com.design.common.Polygon;
 import com.design.deco.Tile4;
 import com.design.deco.Tile5;
@@ -116,7 +117,7 @@ public class TestBed2 {
 
         patternsNew.forEach(p -> {
                     PayloadSimple payload = p.get();
-                    Polygon.InitialConditions newIC = Polygon.InitialConditions.of(ic.getLeft(), sizeToRNew.get(payload.getSize()));
+                    InitialConditions newIC = InitialConditions.of(ic.getLeft(), sizeToRNew.get(payload.getSize()));
                     Dimension newDim = new Dimension((int) (15 * newIC.getR()), (int) (10 * newIC.getR()));
                     saveToFile(
                             buildSvg(newDim,
@@ -218,12 +219,12 @@ public class TestBed2 {
     }
 
 
-    private String buildSvgFromPayloadSimpleNew(PayloadSimple payload, Polygon.InitialConditions ic) {
+    private String buildSvgFromPayloadSimpleNew(PayloadSimple payload, InitialConditions ic) {
 
         List<Point2D> gridPoints = Grid.gridFromStart(ic.getCentre(), ic.getR(), payload.getGridConfiguration(), 20);
 
         return
-                gridPoints.stream().map(p -> Polygon.InitialConditions.of(p, ic.getR())).map(payload::draw).collect(joining());
+                gridPoints.stream().map(p -> InitialConditions.of(p, ic.getR())).map(payload::draw).collect(joining());
 
     }
 

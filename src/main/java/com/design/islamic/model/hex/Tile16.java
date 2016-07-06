@@ -2,127 +2,77 @@ package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
 import com.design.common.DesignHelper.ImportantVertex;
+import com.design.common.FinalPointTransition;
+import com.design.common.PointsPath;
 import com.design.common.Polygon;
-import com.design.common.model.Path;
-import com.design.common.model.Path.Paths;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.PayloadSimple;
 import com.design.islamic.model.TileSupplier;
-import com.google.common.collect.Maps;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.awt.*;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static com.design.common.FinalPointTransition.K;
+import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.Polygon.Type.VER;
-import static com.design.islamic.model.Hex.*;
+import static com.design.common.RatioHelper.P6.H;
 import static com.design.islamic.model.Hex.Corner.*;
-import static com.design.islamic.model.Hex.Vertex.*;
+import static com.design.islamic.model.Hex.*;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 //p.
 public class Tile16 {
-
-    private static final Map<Polygon.Vertex, Polygon.Vertex> toLeft;
-
-    static {
-        toLeft = Maps.newHashMap();
-        toLeft.put(ONE, THREE);
-        toLeft.put(SIX, FOUR);
-        toLeft.put(TWO, TWO);
-        toLeft.put(THREE, THREE);
-        toLeft.put(FOUR, FOUR);
-        toLeft.put(FIVE, FIVE);
-    }
-
-    private static Polygon.VertexPath toLeft(Polygon.VertexPath right) {
-
-        return () -> right.get().stream().map(r -> ActualVertex.of(r.get().getLeft(), toLeft.get(r.get().getRight()))).collect(toList());
-    }
-
     private static double RATIO_m = 1.0 / 9.0;
+    private static double KA = RATIO_m;
+    private static double KG = H * KA;
+
+    public final static FinalPointTransition A = fpt(pt(KA, UL_V));
+    public final static FinalPointTransition G = fpt(pt(KG, LEFT));
+    public final static FinalPointTransition I1 = fpt(pt(8 * KA, UP));
+    public final static FinalPointTransition I2 = udr(8, 5);
+    public final static FinalPointTransition I3 = udr(6, 3);
+    public final static FinalPointTransition I4 = udr(6, 1);
+    public final static FinalPointTransition I5 = udr(4, 3);
+    public final static FinalPointTransition I6 = udr(9, 8);
+    public final static FinalPointTransition I7 = fpt(pt(KA, UR_V));
+    public final static FinalPointTransition I8 = fpt(pt(KA, DOWN));
+    public final static FinalPointTransition I9 = fpt(pt(8 * KA, DR_V));
+
+    public final static FinalPointTransition L1 = dur(1, 4);
+    public final static FinalPointTransition L2 = dur(1, 9);
+    public final static FinalPointTransition L3 = dur(3, 6);
+    public final static FinalPointTransition L4 = dur(3, 8);
+    public final static FinalPointTransition L5 = dur(5, 6);
+    public final static FinalPointTransition L6 = dur(4, 1);
+    public final static FinalPointTransition L7 = dur(6, 3);
+    public final static FinalPointTransition L8 = dur(6, 5);
+    public final static FinalPointTransition L9 = dur(8, 3);
+    public final static FinalPointTransition L10 = dur(9, 1);
+
+    private static FinalPointTransition udr(int up, int downRight) {
+        return fpt(pt(up * KA, UP), pt(downRight * KA, DR_V));
+    }
+
+    private static FinalPointTransition dur(int down, int upRight) {
+        return fpt(pt(down * KA, DOWN), pt(upRight * KA, UR_V));
+    }
 
     @TileSupplier
     public static PayloadSimple getPayloadSimple() {
 
-        Polygon.VertexPath l1 = () -> asList(
-                h(8, UP),
-                u(5, 8),
-                u(3, 6),
-                u(1, 6),
-                u(1, 1),
-                u(6, 1),
-                u(6, 3),
-                u(8, 5),
-                h(8, DR_V),
-                d(3, 8),
-                d(3, 6), //
-                d(5, 6),
-                h(1, DOWN)
-        );
-
-        Polygon.VertexPath l2 = () -> asList(
-                u(3, 6),
-                u(3, 4),
-                u(8, 9)
-        );
-
-        Polygon.VertexPath l3 = () -> asList(
-                u(6, 3),
-                u(4, 3),
-                u(9, 8)
-        );
-
-        Polygon.VertexPath l4 = () -> asList(
-                d(3, 6),
-                d(1, 4),
-                d(1, 9)
-        );
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
         return new PayloadSimple.Builder("hex_tile_16",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsSingle(() ->
-                        asList(
-                                l1,
-                                toLeft(l1),
-                                l2,
-                                toLeft(l2),
-                                l3,
-                                toLeft(l3),
-                                l4,
-                                toLeft(l4)
-                        ), whiteBold
-                )
-//                .withGridConf(Grid.Configuration.customRect(2*RATIO_w, 2*RATIO_h))
-
+                .withPathsNewSingleLines(whiteBold, getAllSinglePath())
                 .build();
 
     }
-
-    private static ActualVertex u(int times, int timesCentre) {
-        return instruction(times * RATIO_m, Hex.centreTransform(timesCentre * RATIO_m, UP), DR_V);
-    }
-
-    private static ActualVertex d(int times, int timesCentre) {
-        return instruction(times * RATIO_m, Hex.centreTransform(timesCentre * RATIO_m, DOWN), UR_V);
-    }
-
-
-    private static ActualVertex h(int times, Hex.Corner corner) {
-        return instruction(times * RATIO_m, corner);
-    }
-
 
     @DesignSupplier
     public static DesignHelper getDesignHelper() {
@@ -131,64 +81,61 @@ public class Tile16 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        Polygon main = Hex.hex(1, VER);
-
         List<String> equations = asList(
                 "r = 1 / 9"
         );
 
-        Function<Polygon, Paths> xDiagonals = p -> Path.vertexPathsToPaths.apply(
-                Polygon.toVertexPaths(p,
-                        asList(
-                                asList(
-                                        TWO,
-                                        FIVE
-                                ),
-                                asList(
-                                        THREE,
-                                        SIX
-                                )
-                        )));
-
-
-//        List<List<Polygon.Vertex>> xDiagonals = asList(asList(TWO.cast(), FIVE), asList(THREE, SIX));
-
-        List<Pair<Polygon, Function<Polygon, Paths>>> diagonals1 = IntStream.range(1, 9).mapToObj(i -> Pair.of(Hex.hex(1, VER, Polygon.centreTransform(i * RATIO_m, ONE, VER)), xDiagonals)).collect(toList());
-        List<Pair<Polygon, Function<Polygon, Paths>>> diagonals2 = IntStream.range(1, 9).mapToObj(i -> Pair.of(Hex.hex(1, VER, Polygon.centreTransform(i * RATIO_m, FOUR, VER)), xDiagonals)).collect(toList());
-
-        List<Polygon> innerHexes = IntStream.range(1, 9).mapToObj(i -> Hex.hex(i * RATIO_m, VER)).collect(toList());
-
-        BiFunction<List<Polygon>, Polygon.Vertex, List<ImportantVertex>> indexOnVertexes = (p, v) -> {
-            AtomicInteger vIndex2 = new AtomicInteger(1);
-            return p.stream().map(h -> ImportantVertex.of(h, v, String.valueOf(vIndex2.getAndIncrement()))).collect(toList());
-        };
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_16_design")
-                .addSinglePaths(() -> getPayloadSimple().getPathsSingle(), red)
                 .addEquations(equations)
-                .addSinglePaths(asList(
-                        Pair.of(main, PERIMETER),
-                        Pair.of(main, DIAGONALS)
+                .addImportantVertexes(Tile16.class)
+                .addImportantVertexes(
+                        IntStream.rangeClosed(1, 9).mapToObj(i -> Stream.of(
+                                ImportantVertex.of(String.valueOf(i), fpt(pt(i * KA, UR_V))),
+                                ImportantVertex.of(String.valueOf(i), fpt(pt(i * KA, DR_V))),
+                                ImportantVertex.of(String.valueOf(i), fpt(pt(i * KA, DOWN))),
+                                ImportantVertex.of(String.valueOf(i), fpt(pt(i * KA, UP)))
+                        )).flatMap(s -> s)
+                )
+                .addSinglePathsLines(
+                        gray,
+                        perimeter(1.0, VER).apply(K),
+                        diagonals(1.0, VER).apply(K)
+                )
+                .addSinglePathsLines(
+                        gray,
+                        IntStream.rangeClosed(1, 9)
+                                .mapToObj(i ->
+                                        Stream.of(
+                                                diagonalVertical(1.0).apply(fpt(pt(i * KG, LEFT))),
+                                                diagonalVertical(1.0).apply(fpt(pt(i * KG, RIGHT))),
+                                                diagonalLeftToRightVert(1.0).apply(fpt(pt(i * KA, UL_V))),
+                                                diagonalLeftToRightVert(1.0).apply(fpt(pt(i * KA, DR_V))),
+                                                diagonalRightToLeftVert(1.0).apply(fpt(pt(i * KA, UR_V))),
+                                                diagonalRightToLeftVert(1.0).apply(fpt(pt(i * KA, DL_V)))
+                                        ).flatMap(s -> s)
+                                ).flatMap(s -> s)
+                )
+                .addSinglePathsLines(red,
+                        getAllSinglePath()
+                );
 
-                ), gray)
-                .addSinglePaths(diagonals1, gray)
-                .addSinglePaths(diagonals2, gray)
-//                .addImportantVertexes(
-//                        ImportantVertex.of(Hex.hex(RATIO_m, VER), ONE, "A")
+    }
 
-//                )
-//                .addImportantVertexes(innerHexes.stream().map(h->ImportantVertex.of(h, ONE, String.valueOf(vIndex.getAndIncrement()))).collect(toList()))
-                .addImportantVertexes(Stream.of(ONE, TWO, SIX, FIVE).map(v -> indexOnVertexes.apply(innerHexes, v)).map(Collection::stream).flatMap(s -> s).collect(toList()))
-                .addSinglePaths(
-                        innerHexes.stream().map(h -> Pair.of(h, PERIMETER)).collect(toList())
-                        , gray)
+    private static List<PointsPath> getAllSinglePath() {
+        return Stream.concat(
+                getSinglePath().stream(),
+                getSinglePath().stream().map(p -> p.mirror(mirrorHor))
+        ).collect(toList());
+    }
 
-                .addAllVertexesAsImportantPoints(asList(
-//                        main
-                ))
+    private static List<PointsPath> getSinglePath() {
+        return asList(
+                PointsPath.of(I1, I2, I3, I4, I7, L5, L3, L4, I9, L9, L7, L6, L10),
+                PointsPath.of(I3, I5, I6),
+                PointsPath.of(L2, L1, L3),
+                PointsPath.of(L7, L8, I8)
 
-                ;
-
+        );
     }
 
 }

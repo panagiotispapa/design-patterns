@@ -1,12 +1,9 @@
 package com.design.islamic.model.tiles.svg;
 
-import com.design.common.model.Path;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.util.Arrays;
 
 import static com.design.common.view.SvgFactory.*;
 import static org.fest.assertions.api.Assertions.assertThat;

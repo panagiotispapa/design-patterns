@@ -2,27 +2,26 @@ package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
 import com.design.common.DesignHelper.ImportantVertex;
+import com.design.common.FinalPointTransition;
+import com.design.common.PointsPath;
 import com.design.common.Polygon;
-import com.design.common.model.Path.Paths;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.awt.*;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static com.design.common.FinalPointTransition.K;
+import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.RatioHelper.P6.P;
-import static com.design.islamic.model.Hex.Corner.DR_V;
-import static com.design.islamic.model.Hex.Corner.UP;
-import static com.design.islamic.model.Hex.DIAGONALS;
-import static com.design.islamic.model.Hex.PERIMETER;
+import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.islamic.model.Hex.*;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
@@ -37,77 +36,27 @@ public class Tile9a {
 
     protected static final Double AF = 0.5 * p;
     protected static final Double AC = q;
+    protected static final Double AD = AC;
     protected static final Double KE = l * l;
+    protected static final Double AE = 1.0 - KE;
     protected static final Double KC = l;
     protected static final Double AB = m;
     protected static final Double BC = AB;
     protected static final Double KB = H;
+    protected static final Double KJ1 = pHalf;
+    protected static final Double KE1 = KE * H;
+    protected static final Double KC1 = KC * H;
 
 
-    protected static Polygon main = Hex.hex(1, VER);
-    protected static Polygon mainHor = Hex.hex(1, HOR);
-
-    protected static Polygon mainL2 = Hex.hex(l, VER);
-    protected static Polygon mainL2Hor = Hex.hex(l, HOR);
-
-    protected static Polygon mainL3 = Hex.hex(l * l, VER);
-    protected static Polygon mainL3Hor = Hex.hex(l * l, HOR);
-
-    protected static Polygon outer = Hex.hex(k, VER, Hex.centreTransform(1, Hex.Corner.UP));
-
-    protected static Function<Double, Polygon.VertexPath> innerLines1 = r -> {
-        Polygon ver = Hex.hex(r, VER);
-        Polygon hor = Hex.hex(r, HOR);
-        return
-                () -> asList(
-                        () -> Pair.of(ver, Hex.Corner.DL_V.getVertex()),
-                        () -> Pair.of(hor, Hex.Corner.UL_H.getVertex()),
-                        () -> Pair.of(ver, Hex.Corner.UR_V.getVertex())
-                );
-    };
-
-    protected static Function<Double, Polygon.VertexPath> innerLines2 = (r) -> {
-        Polygon hor = Hex.hex(1.0, HOR, Hex.centreTransform(r, Hex.Corner.UP));
-        return
-                () -> asList(
-                        () -> Pair.of(hor, Hex.Corner.LEFT.getVertex()),
-                        () -> Pair.of(hor, Hex.Corner.RIGHT.getVertex())
-                );
-    };
-
-    protected static Function<Double, Polygon.VertexPath> innerLines3 = (r) -> {
-        Polygon ver = Hex.hex(1.0, VER, Hex.centreTransform(r, Hex.Corner.RIGHT));
-        return
-                () -> asList(
-                        () -> Pair.of(ver, Hex.Corner.UP.getVertex()),
-                        () -> Pair.of(ver, Hex.Corner.DOWN.getVertex())
-                );
-    };
-
-    protected static Function<Double, Polygon.VertexPath> outerLines1 = r -> {
-        Polygon ver = Hex.hex(1.0 - l * r, VER, Hex.centreTransform(1, Hex.Corner.UP));
-        Polygon hor = ver.getMirror();
-
-        return
-                () -> asList(
-                        () -> Pair.of(hor, Hex.Corner.LEFT.getVertex()),
-                        () -> Pair.of(ver, Hex.Corner.DOWN.getVertex()),
-                        () -> Pair.of(hor, Hex.Corner.RIGHT.getVertex())
-                );
-    };
-
-
-    protected static Function<Double, Polygon.VertexPath> outerLines2 = r -> {
-        Polygon ver = Hex.hex(1.0 - l * r, VER, Hex.centreTransform(1, Hex.Corner.RIGHT));
-        Polygon hor = ver.getMirror();
-
-        return
-                () -> asList(
-                        () -> Pair.of(ver, Hex.Corner.UP.getVertex()),
-                        () -> Pair.of(hor, Hex.Corner.LEFT.getVertex()),
-                        () -> Pair.of(ver, Hex.Corner.DOWN.getVertex())
-                );
-    };
+    public final static FinalPointTransition A = fpt(pt(1.0, UP));
+    public final static FinalPointTransition A1 = fpt(pt(1.0, RIGHT));
+    public final static FinalPointTransition A2 = fpt(pt(1.0, UR_V));
+    public final static FinalPointTransition B = fpt(pt(H, UP));
+    public final static FinalPointTransition C = fpt(pt(KC, UP));
+    public final static FinalPointTransition D = A.append(pt(AD, DR_V));
+    public final static FinalPointTransition E = fpt(pt(KE, UP));
+    public final static FinalPointTransition F = A.append(pt(AF, DL_V));
+    public final static FinalPointTransition F2 = A2.append(pt(AF, DOWN));
 
 
     @DesignSupplier
@@ -120,10 +69,95 @@ public class Tile9a {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_09a_design")
                 .addEquations(getEquationsA())
-                .addImportantVertexes(getImportantPointsA())
-                .addSinglePaths(getInstructionsGrayA(), gray)
-                .addSinglePaths(getInstructionsBlueA(), blue)
-                .addFullPaths(() -> getFullInstructionsGrayA(), gray);
+                .addImportantVertexes(
+                        getImportantPointsA()
+                )
+                .addSinglePathsLines(
+                        gray,
+                        getInstructionsGrayA()
+                )
+                .addSinglePathsLines(
+                        blue,
+                        getInstructionsBlueA()
+                )
+                .addFullPaths(
+                        gray,
+                        getFullInstructionsGrayA()
+                )
+
+                ;
+    }
+
+    protected static Stream<PointsPath> getFullInstructionsGrayA() {
+        return Stream.of(
+                PointsPath.of(fpt(pt(1.0, LEFT)), fpt(pt(1.0, UP)), fpt(pt(1.0, RIGHT)))
+        );
+    }
+
+    protected static Stream<PointsPath> getFullInstructionsGrayB() {
+        return Stream.of(
+                PointsPath.of(fpt(pt(KE, LEFT)), fpt(pt(KE, UP)), fpt(pt(KE, RIGHT))),
+                PointsPath.of(fpt(pt(KC, LEFT)), fpt(pt(KC, UP)), fpt(pt(KC, RIGHT))),
+                PointsPath.of(A.append(pt(AC, LEFT)), A.append(pt(AC, DOWN)), A.append(pt(AC, RIGHT))),
+                PointsPath.of(A.append(pt(AE, LEFT)), A.append(pt(AE, DOWN)), A.append(pt(AE, RIGHT))),
+                PointsPath.of(A1.append(pt(AC, UP)), A1.append(pt(AC, LEFT)), A1.append(pt(AC, DOWN))),
+                PointsPath.of(A1.append(pt(AE, UP)), A1.append(pt(AE, LEFT)), A1.append(pt(AE, DOWN)))
+        );
+    }
+
+    protected static Stream<PointsPath> getFullInstructionsGrayC() {
+        return Stream.of(
+                diagonalHorizontal(1.0).apply(fpt(pt(AF, UP))),
+                diagonalVertical(1.0).apply(fpt(pt(AF, RIGHT)))
+
+        ).flatMap(s -> s);
+    }
+
+    protected static Stream<PointsPath> getInstructionsBlueA() {
+        return Stream.of(
+                perimeter(KC, VER).apply(K),
+                perimeter(KC, HOR).apply(K),
+                perimeter(AC, VER).apply(A)
+        ).flatMap(s -> s);
+    }
+
+    protected static Stream<PointsPath> getInstructionsBlueB() {
+        return Stream.of(
+                perimeter(KE, VER).apply(K),
+                perimeter(KE, HOR).apply(K)
+//                perimeter(AC, VER).apply(A1)
+        ).flatMap(s -> s);
+    }
+
+    protected static Stream<PointsPath> getInstructionsGrayA() {
+        return Stream.of(
+                perimeter(1.0, VER).apply(K),
+                perimeter(1.0, HOR).apply(K),
+                diagonals(1.0, VER).apply(K),
+                diagonals(1.0, HOR).apply(K)
+        ).flatMap(s -> s);
+    }
+
+    protected static Stream<ImportantVertex> getImportantPointsA() {
+        return Stream.of(
+                ImportantVertex.of("A", A),
+                ImportantVertex.of("B", B),
+                ImportantVertex.of("C", C),
+                ImportantVertex.of("D", D)
+        );
+    }
+
+    protected static Stream<ImportantVertex> getImportantPointsB() {
+        return Stream.of(
+                ImportantVertex.of("E", E),
+                ImportantVertex.of("A1", A1)
+        );
+    }
+
+    protected static Stream<ImportantVertex> getImportantPointsC() {
+        return Stream.of(
+                ImportantVertex.of("F", F)
+        );
     }
 
     @DesignSupplier
@@ -138,23 +172,28 @@ public class Tile9a {
                 .addEquations(getEquationsA())
                 .addImportantVertexes(
                         Stream.concat(
-                                getImportantPointsA().stream(),
-                                getImportantPointsB().stream()
-                        ).collect(toList())
+                                getImportantPointsA(),
+                                getImportantPointsB()
+                        )
                 )
-                .addSinglePaths(getInstructionsGrayA(), gray)
-                .addSinglePaths(
+                .addSinglePathsLines(
+                        gray,
+                        getInstructionsGrayA()
+                )
+                .addSinglePathsLines(
+                        blue,
                         Stream.concat(
-                                getInstructionsBlueA().stream(),
-                                getInstructionsBlueB().stream()
-
-                        ).collect(toList()),
-                        blue)
-                .addFullPaths(() ->
-                        Stream.concat(
-                                getFullInstructionsGrayA().stream(),
-                                getFullInstructionsGrayB().stream()
-                        ).collect(toList()), gray);
+                                getInstructionsBlueA(),
+                                getInstructionsBlueB()
+                        )
+                )
+                .addFullPaths(
+                        gray,
+                        Stream.of(
+                                getFullInstructionsGrayA(),
+                                getFullInstructionsGrayB()
+                        ).flatMap(s -> s)
+                );
     }
 
     @DesignSupplier
@@ -166,102 +205,47 @@ public class Tile9a {
         Style red = new Style.Builder(Color.RED, 2).build();
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_09c_design")
-                .addEquations(getEquationsA())
-                .addImportantVertexes(
+                .addEquations(
                         Stream.concat(
-                                getImportantPointsA().stream(),
-                                getImportantPointsB().stream()
+                                getEquationsA().stream(),
+                                getEquationsB().stream()
                         ).collect(toList())
                 )
-                .addSinglePaths(getInstructionsGrayA(), gray)
-                .addSinglePaths(
-                        Stream.concat(
-                                getInstructionsBlueA().stream(),
-                                getInstructionsBlueB().stream()
-
-                        ).collect(toList()),
-                        blue)
-                .addFullPaths(() ->
+                .addImportantVertexes(
                         Stream.of(
-                                getFullInstructionsGrayA().stream(),
-                                getFullInstructionsGrayB().stream(),
-                                getFullInstructionsGrayC().stream()
-                        ).flatMap(s -> s).collect(toList()), gray)
-                .addCircleWithRadius(getCirclesBlueC(), blue)
+                                getImportantPointsA(),
+                                getImportantPointsB(),
+                                getImportantPointsC()
+                        ).flatMap(s -> s)
+                )
+                .addSinglePathsLines(
+                        gray,
+                        getInstructionsGrayA()
+                )
+                .addSinglePathsLines(
+                        blue,
+                        Stream.concat(
+                                getInstructionsBlueA(),
+                                getInstructionsBlueB()
+                        )
+                )
+                .addFullPaths(
+                        gray,
+                        Stream.of(
+                                getFullInstructionsGrayA(),
+                                getFullInstructionsGrayB(),
+                                getFullInstructionsGrayC()
+                        ).flatMap(s -> s)
+
+                )
+                .addCircleWithRadius(
+                        blue,
+                        Pair.of(A, AF)
+                )
+//                .addCircleWithRadius(getCirclesBlueC(), blue)
                 ;
     }
 
-    protected static List<Pair<Polygon, Double>> getCirclesBlueC() {
-        return asList(
-                Pair.of(main, 0.5 * p),
-                Pair.of(mainHor, 0.5 * p)
-        );
-    }
-
-    protected static List<Polygon.VertexPath> getFullInstructionsGrayA() {
-        return asList(
-                innerLines1.apply(1.0)
-        );
-    }
-
-    protected static List<Polygon.VertexPath> getFullInstructionsGrayB() {
-        return asList(
-                innerLines1.apply(l),
-                innerLines1.apply(l * l),
-                outerLines1.apply(1.0),
-                outerLines1.apply(l),
-                outerLines2.apply(1.0),
-                outerLines2.apply(l)
-        );
-    }
-
-    protected static List<Polygon.VertexPath> getFullInstructionsGrayC() {
-        return asList(
-                innerLines2.apply(0.5 * p),
-                innerLines3.apply(0.5 * p)
-        );
-    }
-
-    protected static List<Pair<Polygon, Function<Polygon, Paths>>> getInstructionsBlueA() {
-        return asList(
-                Pair.of(outer, PERIMETER),
-                Pair.of(mainL2, PERIMETER),
-                Pair.of(mainL2Hor, PERIMETER)
-        );
-    }
-
-
-    protected static List<Pair<Polygon, Function<Polygon, Paths>>> getInstructionsBlueB() {
-        return asList(
-                Pair.of(mainL3, PERIMETER),
-                Pair.of(mainL3Hor, PERIMETER)
-        );
-    }
-
-    protected static List<Pair<Polygon, Function<Polygon, Paths>>> getInstructionsGrayA() {
-        return asList(
-                Pair.of(main, PERIMETER),
-                Pair.of(mainHor, PERIMETER),
-                Pair.of(main, DIAGONALS),
-                Pair.of(mainHor, DIAGONALS)
-        );
-    }
-
-    protected static List<ImportantVertex> getImportantPointsA() {
-        return asList(
-                ImportantVertex.of(main, UP.getVertex(), "A"),
-                ImportantVertex.of(Hex.hex(H, VER), UP.getVertex(), "B"),
-                ImportantVertex.of(mainL2, UP.getVertex(), "C"),
-                ImportantVertex.of(outer, DR_V.getVertex(), "D")
-
-        );
-    }
-
-    protected static List<ImportantVertex> getImportantPointsB() {
-        return asList(
-                ImportantVertex.of(mainL3, UP.getVertex(), "E")
-        );
-    }
 
     protected static List<String> getEquationsA() {
         return asList(
@@ -270,6 +254,13 @@ public class Tile9a {
                 "AB = 1 - h",
                 "AC = 2 * AB",
                 "AD = AC"
+        );
+    }
+
+    protected static List<String> getEquationsB() {
+        return asList(
+                "CE = KC - KE",
+                "AF = 0.5 * CE"
         );
     }
 
