@@ -3,10 +3,9 @@ package com.design.islamic.model.tiles;
 import com.design.common.DesignHelper;
 import com.design.common.Grid;
 import com.design.common.InitialConditions;
-import com.design.common.Polygon;
 import com.design.deco.Tile4;
 import com.design.deco.Tile5;
-import com.design.islamic.model.PayloadSimple;
+import com.design.islamic.model.Payload;
 import com.design.islamic.model.hex.*;
 import com.google.common.collect.ImmutableMap;
 import org.apache.batik.swing.JSVGCanvas;
@@ -36,10 +35,10 @@ public class TestBed2 {
     private JPanel jPanel;
 
 
-    private static Map<PayloadSimple.Size, Double> sizeToRNew = ImmutableMap.of(
-            PayloadSimple.Size.SMALL, 100.0,
-            PayloadSimple.Size.MEDIUM, 150.0,
-            PayloadSimple.Size.LARGE, 200.0
+    private static Map<Payload.Size, Double> sizeToRNew = ImmutableMap.of(
+            Payload.Size.SMALL, 100.0,
+            Payload.Size.MEDIUM, 150.0,
+            Payload.Size.LARGE, 200.0
     );
 
     public TestBed2(Dimension dim, final double r) {
@@ -67,7 +66,7 @@ public class TestBed2 {
 
         String background = buildBackground(dim);
 
-//        List<Supplier<PayloadSimple>> patterns = Arrays.asList(
+//        List<Supplier<Payload>> patterns = Arrays.asList(
 //                Pair.of("Tile_Star_1", ()-> TileStar.getPayloadSimple(TileStar.RATIO_1)),
 //                Pair.of("Tile_Star_2", ()-> TileStar.getPayloadSimple(TileStar.RATIO_2)),
 //                TileStar::getPayloadSimple3
@@ -97,7 +96,7 @@ public class TestBed2 {
 //        );
 
 //        patterns.forEach(p -> {
-//                    PayloadSimple payloadSimple = p.get();
+//                    Payload payloadSimple = p.get();
 //                    Pair<Point2D, Double> newIC = Pair.of(ic.getLeft(), sizeToR.get(payloadSimple.getSize()));
 //                    Dimension newDim = new Dimension((int) (15 * newIC.getRight()), (int) (10 * newIC.getRight()));
 //                    saveToFile(
@@ -107,7 +106,7 @@ public class TestBed2 {
 //        );
 
 
-        List<Supplier<PayloadSimple>> patternsNew = Arrays.asList(
+        List<Supplier<Payload>> patternsNew = Arrays.asList(
                 com.design.islamic.model.rect.Tile1::getPayloadSimple,
                 Tile4::getPayloadSimple,
                 Tile5::getPayloadSimple,
@@ -116,7 +115,7 @@ public class TestBed2 {
         );
 
         patternsNew.forEach(p -> {
-                    PayloadSimple payload = p.get();
+                    Payload payload = p.get();
                     InitialConditions newIC = InitialConditions.of(ic.getLeft(), sizeToRNew.get(payload.getSize()));
                     Dimension newDim = new Dimension((int) (15 * newIC.getR()), (int) (10 * newIC.getR()));
                     saveToFile(
@@ -219,7 +218,7 @@ public class TestBed2 {
     }
 
 
-    private String buildSvgFromPayloadSimpleNew(PayloadSimple payload, InitialConditions ic) {
+    private String buildSvgFromPayloadSimpleNew(Payload payload, InitialConditions ic) {
 
         List<Point2D> gridPoints = Grid.gridFromStart(ic.getCentre(), ic.getR(), payload.getGridConfiguration(), 20);
 

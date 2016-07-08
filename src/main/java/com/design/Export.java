@@ -4,7 +4,7 @@ import com.design.common.DesignHelper;
 import com.design.common.Grid;
 import com.design.common.InitialConditions;
 import com.design.islamic.model.DesignSupplier;
-import com.design.islamic.model.PayloadSimple;
+import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.tuple.Pair;
@@ -37,10 +37,10 @@ public class Export {
 
     }
 
-    private static Map<PayloadSimple.Size, Double> sizeToRNew = ImmutableMap.of(
-            PayloadSimple.Size.SMALL, 100.0,
-            PayloadSimple.Size.MEDIUM, 150.0,
-            PayloadSimple.Size.LARGE, 200.0
+    private static Map<Payload.Size, Double> sizeToRNew = ImmutableMap.of(
+            Payload.Size.SMALL, 100.0,
+            Payload.Size.MEDIUM, 150.0,
+            Payload.Size.LARGE, 200.0
     );
 
     private static Reflections forPackage(String pkg) {
@@ -57,7 +57,7 @@ public class Export {
 
         System.out.println(methods.size());
 
-        methods.stream().map(m -> Export.invokeMethod(m, PayloadSimple.class))
+        methods.stream().map(m -> Export.invokeMethod(m, Payload.class))
                 .forEach(Export::export);
     }
 
@@ -69,7 +69,7 @@ public class Export {
                 .forEach(Export::export);
     }
 
-    private static void export(PayloadSimple payload) {
+    private static void export(Payload payload) {
 
         Double R = sizeToRNew.get(payload.getSize());
         Dimension dim = new Dimension((int) (15 * R), (int) (10 * R));
@@ -81,7 +81,7 @@ public class Export {
     }
 
 
-    private static String buildSvgFromPayloadSimple(PayloadSimple payload, InitialConditions ic) {
+    private static String buildSvgFromPayloadSimple(Payload payload, InitialConditions ic) {
         List<Point2D> gridPoints = Grid.gridFromStart(ic.getCentre(), ic.getR(), payload.getGridConfiguration(), 17);
 
         return
@@ -111,9 +111,9 @@ public class Export {
 
         Pair<Point2D, Double> ic = Pair.of(centre, 300.0);
 
-        buildSvg(dim, designHelper.build(() -> ic));
-
         System.out.println(designHelper.getName());
+
+        buildSvg(dim, designHelper.build(() -> ic));
 
         saveToFile(buildSvg(dim, designHelper.build(() -> ic)), designHelper.getName());
 
@@ -148,7 +148,8 @@ public class Export {
     public static void main(String[] args) throws InvocationTargetException, IllegalAccessException {
         Export.exportDesigns();
         Export.exportPayloads();
-
-
+//
+//        Export.export(Tile15.getDesignHelper());
+//
     }
 }

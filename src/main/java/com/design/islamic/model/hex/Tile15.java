@@ -1,30 +1,30 @@
 package com.design.islamic.model.hex;
 
-import com.design.common.*;
+import com.design.common.DesignHelper;
 import com.design.common.DesignHelper.ImportantVertex;
-import com.design.common.Polygon;
+import com.design.common.FinalPointTransition;
+import com.design.common.Grid;
+import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
-import com.design.islamic.model.PayloadSimple;
+import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
-import com.google.common.collect.Maps;
 
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
+import static com.design.common.PointTransition.pt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P6.H;
-import static com.design.islamic.model.Hex.Corner.*;
-import static com.design.islamic.model.Hex.*;
 import static com.design.islamic.model.Hex.Vertex.*;
+import static com.design.islamic.model.Hex.*;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
@@ -53,27 +53,16 @@ public class Tile15 {
     public final static FinalPointTransition I9 = fpt(pt(KB, UP));
     public final static FinalPointTransition I10 = I9.append(pt(6 * KB, UR_V));
 
-    private static final Map<Polygon.Vertex, Polygon.Vertex> toLeft;
-
-    static {
-        toLeft = Maps.newHashMap();
-        toLeft.put(ONE, THREE);
-        toLeft.put(SIX, FOUR);
-        toLeft.put(TWO, TWO);
-        toLeft.put(THREE, THREE);
-        toLeft.put(FOUR, FOUR);
-        toLeft.put(FIVE, FIVE);
-    }
 
     @TileSupplier
-    public static PayloadSimple getPayloadSimple() {
+    public static Payload getPayloadSimple() {
 
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
 
-        return new PayloadSimple.Builder("hex_tile_15",
+        return new Payload.Builder("hex_tile_15",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsNewSingleLines(whiteBold, getAllSinglePath())
+                .withPathsSingleLines(whiteBold, getAllSinglePath())
                 .withGridConf(Grid.Configuration.customRect(2.0 * RATIO_W, 2 * RATIO_H))
                 .build();
     }

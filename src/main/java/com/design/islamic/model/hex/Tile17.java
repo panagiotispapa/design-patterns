@@ -1,11 +1,10 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.*;
-import com.design.common.Polygon;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
-import com.design.islamic.model.PayloadSimple;
+import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
 
 import java.awt.*;
@@ -15,7 +14,8 @@ import java.util.List;
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.Polygon.Type.HOR;
-import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.common.PointTransition.pt;
+import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
 import static java.util.Arrays.asList;
 
@@ -37,12 +37,12 @@ public class Tile17 {
 
 
     @TileSupplier
-    public static PayloadSimple getPayloadSimple() {
+    public static Payload getPayloadSimple() {
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
-        return new PayloadSimple.Builder("hex_tile_17",
+        return new Payload.Builder("hex_tile_17",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsNewFull(whiteBold, getFullPath())
+                .withPathsFull(whiteBold, getFullPath())
                 .withGridConf(Grid.Configs.HEX_HOR3.getConfiguration())
                 .build();
     }

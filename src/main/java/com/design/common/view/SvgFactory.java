@@ -197,14 +197,9 @@ public class SvgFactory {
         return String.format("%f,%f", point.getX(), point.getY());
     }
 
-
-
     public static String toSVG(Point2D point, Supplier<String> instructionType) {
         return format("%s%s", instructionType.get(), commaSep(point));
     }
-
-
-
 
 
 //    private static String toPointsString(Collection<Line2D> points) {

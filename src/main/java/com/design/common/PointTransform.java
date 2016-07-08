@@ -31,7 +31,7 @@ public interface PointTransform extends Supplier<Function<PointInstruction, Poin
     }
 
     static PointTransform of(PointTransition pointTransition) {
-        return PointTransform.of(p -> PointInstruction.of(Points.translateAndScale(p.getCentre(), p.getR() * pointTransition.getRatio()).apply(pointTransition.getVertex().getPoint(p.getRadIndex(), pointTransition.getType())), p.getR(), p.getRadIndex()));
+        return PointTransform.of(p -> PointInstruction.of(Points.translateAndScale(p.getCentre(), p.getR() * pointTransition.getRatio()).apply(pointTransition.getVertex().getPoint(p.getRadIndex())), p.getR(), p.getRadIndex()));
     }
 
 }

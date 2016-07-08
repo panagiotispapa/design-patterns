@@ -7,16 +7,17 @@ import com.design.common.Polygon;
 import com.google.common.collect.ImmutableMap;
 
 import java.awt.geom.Point2D;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static com.design.common.PolygonTools.calcVertexes;
+import static com.design.common.PointsPath.buildLines;
+import static com.design.common.PointsPath.toPath;
 import static com.design.common.PolygonTools.newEdgeAt;
 import static java.lang.Math.PI;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 public class Hex extends Polygon {
@@ -27,360 +28,268 @@ public class Hex extends Polygon {
 
     public static final double PHI = (2.0 * PI) / 6.0;
 
-//    public static List<List<Polygon.Vertex>> PERIMETER = asList(
-//            asList(
-//                    (Polygon.Vertex) Vertex.ONE,
-//                    Vertex.TWO,
-//                    Vertex.THREE,
-//                    Vertex.FOUR,
-//                    Vertex.FIVE,
-//                    Vertex.SIX,
-//                    Vertex.ONE
-//            )
-//    );
-
     public static Function<FinalPointTransition, Stream<PointsPath>> perimeter(double ratio, Type type) {
-        return buildLines(
-                ratio, type,
-                Stream.of(
-                        Vertex.ONE,
-                        Vertex.TWO,
-                        Vertex.THREE,
-                        Vertex.FOUR,
-                        Vertex.FIVE,
-                        Vertex.SIX,
-                        Vertex.ONE
-                )
-        );
+
+        return type == Type.HOR ?
+                buildLines(
+                        ratio,
+                        Stream.of(
+                                Vertex.RIGHT,
+                                Vertex.DR_H,
+                                Vertex.DL_H,
+                                Vertex.LEFT,
+                                Vertex.UL_H,
+                                Vertex.UR_H,
+                                Vertex.RIGHT
+                        )
+                ) :
+                buildLines(
+                        ratio,
+                        Stream.of(
+                                Vertex.DR_V,
+                                Vertex.DOWN,
+                                Vertex.DL_V,
+                                Vertex.UL_V,
+                                Vertex.UP,
+                                Vertex.UR_V,
+                                Vertex.DR_V
+                        )
+                );
+
+
     }
 
 
     public static Function<FinalPointTransition, Stream<PointsPath>> innerTriangles(double ratio, Type type) {
-        return buildLines(
-                ratio, type,
-                Stream.of(
-                        Vertex.ONE,
-                        Vertex.THREE,
-                        Vertex.FIVE,
-                        Vertex.ONE
-                ),
-                Stream.of(
-                        Vertex.TWO,
-                        Vertex.FOUR,
-                        Vertex.SIX,
-                        Vertex.TWO
-                )
+        return type == Type.HOR ?
+                buildLines(
+                        ratio,
+                        Stream.of(
+                                Vertex.RIGHT,
+                                Vertex.DL_H,
+                                Vertex.UL_H,
+                                Vertex.RIGHT
+                        ),
+                        Stream.of(
+                                Vertex.DR_H,
+                                Vertex.LEFT,
+                                Vertex.UR_H,
+                                Vertex.DR_H
+                        )
 
-        );
+                ) :
+                buildLines(
+                        ratio,
+                        Stream.of(
+                                Vertex.DR_V,
+                                Vertex.DL_V,
+                                Vertex.UP,
+                                Vertex.DR_V
+                        ),
+                        Stream.of(
+                                Vertex.DOWN,
+                                Vertex.UL_V,
+                                Vertex.UR_V,
+                                Vertex.DOWN
+                        )
+
+                );
+
+
     }
-
-    private static Function<FinalPointTransition, Stream<PointsPath>> buildLines(double ratio, Type type, Stream<Vertex>... vertices) {
-        return centre -> Stream.of(
-                vertices
-        ).map(toPath(centre, ratio, type));
-    }
-
-    private static Function<FinalPointTransition, Stream<PointsPath>> buildLines(double ratio, Stream<Corner>... corners) {
-        return centre -> Stream.of(
-                corners
-        ).map(toPath(centre, ratio));
-    }
-
-
-    public static Function<Stream<Vertex>, PointsPath> toPath(FinalPointTransition centre, double ratio, Type type) {
-        return vertexes -> PointsPath.of(
-                vertexes.map(v -> PointTransition.of(ratio, v, type))
-                        .map(centre::append).collect(toList())
-        );
-    }
-
-
-    public static Function<Stream<Corner>, PointsPath> toPath(FinalPointTransition centre, double ratio) {
-        return conrners -> PointsPath.of(
-                conrners.map(corner -> PointTransition.of(ratio, corner.getVertex(), corner.getType()))
-                        .map(centre::append).collect(toList())
-        );
-    }
-
 
     public static Function<FinalPointTransition, Stream<PointsPath>> diagonalLeftToRightVert(double ratio) {
         return buildLines(ratio,
                 Stream.of(
-                        Corner.DL_V,
-                        Corner.UR_V
+                        Vertex.DL_V,
+                        Vertex.UR_V
                 ));
     }
 
     public static Function<FinalPointTransition, Stream<PointsPath>> diagonalLeftToRightHor(double ratio) {
         return buildLines(ratio,
                 Stream.of(
-                        Corner.DL_H,
-                        Corner.UR_H
+                        Vertex.DL_H,
+                        Vertex.UR_H
                 ));
     }
 
     public static Function<FinalPointTransition, Stream<PointsPath>> diagonalRightToLeftVert(double ratio) {
         return buildLines(ratio,
                 Stream.of(
-                        Corner.DR_V,
-                        Corner.UL_V
+                        Vertex.DR_V,
+                        Vertex.UL_V
                 ));
     }
 
     public static Function<FinalPointTransition, Stream<PointsPath>> diagonalRightToLeftHor(double ratio) {
         return buildLines(ratio,
                 Stream.of(
-                        Corner.DR_H,
-                        Corner.UL_H
+                        Vertex.DR_H,
+                        Vertex.UL_H
                 ));
     }
 
     public static Function<FinalPointTransition, Stream<PointsPath>> diagonalVertical(double ratio) {
         return buildLines(ratio,
                 Stream.of(
-                        Corner.UP,
-                        Corner.DOWN
+                        Vertex.UP,
+                        Vertex.DOWN
                 ));
     }
 
     public static Function<FinalPointTransition, Stream<PointsPath>> diagonalHorizontal(double ratio) {
         return buildLines(ratio,
                 Stream.of(
-                        Corner.RIGHT,
-                        Corner.LEFT
+                        Vertex.RIGHT,
+                        Vertex.LEFT
                 ));
     }
 
-    public static Function<FinalPointTransition, Stream<PointsPath>> diagonalOne(double ratio, Type type) {
-        return buildLines(
-                ratio, type,
-
-                Stream.of(
-                        Vertex.ONE,
-                        Vertex.FOUR
-                )
-        );
-    }
-
-    public static Function<FinalPointTransition, Stream<PointsPath>> diagonalTwo(double ratio, Type type) {
-        return buildLines(
-                ratio, type,
-
-                Stream.of(
-                        Vertex.TWO,
-                        Vertex.FIVE
-                )
-        );
-    }
-
-    public static Function<FinalPointTransition, Stream<PointsPath>> diagonalThree(double ratio, Type type) {
-        return buildLines(
-                ratio, type,
-
-                Stream.of(
-                        Vertex.THREE,
-                        Vertex.SIX
-                )
-        );
-    }
 
     public static Function<FinalPointTransition, Stream<PointsPath>> diagonals(double ratio, Type type) {
-        return buildLines(
-                ratio, type,
-                Stream.of(
-                        Vertex.ONE,
-                        Vertex.FOUR
-                ),
-                Stream.of(
-                        Vertex.TWO,
-                        Vertex.FIVE
-                ),
-                Stream.of(
-                        Vertex.THREE,
-                        Vertex.SIX
-                )
-        );
+        return type == Type.HOR ?
+
+                buildLines(
+                        ratio,
+                        Stream.of(
+                                Vertex.RIGHT,
+                                Vertex.LEFT
+                        ),
+                        Stream.of(
+                                Vertex.DR_H,
+                                Vertex.UL_H
+                        ),
+                        Stream.of(
+                                Vertex.DL_H,
+                                Vertex.UR_H
+                        )
+                ) :
+                buildLines(
+                        ratio,
+                        Stream.of(
+                                Vertex.DR_V,
+                                Vertex.UL_V
+                        ),
+                        Stream.of(
+                                Vertex.DOWN,
+                                Vertex.UP
+                        ),
+                        Stream.of(
+                                Vertex.DL_V,
+                                Vertex.UR_V
+                        )
+                );
+
     }
 
 
-    public static PointTransition pt(double ratio, Corner corner) {
-        return PointTransition.of(ratio, corner.getVertex(), corner.getType());
-    }
 
 
-    public enum Corner {
-        DR_V(Vertex.ONE, Type.VER),
-        DOWN(Vertex.TWO, Type.VER),
-        DL_V(Vertex.THREE, Type.VER),
-        UL_V(Vertex.FOUR, Type.VER),
-        UP(Vertex.FIVE, Type.VER),
-        UR_V(Vertex.SIX, Type.VER),
-//
-//
-        RIGHT(Vertex.ONE, Type.HOR),
-        DR_H(Vertex.TWO, Type.HOR),
-        DL_H(Vertex.THREE, Type.HOR),
-        LEFT(Vertex.FOUR, Type.HOR),
-        UL_H(Vertex.FIVE, Type.HOR),
-        UR_H(Vertex.SIX, Type.HOR);
-//
-//        DR_V(VertexNew.DR_V, Type.VER),
-//        DOWN(VertexNew.DOWN, Type.VER),
-//        DL_V(VertexNew.DL_V, Type.VER),
-//        UL_V(VertexNew.UL_V, Type.VER),
-//        UP(VertexNew.UP, Type.VER),
-//        UR_V(VertexNew.UR_V, Type.VER),
-//
-//        RIGHT(VertexNew.RIGHT, Type.HOR),
-//        DR_H(VertexNew.DR_H, Type.HOR),
-//        DL_H(VertexNew.DL_H, Type.HOR),
-//        LEFT(VertexNew.LEFT, Type.HOR),
-//        UL_H(VertexNew.UL_H, Type.HOR),
-//        UR_H(VertexNew.UR_H, Type.HOR);
+    public static Map<Polygon.Vertex, Polygon.Vertex> verticalMapping = (Map)
+            new ImmutableMap.Builder<>()
+                    .put(Vertex.DR_V, Vertex.UR_V)
+                    .put(Vertex.DOWN, Vertex.UP)
+                    .put(Vertex.DL_V, Vertex.UL_V)
+                    .put(Vertex.UL_V, Vertex.DL_V)
+                    .put(Vertex.UP, Vertex.DOWN)
+                    .put(Vertex.UR_V, Vertex.DR_V)
 
-        private final Polygon.Vertex vertex;
-        private final Type type;
+                    .put(Vertex.RIGHT, Vertex.RIGHT)
+                    .put(Vertex.DR_H, Vertex.UR_H)
+                    .put(Vertex.DL_H, Vertex.UL_H)
+                    .put(Vertex.LEFT, Vertex.LEFT)
+                    .put(Vertex.UL_H, Vertex.DL_H)
+                    .put(Vertex.UR_H, Vertex.DR_H)
 
-        Corner(Polygon.Vertex vertex, Type type) {
-            this.vertex = vertex;
-            this.type = type;
-        }
-
-        public Polygon.Vertex getVertex() {
-            return vertex;
-        }
-
-        public Type getType() {
-            return type;
-        }
-    }
-
-    public static Map<Polygon.Type, Map<Polygon.Vertex, Polygon.Vertex>> verticalMapping = ImmutableMap.of(
-            Type.VER, (Map)
-                    new ImmutableMap.Builder<>()
-                            .put(Vertex.ONE, Vertex.SIX)
-                            .put(Vertex.TWO, Vertex.FIVE)
-                            .put(Vertex.THREE, Vertex.FOUR)
-                            .put(Vertex.FOUR, Vertex.THREE)
-                            .put(Vertex.FIVE, Vertex.TWO)
-                            .put(Vertex.SIX, Vertex.ONE)
-                            .build()
-            ,
-            Type.HOR, (Map)
-                    new ImmutableMap.Builder<>()
-                            .put(Vertex.ONE, Vertex.ONE)
-                            .put(Vertex.TWO, Vertex.SIX)
-                            .put(Vertex.THREE, Vertex.FIVE)
-                            .put(Vertex.FOUR, Vertex.FOUR)
-                            .put(Vertex.FIVE, Vertex.THREE)
-                            .put(Vertex.SIX, Vertex.TWO)
-                            .build()
-
-    );
+                    .build();
 
 
-    public static Map<Polygon.Type, Map<Polygon.Vertex, Polygon.Vertex>> horizontallMapping = ImmutableMap.of(
-            Type.VER, (Map)
-                    new ImmutableMap.Builder<>()
-                            .put(Vertex.ONE, Vertex.THREE)
-                            .put(Vertex.TWO, Vertex.TWO)
-                            .put(Vertex.THREE, Vertex.ONE)
-                            .put(Vertex.FOUR, Vertex.SIX)
-                            .put(Vertex.FIVE, Vertex.FIVE)
-                            .put(Vertex.SIX, Vertex.FOUR)
-                            .build()
-            ,
-            Type.HOR, (Map)
-                    new ImmutableMap.Builder<>()
-                            .put(Vertex.ONE, Vertex.FOUR)
-                            .put(Vertex.TWO, Vertex.THREE)
-                            .put(Vertex.THREE, Vertex.TWO)
-                            .put(Vertex.FOUR, Vertex.ONE)
-                            .put(Vertex.FIVE, Vertex.SIX)
-                            .put(Vertex.SIX, Vertex.FIVE)
-                            .build()
+    public static Map<Polygon.Vertex, Polygon.Vertex> horizontalMapping = (Map)
+            new ImmutableMap.Builder<>()
+                    .put(Vertex.DR_V, Vertex.DL_V)
+                    .put(Vertex.DOWN, Vertex.DOWN)
+                    .put(Vertex.DL_V, Vertex.DR_V)
+                    .put(Vertex.UL_V, Vertex.UR_V)
+                    .put(Vertex.UP, Vertex.UP)
+                    .put(Vertex.UR_V, Vertex.UL_V)
 
-    );
+                    .put(Vertex.RIGHT, Vertex.LEFT)
+                    .put(Vertex.DR_H, Vertex.DL_H)
+                    .put(Vertex.DL_H, Vertex.DR_H)
+                    .put(Vertex.LEFT, Vertex.RIGHT)
+                    .put(Vertex.UL_H, Vertex.UR_H)
+                    .put(Vertex.UR_H, Vertex.UL_H)
+
+                    .build();
 
 
     public static Function<PointTransition, PointTransition> mirrorVert = mirror(verticalMapping);
-    public static Function<PointTransition, PointTransition> mirrorHor = mirror(horizontallMapping);
+    public static Function<PointTransition, PointTransition> mirrorHor = mirror(horizontalMapping);
 
-    private static Function<PointTransition, PointTransition> mirror(Map<Polygon.Type, Map<Polygon.Vertex, Polygon.Vertex>> mapping) {
+    private static Function<PointTransition, PointTransition> mirror(Map<Polygon.Vertex, Polygon.Vertex> mapping) {
         return initial ->
-                PointTransition.of(initial.getRatio(), mapping.get(initial.getType()).get(initial.getVertex()), initial.getType());
-    }
-
-    public enum VertexNew implements Polygon.Vertex {
-        DR_V(0, 0.5),
-        DOWN(1, 0.5),
-        DL_V(2, 0.5),
-        UL_V(3, 0.5),
-        UP(4, 0.5),
-        UR_V(5, 0.5),
-
-        RIGHT(0, 0),
-        DR_H(1, 0),
-        DL_H(2, 0),
-        LEFT(3, 0),
-        UL_H(4, 0),
-        UR_H(5, 0);
-
-        private final int index;
-        private final Point2D point;
-
-        VertexNew(int index, double offset) {
-            this.index = index;
-            this.point = newEdgeAt(index, offset, 6);
-        }
-
-
-        @Override
-        public Point2D getPoint(int offset, Type type) {
-            return point;
-        }
-
-        @Override
-        public int getIndex() {
-            return index;
-        }
+                PointTransition.pt(initial.getRatio(), mapping.get(initial.getVertex()));
     }
 
     public enum Vertex implements Polygon.Vertex {
-        ONE(0),
-        TWO(1),
-        THREE(2),
-        FOUR(3),
-        FIVE(4),
-        SIX(5);
+        DR_V(0, 0.5, Type.VER),
+        DOWN(1, 0.5, Type.VER),
+        DL_V(2, 0.5, Type.VER),
+        UL_V(3, 0.5, Type.VER),
+        UP(4, 0.5, Type.VER),
+        UR_V(5, 0.5, Type.VER),
 
-        private static final Map<Polygon.Type, List<Point2D>> vertexes;
+        RIGHT(0, 0, Type.HOR),
+        DR_H(1, 0, Type.HOR),
+        DL_H(2, 0, Type.HOR),
+        LEFT(3, 0, Type.HOR),
+        UL_H(4, 0, Type.HOR),
+        UR_H(5, 0, Type.HOR);
 
         private final int index;
-
-        Vertex(int index) {
-            this.index = index;
-        }
+        private final Point2D point;
+        private final Type type;
+        private final static Map<Type, List<Polygon.Vertex>> vertexMap;
 
         static {
-            vertexes = new HashMap<>();
-            vertexes.put(Polygon.Type.HOR, calcVertexes(N, 0));
-            vertexes.put(Polygon.Type.VER, calcVertexes(N, 0.5));
+            vertexMap = ImmutableMap.of(
+                    Type.VER, asList(
+                            DR_V,
+                            DOWN,
+                            DL_V,
+                            UL_V,
+                            UP,
+                            UR_V
+                    ),
+                    Type.HOR, asList(
+                            RIGHT,
+                            DR_H,
+                            DL_H,
+                            LEFT,
+                            UL_H,
+                            UR_H
+                    )
+            );
+
+        }
+
+        Vertex(int index, double offset, Type type) {
+            this.index = index;
+            this.type = type;
+            this.point = newEdgeAt(index, offset, N);
         }
 
         @Override
-        public Point2D getPoint(int offset, Polygon.Type type) {
-            return vertexes.get(type).get((index + offset) % N);
+        public Point2D getPoint(int offset) {
+            return vertexMap.get(type).get((index + offset) % N).getPoint();
         }
 
         @Override
-        public int getIndex() {
-            return index;
+        public Point2D getPoint() {
+            return point;
         }
 
-        public Polygon.Vertex cast() {
-            return this;
-        }
     }
 
 }

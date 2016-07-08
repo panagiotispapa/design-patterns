@@ -8,7 +8,7 @@ import com.design.common.RatioHelper.Ratios;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
-import com.design.islamic.model.PayloadSimple;
+import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
 
 import java.awt.*;
@@ -18,7 +18,8 @@ import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
-import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.common.PointTransition.pt;
+import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
 import static java.lang.Math.PI;
 import static java.lang.Math.cos;
@@ -43,12 +44,12 @@ public class Tile27 {
 
 
     @TileSupplier
-    public static PayloadSimple getPayloadSimple() {
+    public static Payload getPayloadSimple() {
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
-        return new PayloadSimple.Builder("hex_tile_27",
+        return new Payload.Builder("hex_tile_27",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsNewFull(whiteBold, getFullPath())
+                .withPathsFull(whiteBold, getFullPath())
                 .build();
     }
 

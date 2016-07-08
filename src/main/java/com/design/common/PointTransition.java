@@ -1,12 +1,13 @@
 package com.design.common;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.function.Supplier;
 
-public interface PointTransition extends Supplier<Triple<Double, Polygon.Vertex, Polygon.Type>> {
-    static PointTransition of(double ratio, Polygon.Vertex vertex, Polygon.Type type) {
-        return () -> Triple.of(ratio, vertex, type);
+public interface PointTransition extends Supplier<Pair<Double, Polygon.Vertex>> {
+    static PointTransition pt(double ratio, Polygon.Vertex vertex) {
+        return () -> Pair.of(ratio, vertex);
     }
 
     default Double getRatio() {
@@ -14,11 +15,8 @@ public interface PointTransition extends Supplier<Triple<Double, Polygon.Vertex,
     }
 
     default Polygon.Vertex getVertex() {
-        return get().getMiddle();
-    }
-
-    default Polygon.Type getType() {
         return get().getRight();
     }
+
 }
 

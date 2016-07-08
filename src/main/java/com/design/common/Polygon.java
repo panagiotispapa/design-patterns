@@ -10,9 +10,10 @@ public abstract class Polygon {
     }
 
     public interface Vertex {
-        Point2D getPoint(int offset, Polygon.Type type);
+        Point2D getPoint(int offset);
 
-        int getIndex();
+        Point2D getPoint();
+
     }
 
 

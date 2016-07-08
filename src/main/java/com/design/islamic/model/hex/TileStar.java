@@ -8,7 +8,7 @@ import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
-import com.design.islamic.model.PayloadSimple;
+import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -22,7 +22,8 @@ import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.RatioHelper.P6.P;
-import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.common.PointTransition.pt;
+import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
 import static java.util.Arrays.asList;
 
@@ -60,69 +61,69 @@ public class TileStar {
 
 
     @TileSupplier
-    public static PayloadSimple getPayloadSimple1() {
+    public static Payload getPayloadSimple1() {
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
-        return new PayloadSimple
+        return new Payload
                 .Builder(
                 "hex_tile_star_01",
                 Hex.ALL_VERTEX_INDEXES
-        ).withPathsNewFull(whiteBold, getFullPath1())
+        ).withPathsFull(whiteBold, getFullPath1())
                 .build();
     }
 
     @TileSupplier
-    public static PayloadSimple getPayloadSimple2() {
+    public static Payload getPayloadSimple2() {
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
-        return new PayloadSimple.Builder("hex_tile_star_02",
+        return new Payload.Builder("hex_tile_star_02",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsNewFull(whiteBold, getFullPath2())
+                .withPathsFull(whiteBold, getFullPath2())
                 .build();
     }
 
     @TileSupplier
-    public static PayloadSimple getPayloadSimple3() {
+    public static Payload getPayloadSimple3() {
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
-        return new PayloadSimple.Builder("hex_tile_star_03",
+        return new Payload.Builder("hex_tile_star_03",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsNewFull(whiteBold, getFullPath3())
+                .withPathsFull(whiteBold, getFullPath3())
                 .build();
     }
 
     @TileSupplier
-    public static PayloadSimple getPayloadSimple1b() {
+    public static Payload getPayloadSimple1b() {
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
-        return new PayloadSimple
+        return new Payload
                 .Builder(
                 "hex_tile_star_01b",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsNewFull(whiteBold, getFullPath1b())
+                .withPathsFull(whiteBold, getFullPath1b())
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
     }
 
     @TileSupplier
-    public static PayloadSimple getPayloadSimple2b() {
+    public static Payload getPayloadSimple2b() {
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
-        return new PayloadSimple
+        return new Payload
                 .Builder(
                 "hex_tile_star_02b",
                 Hex.ALL_VERTEX_INDEXES
-        ).withPathsNewFull(whiteBold, getFullPath2b())
+        ).withPathsFull(whiteBold, getFullPath2b())
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
     }
 
     @TileSupplier
-    public static PayloadSimple getPayloadSimple3b() {
+    public static Payload getPayloadSimple3b() {
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
-        return new PayloadSimple
+        return new Payload
                 .Builder(
                 "hex_tile_star_03b",
                 Hex.ALL_VERTEX_INDEXES
-        ).withPathsNewFull(whiteBold, getFullPath3b())
+        ).withPathsFull(whiteBold, getFullPath3b())
                 .withGridConf(Grid.Configs.HEX_VER2.getConfiguration())
                 .build();
     }

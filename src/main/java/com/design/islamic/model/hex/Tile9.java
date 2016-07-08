@@ -8,7 +8,7 @@ import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
-import com.design.islamic.model.PayloadSimple;
+import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -22,7 +22,8 @@ import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.RatioHelper.Ratios.*;
-import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.common.PointTransition.pt;
+import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
 import static java.util.Arrays.asList;
 
@@ -146,16 +147,16 @@ public class Tile9 {
     public final static FinalPointTransition P2 = P.append(pt(B2P, DOWN));
 
     @TileSupplier
-    public static PayloadSimple getPayloadSimple() {
+    public static Payload getPayloadSimple() {
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
 
-        return new PayloadSimple.Builder("hex_tile_09"
+        return new Payload.Builder("hex_tile_09"
                 , Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsNewFull(
+                .withPathsFull(
                         whiteBold,
                         getFullPath())
-                .withSize(PayloadSimple.Size.MEDIUM)
+                .withSize(Payload.Size.MEDIUM)
                 .build();
     }
 

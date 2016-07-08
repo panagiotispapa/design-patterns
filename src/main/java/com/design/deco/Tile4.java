@@ -16,7 +16,8 @@ import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P4.H;
-import static com.design.islamic.model.Rect.Corner.*;
+import static com.design.common.PointTransition.pt;
+import static com.design.islamic.model.Rect.Vertex.*;
 import static com.design.islamic.model.Rect.*;
 import static java.util.Arrays.asList;
 
@@ -35,14 +36,14 @@ public class Tile4 {
     public final static FinalPointTransition D = C.append(pt(CD, LEFT));
     public final static FinalPointTransition E = C.append(pt(CE, DL));
     @TileSupplier
-    public static PayloadSimple getPayloadSimple() {
+    public static Payload getPayloadSimple() {
 
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
 
-        return new PayloadSimple.Builder("deco_tile_04",
-                Hex.ALL_VERTEX_INDEXES
+        return new Payload.Builder("deco_tile_04",
+                Rect.ALL_VERTEX_INDEXES
         )
-                .withPathsNewFull(whiteBold, getFullPath())
+                .withPathsFull(whiteBold, getFullPath())
                 .withGridConf(Grid.Configs.RECT3.getConfiguration())
                 .build();
     }

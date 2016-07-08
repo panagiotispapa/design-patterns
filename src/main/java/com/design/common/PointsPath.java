@@ -23,5 +23,19 @@ public interface PointsPath extends Supplier<List<FinalPointTransition>> {
     default PointsPath mirror(Function<PointTransition, PointTransition> mapper) {
         return of(get().stream().map(s -> s.mirror(mapper)).collect(toList()));
     }
+
+    static Function<FinalPointTransition, Stream<PointsPath>> buildLines(double ratio, Stream<Polygon.Vertex>... vertices) {
+        return centre -> Stream.of(
+                vertices
+        ).map(toPath(centre, ratio));
+    }
+
+    static Function<Stream<Polygon.Vertex>, PointsPath> toPath(FinalPointTransition centre, double ratio) {
+        return vertexes -> PointsPath.of(
+                vertexes.map(v -> PointTransition.pt(ratio, v))
+                        .map(centre::append).collect(toList())
+        );
+    }
+
 }
 

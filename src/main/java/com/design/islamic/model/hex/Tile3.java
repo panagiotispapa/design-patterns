@@ -8,7 +8,7 @@ import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
-import com.design.islamic.model.PayloadSimple;
+import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
 
 import java.awt.*;
@@ -17,12 +17,12 @@ import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
+import static com.design.common.PointTransition.pt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.RatioHelper.P6.P;
-import static com.design.islamic.model.Hex.Corner.*;
-import static com.design.islamic.model.Hex.*;
+import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 
 public class Tile3 {
@@ -59,12 +59,12 @@ public class Tile3 {
     public final static FinalPointTransition E = fpt(pt(H, DR_H));
 
     @TileSupplier
-    public static PayloadSimple getPayloadSimple() {
+    public static Payload getPayloadSimple() {
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
-        return new PayloadSimple.Builder("hex_tile_03",
+        return new Payload.Builder("hex_tile_03",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsNewFull(
+                .withPathsFull(
                         whiteBold,
                         getFullPath()
                 )
@@ -78,13 +78,13 @@ public class Tile3 {
     }
 
     @TileSupplier
-    public static PayloadSimple getPayloadSimple2() {
+    public static Payload getPayloadSimple2() {
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
 
-        return new PayloadSimple.Builder("hex_tile_03b",
+        return new Payload.Builder("hex_tile_03b",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsNewFull(
+                .withPathsFull(
                         whiteBold,
                         getFullPathB()
                 )

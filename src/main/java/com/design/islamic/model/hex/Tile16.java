@@ -4,11 +4,10 @@ import com.design.common.DesignHelper;
 import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.FinalPointTransition;
 import com.design.common.PointsPath;
-import com.design.common.Polygon;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
-import com.design.islamic.model.PayloadSimple;
+import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
 
 import java.awt.*;
@@ -20,7 +19,8 @@ import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P6.H;
-import static com.design.islamic.model.Hex.Corner.*;
+import static com.design.common.PointTransition.pt;
+import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -63,13 +63,13 @@ public class Tile16 {
     }
 
     @TileSupplier
-    public static PayloadSimple getPayloadSimple() {
+    public static Payload getPayloadSimple() {
 
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
-        return new PayloadSimple.Builder("hex_tile_16",
+        return new Payload.Builder("hex_tile_16",
                 Hex.ALL_VERTEX_INDEXES
         )
-                .withPathsNewSingleLines(whiteBold, getAllSinglePath())
+                .withPathsSingleLines(whiteBold, getAllSinglePath())
                 .build();
 
     }

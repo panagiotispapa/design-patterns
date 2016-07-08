@@ -8,12 +8,12 @@ import java.util.function.Supplier;
 import static java.util.stream.Collectors.toList;
 
 public class GenericTools {
-    public static void scalePoint(Point2D edge, final double r) {
-        edge.setLocation(edge.getX() * r, edge.getY() * r);
+    public static Function<Point2D, Point2D> scalePoint(final double r) {
+        return e -> new Point2D.Double(e.getX() * r, e.getY() * r);
     }
 
-    public static void translatePoint(Point2D edge, final Point2D centre) {
-        edge.setLocation(edge.getX() + centre.getX(), edge.getY() + centre.getY());
+    public static Function<Point2D, Point2D> translatePoint(final Point2D centre) {
+        return e -> new Point2D.Double(e.getX() + centre.getX(), e.getY() + centre.getY());
     }
 
     public static List<Point2D> clonePoints(List<Point2D> points) {
