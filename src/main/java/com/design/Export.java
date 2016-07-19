@@ -51,7 +51,7 @@ public class Export {
         );
     }
 
-    public static void exportPayloads() {
+    private static void exportPayloads() {
         Set<Method> methods = forPackage("com.design")
                 .getMethodsAnnotatedWith(TileSupplier.class);
 
@@ -61,7 +61,7 @@ public class Export {
                 .forEach(Export::export);
     }
 
-    public static void exportDesigns() {
+    private static void exportDesigns() {
         Set<Method> methods = forPackage("com.design")
                 .getMethodsAnnotatedWith(DesignSupplier.class);
 

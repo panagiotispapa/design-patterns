@@ -10,7 +10,8 @@ public abstract class Polygon {
     }
 
     public interface Vertex {
-        Point2D getPoint(int offset);
+
+        Vertex withOffset(int offset);
 
         Point2D getPoint();
 

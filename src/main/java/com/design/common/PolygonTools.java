@@ -1,12 +1,8 @@
 package com.design.common;
 
 import java.awt.geom.Point2D;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.IntStream;
 
 import static java.lang.Math.*;
-import static java.util.stream.Collectors.toList;
 
 public class PolygonTools {
 
@@ -15,7 +11,7 @@ public class PolygonTools {
         return newEdgeAt(phi * (n + offset));
     }
 
-    public static Point2D newEdgeAt(double phi) {
+    private static Point2D newEdgeAt(double phi) {
         return new Point2D.Double(
                 cos(phi),
                 sin(phi)

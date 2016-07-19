@@ -23,6 +23,10 @@ public interface FinalPointTransition extends Supplier<List<PointTransition>> {
 
     FinalPointTransition K = fpt();
 
+    default FinalPointTransition withOffset(int offset) {
+        return fpt(get().stream().map(t -> t.withOffset(offset)).collect(toList()));
+    }
+
     default FinalPointTransition append(PointTransition... transitions) {
         return fpt(
                 Stream.concat(
@@ -33,12 +37,7 @@ public interface FinalPointTransition extends Supplier<List<PointTransition>> {
     }
 
     default Point2D toPoint(InitialConditions ic) {
-        return toPoint(0, ic);
-    }
-
-    default Point2D toPoint(int offset, InitialConditions ic) {
-        return PointTransform.of(get()).get()
-                .apply(PointInstruction.of(ic.getCentre(), ic.getR(), offset)).getCentre();
+        return get().stream().map(t -> t.forR(ic.getR())).reduce(ic.getCentre(), Points::translate);
     }
 
     default FinalPointTransition mirror(Function<PointTransition, PointTransition> mapper) {

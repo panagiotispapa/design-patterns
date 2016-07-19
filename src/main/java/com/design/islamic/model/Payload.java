@@ -16,19 +16,15 @@ import static java.util.stream.Collectors.toList;
 
 public class Payload {
     private final Grid.Configuration gridConfiguration;
-    private final List<Integer> allVertexes;
     private final String name;
     private final Size size;
-    private final List<Path> pathsSingle;
-    private final List<Path> pathsFull;
+    private final List<Path> paths;
 
-    public Payload(String name, List<Integer> allVertexes, Grid.Configuration gridConfiguration, Size size, List<Path> pathsSingle, List<Path> pathsFull) {
+    public Payload(String name, Grid.Configuration gridConfiguration, Size size, List<Path> paths) {
         this.gridConfiguration = gridConfiguration;
-        this.allVertexes = allVertexes;
         this.name = name;
         this.size = size;
-        this.pathsSingle = pathsSingle;
-        this.pathsFull = pathsFull;
+        this.paths = paths;
     }
 
     public Size getSize() {
@@ -42,8 +38,7 @@ public class Payload {
     public String draw(InitialConditions ic) {
         return
                 Stream.of(
-                        pathsSingle.stream().map(p -> p.draw(ic)),
-                        pathsFull.stream().map(p -> p.draw(allVertexes, ic)).flatMap(s -> s)
+                        paths.stream().map(p -> p.draw(ic))
                 ).flatMap(s -> s).collect(joining());
     }
 
@@ -62,8 +57,7 @@ public class Payload {
         private Grid.Configuration gridConfiguration = Grid.Configs.HEX_HOR2.getConfiguration();
         private final List<Integer> allVertexes;
         private final String name;
-        private final List<Path> pathsSingle = new ArrayList<>();
-        private final List<Path> pathsFull = new ArrayList<>();
+        private final List<Path> paths = new ArrayList<>();
 
         public Builder(String name, List<Integer> allVertexes) {
             this.allVertexes = allVertexes;
@@ -77,12 +71,12 @@ public class Payload {
 
 
         public Builder withPathsSingleLines(Style style, PointsPath... lines) {
-            Stream.of(lines).map(Path.fromPath(style)).forEach(pathsSingle::add);
+            Stream.of(lines).map(Path.fromPath(style)).forEach(paths::add);
             return this;
         }
 
         public Builder withPathsSingleLines(Style style, List<PointsPath> lines) {
-            lines.stream().map(Path.fromPath(style)).forEach(pathsSingle::add);
+            lines.stream().map(Path.fromPath(style)).forEach(paths::add);
             return this;
         }
 
@@ -95,7 +89,7 @@ public class Payload {
         }
 
         public Builder withPathsFull(Style style, List<PointsPath> lines) {
-            lines.stream().map(Path.fromPath(style)).forEach(pathsFull::add);
+            allVertexes.stream().flatMap(offset->lines.stream().map(p->p.withOffset(offset))).map(Path.fromPath(style)).forEach(paths::add);
             return this;
         }
 
@@ -106,7 +100,7 @@ public class Payload {
         }
 
         public Payload build() {
-            return new Payload(name, allVertexes, gridConfiguration, size, pathsSingle, pathsFull);
+            return new Payload(name, gridConfiguration, size, paths);
         }
 
     }

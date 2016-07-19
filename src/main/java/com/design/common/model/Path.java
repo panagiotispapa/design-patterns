@@ -1,7 +1,6 @@
 package com.design.common.model;
 
 import com.design.common.InitialConditions;
-import com.design.common.Polygon;
 import com.design.common.PointsPath;
 import com.design.common.view.SvgFactory;
 import com.google.common.collect.Lists;
@@ -12,7 +11,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.design.common.view.SvgFactory.toSVGString;
 
@@ -27,11 +25,11 @@ public class Path {
         return path -> new Path(style, path);
     }
 
-    public Path(Style style, PointsPath path) {
+    private Path(Style style, PointsPath path) {
         this(false, style, path);
     }
 
-    public Path(boolean closed, Style style, PointsPath path) {
+    private Path(boolean closed, Style style, PointsPath path) {
         this.closed = closed;
         this.style = style;
         this.path = path;
@@ -49,22 +47,15 @@ public class Path {
         return style;
     }
 
-    public Stream<String> draw(List<Integer> offsets, InitialConditions ic) {
-        return offsets.stream().map(i -> draw(i, ic));
-    }
-
-    public String draw(InitialConditions ic) {
-        return draw(0, ic);
-    }
 
     private static Function<Pair<Point2D, InstructionType>, String> toSvg() {
         return p -> SvgFactory.toSVG(p.getLeft(), p.getRight()::getSvgInstruction);
     }
 
-    public String draw(int offset, InitialConditions ic) {
+    public String draw(InitialConditions ic) {
         StringBuilder builder = new StringBuilder("<path d=\"");
 
-        builder.append(fromPath(path, offset, ic).stream().map(toSvg()).collect(Collectors.joining(" ")));
+        builder.append(fromPath(path, ic).stream().map(toSvg()).collect(Collectors.joining(" ")));
 
 //        builder.append(getRealPointInstructions(offset, ic).stream().map(fromPathRealPointInstruction()).collect(Collectors.joining(" ")));
 
@@ -96,10 +87,10 @@ public class Path {
     }
 
 
-    private List<Pair<Point2D, InstructionType>> fromPath(PointsPath path, int offset, InitialConditions ic) {
+    private List<Pair<Point2D, InstructionType>> fromPath(PointsPath path, InitialConditions ic) {
         List<Pair<Point2D, InstructionType>> instructions = Lists.newArrayList();
         AtomicInteger counter = new AtomicInteger(0);
-        path.get().stream().map(p -> p.toPoint(offset, ic)).forEach(p -> {
+        path.get().stream().map(p -> p.toPoint(ic)).forEach(p -> {
             if (counter.getAndIncrement() == 0) {
                 instructions.add(Pair.of(p, InstructionType.STARTING_POINT));
             } else {

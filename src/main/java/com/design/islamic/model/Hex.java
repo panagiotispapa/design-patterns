@@ -14,7 +14,6 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.design.common.PointsPath.buildLines;
-import static com.design.common.PointsPath.toPath;
 import static com.design.common.PolygonTools.newEdgeAt;
 import static java.lang.Math.PI;
 import static java.util.Arrays.asList;
@@ -24,7 +23,7 @@ public class Hex extends Polygon {
 
     public static final List<Integer> ALL_VERTEX_INDEXES = IntStream.range(0, 6).boxed().collect(toList());
 
-    public static final int N = 6;
+    private static final int N = 6;
 
     public static final double PHI = (2.0 * PI) / 6.0;
 
@@ -184,9 +183,7 @@ public class Hex extends Polygon {
     }
 
 
-
-
-    public static Map<Polygon.Vertex, Polygon.Vertex> verticalMapping = (Map)
+    private static Map<Polygon.Vertex, Polygon.Vertex> verticalMapping = (Map)
             new ImmutableMap.Builder<>()
                     .put(Vertex.DR_V, Vertex.UR_V)
                     .put(Vertex.DOWN, Vertex.UP)
@@ -205,7 +202,7 @@ public class Hex extends Polygon {
                     .build();
 
 
-    public static Map<Polygon.Vertex, Polygon.Vertex> horizontalMapping = (Map)
+    private static Map<Polygon.Vertex, Polygon.Vertex> horizontalMapping = (Map)
             new ImmutableMap.Builder<>()
                     .put(Vertex.DR_V, Vertex.DL_V)
                     .put(Vertex.DOWN, Vertex.DOWN)
@@ -281,8 +278,8 @@ public class Hex extends Polygon {
         }
 
         @Override
-        public Point2D getPoint(int offset) {
-            return vertexMap.get(type).get((index + offset) % N).getPoint();
+        public Polygon.Vertex withOffset(int offset) {
+            return vertexMap.get(type).get((index + offset) % N);
         }
 
         @Override

@@ -64,7 +64,7 @@ public class Helper {
 
     }
 
-    public static List<Circle> putInARowLeftToRight(Circle bigR, double part, double offset) {
+    private static List<Circle> putInARowLeftToRight(Circle bigR, double part, double offset) {
 
         List<Circle> output = new ArrayList<>();
 
@@ -103,7 +103,7 @@ public class Helper {
 
     }
 
-    public static List<Circle> splitInHalf(Circle big) {
+    private static List<Circle> splitInHalf(Circle big) {
 
         final double newR = big.getR() / 2.0;
 

@@ -34,11 +34,11 @@ public class Grid {
                 .collect(Collectors.toList());
     }
 
-    public static IntFunction<Point2D> nextHorPoint(Point2D start, double r, Configuration config) {
+    private static IntFunction<Point2D> nextHorPoint(Point2D start, double r, Configuration config) {
         return i -> new Point2D.Double(start.getX() + i * config.getxRatio() * r, start.getY() + (i % 2) * config.getyOffset() * r);
     }
 
-    public static IntFunction<Point2D> nextVerPoint(Point2D start, double r, Configuration config) {
+    private static IntFunction<Point2D> nextVerPoint(Point2D start, double r, Configuration config) {
         return i -> new Point2D.Double(start.getX() + (i % 2) * config.getxOffset() * r, start.getY() + i * config.getyRatio() * r);
     }
 
@@ -101,7 +101,7 @@ public class Grid {
         }
     }
 
-    public static enum Configs {
+    public enum Configs {
 
         HEX_HOR(1, P6.H, 0.5, 0),
         HEX_HOR2(2.0 * P6.H, 1.5, P6.H, 0),

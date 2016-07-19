@@ -1,7 +1,5 @@
 package com.design.common;
 
-import com.design.common.FinalPointTransition;
-import com.design.common.PointsPath;
 import com.design.common.model.Circle;
 import com.design.common.model.Path;
 import com.design.common.model.Style;
@@ -30,7 +28,6 @@ public class DesignHelper {
     private List<Pair<List<Double>, Style>> circlesCentral = new ArrayList<>();
 
     private List<Path> singlePaths = new ArrayList<>();
-    private List<Path> fullPaths = new ArrayList<>();
 
     //    protected Function<Triple<Polygon, ? extends Polygon.Vertex, String>, Pair<Point2D, String>> importantPoint;
 
@@ -124,28 +121,9 @@ public class DesignHelper {
     }
 
     public DesignHelper addFullPaths(Style style, List<PointsPath> paths) {
-        paths.stream().map(Path.fromPath(style)).forEach(fullPaths::add);
+        allVertexIndexes.stream().flatMap(offset -> paths.stream().map(p -> p.withOffset(offset))).map(Path.fromPath(style)).forEach(singlePaths::add);
         return this;
     }
-
-
-//    public DesignHelper addSinglePaths(List<Path>... paths) {
-//        Stream.of(paths).forEach(singlePaths::addAll);
-//        return this;
-//    }
-
-
-//    public List<Path> getSinglePaths() {
-//        return singlePaths;
-//    }
-//
-//    public List<Path> getFullPaths() {
-//        return fullPaths;
-//    }
-//
-//    public List<Pair<Point2D, String>> getImportantPoints() {
-//        return importantPoints;
-//    }
 
     public String build(InitialConditions initialConditions) {
 
@@ -176,7 +154,6 @@ public class DesignHelper {
                         p.getLeft().stream().map(d -> Circle.of(initialConditions.get().getLeft(), d * initialConditions.get().getRight())).map(drawCircle(p.getRight()))
                 ).flatMap(s -> s),
                 singlePaths.stream().map(p -> p.draw(initialConditions)),
-                fullPaths.stream().map(p -> p.draw(allVertexIndexes, initialConditions)).flatMap(s -> s),
                 Stream.of(highlightPoints("black", 2).apply(gridPoints)),
                 importantPoints.stream().map(drawText(fontSize)),
                 importantPoints.stream().map(Pair::getLeft).map(highlightPoint())
@@ -209,17 +186,5 @@ public class DesignHelper {
             return get().getRight();
         }
     }
-
-
-
-//    public interface Paths extends Supplier<List<Path>> {
-//        static Paths of(List<Path> paths) {
-//            return () -> paths;
-//        }
-//
-//        static Paths of(Path... paths) {
-//            return of(Arrays.asList(paths));
-//        }
-//    }
 
 }

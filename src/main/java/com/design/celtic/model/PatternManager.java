@@ -1,5 +1,7 @@
 package com.design.celtic.model;
 
+import com.design.celtic.Patterns;
+
 import java.awt.*;
 import java.util.Map;
 
@@ -23,12 +25,7 @@ public class PatternManager {
 
 
         providerMap = newHashMap();
-        providerMap.put(ONE, new PatternProvider() {
-            @Override
-            public String provideSVG(Dimension dim, double r) {
-                return buildPattern1(dim, r);
-            }
-        });
+        providerMap.put(ONE, Patterns::buildPattern1);
 
     }
 

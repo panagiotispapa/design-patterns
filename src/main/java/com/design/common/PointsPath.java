@@ -20,6 +20,11 @@ public interface PointsPath extends Supplier<List<FinalPointTransition>> {
         return () -> transitions.collect(toList());
     }
 
+    default PointsPath withOffset(int offset) {
+        return of(get().stream().map(t -> t.withOffset(offset)).collect(toList()));
+    }
+
+
     default PointsPath mirror(Function<PointTransition, PointTransition> mapper) {
         return of(get().stream().map(s -> s.mirror(mapper)).collect(toList()));
     }

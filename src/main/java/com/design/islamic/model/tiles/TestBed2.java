@@ -253,7 +253,7 @@ public class TestBed2 {
 
     }
 
-    public JPanel getComponent() {
+    private JPanel getComponent() {
         return jPanel;
     }
 

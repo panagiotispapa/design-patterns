@@ -1,7 +1,6 @@
 package com.design.islamic.model;
 
 import com.design.common.FinalPointTransition;
-import com.design.common.PointTransition;
 import com.design.common.PointsPath;
 import com.design.common.Polygon;
 import com.google.common.collect.ImmutableMap;
@@ -133,8 +132,8 @@ public class Rect extends Polygon {
         }
 
         @Override
-        public Point2D getPoint(int offset) {
-            return vertexMap.get(type).get((index + offset) % N).getPoint();
+        public Polygon.Vertex withOffset(int offset) {
+            return vertexMap.get(type).get((index + offset) % N);
         }
 
         @Override

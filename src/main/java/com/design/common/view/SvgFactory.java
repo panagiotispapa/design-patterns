@@ -68,7 +68,7 @@ public class SvgFactory {
                 c -> c.stream().map(drawCircle(style)).collect(joining());
     }
 
-    public static Function<Circle, String> drawCircle(final String style) {
+    private static Function<Circle, String> drawCircle(final String style) {
         return p -> newCircle(p.getCentre(), p.getR(), style);
     }
 
@@ -84,7 +84,7 @@ public class SvgFactory {
         return p -> format("<text x=\"%f\" y=\"%f\" fill=\"black\" font-size=\"%d\">%s</text>", p.getLeft().getX() + 5, p.getLeft().getY() + 5, fontSize, p.getRight());
     }
 
-    public static Function<Pair<Point2D, String>, String> drawText() {
+    private static Function<Pair<Point2D, String>, String> drawText() {
         return drawText(18);
     }
 
@@ -100,7 +100,7 @@ public class SvgFactory {
         return highlightPoint("red", 3);
     }
 
-    public static Function<Point2D, String> highlightPoint(String fill, int radius) {
+    private static Function<Point2D, String> highlightPoint(String fill, int radius) {
         String style = newStyle(fill, "black", 1, 1, 1);
         return p -> newCircle(p, radius, style);
     }
@@ -122,7 +122,7 @@ public class SvgFactory {
         );
     }
 
-    public static String newCircle(Point2D centre, double r, Style style) {
+    private static String newCircle(Point2D centre, double r, Style style) {
         return format("<circle cx=\"%f\" cy=\"%f\" r=\"%f\" style=\"%s\" />",
                 centre.getX(),
                 centre.getY(),
@@ -136,7 +136,7 @@ public class SvgFactory {
 
     }
 
-    public static String drawArc(Arc arc, String style) {
+    private static String drawArc(Arc arc, String style) {
         final String path = arc.isUp() ? "M %f %f a 1 1 0 0 1 %f 0" : "M %f %f a 1 1 0 0 0 %f 0";
 
         return format("<path d=\"%s\" style=\"%s\"/>",
@@ -193,7 +193,7 @@ public class SvgFactory {
         }
     }
 
-    public static String commaSep(Point2D point) {
+    private static String commaSep(Point2D point) {
         return String.format("%f,%f", point.getX(), point.getY());
     }
 

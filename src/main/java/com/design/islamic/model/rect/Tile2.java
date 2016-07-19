@@ -27,23 +27,25 @@ public class Tile2 {
     private static final double KC = H;
     private static final double KB = H;
     private static final double KD = H * KB;
-    private static final double BD = KD;
-    private static final double DC = KD + KC;
-    private static final double KE = BD * (KC / DC);
-    private static final double FG = KC / H;
-    private static final double KF = KE;
-    private static final double KG = FG + KF;
+    private static final double KL = 1.0 - H;
+    private static final double KF = KL;
+    private static final double KG = KA + KF;
+    private static final double FG = KA;
 
     public final static FinalPointTransition A = fpt(pt(KA, DR));
     public final static FinalPointTransition B = fpt(pt(KB, UR));
     public final static FinalPointTransition P = fpt(pt(KB, DR));
     public final static FinalPointTransition C = fpt(pt(KC, LEFT));
+    public final static FinalPointTransition C2 = fpt(pt(KC, RIGHT));
     public final static FinalPointTransition D = fpt(pt(KD, RIGHT));
-    public final static FinalPointTransition E = fpt(pt(KE, UP));
+    public final static FinalPointTransition E = fpt(pt(KL, UP));
     public final static FinalPointTransition F = fpt(pt(KF, RIGHT));
     public final static FinalPointTransition G = fpt(pt(KG, RIGHT));
     public final static FinalPointTransition I = G.append(pt(FG, DL));
     public final static FinalPointTransition J = G.append(pt(FG, UL));
+    public final static FinalPointTransition L = fpt(pt(KF, DR));
+    public final static FinalPointTransition M = fpt(pt(H, DOWN));
+    public final static FinalPointTransition N = I.append(pt(H, UP));
 
 
     @TileSupplier
@@ -53,7 +55,7 @@ public class Tile2 {
         return new Payload.Builder("rect_tile_02",
                 Rect.ALL_VERTEX_INDEXES)
                 .withPathsFull(whiteBold, getFullPath())
-                .withGridConf(Grid.Configs.RECT3.getConfiguration())
+                .withGridConf(Grid.Configs.RECT2.getConfiguration())
                 .build();
     }
 
@@ -67,11 +69,11 @@ public class Tile2 {
                 "KB = h",
                 "KD = h * KB",
                 "BD = KD",
-                "DC = KD + KC",
-                "KE = BD * (KC / DC)",
-                "FG = KC / h",
-                "KF = KE",
-                "KG = FG + KF"
+                "AM = AL",
+                "KL = KA - AL = KA - AM = 1 - h",
+                "IN = h",
+                "FG = IN / h = 1.0",
+                "KG = FG + KF = 1.0 + KF"
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "rect_tile_02_design")
@@ -100,7 +102,8 @@ public class Tile2 {
 
     private static List<PointsPath> getFullPath() {
         return asList(
-                PointsPath.of(I, F, J)
+                PointsPath.of(I, F, J),
+                PointsPath.of(M, L, C2)
         );
     }
 
