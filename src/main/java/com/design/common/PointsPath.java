@@ -1,8 +1,10 @@
 package com.design.common;
 
+import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -24,9 +26,12 @@ public interface PointsPath extends Supplier<List<FinalPointTransition>> {
         return of(get().stream().map(t -> t.withOffset(offset)).collect(toList()));
     }
 
-
     default PointsPath mirror(Function<PointTransition, PointTransition> mapper) {
         return of(get().stream().map(s -> s.mirror(mapper)).collect(toList()));
+    }
+
+    default List<Point2D> generatePoints(InitialConditions ic) {
+        return get().stream().map(p -> p.toPoint(ic)).collect(toList());
     }
 
     static Function<FinalPointTransition, Stream<PointsPath>> buildLines(double ratio, Stream<Polygon.Vertex>... vertices) {

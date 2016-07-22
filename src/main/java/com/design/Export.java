@@ -6,6 +6,10 @@ import com.design.common.InitialConditions;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.design.islamic.model.rect.Tile3;
+import com.design.islamic.model.rect.Tile4;
+import com.design.islamic.model.rect.Tile5;
+import com.design.islamic.model.rect.Tile6;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.tuple.Pair;
 import org.reflections.Reflections;
@@ -55,7 +59,7 @@ public class Export {
         Set<Method> methods = forPackage("com.design")
                 .getMethodsAnnotatedWith(TileSupplier.class);
 
-        System.out.println(methods.size());
+//        System.out.println(methods.size());
 
         methods.stream().map(m -> Export.invokeMethod(m, Payload.class))
                 .forEach(Export::export);
@@ -149,7 +153,8 @@ public class Export {
         Export.exportDesigns();
         Export.exportPayloads();
 //
-//        Export.export(Tile15.getDesignHelper());
-//
+//        Export.export(Tile6.getDesignHelper());
+//        Export.export(Tile6.getPayloadSimple());
+
     }
 }

@@ -1,6 +1,7 @@
 package com.design.islamic.model;
 
 import com.design.common.FinalPointTransition;
+import com.design.common.PointTransition;
 import com.design.common.PointsPath;
 import com.design.common.Polygon;
 import com.google.common.collect.ImmutableMap;
@@ -87,6 +88,42 @@ public class Rect extends Polygon {
                         Vertex.RIGHT,
                         Vertex.LEFT
                 ));
+    }
+
+    private static Map<Polygon.Vertex, Polygon.Vertex> verticalMapping = (Map)
+            new ImmutableMap.Builder<>()
+                    .put(Vertex.DR, Vertex.UR)
+                    .put(Vertex.DL, Vertex.UL)
+                    .put(Vertex.UL, Vertex.DL)
+                    .put(Vertex.UR, Vertex.DR)
+
+                    .put(Vertex.RIGHT, Vertex.RIGHT)
+                    .put(Vertex.LEFT, Vertex.LEFT)
+                    .put(Vertex.UP, Vertex.DOWN)
+                    .put(Vertex.DOWN, Vertex.UP)
+                    .build();
+
+
+    private static Map<Polygon.Vertex, Polygon.Vertex> horizontalMapping = (Map)
+            new ImmutableMap.Builder<>()
+                    .put(Vertex.DR, Vertex.DL)
+                    .put(Vertex.UR, Vertex.UL)
+                    .put(Vertex.UL, Vertex.UR)
+                    .put(Vertex.DL, Vertex.DR)
+
+                    .put(Vertex.RIGHT, Vertex.LEFT)
+                    .put(Vertex.LEFT, Vertex.RIGHT)
+                    .put(Vertex.UP, Vertex.UP)
+                    .put(Vertex.DOWN, Vertex.DOWN)
+
+                    .build();
+
+    public static Function<PointTransition, PointTransition> mirrorVert = mirror(verticalMapping);
+    public static Function<PointTransition, PointTransition> mirrorHor = mirror(horizontalMapping);
+
+    private static Function<PointTransition, PointTransition> mirror(Map<Polygon.Vertex, Polygon.Vertex> mapping) {
+        return initial ->
+                PointTransition.pt(initial.getRatio(), mapping.get(initial.getVertex()));
     }
 
 

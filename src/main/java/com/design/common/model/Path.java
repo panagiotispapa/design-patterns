@@ -10,9 +10,9 @@ import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static com.design.common.view.SvgFactory.toSVGString;
+import static java.util.stream.Collectors.joining;
 
 
 public class Path {
@@ -48,27 +48,17 @@ public class Path {
     }
 
 
-    private static Function<Pair<Point2D, InstructionType>, String> toSvg() {
-        return p -> SvgFactory.toSVG(p.getLeft(), p.getRight()::getSvgInstruction);
-    }
-
     public String draw(InitialConditions ic) {
         StringBuilder builder = new StringBuilder("<path d=\"");
-
-        builder.append(fromPath(path, ic).stream().map(toSvg()).collect(Collectors.joining(" ")));
-
-//        builder.append(getRealPointInstructions(offset, ic).stream().map(fromPathRealPointInstruction()).collect(Collectors.joining(" ")));
-
-        if (isClosed()) {
-            builder.append(" z\" style=\"");
-        } else {
-            builder.append("\" style=\"");
-        }
-
-        builder.append(toSVGString(getStyle()));
+        builder.append(fromPath(path.generatePoints(ic)).stream().map(toSvg()).collect(joining(" ")));
+        builder.append(isClosed() ? " z\"" : "\"");
+        builder.append(" style=\"" + toSVGString(getStyle()));
         builder.append("\"/>");
-
         return builder.toString();
+    }
+
+    private static Function<Pair<Point2D, InstructionType>, String> toSvg() {
+        return p -> SvgFactory.toSVG(p.getLeft(), p.getRight()::getSvgInstruction);
     }
 
     private enum InstructionType {
@@ -87,10 +77,10 @@ public class Path {
     }
 
 
-    private List<Pair<Point2D, InstructionType>> fromPath(PointsPath path, InitialConditions ic) {
+    private List<Pair<Point2D, InstructionType>> fromPath(List<Point2D> points) {
         List<Pair<Point2D, InstructionType>> instructions = Lists.newArrayList();
         AtomicInteger counter = new AtomicInteger(0);
-        path.get().stream().map(p -> p.toPoint(ic)).forEach(p -> {
+        points.forEach(p -> {
             if (counter.getAndIncrement() == 0) {
                 instructions.add(Pair.of(p, InstructionType.STARTING_POINT));
             } else {

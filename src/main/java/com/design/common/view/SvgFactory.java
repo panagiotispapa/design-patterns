@@ -45,8 +45,8 @@ public class SvgFactory {
         return builder.toString();
     }
 
-    public static String newStyle(String stroke, int strokeWidth, double strokeOpcacity) {
-        return format("fill:none;stroke:%s;stroke-width:%d;stroke-opacity:%s", stroke, strokeWidth, strokeOpcacity);
+    public static String newStyle(String stroke, int strokeWidth, double strokeOpacity) {
+        return format("fill:none;stroke:%s;stroke-width:%d;stroke-opacity:%s", stroke, strokeWidth, strokeOpacity);
     }
 
     public static String newStyle(String fill, String stroke, int strokeWidth, double fillOpacity, double strokeOpcacity) {
@@ -173,7 +173,6 @@ public class SvgFactory {
         return toPointsString(Arrays.asList(line.getP1(), line.getP2()));
     }
 
-
     public static String toHtml(String svg) {
         return "<html>" +
                 "<header>" +
@@ -182,7 +181,6 @@ public class SvgFactory {
                 svg +
                 "</body>" +
                 "</html>";
-
     }
 
     public static String toHex(Color color) {
@@ -193,12 +191,12 @@ public class SvgFactory {
         }
     }
 
-    private static String commaSep(Point2D point) {
-        return String.format("%f,%f", point.getX(), point.getY());
-    }
-
     public static String toSVG(Point2D point, Supplier<String> instructionType) {
         return format("%s%s", instructionType.get(), commaSep(point));
+    }
+
+    private static String commaSep(Point2D point) {
+        return String.format("%f,%f", point.getX(), point.getY());
     }
 
 
