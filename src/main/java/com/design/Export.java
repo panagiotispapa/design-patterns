@@ -6,10 +6,10 @@ import com.design.common.InitialConditions;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
-import com.design.islamic.model.rect.Tile3;
-import com.design.islamic.model.rect.Tile4;
-import com.design.islamic.model.rect.Tile5;
-import com.design.islamic.model.rect.Tile6;
+import com.design.islamic.model.hex.Tile23;
+import com.design.islamic.model.hex.Tile25;
+import com.design.islamic.model.hex.TileGrid;
+import com.design.islamic.model.rect.*;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.tuple.Pair;
 import org.reflections.Reflections;
@@ -152,9 +152,12 @@ public class Export {
     public static void main(String[] args) throws InvocationTargetException, IllegalAccessException {
         Export.exportDesigns();
         Export.exportPayloads();
-//
-//        Export.export(Tile6.getDesignHelper());
-//        Export.export(Tile6.getPayloadSimple());
+
+//        Export.export(TileGrid.getPayloadRect1());
+//        Export.export(TileGrid.getPayloadRect2());
+//        Export.export(TileGrid.getPayloadRect3());
+//        Export.export(Tile14.getDesignHelper());
+//        Export.export(Tile14.getPayloadSimple());
 
     }
 }
