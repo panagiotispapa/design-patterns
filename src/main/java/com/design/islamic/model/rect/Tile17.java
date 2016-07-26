@@ -183,9 +183,7 @@ public class Tile17 {
                 "KJ = KI * P6.H",
                 "LM = KL / P12.P",
                 "BQ = BT / 2.0",
-                "BQ = BS",
-                "",
-                ""
+                "BQ = BS"
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "rect_tile_17_design")
