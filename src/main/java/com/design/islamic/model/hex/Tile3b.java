@@ -25,48 +25,47 @@ import static com.design.common.RatioHelper.P6.P;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 
-public class Tile3 {
+public class Tile3b {
 
 
     private static double KA = 1.0;
     private static double KB = KA * H;
-    private static double KT = 0.5 * 0.5;
-    private static double KV = KT * H;
-    private static double TV = KT * P;
-    private static double VQ = TV;
-    private static double KQ = KV + VQ;
-    private static double KI = KQ;
+    private static double AE = 0.5;
+    private static double AL = AE * P;
+    private static double EL = AE * H;
+    private static double ML = EL;
+    private static double AM = ML + AL;
+    private static double KM = KA - AM;
+    private static double KL = KA - AL;
 
-    public final static FinalPointTransition T = fpt(pt(KT, DOWN));
     public final static FinalPointTransition B = fpt(pt(H, RIGHT));
     public final static FinalPointTransition A = fpt(pt(1, DR_V));
     public final static FinalPointTransition C = fpt(pt(1, DL_V));
     public final static FinalPointTransition F = fpt(pt(1, UL_V));
     public final static FinalPointTransition D = fpt(pt(H, LEFT));
+    public final static FinalPointTransition M = fpt(pt(KM, DR_V));
+    public final static FinalPointTransition L = fpt(pt(KL, DR_V));
     public final static FinalPointTransition E = fpt(pt(H, DR_H));
-    public final static FinalPointTransition V = fpt(pt(KV, DR_H));
-    public final static FinalPointTransition Q = fpt(pt(KQ, DR_H));
-    public final static FinalPointTransition I = fpt(pt(KQ, RIGHT));
 
     @TileSupplier
     public static Payload getPayloadSimple() {
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
-        return new Payload.Builder("hex_tile_03",
+
+        return new Payload.Builder("hex_tile_03b",
                 Hex.ALL_VERTEX_INDEXES
         )
                 .withPathsFull(
                         whiteBold,
-                        getFullPath()
+                        getFullPathB()
                 )
                 .build();
     }
 
-    private static List<PointsPath> getFullPath() {
+    private static List<PointsPath> getFullPathB() {
         return Arrays.asList(
-                PointsPath.of(I, A, Q)
+                PointsPath.of(B, M, E)
         );
     }
-
 
     @DesignSupplier
     public static DesignHelper getDesignHelper() {
@@ -75,20 +74,20 @@ public class Tile3 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        List<String> equations = asList(
-                "KT = 0.5 * 0.5",
-                "KV = KT * H",
-                "TV = KT * P",
-                "VQ = TV",
-                "KQ = KV + VQ",
-                "KI = KQ"
-        );
 
-        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_03_design")
+        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_03b_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
-                .addFullPaths(red, getFullPath())
-                .addEquations(equations)
-                .addImportantVertexes(Tile3.class)
+                .addFullPaths(red, getFullPathB())
+                .addEquations(
+                        "AE = 0.5",
+                        "AL = AE * P",
+                        "EL = AE * H",
+                        "ML = EL",
+                        "AM = ML + AL",
+                        "KM = KA - AM",
+                        "KL = KA - AL"
+                )
+                .addImportantVertexes(Tile3b.class)
                 .addSinglePathsLines(
                         gray,
                         Hex.perimeter(1.0, VER).apply(K),
@@ -97,17 +96,11 @@ public class Tile3 {
                 )
                 .addSinglePathsLines(
                         green,
-                        Hex.perimeter(0.5, VER).apply(B)
+                        Hex.perimeter(KM, VER).apply(K)
                 )
-                .addSinglePathsLines(
-                        blue,
-                        Hex.perimeter(KT, VER).apply(K),
-                        Hex.perimeter(KI, HOR).apply(K)
-                )
-                .addFullPaths(gray,
-                        PointsPath.of(C, B, F)
+                .addSinglePathsLines(gray,
+                        PointsPath.of(E, L)
                 );
-
 
     }
 

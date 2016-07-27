@@ -20,12 +20,13 @@ import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.PointTransition.pt;
+import static com.design.common.RatioHelper.P6.H;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static java.util.Arrays.asList;
 
 public class Tile4 {
 
-    private static double KA = 0.5 / P6.H;
+    private static double KA = 0.5 / H;
     private static double KB = KA * KA;
     private static double KC = 2 * KB;
     private static double CD = 1 - KC;
@@ -68,12 +69,10 @@ public class Tile4 {
         Style red = new Style.Builder(Color.RED, 2).build();
 
         List<String> equations = asList(
-                "i=0.5/h",
-                "KA=i",
-                "KB=i*i",
-                "KC=KA/h=2*KB",
-                "DC=DE=KB",
-                "DC=1-KC"
+                "KA = 0.5 / H",
+                "KB = KA * KA",
+                "KC = 2 * KB",
+                "CD = 1 - KC"
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_04_design")

@@ -1,5 +1,6 @@
 package com.design.islamic.model.hex;
 
+
 import com.design.common.DesignHelper;
 import com.design.common.FinalPointTransition;
 import com.design.common.Grid;
@@ -18,44 +19,39 @@ import static com.design.common.PointTransition.pt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P6.H;
-import static com.design.common.RatioHelper.P6.P;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.diagonals;
 import static com.design.islamic.model.Hex.perimeter;
 import static java.util.Arrays.asList;
 
-public class Tile2b {
+public class TileStar2 {
 
-    private static double KA = 1.0;
-    private static double BD = KA / (1.0 / P + 1.0 / H);
-    private static double BA = BD / H;
-    private static double KB = KA - BA;
+    public static double KB = H / (H + 0.5);
+    public static final double KA = KB * H;
 
-    private static double KC = KB * H;
-    private static double KF = 0.5 * KB;
-    private static double BG = 0.5 * KB * H;
-//    private static double BG = 0.5 * KB * H;
+    private static final double KC = H;
 
-    public final static FinalPointTransition A = fpt(pt(1.0, DR_V));
-    public final static FinalPointTransition B = fpt(pt(KB, DR_V));
-    public final static FinalPointTransition F = fpt(pt(KF, DR_V));
-    public final static FinalPointTransition E = fpt(pt(H, RIGHT));
+    public final static FinalPointTransition A = fpt(pt(KA, RIGHT));
+    public final static FinalPointTransition B = fpt(pt(KB, UR_V));
     public final static FinalPointTransition C = fpt(pt(KC, RIGHT));
-    public final static FinalPointTransition D = B.append(pt(BD, RIGHT));
-    public final static FinalPointTransition D3 = B.append(pt(BD, DL_V));
-    public final static FinalPointTransition D2 = B.append(pt(BD, DR_H));
-    public final static FinalPointTransition G = B.append(pt(BG, DL_H));
-    public final static FinalPointTransition G2 = B.append(pt(BG, UR_H));
+    public final static FinalPointTransition D = fpt(pt(KB, DR_V));
 
 
     @TileSupplier
     public static Payload getPayloadSimple() {
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
-        return new Payload.Builder("hex_tile_02b",
+        return new Payload.Builder("hex_tile_star_02",
                 Hex.ALL_VERTEX_INDEXES
         )
                 .withPathsFull(whiteBold, getFullPath())
                 .build();
+    }
+
+
+    private static java.util.List<PointsPath> getFullPath() {
+        return asList(
+                PointsPath.of(D, C, B)
+        );
     }
 
     @DesignSupplier
@@ -66,43 +62,33 @@ public class Tile2b {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_02b_design")
+        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_02_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
                 .addEquations(asList(
-                        "BD = BC",
-                        "BC = KB * p",
-                        "BD = BA * h",
-                        "KB + BA = KA",
-                        "KF=KB/2",
-                        "KG=(KB/2)*h"
+                        "AB=AC",
+                        "KB= h / (h + 0.5)"
                 ))
-                .addImportantVertexes(Tile2b.class)
+                .addImportantVertexes(
+                        TileStar2.class
+                )
                 .addSinglePathsLines(
                         gray,
                         perimeter(1.0, VER).apply(K),
                         diagonals(1.0, VER).apply(K),
-                        diagonals(H, HOR).apply(K),
-                        diagonals(BD, HOR).apply(B)
+                        diagonals(H, HOR).apply(K)
                 )
                 .addSinglePathsLines(
                         blue,
-                        perimeter(BD, HOR).apply(B)
-
+                        perimeter(0.5, VER).apply(K)
                 )
                 .addSinglePathsLines(
                         green,
-                        perimeter(BG, HOR).apply(B)
+                        perimeter(KB, VER).apply(K)
                 )
                 .addFullPaths(red, getFullPath())
                 ;
 
     }
 
-    private static java.util.List<PointsPath> getFullPath() {
-        return asList(
-                PointsPath.of(C, F, D3, G, D2, D, G2, C, B, D),
-                PointsPath.of(D3, B, D2)
-        );
-    }
 
 }

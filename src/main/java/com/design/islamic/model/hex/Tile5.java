@@ -29,7 +29,6 @@ public class Tile5 {
     public static double KC = KA / H;
     public static double KB = Mappings.<Double>chain(i -> i / 2.0, i -> i / H).apply(KA);
     public static double DC = KB;
-    public static double RATIO_2 = KA * KA;
 
     public final static FinalPointTransition A = fpt(pt(KA, RIGHT));
     public final static FinalPointTransition B = fpt(pt(KB, DR_V));

@@ -1,7 +1,6 @@
 package com.design.islamic.model.hex;
 
 import com.design.common.*;
-import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
@@ -18,17 +17,25 @@ import static com.design.common.PointTransition.pt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P6.H;
+import static com.design.common.RatioHelper.P6.P;
 import static com.design.islamic.model.Hex.Vertex.*;
 
 public class Tile2 {
 
-    private static double RATIO_KB = H / (H + 0.5);
-    private static double RATIO_BD = Mappings.<Double>chain(i -> 1 - i, i -> i * H).apply(RATIO_KB);
+    private static double KA = 1.0;
+    private static double BD = KA / (1.0 / P + 1.0 / H);
+    private static double BA = BD / H;
+    private static double KB = KA - BA;
+    private static double KC = KB * H;
 
-    private final static FinalPointTransition G = fpt(pt(RATIO_KB, DOWN));
-    private final static FinalPointTransition B = fpt(pt(RATIO_KB, DR_V));
-    private final static FinalPointTransition D = B.append(pt(RATIO_BD, RIGHT));
-    private final static FinalPointTransition F = B.append(pt(RATIO_BD, DR_H));
+
+    public final static FinalPointTransition A = fpt(pt(KA, DR_V));
+    public final static FinalPointTransition B = fpt(pt(KB, DR_V));
+    public final static FinalPointTransition C = fpt(pt(KC, RIGHT));
+    public final static FinalPointTransition D = B.append(pt(BD, RIGHT));
+    public final static FinalPointTransition E = C.append(pt(BD, RIGHT));
+    public final static FinalPointTransition F = B.append(pt(BD, DR_H));
+    public final static FinalPointTransition G = fpt(pt(KB, DOWN));
 
     @TileSupplier
     public static Payload getPayloadSimple() {
@@ -65,32 +72,30 @@ public class Tile2 {
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
                 .addFullPaths(red, getFullPath())
                 .addEquations(
-                        "KB=h/(h+0.5)",
-                        "BD=h*(1-KB)"
+                        "BD = BC",
+                        "BC = KB * p",
+                        "BD = BA * h",
+                        "KB + BA = KA",
+                        "BC / p + BD / h = KA",
+                        "BD / p + BD / h = KA",
+                        "BD * (1 / p + 1 / h) = KA",
+                        "BD = KA / (1 / p + 1 / h)"
                 )
-                .addImportantVertexes(
-                        ImportantVertex.of("A", pt(1, DR_V)),
-                        ImportantVertex.of("E", pt(H, RIGHT)),
-                        ImportantVertex.of("B", B),
-                        ImportantVertex.of("G", pt(RATIO_KB, DOWN)),
-                        ImportantVertex.of("C", pt(RATIO_KB * H, RIGHT)),
-                        ImportantVertex.of("D", B.append(pt(RATIO_BD, RIGHT))),
-                        ImportantVertex.of("F", B.append(pt(RATIO_BD, DR_H)))
-                )
+                .addImportantVertexes(Tile2.class)
                 .addSinglePathsLines(
                         gray,
                         Hex.perimeter(1.0, VER).apply(K),
                         Hex.diagonals(1.0, VER).apply(K),
                         Hex.diagonals(H, HOR).apply(K),
-                        Hex.diagonals(RATIO_BD, HOR).apply(B)
+                        Hex.diagonals(BD, HOR).apply(B)
                 )
                 .addSinglePathsLines(
                         green,
-                        Hex.perimeter(RATIO_KB, VER).apply(K)
+                        Hex.perimeter(KB, VER).apply(K)
                 )
                 .addSinglePathsLines(
                         blue,
-                        Hex.perimeter(RATIO_BD, HOR).apply(B)
+                        Hex.perimeter(BD, HOR).apply(B)
                 );
 
     }
