@@ -3,6 +3,7 @@ package com.design.islamic.model.hex;
 import com.design.common.DesignHelper;
 import com.design.common.DesignHelper.ImportantVertex;
 import com.design.common.FinalPointTransition;
+import com.design.common.Grid;
 import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
@@ -82,12 +83,16 @@ public class Tile16 {
         Style red = new Style.Builder(Color.RED, 2).build();
 
         List<String> equations = asList(
-                "r = 1 / 9"
+                "KA = 1 / 9"
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_16_design")
                 .addEquations(equations)
                 .addImportantVertexes(Tile16.class)
+                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
+                .withGridRatio(KA)
+                .withGridSize(24)
+
                 .addImportantVertexes(
                         IntStream.rangeClosed(1, 9).mapToObj(i -> Stream.of(
                                 ImportantVertex.of(String.valueOf(i), fpt(pt(i * KA, UR_V))),
@@ -100,20 +105,6 @@ public class Tile16 {
                         gray,
                         perimeter(1.0, VER).apply(K),
                         diagonals(1.0, VER).apply(K)
-                )
-                .addSinglePathsLines(
-                        gray,
-                        IntStream.rangeClosed(1, 9)
-                                .mapToObj(i ->
-                                        Stream.of(
-                                                diagonalVertical(1.0).apply(fpt(pt(i * KG, LEFT))),
-                                                diagonalVertical(1.0).apply(fpt(pt(i * KG, RIGHT))),
-                                                diagonalLeftToRightVert(1.0).apply(fpt(pt(i * KA, UL_V))),
-                                                diagonalLeftToRightVert(1.0).apply(fpt(pt(i * KA, DR_V))),
-                                                diagonalRightToLeftVert(1.0).apply(fpt(pt(i * KA, UR_V))),
-                                                diagonalRightToLeftVert(1.0).apply(fpt(pt(i * KA, DL_V)))
-                                        ).flatMap(s -> s)
-                                ).flatMap(s -> s)
                 )
                 .addSinglePathsLines(red,
                         getAllSinglePath()

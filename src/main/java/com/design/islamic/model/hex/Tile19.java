@@ -2,6 +2,7 @@ package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
 import com.design.common.FinalPointTransition;
+import com.design.common.Grid;
 import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
@@ -74,15 +75,15 @@ public class Tile19 {
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_19_design")
-//                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
+                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
+                .withGridRatio(KA)
+                .withGridSize(16)
+
                 .addEquations(equations)
                 .addImportantVertexes(Tile19.class)
                 .addSinglePathsLines(gray,
                         perimeter(1.0, VER).apply(K),
                         perimeter(KA, VER).apply(K),
-                        perimeter(2 * KA, VER).apply(K),
-                        perimeter(3 * KA, VER).apply(K),
-                        perimeter(4 * KA, VER).apply(K),
                         perimeter(KA, VER).apply(C),
                         perimeter(KA, VER).apply(D),
                         perimeter(KA, VER).apply(E),

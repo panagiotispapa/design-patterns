@@ -2,6 +2,7 @@ package com.design.islamic.model.hex;
 
 import com.design.common.DesignHelper;
 import com.design.common.FinalPointTransition;
+import com.design.common.Grid;
 import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
@@ -82,6 +83,9 @@ public class Tile11 {
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_11_design")
                 .addEquations(equations)
                 .addImportantVertexes(Tile11.class)
+                .withGrid(Grid.Configs.HEX_HOR.getConfiguration())
+                .withGridRatio(KA)
+                .withGridSize(8)
                 .addSinglePathsLines(
                         gray,
                         perimeter(KI, HOR).apply(K),

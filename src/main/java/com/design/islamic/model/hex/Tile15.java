@@ -84,20 +84,9 @@ public class Tile15 {
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_15_design")
                 .addEquations(equations)
                 .addImportantVertexes(Tile15.class)
-                .addSinglePathsLines(
-                        gray,
-                        IntStream.rangeClosed(1, 6)
-                                .mapToObj(i ->
-                                        Stream.of(
-                                                diagonalLeftToRightVert(1.0).apply(fpt(pt(i * RATIO_x, DR_H))),
-                                                diagonalLeftToRightVert(1.0).apply(fpt(pt(i * RATIO_x, UL_H))),
-                                                diagonalRightToLeftVert(1.0).apply(fpt(pt(i * RATIO_x, DL_H))),
-                                                diagonalRightToLeftVert(1.0).apply(fpt(pt(i * RATIO_x, UR_H))),
-                                                diagonalVertical(1.0).apply(fpt(pt(i * RATIO_x, RIGHT))),
-                                                diagonalVertical(1.0).apply(fpt(pt(i * RATIO_x, LEFT)))
-                                        ).flatMap(s -> s)
-                                ).flatMap(s -> s)
-                )
+                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
+                .withGridRatio(KB)
+                .withGridSize(16)
                 .addImportantVertexes(
                         IntStream.rangeClosed(1, 6).mapToObj(i -> Stream.of(
                                 ImportantVertex.of(String.valueOf(i), fpt(pt(i * RATIO_x, RIGHT))),
@@ -105,7 +94,6 @@ public class Tile15 {
                                 ImportantVertex.of(String.valueOf(i), fpt(pt(i * RATIO_y, DR_V)))
                         )).flatMap(s -> s)
                 )
-
                 .addSinglePathsLines(
                         blue,
                         perimeter(1.0, VER).apply(K),

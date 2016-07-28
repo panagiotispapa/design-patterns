@@ -15,8 +15,9 @@ import java.util.stream.Stream;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
-import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.PointTransition.pt;
+import static com.design.common.Polygon.Type.HOR;
+import static com.design.common.RatioHelper.P6.H;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
 import static java.util.Arrays.asList;
@@ -24,10 +25,12 @@ import static java.util.Arrays.asList;
 //p.
 public class Tile20 {
 
-    private static double RATIO_m = 1.0 / 6.0;
-    private static double KA = RATIO_m;
+
+    private static double KA = 1.0 / 6.0;
+    private static double KB = KA * H;
 
     public final static FinalPointTransition A = fpt(pt(KA, UL_H));
+    public final static FinalPointTransition B = fpt(pt(KB, UP));
     public final static FinalPointTransition I1 = fpt(right(2));
     public final static FinalPointTransition I2 = fpt(right(3));
     public final static FinalPointTransition I3 = fpt(right(4));
@@ -87,24 +90,15 @@ public class Tile20 {
         Style red = new Style.Builder(Color.RED, 2).build();
 
         List<String> equations = asList(
-                "r = 1 / 6"
+                "KA = 1 / 6"
         );
 
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_20_design")
                 .addEquations(equations)
-                .addSinglePathsLines(
-                        gray,
-                        IntStream.rangeClosed(1, 6)
-                                .mapToObj(i ->
-                                        Stream.of(
-                                                diagonalLeftToRightHor(1.0).apply(fpt(right(i))),
-                                                diagonalLeftToRightHor(1.0).apply(fpt(left(i))),
-                                                diagonalRightToLeftHor(1.0).apply(fpt(right(i))),
-                                                diagonalRightToLeftHor(1.0).apply(fpt(left(i)))
-                                        ).flatMap(s -> s)
-                                ).flatMap(s -> s)
-                )
+                .withGrid(Grid.Configs.HEX_HOR.getConfiguration())
+                .withGridRatio(KA)
+                .withGridSize(16)
                 .addImportantVertexes(Tile20.class)
                 .addImportantVertexes(
                         IntStream.rangeClosed(1, 6).mapToObj(i -> Stream.of(
@@ -114,8 +108,7 @@ public class Tile20 {
                         )).flatMap(s -> s)
                 )
                 .addSinglePathsLines(gray,
-                        IntStream.rangeClosed(1, 6).mapToObj(i ->
-                                perimeter(i * KA, HOR).apply(K)).flatMap(s -> s),
+                        perimeter(1.0, HOR).apply(K),
                         diagonals(1.0, HOR).apply(K)
 
                 )

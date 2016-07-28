@@ -57,6 +57,10 @@ public class Tile14 {
         Style red = new Style.Builder(Color.RED, 2).build();
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_14_design")
+                .withGrid(Grid.Configs.HEX_HOR.getConfiguration())
+                .withGridRatio(KB)
+                .withGridSize(8)
+
                 .addFullPaths(red, getFullPath())
                 .addEquations(
                         "KB = (1/4) * KA"

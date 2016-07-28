@@ -22,6 +22,8 @@ import static java.util.stream.Collectors.toList;
 
 public class DesignHelper {
     private Grid.Configuration gridConfig;
+    private Double gridRatio = 1 / 4.0;
+    private int gridSize = 12;
     private List<Pair<Point2D, String>> importantPoints = new ArrayList<>();
     private List<ImportantVertex> importantVertexes = new ArrayList<>();
     private List<Pair<List<Pair<FinalPointTransition, Double>>, Style>> circlePolygonsWithRadius = new ArrayList<>();
@@ -44,6 +46,16 @@ public class DesignHelper {
 
     public DesignHelper withGrid(Grid.Configuration gridConfig) {
         this.gridConfig = gridConfig;
+        return this;
+    }
+
+    public DesignHelper withGridSize(int gridSize) {
+        this.gridSize = gridSize;
+        return this;
+    }
+
+    public DesignHelper withGridRatio(Double gridRatio) {
+        this.gridRatio = gridRatio;
         return this;
     }
 
@@ -137,7 +149,7 @@ public class DesignHelper {
 
         List<Point2D> gridPoints = new ArrayList<>();
         if (gridConfig != null) {
-            gridPoints = Grid.grid(initialConditions.get().getLeft(), initialConditions.get().getRight() / 4.0, gridConfig, 12);
+            gridPoints = Grid.grid(initialConditions.get().getLeft(), initialConditions.get().getRight() * gridRatio, gridConfig, gridSize);
 
         }
 //        singleLinesInstructions.stream().map(p->Mappings.fromListOfLists(toVertex).apply(p.getLeft())).

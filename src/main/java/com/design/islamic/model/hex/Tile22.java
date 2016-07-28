@@ -125,6 +125,9 @@ public class Tile22 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_22_design")
                 .addEquations(equations)
+                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
+                .withGridRatio(KA)
+                .withGridSize(32)
                 .addImportantVertexes(Tile22.class)
                 .addImportantVertexes(
                         IntStream.rangeClosed(1, 15).mapToObj(i -> Stream.of(
@@ -135,8 +138,8 @@ public class Tile22 {
                         )).flatMap(s -> s)
                 )
                 .addSinglePathsLines(gray,
-                        IntStream.rangeClosed(1, 15).mapToObj(i ->
-                                perimeter(i * KA, VER).apply(K)).flatMap(s -> s),
+//                        IntStream.rangeClosed(1, 15).mapToObj(i ->
+//                                perimeter(i * KA, VER).apply(K)).flatMap(s -> s),
                         perimeter(1.0, HOR).apply(K),
                         diagonals(1.0, HOR).apply(K),
                         diagonals(H, VER).apply(K)

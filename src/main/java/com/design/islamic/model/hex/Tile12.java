@@ -94,16 +94,15 @@ public class Tile12 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_12_design")
                 .addEquations(equations)
+                .withGrid(Grid.Configs.HEX_VER.getConfiguration())
+                .withGridRatio(KA)
+                .withGridSize(16)
                 .addSinglePathsLines(
                         gray,
                         perimeter(1.0, VER).apply(K),
                         diagonals(1.0, VER).apply(K),
                         diagonals(1.0, VER).apply(K)
 
-                )
-                .addSinglePathsLines(
-                        gray,
-                        IntStream.range(1, 7).mapToObj(i -> perimeter(i * KA, VER).apply(K)).flatMap(s -> s)
                 )
                 .addSinglePathsLines(
                         green,

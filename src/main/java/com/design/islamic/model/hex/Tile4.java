@@ -77,6 +77,7 @@ public class Tile4 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_04_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
+                .withGridRatio(KB)
                 .addFullPaths(red, getFullPath())
                 .addEquations(equations)
                 .addImportantVertexes(Tile4.class)

@@ -71,26 +71,16 @@ public class Tile21 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-
         List<String> equations = asList(
-                "r = 1 / 6",
-                "r2 = 1 / 16"
+                "KA = 1 / 6",
+                "KB = 1 / 16"
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_21_design")
                 .addEquations(equations)
-                .addSinglePathsLines(
-                        gray,
-                        IntStream.rangeClosed(1, 6)
-                                .mapToObj(i ->
-                                        Stream.of(
-                                                diagonalLeftToRightHor(1.0).apply(fpt(pt(i * KA, RIGHT))),
-                                                diagonalLeftToRightHor(1.0).apply(fpt(pt(i * KA, LEFT))),
-                                                diagonalRightToLeftHor(1.0).apply(fpt(pt(i * KA, RIGHT))),
-                                                diagonalRightToLeftHor(1.0).apply(fpt(pt(i * KA, LEFT)))
-                                        ).flatMap(s -> s)
-                                ).flatMap(s -> s)
-                )
+                .withGrid(Grid.Configs.HEX_HOR.getConfiguration())
+                .withGridRatio(KA)
+                .withGridSize(12)
                 .addImportantVertexes(Tile21.class)
                 .addImportantVertexes(
                         IntStream.rangeClosed(1, 6).mapToObj(i -> Stream.of(

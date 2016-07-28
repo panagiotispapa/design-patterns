@@ -63,6 +63,10 @@ public class Tile13 {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_13_design")
                 .addFullPaths(red, getFullPath())
+                .withGrid(Grid.Configs.HEX_HOR.getConfiguration())
+                .withGridRatio(KB)
+                .withGridSize(8)
+
                 .addEquations(equations)
                 .addImportantVertexes(Tile13.class)
                 .addSinglePathsLines(

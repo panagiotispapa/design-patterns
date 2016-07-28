@@ -59,6 +59,10 @@ public class Tile17 {
         );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_17_design")
+                .withGrid(Grid.Configs.HEX_HOR.getConfiguration())
+                .withGridRatio(KB)
+                .withGridSize(8)
+
                 .addFullPaths(red, getFullPath())
                 .addEquations(equations)
                 .addImportantVertexes(Tile17.class)
