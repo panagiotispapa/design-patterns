@@ -7,7 +7,6 @@ import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.Rect;
 import com.design.islamic.model.TileSupplier;
-import com.sun.javafx.font.directwrite.RECT;
 
 import java.awt.*;
 

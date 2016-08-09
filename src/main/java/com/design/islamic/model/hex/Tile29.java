@@ -6,10 +6,9 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -19,8 +18,8 @@ import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
+import static com.googlecode.totallylazy.Sequences.sequence;
 import static java.lang.Math.PI;
-import static java.util.Arrays.asList;
 
 public class Tile29 {
 
@@ -75,7 +74,7 @@ public class Tile29 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        List<String> equations = Arrays.asList(
+        Sequence<String> equations = sequence(
                 "IGH = ANGLE_1 = PI / 3.0 - PI / 4.0",
                 "m = tan(ANGLE_1)",
                 "n = cos(ANGLE_1)",
@@ -118,8 +117,8 @@ public class Tile29 {
                 ;
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(F2, I2, G2),
                 PointsPath.of(A, D, F)
         );

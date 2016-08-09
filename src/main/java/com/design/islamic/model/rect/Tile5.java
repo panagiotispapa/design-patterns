@@ -6,12 +6,9 @@ import com.design.common.Grid;
 import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.*;
-import com.google.common.base.Supplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -19,12 +16,11 @@ import static com.design.common.PointTransition.pt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P4.H;
-import static com.design.islamic.model.Hex.mirrorHor;
 import static com.design.islamic.model.Rect.Vertex.*;
 import static com.design.islamic.model.Rect.diagonals;
 import static com.design.islamic.model.Rect.perimeter;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
+import static com.googlecode.totallylazy.Sequences.join;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile5 {
 
@@ -36,7 +32,7 @@ public class Tile5 {
     private static final double KE = KD / H;
     private static final double CE = KC - KE;
     private static final double CF = CE * H;
-    private static final double CG = 2.0 * CF ;
+    private static final double CG = 2.0 * CF;
     private static final double KI = KC * H;
     private static final double IC = KI;
     private static final double GI = IC - CG;
@@ -109,7 +105,7 @@ public class Tile5 {
         Style red = new Style.Builder(Color.RED, 2).build();
         Style gray = new Style.Builder(Color.GRAY, 1).build();
 
-        List<String> equations = Arrays.asList(
+        Sequence<String> equations = sequence(
                 "KB = h = KC",
                 "KI = KB / 2 = IC",
                 "KE = KI / h",
@@ -121,7 +117,7 @@ public class Tile5 {
                 "DJ = LM = NP"
         );
 
-        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "rect_tile_05_design")
+        return new DesignHelper(Rect.ALL_VERTEX_INDEXES, "rect_tile_05_design")
                 .addEquations(equations)
                 .addImportantVertexes(Tile5.class)
                 .addSinglePathsLines(
@@ -145,23 +141,21 @@ public class Tile5 {
                         gray,
                         Rect.diagonalVertical(H).apply(fpt(pt(KD, LEFT)))
                 )
-                .addCirclesCentral(asList(
-                        H
-                ), gray)
+                .addCirclesCentral(gray, H)
                 .addSinglePathsLines(red, getAllSinglesPath())
                 ;
 
     }
 
-    private static List<PointsPath> getAllSinglesPath() {
-        return Stream.concat(
-                getSinglesPath().stream(),
-                getSinglesPath().stream().map(s -> s.mirror(Rect.mirrorVert))
-        ).collect(toList());
+    private static Sequence<PointsPath> getAllSinglesPath() {
+        return join(
+                getSinglesPath(),
+                getSinglesPath().map(s -> s.mirror(Rect.mirrorVert))
+        );
     }
 
-    private static List<PointsPath> getSinglesPath() {
-        return asList(
+    private static Sequence<PointsPath> getSinglesPath() {
+        return sequence(
                 PointsPath.of(B2, I4, P, B, P2, I2, B3),
                 PointsPath.of(A, M, J, J4, M4, A4)
 

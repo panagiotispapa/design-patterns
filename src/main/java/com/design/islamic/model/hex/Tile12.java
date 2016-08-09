@@ -9,12 +9,9 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
-import com.google.common.base.Supplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.List;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -23,8 +20,8 @@ import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
+import static com.googlecode.totallylazy.Sequences.join;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 //p. 3
 public class Tile12 {
@@ -86,14 +83,12 @@ public class Tile12 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        List<String> equations = asList(
-                "KB = KD = AC = 1 / 7",
-                "EC = 0.5 - AB"
-        );
-
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_12_design")
-                .addEquations(equations)
+                .addEquations(sequence(
+                        "KB = KD = AC = 1 / 7",
+                        "EC = 0.5 - AB"
+                ))
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
                 .withGridRatio(KA)
                 .withGridSize(16)
@@ -120,22 +115,21 @@ public class Tile12 {
 
     }
 
-    private static List<PointsPath> getAllSinglesPath() {
-        return Stream.concat(
-                getSinglesPath().get(),
-                getSinglesPath().get().map(s -> s.mirror(Hex.mirrorVert))
+    private static Sequence<PointsPath> getAllSinglesPath() {
+        return join(
+                getSinglesPath(),
+                getSinglesPath().map(s -> s.mirror(Hex.mirrorVert))
 
-        ).collect(toList());
+        );
     }
 
-    private static Supplier<Stream<PointsPath>> getSinglesPath() {
-        return () -> Stream.of(
+    private static Sequence<PointsPath> getSinglesPath() {
+        return sequence(
                 PointsPath.of(K8, I3, I1, I2, I6, I4, K3, K2, K8),
                 PointsPath.of(K8, I3, I1, I2, I6, I4, K3, K2, K8).mirror(mirrorHor),
                 PointsPath.of(K4, L9, K5),
                 PointsPath.of(K6, K7, I7, E3),
                 PointsPath.of(K6, K7, I7, E3).mirror(mirrorHor)
-
         );
     }
 

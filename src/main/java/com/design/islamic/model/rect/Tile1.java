@@ -10,10 +10,9 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.Rect;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -23,7 +22,7 @@ import static com.design.common.RatioHelper.P4.H;
 import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Rect.Vertex.*;
 import static com.design.islamic.model.Rect.*;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile1 {
 
@@ -68,8 +67,7 @@ public class Tile1 {
         Style blue = new Style.Builder(Color.BLUE, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-
-        List<String> equations = Arrays.asList(
+        Sequence<String> equations = sequence(
                 "KF = h"
         );
 
@@ -89,8 +87,8 @@ public class Tile1 {
                 ;
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(E, C, C2, E2),
                 PointsPath.of(C, G)
         );

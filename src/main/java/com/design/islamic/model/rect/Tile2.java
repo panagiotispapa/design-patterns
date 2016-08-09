@@ -6,10 +6,9 @@ import com.design.common.Grid;
 import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.*;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -19,7 +18,7 @@ import static com.design.common.RatioHelper.P4.H;
 import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Rect.Vertex.*;
 import static com.design.islamic.model.Rect.*;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile2 {
 
@@ -64,7 +63,7 @@ public class Tile2 {
         Style red = new Style.Builder(Color.RED, 2).build();
         Style gray = new Style.Builder(Color.GRAY, 1).build();
 
-        List<String> equations = Arrays.asList(
+        Sequence<String> equations = sequence(
                 "KC = h",
                 "KB = h",
                 "KD = h * KB",
@@ -76,7 +75,7 @@ public class Tile2 {
                 "KG = FG + KF = 1.0 + KF"
         );
 
-        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "rect_tile_02_design")
+        return new DesignHelper(Rect.ALL_VERTEX_INDEXES, "rect_tile_02_design")
                 .addEquations(equations)
                 .addImportantVertexes(Tile2.class)
                 .addSinglePathsLines(
@@ -92,16 +91,14 @@ public class Tile2 {
                         gray,
                         PointsPath.of(B, C, P)
                 )
-                .addCirclesCentral(asList(
-                        H
-                ), gray)
+                .addCirclesCentral(gray, H)
                 .addFullPaths(red, getFullPath())
                 ;
 
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(I, F, J),
                 PointsPath.of(M, L, C2)
         );

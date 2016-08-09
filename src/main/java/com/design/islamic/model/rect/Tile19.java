@@ -9,10 +9,9 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.Rect;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -23,7 +22,7 @@ import static com.design.common.RatioHelper.P4.H;
 import static com.design.islamic.model.Rect.Vertex.*;
 import static com.design.islamic.model.Rect.diagonals;
 import static com.design.islamic.model.Rect.perimeter;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile19 {
 
@@ -70,13 +69,11 @@ public class Tile19 {
         Style red = new Style.Builder(Color.RED, 2).build();
 
 
-        List<String> equations = Arrays.asList(
-                "KC = h",
-                "KD = KA / 2.0"
-        );
-
         return new DesignHelper(Rect.ALL_VERTEX_INDEXES, "rect_tile_19_design")
-                .addEquations(equations)
+                .addEquations(sequence(
+                        "KC = h",
+                        "KD = KA / 2.0"
+                ))
                 .addImportantVertexes(Tile19.class)
                 .addSinglePathsLines(
                         gray,
@@ -96,10 +93,10 @@ public class Tile19 {
                 ;
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(K, D2, F, J , L, P, G, D, K)
-//                PointsPath.of(C, G)
+//                PointsPath.circle(C, G)
         );
     }
 

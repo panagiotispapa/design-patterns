@@ -6,10 +6,9 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -19,6 +18,7 @@ import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile5 {
 
@@ -57,8 +57,8 @@ public class Tile5 {
                 .build();
     }
 
-    private static List<PointsPath> getFullPath() {
-        return Arrays.asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(I, E2),
                 PointsPath.of(B, E3)
         );
@@ -71,20 +71,18 @@ public class Tile5 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        List<String> equations = Arrays.asList(
-                "KF = h",
-                "KG = KD / 2",
-                "KA = KG / h",
-                "KB = (0.5*KA)/h",
-                "KC = KA / h = 2 * KB",
-                "DC = DE = KB",
-                "DB = 1 - KB"
-        );
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_05_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
                 .addFullPaths(red, getFullPath())
-                .addEquations(equations)
+                .addEquations(sequence(
+                        "KF = h",
+                        "KG = KD / 2",
+                        "KA = KG / h",
+                        "KB = (0.5*KA)/h",
+                        "KC = KA / h = 2 * KB",
+                        "DC = DE = KB",
+                        "DB = 1 - KB"
+                ))
                 .addImportantVertexes(Tile5.class)
                 .addSinglePathsLines(
                         gray,

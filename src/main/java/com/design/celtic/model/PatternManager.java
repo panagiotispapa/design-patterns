@@ -5,7 +5,6 @@ import com.design.celtic.Patterns;
 import java.awt.*;
 import java.util.Map;
 
-import static com.design.celtic.Patterns.buildPattern1;
 import static com.design.celtic.model.Pattern.ONE;
 import static com.google.common.collect.Maps.newHashMap;
 

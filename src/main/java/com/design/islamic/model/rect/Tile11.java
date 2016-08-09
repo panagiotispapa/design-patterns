@@ -6,10 +6,9 @@ import com.design.common.Grid;
 import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.*;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -20,7 +19,7 @@ import static com.design.common.RatioHelper.P4.H;
 import static com.design.islamic.model.Rect.Vertex.*;
 import static com.design.islamic.model.Rect.diagonals;
 import static com.design.islamic.model.Rect.perimeter;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile11 {
 
@@ -69,13 +68,11 @@ public class Tile11 {
         Style gray = new Style.Builder(Color.GRAY, 1).build();
         Style blue = new Style.Builder(Color.BLUE, 1).build();
 
-        List<String> equations = Arrays.asList(
-                "KB = h",
-                "KE = KB / 4"
-        );
-
-        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "rect_tile_11_design")
-                .addEquations(equations)
+        return new DesignHelper(Rect.ALL_VERTEX_INDEXES, "rect_tile_11_design")
+                .addEquations(sequence(
+                        "KB = h",
+                        "KE = KB / 4"
+                ))
                 .addImportantVertexes(Tile11.class)
                 .addSinglePathsLines(
                         gray,
@@ -86,16 +83,14 @@ public class Tile11 {
                         diagonals(1.0, HOR).apply(K),
                         diagonals(H, VER).apply(K)
                 )
-                .addCirclesCentral(asList(
-                        H
-                ), gray)
+                .addCirclesCentral(gray, H)
                 .addFullPaths(red, getFullPath())
                 ;
 
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(J, I, I2, J2),
                 PointsPath.of(L2, M2, M, L, N)
         );

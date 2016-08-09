@@ -9,9 +9,9 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -24,7 +24,7 @@ import static com.design.islamic.model.Hex.Vertex.UP;
 import static com.design.islamic.model.Hex.Vertex.UR_H;
 import static com.design.islamic.model.Hex.diagonals;
 import static com.design.islamic.model.Hex.perimeter;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile23 {
 
@@ -64,15 +64,13 @@ public class Tile23 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        List<String> equations = asList(
-                "KB = H * KA",
-                "KC = H * KB",
-                "AC = KA - KC",
-                "CD = H * AC"
-        );
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_23_design")
-                .addEquations(equations)
+                .addEquations(sequence(
+                        "KB = H * KA",
+                        "KC = H * KB",
+                        "AC = KA - KC",
+                        "CD = H * AC"
+                ))
                 .addImportantVertexes(Tile23.class)
                 .addSinglePathsLines(gray,
                         perimeter(1.0, VER).apply(K),
@@ -90,8 +88,8 @@ public class Tile23 {
 
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(B, B2),
                 PointsPath.of(E, C, D)
         );

@@ -63,19 +63,19 @@ public class SvgFactory {
                 c -> c.stream().map(drawCircle(style)).collect(joining());
     }
 
-    public static Function<List<Circle>, String> drawCircles(final Style style) {
-        return
-                c -> c.stream().map(drawCircle(style)).collect(joining());
-    }
+//    public static Function<List<Circle>, String> drawCircles(final Style style) {
+//        return
+//                c -> c.stream().map(drawCircle(style)).collect(joining());
+//    }
 
     private static Function<Circle, String> drawCircle(final String style) {
         return p -> newCircle(p.getCentre(), p.getR(), style);
     }
 
-    public static Function<Circle, String> drawCircle(final Style style) {
-        return p -> newCircle(p.getCentre(), p.getR(), style);
-    }
-
+//    public static Function<Circle, String> drawCircle(final Style style) {
+//        return p -> newCircle(p.getCentre(), p.getR(), style);
+//    }
+//
     public static Function<List<Pair<Point2D, String>>, String> drawTexts() {
         return p -> p.stream().map(drawText()).collect(joining());
     }
@@ -122,7 +122,11 @@ public class SvgFactory {
         );
     }
 
-    private static String newCircle(Point2D centre, double r, Style style) {
+//    public static String newCircle(Circle circle, Style style) {
+//        return newCircle(circle.getCentre(), circle.getR(), style);
+//    }
+
+    public static String newCircle(Point2D centre, double r, Style style) {
         return format("<circle cx=\"%f\" cy=\"%f\" r=\"%f\" style=\"%s\" />",
                 centre.getX(),
                 centre.getY(),
@@ -156,7 +160,7 @@ public class SvgFactory {
             return f.createSVGDocument("http://www.test.com", new StringReader(svgDoc));
 
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();  //To change body circle catch statement use File | Settings | File Templates.
         }
         return null;
     }

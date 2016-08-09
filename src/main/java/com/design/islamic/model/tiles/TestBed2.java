@@ -67,14 +67,14 @@ public class TestBed2 {
         String background = buildBackground(dim);
 
 //        List<Supplier<Payload>> patterns = Arrays.asList(
-//                Pair.of("Tile_Star_1", ()-> TileStar.getPayloadSimple(TileStar.RATIO_1)),
-//                Pair.of("Tile_Star_2", ()-> TileStar.getPayloadSimple(TileStar.RATIO_2)),
+//                Pair.circle("Tile_Star_1", ()-> TileStar.getPayloadSimple(TileStar.RATIO_1)),
+//                Pair.circle("Tile_Star_2", ()-> TileStar.getPayloadSimple(TileStar.RATIO_2)),
 //                TileStar::getPayloadSimple3
-//                Pair.of("Tile_02", Tile2::getPayloadSimple),
-//                Pair.of("Tile_03", Tile3::getPayloadSimple),
-//                Pair.of("Tile_04", Tile4::getPayloadSimple),
-//                Pair.of("Tile_05", Tile5::getPayloadSimple)
-//                Pair.of("Tile_06", Tile6::getPayloadSimple)
+//                Pair.circle("Tile_02", Tile2::getPayloadSimple),
+//                Pair.circle("Tile_03", Tile3::getPayloadSimple),
+//                Pair.circle("Tile_04", Tile4::getPayloadSimple),
+//                Pair.circle("Tile_05", Tile5::getPayloadSimple)
+//                Pair.circle("Tile_06", Tile6::getPayloadSimple)
 //                Tile9New::getPayloadSimple
 //                Tile12::getPayloadSimple
 //                com.design.deco.Tile2::getPayloadSimple,
@@ -90,14 +90,14 @@ public class TestBed2 {
 //                Tile8::getPayloadSimple,
 //                Tile9::getPayloadSimple,
 //                Tile29::getPayloadSimple
-//                Pair.of("Tile_07", Tile7::getPayloadSimple)
+//                Pair.circle("Tile_07", Tile7::getPayloadSimple)
 //                Tile8::getPayloadSimple
-//                Pair.of("Tile_3", () -> new Tile3(ic).getPayload())
+//                Pair.circle("Tile_3", () -> new Tile3(ic).getPayload())
 //        );
 
 //        patterns.forEach(p -> {
 //                    Payload payloadSimple = p.get();
-//                    Pair<Point2D, Double> newIC = Pair.of(ic.getLeft(), sizeToR.get(payloadSimple.getSize()));
+//                    Pair<Point2D, Double> newIC = Pair.circle(ic.getLeft(), sizeToR.get(payloadSimple.getSize()));
 //                    Dimension newDim = new Dimension((int) (15 * newIC.getRight()), (int) (10 * newIC.getRight()));
 //                    saveToFile(
 //                            buildSvg(newDim,
@@ -143,8 +143,8 @@ public class TestBed2 {
         Pair<Point2D, Double> ic = Pair.of(centre, 300.0);
 
         List<Supplier<DesignHelper>> designs = Arrays.asList(
-//                Pair.of("Tile_Star_1", new TileStar(ic, TileStar.RATIO_1)::design1),
-//                Pair.of("Tile_Star_2", new TileStar(ic, TileStar.RATIO_1)::design2),
+//                Pair.circle("Tile_Star_1", new TileStar(ic, TileStar.RATIO_1)::design1),
+//                Pair.circle("Tile_Star_2", new TileStar(ic, TileStar.RATIO_1)::design2),
 //                TileStar::getDesignHelper3
 //                Tile9::getDesignHelper1,
 //                Tile9::getDesignHelper2,
@@ -197,14 +197,14 @@ public class TestBed2 {
 //                Tile20::getDesignHelper,
 //                Tile21::getDesignHelper,
 //                Tile22::getDesignHelper
-//                Pair.of("Tile_2", new Tile2(ic)::design1),
-//                Pair.of("Tile_3", new Tile3(ic)::design1),
-//                Pair.of("Tile_4", new Tile4(ic)::design1),
-//                Pair.of("Tile_5", new Tile5(ic)::design1),
-//                Pair.of("Tile_6", new Tile6(ic)::design1)
-//                Pair.of("Tile_7", new Tile7(ic)::design1)
-//                Pair.of("Tile_8", Tile8::getDesignHelper)
-//                Pair.of("Tile_8", Tile8::getDesignHelper)
+//                Pair.circle("Tile_2", new Tile2(ic)::design1),
+//                Pair.circle("Tile_3", new Tile3(ic)::design1),
+//                Pair.circle("Tile_4", new Tile4(ic)::design1),
+//                Pair.circle("Tile_5", new Tile5(ic)::design1),
+//                Pair.circle("Tile_6", new Tile6(ic)::design1)
+//                Pair.circle("Tile_7", new Tile7(ic)::design1)
+//                Pair.circle("Tile_8", Tile8::getDesignHelper)
+//                Pair.circle("Tile_8", Tile8::getDesignHelper)
         );
 
         designs.forEach(d -> {

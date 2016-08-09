@@ -9,10 +9,9 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -20,7 +19,7 @@ import static com.design.common.Polygon.Type.VER;
 import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile19 {
 
@@ -70,16 +69,14 @@ public class Tile19 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        List<String> equations = Arrays.asList(
-                "KA = 1 / 5"
-        );
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_19_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
                 .withGridRatio(KA)
                 .withGridSize(16)
 
-                .addEquations(equations)
+                .addEquations(sequence(
+                        "KA = 1 / 5"
+                ))
                 .addImportantVertexes(Tile19.class)
                 .addSinglePathsLines(gray,
                         perimeter(1.0, VER).apply(K),
@@ -96,8 +93,8 @@ public class Tile19 {
 
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(A, L9, I6, I5),
                 PointsPath.of(J, L8),
                 PointsPath.of(C, B, L7, L6),

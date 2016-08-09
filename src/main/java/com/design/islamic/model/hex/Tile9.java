@@ -10,22 +10,21 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.awt.*;
-import java.util.List;
-import java.util.stream.Stream;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
+import static com.design.common.PointTransition.pt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.RatioHelper.Ratios.*;
-import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile9 {
 
@@ -161,8 +160,8 @@ public class Tile9 {
     }
 
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(G4, I4, I2, J4, H2, Q1, R1, R3, G6),
                 PointsPath.of(G5, I3, I1, J3, H1, Q3),
                 PointsPath.of(G10, R4, R2, Q2),
@@ -179,7 +178,7 @@ public class Tile9 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        List<String> equations = asList(
+        Sequence<String> equations = sequence(
                 "AC = 0.5 * tan(15)",
                 "AD = 2 * AC",
                 "AD = AE"
@@ -196,9 +195,7 @@ public class Tile9 {
                 )
                 .addFullPaths(
                         green,
-                        Stream.of(
-                                PointsPath.of(fpt(pt(KA, UR_V)), fpt(pt(KA, DR_H)), fpt(pt(KA, DL_V)))
-                        )
+                        PointsPath.of(fpt(pt(KA, UR_V)), fpt(pt(KA, DR_H)), fpt(pt(KA, DL_V)))
                 )
                 .addImportantVertexes(
                         ImportantVertex.of("A", A),
@@ -360,7 +357,7 @@ public class Tile9 {
                         gray,
                         diagonalHorizontal(1.0).apply(fpt(pt(KG1, UP))),
                         diagonalVertical(1.0).apply(fpt(pt(KG1, RIGHT))),
-                        Stream.of(
+                        sequence(
                                 PointsPath.of(B1, A1, fpt(pt(1.0, DR_H))),
                                 PointsPath.of(A1, fpt(pt(1.0, DL_H)), fpt(pt(1.0, UL_V))),
                                 PointsPath.of(fpt(pt(KA2, DR_V)), fpt(pt(KA2, DL_H)), fpt(pt(KA2, UL_V))),
@@ -369,12 +366,10 @@ public class Tile9 {
                 )
                 .addFullPaths(
                         green,
-                        Stream.of(
-                                PointsPath.of(B1.append(pt(B1B2, UP)), B1.append(pt(B1B2, LEFT)), B1.append(pt(B1B2, DOWN))),
-                                PointsPath.of(B1.append(pt(B1B3, UP)), B1.append(pt(B1B3, LEFT)), B1.append(pt(B1B3, DOWN))),
-                                PointsPath.of(A1.append(pt(A1A2, UR_H)), A1.append(pt(A1A2, UL_V)), A1.append(pt(A1A2, DL_H))),
-                                PointsPath.of(A1.append(pt(A1A3, UR_H)), A1.append(pt(A1A3, UL_V)), A1.append(pt(A1A3, DL_H)))
-                        )
+                        PointsPath.of(B1.append(pt(B1B2, UP)), B1.append(pt(B1B2, LEFT)), B1.append(pt(B1B2, DOWN))),
+                        PointsPath.of(B1.append(pt(B1B3, UP)), B1.append(pt(B1B3, LEFT)), B1.append(pt(B1B3, DOWN))),
+                        PointsPath.of(A1.append(pt(A1A2, UR_H)), A1.append(pt(A1A2, UL_V)), A1.append(pt(A1A2, DL_H))),
+                        PointsPath.of(A1.append(pt(A1A3, UR_H)), A1.append(pt(A1A3, UL_V)), A1.append(pt(A1A3, DL_H)))
                 )
                 .addCircleWithRadius(
                         blue,

@@ -9,10 +9,9 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -22,7 +21,7 @@ import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 //p. 2
 public class Tile11 {
@@ -61,8 +60,8 @@ public class Tile11 {
     }
 
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(C1, C2, C, E, E1, E2)
         );
     }
@@ -75,7 +74,7 @@ public class Tile11 {
         Style red = new Style.Builder(Color.RED, 2).build();
 
 
-        List<String> equations = Arrays.asList(
+        Sequence<String> equations = sequence(
                 "KA = (1/4) / h",
                 "BC DE = KA"
         );

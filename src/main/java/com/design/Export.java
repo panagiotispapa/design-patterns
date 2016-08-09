@@ -6,10 +6,6 @@ import com.design.common.InitialConditions;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
-import com.design.islamic.model.hex.Tile23;
-import com.design.islamic.model.hex.Tile25;
-import com.design.islamic.model.hex.TileGrid;
-import com.design.islamic.model.rect.*;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.tuple.Pair;
 import org.reflections.Reflections;
@@ -61,7 +57,7 @@ public class Export {
 
 //        System.out.println(methods.size());
 
-        methods.stream().map(m -> Export.invokeMethod(m, Payload.class))
+        methods.parallelStream().map(m -> Export.invokeMethod(m, Payload.class))
                 .forEach(Export::export);
     }
 
@@ -69,7 +65,7 @@ public class Export {
         Set<Method> methods = forPackage("com.design")
                 .getMethodsAnnotatedWith(DesignSupplier.class);
 
-        methods.stream().map(m -> Export.invokeMethod(m, DesignHelper.class))
+        methods.parallelStream().map(m -> Export.invokeMethod(m, DesignHelper.class))
                 .forEach(Export::export);
     }
 
@@ -89,7 +85,7 @@ public class Export {
         List<Point2D> gridPoints = Grid.gridFromStart(ic.getCentre(), ic.getR(), payload.getGridConfiguration(), 17);
 
         return
-                gridPoints.stream().map(p -> InitialConditions.of(p, ic.getR())).map(payload::draw).collect(joining());
+                gridPoints.parallelStream().map(p -> InitialConditions.of(p, ic.getR())).map(payload::draw).collect(joining());
 
     }
 

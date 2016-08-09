@@ -6,20 +6,20 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.List;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
+import static com.design.common.PointTransition.pt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
-import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
-import static com.design.islamic.model.Hex.*;
-import static java.util.Arrays.asList;
+import static com.design.islamic.model.Hex.diagonals;
+import static com.design.islamic.model.Hex.perimeter;
+import static com.googlecode.totallylazy.Sequences.sequence;
+import static com.googlecode.totallylazy.numbers.Integers.range;
 
 //p.
 public class Tile21 {
@@ -71,36 +71,34 @@ public class Tile21 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        List<String> equations = asList(
-                "KA = 1 / 6",
-                "KB = 1 / 16"
-        );
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_21_design")
-                .addEquations(equations)
+                .addEquations(sequence(
+                        "KA = 1 / 6",
+                        "KB = 1 / 16"
+                ))
                 .withGrid(Grid.Configs.HEX_HOR.getConfiguration())
                 .withGridRatio(KA)
                 .withGridSize(12)
                 .addImportantVertexes(Tile21.class)
                 .addImportantVertexes(
-                        IntStream.rangeClosed(1, 6).mapToObj(i -> Stream.of(
+                        range(1, 6).flatMap(i -> sequence(
                                 DesignHelper.ImportantVertex.of(String.valueOf(i), pt(i * KA, RIGHT)),
                                 DesignHelper.ImportantVertex.of(String.valueOf(i), pt(i * KA, UR_H)),
                                 DesignHelper.ImportantVertex.of(String.valueOf(i), pt(i * KA, DR_H))
-                        )).flatMap(s -> s)
+                        ))
                 )
                 .addSinglePathsLines(blue,
-                        IntStream.range(1, 6).mapToObj(i ->
-                                perimeter(i * KA, HOR).apply(K)).flatMap(s -> s)
+                        range(1, 6).flatMap(i ->
+                                perimeter(i * KA, HOR).apply(K))
                 )
                 .addSinglePathsLines(gray,
-                        IntStream.range(1, 16).mapToObj(i ->
-                                perimeter(i * KB, HOR).apply(K)).flatMap(s -> s)
+                        range(1, 16).flatMap(i ->
+                                perimeter(i * KB, HOR).apply(K))
                 )
                 .addSinglePathsLines(gray,
                         perimeter(1.0, HOR).apply(K),
                         diagonals(1.0, HOR).apply(K),
-                        diagonals(RatioHelper.P6.H,VER ).apply(K)
+                        diagonals(RatioHelper.P6.H, VER).apply(K)
 
                 )
                 .addFullPaths(red, getFullPath())
@@ -108,8 +106,8 @@ public class Tile21 {
 
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(I1, I5, I7, I6, I3),
                 PointsPath.of(I6, I2, L8, L7, L6, L5, L2, L3, L4),
                 PointsPath.of(I5, I4, L1, L2),

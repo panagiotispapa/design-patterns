@@ -10,12 +10,9 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -25,8 +22,9 @@ import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P6.H;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
+import static com.googlecode.totallylazy.Sequences.join;
+import static com.googlecode.totallylazy.Sequences.sequence;
+import static com.googlecode.totallylazy.numbers.Integers.range;
 
 public class Tile15 {
 
@@ -74,25 +72,23 @@ public class Tile15 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        List<String> equations = Arrays.asList(
-                "KB = 1/5",
-                "KC = h * Ry",
-                "h = 5 * Ry",
-                "w = 6 * Rx"
-        );
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_15_design")
-                .addEquations(equations)
+                .addEquations(sequence(
+                        "KB = 1/5",
+                        "KC = h * Ry",
+                        "h = 5 * Ry",
+                        "w = 6 * Rx"
+                ))
                 .addImportantVertexes(Tile15.class)
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
                 .withGridRatio(KB)
                 .withGridSize(16)
                 .addImportantVertexes(
-                        IntStream.rangeClosed(1, 6).mapToObj(i -> Stream.of(
+                        range(1, 6).flatMap(i -> sequence(
                                 ImportantVertex.of(String.valueOf(i), fpt(pt(i * RATIO_x, RIGHT))),
                                 ImportantVertex.of(String.valueOf(i), fpt(pt(i * RATIO_y, UR_V))),
                                 ImportantVertex.of(String.valueOf(i), fpt(pt(i * RATIO_y, DR_V)))
-                        )).flatMap(s -> s)
+                        ))
                 )
                 .addSinglePathsLines(
                         blue,
@@ -112,22 +108,22 @@ public class Tile15 {
                 );
     }
 
-    private static List<PointsPath> getAllSinglePath() {
-        return Stream.concat(
-                getSinglePathUp().stream(),
-                getSinglePathUp().stream().map(p -> p.mirror(mirrorVert))
-        ).collect(toList());
+    private static Sequence<PointsPath> getAllSinglePath() {
+        return join(
+                getSinglePathUp(),
+                getSinglePathUp().map(p -> p.mirror(mirrorVert))
+        );
     }
 
-    private static List<PointsPath> getSinglePathUp() {
-        return Stream.concat(
-                getSinglePathRight().stream(),
-                getSinglePathRight().stream().map(p -> p.mirror(mirrorHor))
-        ).collect(toList());
+    private static Sequence<PointsPath> getSinglePathUp() {
+        return join(
+                getSinglePathRight(),
+                getSinglePathRight().map(p -> p.mirror(mirrorHor))
+        );
     }
 
-    private static List<PointsPath> getSinglePathRight() {
-        return asList(
+    private static Sequence<PointsPath> getSinglePathRight() {
+        return sequence(
                 PointsPath.of(I9, I10),
                 PointsPath.of(I8, I1, I2, I3, I4, I5, I6, I7, I8)
         );

@@ -7,23 +7,22 @@ import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
+import com.googlecode.totallylazy.Sequence;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.awt.*;
-import java.util.List;
-import java.util.stream.Stream;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
+import static com.design.common.PointTransition.pt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.RatioHelper.P6.P;
-import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
+import static com.googlecode.totallylazy.Sequences.join;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile9a {
     protected static final Double m = 1.0 - H;
@@ -88,14 +87,14 @@ public class Tile9a {
                 ;
     }
 
-    protected static Stream<PointsPath> getFullInstructionsGrayA() {
-        return Stream.of(
+    protected static Sequence<PointsPath> getFullInstructionsGrayA() {
+        return sequence(
                 PointsPath.of(fpt(pt(1.0, LEFT)), fpt(pt(1.0, UP)), fpt(pt(1.0, RIGHT)))
         );
     }
 
-    protected static Stream<PointsPath> getFullInstructionsGrayB() {
-        return Stream.of(
+    protected static Sequence<PointsPath> getFullInstructionsGrayB() {
+        return sequence(
                 PointsPath.of(fpt(pt(KE, LEFT)), fpt(pt(KE, UP)), fpt(pt(KE, RIGHT))),
                 PointsPath.of(fpt(pt(KC, LEFT)), fpt(pt(KC, UP)), fpt(pt(KC, RIGHT))),
                 PointsPath.of(A.append(pt(AC, LEFT)), A.append(pt(AC, DOWN)), A.append(pt(AC, RIGHT))),
@@ -105,32 +104,32 @@ public class Tile9a {
         );
     }
 
-    protected static Stream<PointsPath> getFullInstructionsGrayC() {
-        return Stream.of(
+    protected static Sequence<PointsPath> getFullInstructionsGrayC() {
+        return sequence(
                 diagonalHorizontal(1.0).apply(fpt(pt(AF, UP))),
                 diagonalVertical(1.0).apply(fpt(pt(AF, RIGHT)))
 
         ).flatMap(s -> s);
     }
 
-    protected static Stream<PointsPath> getInstructionsBlueA() {
-        return Stream.of(
+    protected static Sequence<PointsPath> getInstructionsBlueA() {
+        return sequence(
                 perimeter(KC, VER).apply(K),
                 perimeter(KC, HOR).apply(K),
                 perimeter(AC, VER).apply(A)
         ).flatMap(s -> s);
     }
 
-    protected static Stream<PointsPath> getInstructionsBlueB() {
-        return Stream.of(
+    protected static Sequence<PointsPath> getInstructionsBlueB() {
+        return sequence(
                 perimeter(KE, VER).apply(K),
                 perimeter(KE, HOR).apply(K)
 //                perimeter(AC, VER).apply(A1)
         ).flatMap(s -> s);
     }
 
-    protected static Stream<PointsPath> getInstructionsGrayA() {
-        return Stream.of(
+    protected static Sequence<PointsPath> getInstructionsGrayA() {
+        return sequence(
                 perimeter(1.0, VER).apply(K),
                 perimeter(1.0, HOR).apply(K),
                 diagonals(1.0, VER).apply(K),
@@ -138,8 +137,8 @@ public class Tile9a {
         ).flatMap(s -> s);
     }
 
-    protected static Stream<ImportantVertex> getImportantPointsA() {
-        return Stream.of(
+    protected static Sequence<ImportantVertex> getImportantPointsA() {
+        return sequence(
                 ImportantVertex.of("A", A),
                 ImportantVertex.of("B", B),
                 ImportantVertex.of("C", C),
@@ -147,15 +146,15 @@ public class Tile9a {
         );
     }
 
-    protected static Stream<ImportantVertex> getImportantPointsB() {
-        return Stream.of(
+    protected static Sequence<ImportantVertex> getImportantPointsB() {
+        return sequence(
                 ImportantVertex.of("E", E),
                 ImportantVertex.of("A1", A1)
         );
     }
 
-    protected static Stream<ImportantVertex> getImportantPointsC() {
-        return Stream.of(
+    protected static Sequence<ImportantVertex> getImportantPointsC() {
+        return sequence(
                 ImportantVertex.of("F", F)
         );
     }
@@ -171,7 +170,7 @@ public class Tile9a {
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_09b_design")
                 .addEquations(getEquationsA())
                 .addImportantVertexes(
-                        Stream.concat(
+                        join(
                                 getImportantPointsA(),
                                 getImportantPointsB()
                         )
@@ -182,17 +181,14 @@ public class Tile9a {
                 )
                 .addSinglePathsLines(
                         blue,
-                        Stream.concat(
-                                getInstructionsBlueA(),
-                                getInstructionsBlueB()
-                        )
+                        getInstructionsBlueA(),
+                        getInstructionsBlueB()
+
                 )
                 .addFullPaths(
                         gray,
-                        Stream.of(
-                                getFullInstructionsGrayA(),
-                                getFullInstructionsGrayB()
-                        ).flatMap(s -> s)
+                        getFullInstructionsGrayA(),
+                        getFullInstructionsGrayB()
                 );
     }
 
@@ -206,17 +202,13 @@ public class Tile9a {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_09c_design")
                 .addEquations(
-                        Stream.concat(
-                                getEquationsA().stream(),
-                                getEquationsB().stream()
-                        ).collect(toList())
+                        getEquationsA(),
+                        getEquationsB()
                 )
                 .addImportantVertexes(
-                        Stream.of(
-                                getImportantPointsA(),
-                                getImportantPointsB(),
-                                getImportantPointsC()
-                        ).flatMap(s -> s)
+                        getImportantPointsA(),
+                        getImportantPointsB(),
+                        getImportantPointsC()
                 )
                 .addSinglePathsLines(
                         gray,
@@ -224,19 +216,14 @@ public class Tile9a {
                 )
                 .addSinglePathsLines(
                         blue,
-                        Stream.concat(
-                                getInstructionsBlueA(),
-                                getInstructionsBlueB()
-                        )
+                        getInstructionsBlueA(),
+                        getInstructionsBlueB()
                 )
                 .addFullPaths(
                         gray,
-                        Stream.of(
-                                getFullInstructionsGrayA(),
-                                getFullInstructionsGrayB(),
-                                getFullInstructionsGrayC()
-                        ).flatMap(s -> s)
-
+                        getFullInstructionsGrayA(),
+                        getFullInstructionsGrayB(),
+                        getFullInstructionsGrayC()
                 )
                 .addCircleWithRadius(
                         blue,
@@ -247,8 +234,8 @@ public class Tile9a {
     }
 
 
-    protected static List<String> getEquationsA() {
-        return asList(
+    protected static Sequence<String> getEquationsA() {
+        return sequence(
                 "KA = 1",
                 "KB = h",
                 "AB = 1 - h",
@@ -257,8 +244,8 @@ public class Tile9a {
         );
     }
 
-    protected static List<String> getEquationsB() {
-        return asList(
+    protected static Sequence<String> getEquationsB() {
+        return sequence(
                 "CE = KC - KE",
                 "AF = 0.5 * CE"
         );

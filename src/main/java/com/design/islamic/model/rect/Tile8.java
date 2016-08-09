@@ -6,10 +6,9 @@ import com.design.common.Grid;
 import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.*;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -17,10 +16,11 @@ import static com.design.common.PointTransition.pt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P4.H;
+import static com.design.islamic.model.Rect.ALL_VERTEX_INDEXES;
 import static com.design.islamic.model.Rect.Vertex.*;
 import static com.design.islamic.model.Rect.diagonals;
 import static com.design.islamic.model.Rect.perimeter;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile8 {
 
@@ -51,7 +51,7 @@ public class Tile8 {
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
 
         return new Payload.Builder("rect_tile_08",
-                Rect.ALL_VERTEX_INDEXES)
+                ALL_VERTEX_INDEXES)
                 .withPathsFull(whiteBold, getFullPath())
                 .withGridConf(Grid.Configs.RECT2.getConfiguration())
                 .build();
@@ -62,7 +62,7 @@ public class Tile8 {
         Style red = new Style.Builder(Color.RED, 2).build();
         Style gray = new Style.Builder(Color.GRAY, 1).build();
 
-        List<String> equations = Arrays.asList(
+        Sequence<String> equations = sequence(
                 "KB = h",
                 "AD = DG = DF = FE = EC",
                 "DB = DF * h",
@@ -74,7 +74,7 @@ public class Tile8 {
                 "AD = AC/2*(1+H)"
         );
 
-        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "rect_tile_08_design")
+        return new DesignHelper(ALL_VERTEX_INDEXES, "rect_tile_08_design")
                 .addEquations(equations)
                 .addImportantVertexes(Tile8.class)
                 .addSinglePathsLines(
@@ -85,16 +85,14 @@ public class Tile8 {
 //                        perimeter(H, VER).apply(K),
 //                        perimeter(KB, HOR).apply(K)
                 )
-                .addCirclesCentral(asList(
-                        H
-                ), gray)
+                .addCirclesCentral(gray, H)
                 .addFullPaths(red, getFullPath())
                 ;
 
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(A, D2, F2, G, A, D, F, G)
         );
     }

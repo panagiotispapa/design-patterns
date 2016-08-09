@@ -8,10 +8,9 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.List;
-import java.util.stream.Stream;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -21,7 +20,7 @@ import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile8 {
 
@@ -89,8 +88,8 @@ public class Tile8 {
     }
 
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(M2, L2, D2, L, M),
                 PointsPath.of(M3, E2, G, E3, M4)
         );
@@ -104,7 +103,7 @@ public class Tile8 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        List<String> equations = asList(
+        Sequence<String> equations = sequence(
                 "KB = 0.5",
                 "KC = KB/h",
                 "KD = h",
@@ -162,7 +161,7 @@ public class Tile8 {
                         diagonalHorizontal(1.0).apply(fpt(pt(FE, UP))),
                         diagonalVertical(1.0).apply(fpt(pt(FE, RIGHT))),
                         diagonalVertical(1.0).apply(fpt(pt(KF, RIGHT))),
-                        Stream.of(
+                        sequence(
                                 PointsPath.of(A, A2, A3),
                                 PointsPath.of(D, D2, D3)
                         )
