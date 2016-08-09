@@ -6,10 +6,9 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -20,7 +19,7 @@ import static com.design.common.RatioHelper.P6.P;
 import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile7 {
 
@@ -56,8 +55,8 @@ public class Tile7 {
                 .build();
     }
 
-    private static List<PointsPath> getFullPath() {
-        return Arrays.asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(G, E),
                 PointsPath.of(I, F),
                 PointsPath.of(J, D, L)
@@ -70,13 +69,6 @@ public class Tile7 {
         Style gray = new Style.Builder(Color.GRAY, 1).build();
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
-
-        List<String> equations = asList(
-                "AB = 1 - h",
-                "KC = 0.5 * h",
-                "KD = KC/h",
-                "BE = 0.5 * AB"
-        );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_07_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
@@ -96,7 +88,12 @@ public class Tile7 {
                 .addFullPaths(red, getFullPath())
                 .addImportantVertexes(Tile7.class)
 
-                .addEquations(equations);
+                .addEquations(sequence(
+                        "AB = 1 - h",
+                        "KC = 0.5 * h",
+                        "KD = KC/h",
+                        "BE = 0.5 * AB"
+                ));
 
     }
 

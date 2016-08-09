@@ -6,10 +6,9 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -19,7 +18,7 @@ import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile3c {
 
@@ -56,24 +55,22 @@ public class Tile3c {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        List<String> equations = Arrays.asList(
-                "KB = h",
-                "KC = h * KB",
-                "BC = 0.5 * KB",
-                "DC = BC",
-                "CA = KA - KC",
-                "KD = KA - KC - DC"
-        );
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_03c_design")
                 .addFullPaths(red, getFullPath())
-                .addEquations(equations)
+                .addEquations(sequence(
+                        "KB = h",
+                        "KC = h * KB",
+                        "BC = 0.5 * KB",
+                        "DC = BC",
+                        "CA = KA - KC",
+                        "KD = KA - KC - DC"
+                ))
                 .addImportantVertexes(Tile3c.class)
 //                .addImportantVertexes(
-//                        ImportantVertex.of(main, RIGHT.getVertex(), "A"),
-//                        ImportantVertex.of(main_Ver, DR_V.getVertex(), "B"),
-//                        ImportantVertex.of(hexKC, RIGHT.getVertex(), "C"),
-//                        ImportantVertex.of(hexKD, RIGHT.getVertex(), "D")
+//                        ImportantVertex.circle(main, RIGHT.getVertex(), "A"),
+//                        ImportantVertex.circle(main_Ver, DR_V.getVertex(), "B"),
+//                        ImportantVertex.circle(hexKC, RIGHT.getVertex(), "C"),
+//                        ImportantVertex.circle(hexKD, RIGHT.getVertex(), "D")
 //                )
                 .addSinglePathsLines(
                         gray,
@@ -94,8 +91,8 @@ public class Tile3c {
 
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(B, D, E)
         );
     }

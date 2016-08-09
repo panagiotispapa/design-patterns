@@ -4,11 +4,10 @@ import com.design.common.*;
 import com.design.common.RatioHelper.P8;
 import com.design.common.model.Style;
 import com.design.islamic.model.*;
+import com.googlecode.totallylazy.Sequence;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -19,7 +18,7 @@ import static com.design.common.RatioHelper.P4.H;
 import static com.design.islamic.model.Rect.Vertex.*;
 import static com.design.islamic.model.Rect.diagonals;
 import static com.design.islamic.model.Rect.perimeter;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile6 {
 
@@ -113,7 +112,7 @@ public class Tile6 {
         Style blue = new Style.Builder(Color.blue, 1).build();
         Style gray = new Style.Builder(Color.GRAY, 1).build();
 
-        List<String> equations = Arrays.asList(
+        Sequence<String> equations = sequence(
                 "KB = h = KC",
                 "CA = KA - KB = AD = AE",
                 "BE = AB - AE",
@@ -124,7 +123,7 @@ public class Tile6 {
                 "IM = BI * P8.P"
         );
 
-        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "rect_tile_06_design")
+        return new DesignHelper(Rect.ALL_VERTEX_INDEXES, "rect_tile_06_design")
                 .addEquations(equations)
                 .addImportantVertexes(Tile6.class)
                 .addSinglePathsLines(
@@ -167,16 +166,14 @@ public class Tile6 {
                         Pair.of(I, IM),
                         Pair.of(D, DP)
                 )
-                .addCirclesCentral(asList(
-                        H
-                ), gray)
+                .addCirclesCentral(gray, H)
                 .addFullPaths(red, getFullPath())
                 .withFontSize(14)
                 ;
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(E, P, T, M2, B, M, T2, P2, E4)
         );
     }

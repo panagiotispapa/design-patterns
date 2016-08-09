@@ -6,11 +6,9 @@ import com.design.common.Grid;
 import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.*;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -21,8 +19,8 @@ import static com.design.common.RatioHelper.P4.H;
 import static com.design.islamic.model.Rect.Vertex.*;
 import static com.design.islamic.model.Rect.diagonals;
 import static com.design.islamic.model.Rect.perimeter;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
+import static com.googlecode.totallylazy.Sequences.join;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile12 {
 
@@ -62,13 +60,11 @@ public class Tile12 {
         Style gray = new Style.Builder(Color.GRAY, 1).build();
         Style blue = new Style.Builder(Color.BLUE, 1).build();
 
-        List<String> equations = Arrays.asList(
-                "KB = h",
-                "KC = KB / 3"
-        );
-
-        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "rect_tile_12_design")
-                .addEquations(equations)
+        return new DesignHelper(Rect.ALL_VERTEX_INDEXES, "rect_tile_12_design")
+                .addEquations(sequence(
+                        "KB = h",
+                        "KC = KB / 3"
+                ))
                 .addImportantVertexes(Tile12.class)
                 .addSinglePathsLines(
                         gray,
@@ -78,32 +74,30 @@ public class Tile12 {
                         perimeter(KC / H, HOR).apply(K),
                         perimeter(2.0 * KC / H, HOR).apply(K)
                 )
-                .addCirclesCentral(asList(
-                        H
-                ), gray)
+                .addCirclesCentral(gray, H)
                 .addSinglePathsLines(red, getAllSinglesPath())
                 ;
 
     }
 
-    private static List<PointsPath> getAllSinglesPath() {
-        return Stream.concat(
-                getSinglesPath2().stream(),
-                getSinglesPath2().stream().map(s -> s.mirror(Rect.mirrorHor))
-        ).collect(toList());
+    private static Sequence<PointsPath> getAllSinglesPath() {
+        return join(
+                getSinglesPath2(),
+                getSinglesPath2().map(s -> s.mirror(Rect.mirrorHor))
+        );
     }
 
-    private static List<PointsPath> getSinglesPath2() {
-        return Stream.concat(
-                getSinglesPath().stream(),
-                getSinglesPath().stream().map(s -> s.mirror(Rect.mirrorVert))
-        ).collect(toList());
+    private static Sequence<PointsPath> getSinglesPath2() {
+        return join(
+                getSinglesPath(),
+                getSinglesPath().map(s -> s.mirror(Rect.mirrorVert))
+        );
     }
 
 
-    private static List<PointsPath> getSinglesPath() {
-        return asList(
-//                PointsPath.of(J, G, C),
+    private static Sequence<PointsPath> getSinglesPath() {
+        return sequence(
+//                PointsPath.circle(J, G, C),
                 PointsPath.of(C, F, P, Q, I, L, J, G, C)
         );
     }

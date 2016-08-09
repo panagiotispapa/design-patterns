@@ -9,10 +9,9 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -20,7 +19,7 @@ import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 //p. 4
 public class Tile13 {
@@ -57,17 +56,15 @@ public class Tile13 {
         Style red = new Style.Builder(Color.RED, 2).build();
 
 
-        List<String> equations = Arrays.asList(
-                "KB = (1/3) * KA"
-        );
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_13_design")
                 .addFullPaths(red, getFullPath())
                 .withGrid(Grid.Configs.HEX_HOR.getConfiguration())
                 .withGridRatio(KB)
                 .withGridSize(8)
 
-                .addEquations(equations)
+                .addEquations(sequence(
+                        "KB = (1/3) * KA"
+                ))
                 .addImportantVertexes(Tile13.class)
                 .addSinglePathsLines(
                         gray,
@@ -81,8 +78,8 @@ public class Tile13 {
 
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(B, G, F, E, D, B)
         );
     }

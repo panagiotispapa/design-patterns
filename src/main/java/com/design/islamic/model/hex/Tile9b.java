@@ -6,20 +6,18 @@ import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
+import com.googlecode.totallylazy.Sequence;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.awt.*;
-import java.util.Collection;
-import java.util.stream.Stream;
 
 import static com.design.common.FinalPointTransition.fpt;
+import static com.design.common.PointTransition.pt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
-import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
-import static com.design.islamic.model.Hex.*;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
+import static com.design.islamic.model.Hex.perimeter;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile9b extends Tile9a {
 //    protected static final Function<Double, Double> tok = i -> Mappings.<Double>chain(k -> k * m, k->k);
@@ -44,19 +42,15 @@ public class Tile9b extends Tile9a {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_09d_design")
                 .addEquations(
-                        Stream.of(
-                                getEquationsA(),
-                                getEquationsB(),
-                                getEquationsD()
-                        ).map(Collection::stream).flatMap(s -> s).collect(toList())
+                        getEquationsA(),
+                        getEquationsB(),
+                        getEquationsD()
                 )
                 .addImportantVertexes(
-                        Stream.of(
-                                getImportantPointsA(),
-                                getImportantPointsB(),
-                                getImportantPointsC(),
-                                getImportantPointsD()
-                        ).flatMap(s -> s)
+                        getImportantPointsA(),
+                        getImportantPointsB(),
+                        getImportantPointsC(),
+                        getImportantPointsD()
                 )
                 .addSinglePathsLines(
                         gray,
@@ -65,18 +59,14 @@ public class Tile9b extends Tile9a {
                 )
                 .addSinglePathsLines(
                         blue,
-                        Stream.concat(
-                                getInstructionsBlueA(),
-                                getInstructionsBlueB()
-                        )
+                        getInstructionsBlueA(),
+                        getInstructionsBlueB()
                 )
                 .addFullPaths(
                         gray,
-                        Stream.of(
-                                getFullInstructionsGrayA(),
-                                getFullInstructionsGrayB(),
-                                getFullInstructionsGrayC()
-                        ).flatMap(s -> s)
+                        getFullInstructionsGrayA(),
+                        getFullInstructionsGrayB(),
+                        getFullInstructionsGrayC()
 
                 )
                 .addCircleWithRadius(
@@ -95,8 +85,8 @@ public class Tile9b extends Tile9a {
                 ;
     }
 
-    protected static Stream<PointsPath> getPathFullLinesD() {
-        return Stream.of(
+    protected static Sequence<PointsPath> getPathFullLinesD() {
+        return sequence(
                 PointsPath.of(A, fpt(pt(1.0, UR_V))),
                 PointsPath.of(F, I),
                 PointsPath.of(F2, H.append(pt(GH, DR_V)))
@@ -104,8 +94,8 @@ public class Tile9b extends Tile9a {
     }
 
 
-    protected static Stream<DesignHelper.ImportantVertex> getImportantPointsD() {
-        return Stream.of(
+    protected static Sequence<DesignHelper.ImportantVertex> getImportantPointsD() {
+        return sequence(
                 DesignHelper.ImportantVertex.of("G", G),
                 DesignHelper.ImportantVertex.of("H", H),
                 DesignHelper.ImportantVertex.of("I", I),
@@ -115,10 +105,8 @@ public class Tile9b extends Tile9a {
     }
 
 
-
-
-    protected static Stream<PointsPath> getInstructionsGrayD() {
-        return Stream.of(
+    protected static Sequence<PointsPath> getInstructionsGrayD() {
+        return sequence(
                 perimeter(AF, VER).apply(A),
                 perimeter(GH, VER).apply(H),
                 perimeter(GH, HOR).apply(G)
@@ -126,8 +114,8 @@ public class Tile9b extends Tile9a {
     }
 
 
-    protected static java.util.List<String> getEquationsD() {
-        return asList(
+    protected static Sequence<String> getEquationsD() {
+        return sequence(
                 "GH = 0.5 * AC - AF",
                 "KH = KC + GH"
         );

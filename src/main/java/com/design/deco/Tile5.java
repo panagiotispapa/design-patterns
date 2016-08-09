@@ -3,12 +3,9 @@ package com.design.deco;
 import com.design.common.*;
 import com.design.common.model.Style;
 import com.design.islamic.model.*;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -17,7 +14,8 @@ import static com.design.common.RatioHelper.P4.H;
 import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Rect.Vertex.*;
 import static com.design.islamic.model.Rect.*;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
+import static com.googlecode.totallylazy.numbers.Integers.range;
 
 public class Tile5 {
 
@@ -66,32 +64,30 @@ public class Tile5 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style blue = new Style.Builder(Color.BLUE, 1).build();
 
-        List<String> equations = Arrays.asList(
-                "KB = KA / 5.0"
-        );
-
-        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "deco_tile_05_design")
-                .addEquations(equations)
+        return new DesignHelper(Rect.ALL_VERTEX_INDEXES, "deco_tile_05_design")
+                .addEquations(
+                        "KB = KA / 5.0"
+                )
                 .addImportantVertexes(Tile5.class)
                 .addSinglePathsLines(
                         gray,
-                        IntStream.rangeClosed(1, 2)
-                                .mapToObj(i ->
-                                        Stream.of(
+                        range(1, 2)
+                                .flatMap(i ->
+                                        sequence(
                                                 diagonalHorizontal(H).apply(fpt(u(i))),
                                                 diagonalHorizontal(H).apply(fpt(d(i))),
                                                 diagonalVertical(H).apply(fpt(r(i))),
                                                 diagonalVertical(H).apply(fpt(l(i)))
                                         ).flatMap(s -> s)
-                                ).flatMap(s -> s),
+                                ),
                         diagonals(H, VER).apply(K)
                 )
                 .addSinglePathsLines(red, getSinglePath())
                 ;
     }
 
-    private static List<PointsPath> getSinglePath() {
-        return asList(
+    private static Sequence<PointsPath> getSinglePath() {
+        return sequence(
                 PointsPath.of(K, B, fpt(u(2), r(2))),
                 PointsPath.of(fpt(u(1), l(1)), fpt(u(1), r(2))),
                 PointsPath.of(fpt(u(2), l(1)), fpt(d(1), l(1))),

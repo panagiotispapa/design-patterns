@@ -10,9 +10,9 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -24,7 +24,7 @@ import static com.design.common.RatioHelper.P6.P;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.diagonals;
 import static com.design.islamic.model.Hex.perimeter;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile26 {
 //https://s-media-cache-ak0.pinimg.com/236x/03/7a/b7/037ab7b5f11620dbad8b8e1012438547.jpg
@@ -115,7 +115,7 @@ public class Tile26 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        List<String> equations = asList(
+        Sequence<String> equations = sequence(
                 "KB = KA * H",
                 "KC = KA * P",
                 "KD = KC / H",
@@ -176,8 +176,8 @@ public class Tile26 {
 
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(M, N, M2, D.append(pt(DN, UP)), D.append(pt(DM, UR_H)), D.append(pt(DN, UR_V)), D.append(pt(DM, RIGHT)), D.append(pt(DN, DR_V)), D.append(pt(DM, DR_H)), D.append(pt(DN, DOWN)), D.append(pt(DM, DL_H)), D.append(pt(DN, DL_V)), D.append(pt(DM, LEFT))),
                 PointsPath.of(C, N),
                 PointsPath.of(G, E2),

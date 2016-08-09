@@ -9,19 +9,20 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
+import static com.design.common.PointTransition.pt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P6.H;
-import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
-import static com.design.islamic.model.Hex.*;
-import static java.util.Arrays.asList;
+import static com.design.islamic.model.Hex.diagonals;
+import static com.design.islamic.model.Hex.perimeter;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile10 {
 
@@ -56,8 +57,8 @@ public class Tile10 {
 
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(C, B),
                 PointsPath.of(G, I),
                 PointsPath.of(J, G, C, E)
@@ -71,7 +72,7 @@ public class Tile10 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        List<String> equations = asList(
+        Sequence<String> equations = sequence(
                 "AB = 1 / 3",
                 "CD = AB / h",
                 "KE = h - (CD / 2)",

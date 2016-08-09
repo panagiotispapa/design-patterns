@@ -1,33 +1,28 @@
 package com.design.islamic.model;
 
-import com.design.common.FinalPointTransition;
-import com.design.common.PointTransition;
-import com.design.common.PointsPath;
-import com.design.common.Polygon;
+import com.design.common.*;
 import com.google.common.collect.ImmutableMap;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
-import static com.design.common.PointsPath.buildLines;
 import static com.design.common.PolygonTools.newEdgeAt;
+import static com.design.common.VertexPath.vp;
+import static com.googlecode.totallylazy.numbers.Integers.range;
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
 
 public class Rect extends Polygon {
 
-    public static final List<Integer> ALL_VERTEX_INDEXES = IntStream.range(0, 4).boxed().collect(toList());
+    public static final Sequence<Integer> ALL_VERTEX_INDEXES = range(0, 3);
 
-
-    public static Function<FinalPointTransition, Stream<PointsPath>> perimeter(double ratio, Type type) {
+    public static Function<FinalPointTransition, Sequence<PointsPath>> perimeter(double ratio, Type type) {
         return type == Type.HOR ?
-                buildLines(
+                p -> p.toLine(
                         ratio,
-                        Stream.of(
+                        vp(
                                 Vertex.UR,
                                 Vertex.UL,
                                 Vertex.DL,
@@ -35,9 +30,9 @@ public class Rect extends Polygon {
                                 Vertex.UR
                         )
                 ) :
-                buildLines(
+                p -> p.toLine(
                         ratio,
-                        Stream.of(
+                        vp(
                                 Vertex.UP,
                                 Vertex.LEFT,
                                 Vertex.DOWN,
@@ -48,43 +43,43 @@ public class Rect extends Polygon {
 
     }
 
-    public static Function<FinalPointTransition, Stream<PointsPath>> diagonals(double ratio, Type type) {
+    public static Function<FinalPointTransition, Sequence<PointsPath>> diagonals(double ratio, Type type) {
         return type == Type.HOR ?
-                buildLines(
+                p -> p.toLine(
                         ratio,
-                        Stream.of(
+                        vp(
                                 Vertex.UL,
                                 Vertex.DR
                         ),
-                        Stream.of(
+                        vp(
                                 Vertex.UR,
                                 Vertex.DL
                         )
                 ) :
-                buildLines(
+                p -> p.toLine(
                         ratio,
-                        Stream.of(
+                        vp(
                                 Vertex.UP,
                                 Vertex.DOWN
                         ),
-                        Stream.of(
+                        vp(
                                 Vertex.LEFT,
                                 Vertex.RIGHT
                         )
                 );
     }
 
-    public static Function<FinalPointTransition, Stream<PointsPath>> diagonalVertical(double ratio) {
-        return buildLines(ratio,
-                Stream.of(
+    public static Function<FinalPointTransition, Sequence<PointsPath>> diagonalVertical(double ratio) {
+        return p -> p.toLine(ratio,
+                vp(
                         Vertex.UP,
                         Vertex.DOWN
                 ));
     }
 
-    public static Function<FinalPointTransition, Stream<PointsPath>> diagonalHorizontal(double ratio) {
-        return buildLines(ratio,
-                Stream.of(
+    public static Function<FinalPointTransition, Sequence<PointsPath>> diagonalHorizontal(double ratio) {
+        return p -> p.toLine(ratio,
+                vp(
                         Vertex.RIGHT,
                         Vertex.LEFT
                 ));

@@ -5,22 +5,18 @@ import com.design.common.InitialConditions;
 import com.design.common.PointsPath;
 import com.design.common.model.Path;
 import com.design.common.model.Style;
+import com.googlecode.totallylazy.Sequence;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 
 public class Payload {
     private final Grid.Configuration gridConfiguration;
     private final String name;
     private final Size size;
-    private final List<Path> paths;
+    private final Sequence<Path> paths;
 
-    public Payload(String name, Grid.Configuration gridConfiguration, Size size, List<Path> paths) {
+    public Payload(String name, Grid.Configuration gridConfiguration, Size size, Sequence<Path> paths) {
         this.gridConfiguration = gridConfiguration;
         this.name = name;
         this.size = size;
@@ -36,10 +32,7 @@ public class Payload {
     }
 
     public String draw(InitialConditions ic) {
-        return
-                Stream.of(
-                        paths.stream().map(p -> p.draw(ic))
-                ).flatMap(s -> s).collect(joining());
+        return paths.map(p -> p.draw(ic)).stream().collect(joining());
     }
 
     public String getName() {
@@ -55,11 +48,11 @@ public class Payload {
     public static class Builder {
         private Size size = Size.SMALL;
         private Grid.Configuration gridConfiguration = Grid.Configs.HEX_HOR2.getConfiguration();
-        private final List<Integer> allVertexes;
+        private final Sequence<Integer> allVertexes;
         private final String name;
-        private final List<Path> paths = new ArrayList<>();
+        private Sequence<Path> paths = sequence();
 
-        public Builder(String name, List<Integer> allVertexes) {
+        public Builder(String name, Sequence<Integer> allVertexes) {
             this.allVertexes = allVertexes;
             this.name = name;
         }
@@ -70,26 +63,21 @@ public class Payload {
         }
 
 
-        public Builder withPathsSingleLines(Style style, PointsPath... lines) {
-            Stream.of(lines).map(Path.fromPath(style)).forEach(paths::add);
-            return this;
-        }
-
-        public Builder withPathsSingleLines(Style style, List<PointsPath> lines) {
-            lines.stream().map(Path.fromPath(style)).forEach(paths::add);
+        public Builder withPathsSingleLines(Style style, Sequence<PointsPath> lines) {
+            this.paths = this.paths.join(lines.map(p -> p.toPath(style)));
             return this;
         }
 
         public Builder withPathsFull(Style style, PointsPath... lines) {
-            return withPathsFull(style, asList(lines));
+            return withPathsFull(style, sequence(lines));
         }
 
-        public Builder withPathsFull(Style style, Stream<PointsPath>... lines) {
-            return withPathsFull(style, Stream.of(lines).flatMap(s -> s).collect(toList()));
+        public Builder withPathsFull(Style style, Sequence<PointsPath>... lines) {
+            return withPathsFull(style, sequence(lines).flatMap(s -> s));
         }
 
-        public Builder withPathsFull(Style style, List<PointsPath> lines) {
-            allVertexes.stream().flatMap(offset->lines.stream().map(p->p.withOffset(offset))).map(Path.fromPath(style)).forEach(paths::add);
+        public Builder withPathsFull(Style style, Sequence<PointsPath> lines) {
+            withPathsSingleLines(style, allVertexes.flatMap(offset -> lines.map(p -> p.withOffset(offset))));
             return this;
         }
 

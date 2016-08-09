@@ -28,7 +28,7 @@ public class Patterns {
         final String styleFrontGray = newStyle(GRAY, BLACK, 2, 0.8, 1);
         final String styleFrontWhite = newStyle(WHITE, BLACK, 2, 1, 1);
 
-        Circle mainCircle = Circle.of(new Point2D.Double(dim.getWidth() / 2, dim.getHeight() / 2), r);
+        Circle mainCircle = Circle.circle(new Point2D.Double(dim.getWidth() / 2, dim.getHeight() / 2), r);
 
         Set<Circle> layer1 = Sets.newHashSet(concat(
                 Helper.putInARow(mainCircle, 18, 0),

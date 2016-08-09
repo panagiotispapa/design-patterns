@@ -6,11 +6,9 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.List;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -20,7 +18,8 @@ import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
+import static com.googlecode.totallylazy.numbers.Integers.range;
 
 //p.
 public class Tile22 {
@@ -119,23 +118,21 @@ public class Tile22 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        List<String> equations = asList(
-                "KA = 1/9"
-        );
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_22_design")
-                .addEquations(equations)
+                .addEquations(sequence(
+                        "KA = 1/9"
+                ))
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
                 .withGridRatio(KA)
                 .withGridSize(32)
                 .addImportantVertexes(Tile22.class)
                 .addImportantVertexes(
-                        IntStream.rangeClosed(1, 15).mapToObj(i -> Stream.of(
+                        range(1, 15).flatMap(i -> sequence(
                                 DesignHelper.ImportantVertex.of(String.valueOf(i), pt(i * KB, RIGHT)),
                                 DesignHelper.ImportantVertex.of(String.valueOf(i), pt(i * KA, UP)),
                                 DesignHelper.ImportantVertex.of(String.valueOf(i), pt(i * KA, DOWN)),
                                 DesignHelper.ImportantVertex.of(String.valueOf(i), pt(i * KA, UR_V))
-                        )).flatMap(s -> s)
+                        ))
                 )
                 .addSinglePathsLines(gray,
 //                        IntStream.rangeClosed(1, 15).mapToObj(i ->
@@ -150,8 +147,8 @@ public class Tile22 {
 
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(I1, I3, P1),
                 PointsPath.of(I4, P2),
                 PointsPath.of(I6, P3),

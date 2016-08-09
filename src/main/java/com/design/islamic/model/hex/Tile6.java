@@ -6,10 +6,9 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -19,7 +18,7 @@ import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile6 {
 
@@ -49,8 +48,8 @@ public class Tile6 {
                 .build();
     }
 
-    private static List<PointsPath> getFullPath() {
-        return Arrays.asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(A, C, B, D, E)
         );
     }
@@ -62,12 +61,6 @@ public class Tile6 {
         Style gray = new Style.Builder(Color.GRAY, 1).build();
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
-
-        List<String> equations = asList(
-                "KA=AB=0.5",
-                "KB=1",
-                "BC=BD=AB*h=0.5*h"
-        );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_06_design")
                 .addSinglePathsLines(
@@ -84,7 +77,11 @@ public class Tile6 {
                 )
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
                 .addEquations(
-                        equations
+                        sequence(
+                                "KA=AB=0.5",
+                                "KB=1",
+                                "BC=BD=AB*h=0.5*h"
+                        )
                 )
                 .addImportantVertexes(Tile6.class)
                 .addFullPaths(red, getFullPath());

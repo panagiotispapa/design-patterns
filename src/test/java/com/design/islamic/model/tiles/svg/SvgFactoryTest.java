@@ -63,7 +63,7 @@ public class SvgFactoryTest {
 //        assertThat(
 //                drawPath(
 //                        Arrays.asList(
-//                                Pair.of(new Point2D.Double(40.0, 20.0), Path.InstructionType.STARTING_POINT)
+//                                Pair.circle(new Point2D.Double(40.0, 20.0), Path.InstructionType.STARTING_POINT)
 //                        ),
 //                        new Path.Style(Color.BLUE, 2)
 //                )).isEqualTo("<path d = \"M40,20  A30,30 0 0,1 70,70\" style = \"stroke:#0000ff; stroke-width:2; fill:none;\" />");

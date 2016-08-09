@@ -6,10 +6,9 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -19,9 +18,9 @@ import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
+import static com.googlecode.totallylazy.Sequences.sequence;
 import static java.lang.Math.PI;
 import static java.lang.Math.tan;
-import static java.util.Arrays.asList;
 
 public class Tile30 {
 
@@ -76,7 +75,7 @@ public class Tile30 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        List<String> equations = Arrays.asList(
+        Sequence<String> equations = sequence(
                 "KPF = ANGLE_1 = PI - PI / 4.0 - PI / 6.0",
                 "FHA = ECA =  ANGLE_2 = PI - ANGLE_1",
                 "CEA = ANGLE_3 = PI - ANGLE_2 - PI / 3.0",
@@ -121,8 +120,8 @@ public class Tile30 {
 
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(C, E, P2),
                 PointsPath.of(P, E2, C2)
         );

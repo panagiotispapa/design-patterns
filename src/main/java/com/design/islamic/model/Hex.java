@@ -1,38 +1,34 @@
 package com.design.islamic.model;
 
-import com.design.common.FinalPointTransition;
-import com.design.common.PointTransition;
-import com.design.common.PointsPath;
-import com.design.common.Polygon;
+import com.design.common.*;
 import com.google.common.collect.ImmutableMap;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
-import static com.design.common.PointsPath.buildLines;
 import static com.design.common.PolygonTools.newEdgeAt;
+import static com.design.common.VertexPath.vp;
+import static com.googlecode.totallylazy.numbers.Integers.range;
 import static java.lang.Math.PI;
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
 
 public class Hex extends Polygon {
 
-    public static final List<Integer> ALL_VERTEX_INDEXES = IntStream.range(0, 6).boxed().collect(toList());
+    public static final Sequence<Integer> ALL_VERTEX_INDEXES = range(0, 5);
 
     private static final int N = 6;
 
     public static final double PHI = (2.0 * PI) / 6.0;
 
-    public static Function<FinalPointTransition, Stream<PointsPath>> perimeter(double ratio, Type type) {
+    public static Function<FinalPointTransition, Sequence<PointsPath>> perimeter(double ratio, Type type) {
 
         return type == Type.HOR ?
-                buildLines(
+                p -> p.toLine(
                         ratio,
-                        Stream.of(
+                        vp(
                                 Vertex.RIGHT,
                                 Vertex.DR_H,
                                 Vertex.DL_H,
@@ -42,9 +38,9 @@ public class Hex extends Polygon {
                                 Vertex.RIGHT
                         )
                 ) :
-                buildLines(
+                p -> p.toLine(
                         ratio,
-                        Stream.of(
+                        vp(
                                 Vertex.DR_V,
                                 Vertex.DOWN,
                                 Vertex.DL_V,
@@ -59,17 +55,17 @@ public class Hex extends Polygon {
     }
 
 
-    public static Function<FinalPointTransition, Stream<PointsPath>> innerTriangles(double ratio, Type type) {
+    public static Function<FinalPointTransition, Sequence<PointsPath>> innerTriangles(double ratio, Type type) {
         return type == Type.HOR ?
-                buildLines(
+                p -> p.toLine(
                         ratio,
-                        Stream.of(
+                        vp(
                                 Vertex.RIGHT,
                                 Vertex.DL_H,
                                 Vertex.UL_H,
                                 Vertex.RIGHT
                         ),
-                        Stream.of(
+                        vp(
                                 Vertex.DR_H,
                                 Vertex.LEFT,
                                 Vertex.UR_H,
@@ -77,15 +73,15 @@ public class Hex extends Polygon {
                         )
 
                 ) :
-                buildLines(
+                p -> p.toLine(
                         ratio,
-                        Stream.of(
+                        vp(
                                 Vertex.DR_V,
                                 Vertex.DL_V,
                                 Vertex.UP,
                                 Vertex.DR_V
                         ),
-                        Stream.of(
+                        vp(
                                 Vertex.DOWN,
                                 Vertex.UL_V,
                                 Vertex.UR_V,
@@ -97,84 +93,83 @@ public class Hex extends Polygon {
 
     }
 
-    public static Function<FinalPointTransition, Stream<PointsPath>> diagonalLeftToRightVert(double ratio) {
-        return buildLines(ratio,
-                Stream.of(
+    public static Function<FinalPointTransition, Sequence<PointsPath>> diagonalLeftToRightVert(double ratio) {
+        return p -> p.toLine(ratio,
+                vp(
                         Vertex.DL_V,
                         Vertex.UR_V
                 ));
     }
 
-    public static Function<FinalPointTransition, Stream<PointsPath>> diagonalLeftToRightHor(double ratio) {
-        return buildLines(ratio,
-                Stream.of(
+    public static Function<FinalPointTransition, Sequence<PointsPath>> diagonalLeftToRightHor(double ratio) {
+        return p -> p.toLine(ratio,
+                vp(
                         Vertex.DL_H,
                         Vertex.UR_H
                 ));
     }
 
-    public static Function<FinalPointTransition, Stream<PointsPath>> diagonalRightToLeftVert(double ratio) {
-        return buildLines(ratio,
-                Stream.of(
+    public static Function<FinalPointTransition, Sequence<PointsPath>> diagonalRightToLeftVert(double ratio) {
+        return p -> p.toLine(ratio,
+                vp(
                         Vertex.DR_V,
                         Vertex.UL_V
                 ));
     }
 
-    public static Function<FinalPointTransition, Stream<PointsPath>> diagonalRightToLeftHor(double ratio) {
-        return buildLines(ratio,
-                Stream.of(
+    public static Function<FinalPointTransition, Sequence<PointsPath>> diagonalRightToLeftHor(double ratio) {
+        return p -> p.toLine(ratio,
+                vp(
                         Vertex.DR_H,
                         Vertex.UL_H
                 ));
     }
 
-    public static Function<FinalPointTransition, Stream<PointsPath>> diagonalVertical(double ratio) {
-        return buildLines(ratio,
-                Stream.of(
+    public static Function<FinalPointTransition, Sequence<PointsPath>> diagonalVertical(double ratio) {
+        return p -> p.toLine(ratio,
+                vp(
                         Vertex.UP,
                         Vertex.DOWN
                 ));
     }
 
-    public static Function<FinalPointTransition, Stream<PointsPath>> diagonalHorizontal(double ratio) {
-        return buildLines(ratio,
-                Stream.of(
+    public static Function<FinalPointTransition, Sequence<PointsPath>> diagonalHorizontal(double ratio) {
+        return p -> p.toLine(ratio,
+                vp(
                         Vertex.RIGHT,
                         Vertex.LEFT
                 ));
     }
 
 
-    public static Function<FinalPointTransition, Stream<PointsPath>> diagonals(double ratio, Type type) {
+    public static Function<FinalPointTransition, Sequence<PointsPath>> diagonals(double ratio, Type type) {
         return type == Type.HOR ?
-
-                buildLines(
+                p -> p.toLine(
                         ratio,
-                        Stream.of(
+                        vp(
                                 Vertex.RIGHT,
                                 Vertex.LEFT
                         ),
-                        Stream.of(
+                        vp(
                                 Vertex.DR_H,
                                 Vertex.UL_H
                         ),
-                        Stream.of(
+                        vp(
                                 Vertex.DL_H,
                                 Vertex.UR_H
                         )
                 ) :
-                buildLines(
+                p -> p.toLine(
                         ratio,
-                        Stream.of(
+                        vp(
                                 Vertex.DR_V,
                                 Vertex.UL_V
                         ),
-                        Stream.of(
+                        vp(
                                 Vertex.DOWN,
                                 Vertex.UP
                         ),
-                        Stream.of(
+                        vp(
                                 Vertex.DL_V,
                                 Vertex.UR_V
                         )

@@ -6,10 +6,9 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -17,7 +16,7 @@ import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 //p.
 public class Tile17 {
@@ -54,17 +53,15 @@ public class Tile17 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        List<String> equations = Arrays.asList(
-                "KB = (1/3) * KA"
-        );
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_17_design")
                 .withGrid(Grid.Configs.HEX_HOR.getConfiguration())
                 .withGridRatio(KB)
                 .withGridSize(8)
 
                 .addFullPaths(red, getFullPath())
-                .addEquations(equations)
+                .addEquations(sequence(
+                        "KB = (1/3) * KA"
+                ))
                 .addImportantVertexes(Tile17.class)
                 .addSinglePathsLines(
                         gray,
@@ -76,8 +73,8 @@ public class Tile17 {
 
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(G, E, I, A, J, D, F)
         );
     }

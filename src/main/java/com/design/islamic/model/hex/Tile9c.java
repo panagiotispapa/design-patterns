@@ -10,20 +10,20 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.awt.*;
-import java.util.Collection;
-import java.util.stream.Stream;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
+import static com.design.common.PointTransition.pt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
-import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
-import static com.design.islamic.model.Hex.*;
-import static java.util.stream.Collectors.toList;
+import static com.design.islamic.model.Hex.diagonals;
+import static com.design.islamic.model.Hex.perimeter;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile9c extends Tile9b {
 
@@ -105,19 +105,12 @@ public class Tile9c extends Tile9b {
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_09e_design")
                 .addEquations(
-                        Stream.of(
-                                getEquationsA(),
-                                getEquationsB(),
-                                getEquationsD()
-                        ).map(Collection::stream).flatMap(s -> s).collect(toList())
+                        getEquationsA()
+                                .join(getEquationsB())
+                                .join(getEquationsD())
                 )
                 .addImportantVertexes(
-                        Stream.of(
-                                getImportantPointsA(),
-                                getImportantPointsB(),
-                                getImportantPointsC(),
-                                getImportantPointsD()
-                        ).flatMap(s -> s)
+                        getImportantPointsA().join(getImportantPointsB()).join(getImportantPointsC()).join(getImportantPointsD())
                 )
                 .addImportantVertexes(Tile9c.class)
                 .addSinglePathsLines(
@@ -128,18 +121,14 @@ public class Tile9c extends Tile9b {
                 )
                 .addSinglePathsLines(
                         blue,
-                        Stream.concat(
-                                getInstructionsBlueA(),
-                                getInstructionsBlueB()
-                        )
+                        getInstructionsBlueA(),
+                        getInstructionsBlueB()
                 )
                 .addFullPaths(
                         gray,
-                        Stream.of(
-                                getFullInstructionsGrayA(),
-                                getFullInstructionsGrayB(),
-                                getFullInstructionsGrayC()
-                        ).flatMap(s -> s)
+                        getFullInstructionsGrayA(),
+                        getFullInstructionsGrayB(),
+                        getFullInstructionsGrayC()
 
                 )
                 .addCircleWithRadius(
@@ -175,8 +164,8 @@ public class Tile9c extends Tile9b {
 
     }
 
-    protected static Stream<PointsPath> getInstructionsGrayE() {
-        return Stream.of(
+    protected static Sequence<PointsPath> getInstructionsGrayE() {
+        return sequence(
                 perimeter(1.0, VER).apply(K),
                 perimeter(1.0, HOR).apply(K),
                 diagonals(1.0, VER).apply(K),
@@ -187,8 +176,8 @@ public class Tile9c extends Tile9b {
         ).flatMap(s -> s);
     }
 
-    protected static Stream<PointsPath> getPathFullLinesE() {
-        return Stream.of(
+    protected static Sequence<PointsPath> getPathFullLinesE() {
+        return sequence(
                 PointsPath.of(I2, J8, I9, L3, G6, G5, L4, L8, I5),
                 PointsPath.of(I7, I8, J7, J5, G3),
                 PointsPath.of(I6, L5, L7, L6, L10),
@@ -196,7 +185,6 @@ public class Tile9c extends Tile9b {
                 PointsPath.of(C, O1, O2)
         );
     }
-
 
 
 //

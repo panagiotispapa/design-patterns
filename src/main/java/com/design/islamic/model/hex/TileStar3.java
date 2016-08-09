@@ -10,10 +10,10 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.awt.*;
-import java.util.stream.Stream;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -24,7 +24,7 @@ import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.RatioHelper.P6.P;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class TileStar3 {
 
@@ -85,7 +85,7 @@ public class TileStar3 {
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_03_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
                 .addFullPaths(red, getFullPath())
-                .addEquations(asList(
+                .addEquations(sequence(
                         "KA = 1",
                         "KE = EB = h",
                         "AB = EB - EA = h - 0.5",
@@ -106,7 +106,7 @@ public class TileStar3 {
                 .addSinglePathsLines(
                         green,
                         perimeter(H, HOR).apply(K),
-                        Stream.of(PointsPath.of(C, D, B))
+                        sequence(PointsPath.of(C, D, B))
                 )
                 .addFullPaths(
                         gray,
@@ -129,8 +129,8 @@ public class TileStar3 {
 
     }
 
-    private static java.util.List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(G, E, L)
         );
     }

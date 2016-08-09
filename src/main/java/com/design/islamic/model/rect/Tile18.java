@@ -8,11 +8,10 @@ import com.design.common.RatioHelper.P12;
 import com.design.common.RatioHelper.P6;
 import com.design.common.model.Style;
 import com.design.islamic.model.*;
+import com.googlecode.totallylazy.Sequence;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -23,7 +22,7 @@ import static com.design.common.RatioHelper.P4.H;
 import static com.design.islamic.model.Rect.Vertex.*;
 import static com.design.islamic.model.Rect.diagonals;
 import static com.design.islamic.model.Rect.perimeter;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile18 {
 
@@ -208,7 +207,7 @@ VV3 = VP2 * (AQ / AI2) / ( FJ2 / FV + AQ / AI2)
         Style gray = new Style.Builder(Color.GRAY, 1).build();
         Style blue = new Style.Builder(Color.BLUE, 1).build();
 
-        List<String> equations = Arrays.asList(
+        Sequence<String> equations = sequence(
                 "KB = h",
                 "KC = KB * P6.H",
                 "CD = KB * P6.P",
@@ -223,7 +222,7 @@ VV3 = VP2 * (AQ / AI2) / ( FJ2 / FV + AQ / AI2)
                 "V3V4 = (VP2 - VV3) * (AQ / AI2)"
         );
 
-        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "rect_tile_18_design")
+        return new DesignHelper(Rect.ALL_VERTEX_INDEXES, "rect_tile_18_design")
                 .addEquations(equations)
                 .addImportantVertexes(Tile18.class)
                 .addSinglePathsLines(
@@ -273,19 +272,19 @@ VV3 = VP2 * (AQ / AI2) / ( FJ2 / FV + AQ / AI2)
                         Pair.of(B2, BI),
                         Pair.of(O3, KO3)
                 )
-                .addCirclesCentral(asList(
+                .addCirclesCentral(gray,
                         H,
                         KJ,
                         KO4
-                ), gray)
+                )
                 .addFullPaths(red, getFullPath())
                 .withFontSize(12)
                 ;
 
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(Q5, S, Q, X4, V5, O11, V6, X5, Q6),
                 PointsPath.of(W, X6, O8, X9, O10)
         );

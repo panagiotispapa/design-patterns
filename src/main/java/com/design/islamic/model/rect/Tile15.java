@@ -7,11 +7,10 @@ import com.design.common.PointsPath;
 import com.design.common.RatioHelper.P6;
 import com.design.common.model.Style;
 import com.design.islamic.model.*;
+import com.googlecode.totallylazy.Sequence;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -22,7 +21,7 @@ import static com.design.common.RatioHelper.P4.H;
 import static com.design.islamic.model.Rect.Vertex.*;
 import static com.design.islamic.model.Rect.diagonals;
 import static com.design.islamic.model.Rect.perimeter;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile15 {
 
@@ -125,7 +124,7 @@ public class Tile15 {
         Style gray = new Style.Builder(Color.GRAY, 1).build();
         Style blue = new Style.Builder(Color.BLUE, 1).build();
 
-        List<String> equations = Arrays.asList(
+        Sequence<String> equations = sequence(
                 "KB = h",
                 "KC = KB * P6.H",
                 "CD = KB * P6.P",
@@ -143,7 +142,7 @@ public class Tile15 {
                 ""
         );
 
-        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "rect_tile_15_design")
+        return new DesignHelper(Rect.ALL_VERTEX_INDEXES, "rect_tile_15_design")
                 .addEquations(equations)
                 .addImportantVertexes(Tile15.class)
                 .addSinglePathsLines(
@@ -184,10 +183,10 @@ public class Tile15 {
                         Pair.of(A2, KB),
                         Pair.of(W, WZ)
                 )
-                .addCirclesCentral(asList(
+                .addCirclesCentral(gray,
                         H,
                         KI
-                ), gray)
+                )
 //                .addCirclesCentral(asList(
 //                        KJ
 //                ), blue)
@@ -197,13 +196,13 @@ public class Tile15 {
 
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(O, X, B, X2, O2),
                 PointsPath.of(Q4, Z, R, T, Q10, T2, N, Z2, Q5)
-//                PointsPath.of(X6, R, W, E, I),
-//                PointsPath.of(X7, X5, R2, W4, E2, I2),
-//                PointsPath.of(X4, L3, Q2, W3, U3)
+//                PointsPath.circle(X6, R, W, E, I),
+//                PointsPath.circle(X7, X5, R2, W4, E2, I2),
+//                PointsPath.circle(X4, L3, Q2, W3, U3)
         );
     }
 

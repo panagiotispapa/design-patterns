@@ -8,10 +8,9 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -19,7 +18,7 @@ import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile18 {
 
@@ -47,12 +46,10 @@ public class Tile18 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        List<String> equations = Arrays.asList(
-        );
-
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_18_design")
                 .addSinglePathsLines(red, getSinglePaths())
-                .addEquations(equations)
+                .addEquations(sequence(
+                ))
                 .addImportantVertexes(Tile18.class)
                 .addSinglePathsLines(
                         gray,
@@ -60,8 +57,8 @@ public class Tile18 {
                 );
     }
 
-    private static List<PointsPath> getSinglePaths() {
-        return asList(
+    private static Sequence<PointsPath> getSinglePaths() {
+        return sequence(
                 PointsPath.of(A, C),
                 PointsPath.of(B, D)
         );

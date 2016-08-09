@@ -6,10 +6,9 @@ import com.design.common.Grid;
 import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.*;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -17,10 +16,11 @@ import static com.design.common.PointTransition.pt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P4.H;
+import static com.design.islamic.model.Rect.ALL_VERTEX_INDEXES;
 import static com.design.islamic.model.Rect.Vertex.*;
 import static com.design.islamic.model.Rect.diagonals;
 import static com.design.islamic.model.Rect.perimeter;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile9 {
 
@@ -49,7 +49,7 @@ public class Tile9 {
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
 
         return new Payload.Builder("rect_tile_09",
-                Rect.ALL_VERTEX_INDEXES)
+                ALL_VERTEX_INDEXES)
                 .withPathsFull(whiteBold, getFullPath())
                 .withGridConf(Grid.Configs.RECT2.getConfiguration())
                 .build();
@@ -61,13 +61,11 @@ public class Tile9 {
         Style gray = new Style.Builder(Color.GRAY, 1).build();
         Style blue = new Style.Builder(Color.BLUE, 1).build();
 
-        List<String> equations = Arrays.asList(
-                "KB = h",
-                "KC = AD = KA / 4"
-        );
-
-        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "rect_tile_09_design")
-                .addEquations(equations)
+        return new DesignHelper(ALL_VERTEX_INDEXES, "rect_tile_09_design")
+                .addEquations(sequence(
+                        "KB = h",
+                        "KC = AD = KA / 4"
+                ))
                 .addImportantVertexes(Tile9.class)
                 .addSinglePathsLines(
                         gray,
@@ -80,16 +78,14 @@ public class Tile9 {
                         diagonals(CE, VER).apply(C),
                         diagonals(CE, VER).apply(D)
                 )
-                .addCirclesCentral(asList(
-                        H
-                ), gray)
+                .addCirclesCentral(gray, H)
                 .addFullPaths(red, getFullPath())
                 ;
 
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(K, C, E, D, A),
                 PointsPath.of(C, F, D),
                 PointsPath.of(F, G),

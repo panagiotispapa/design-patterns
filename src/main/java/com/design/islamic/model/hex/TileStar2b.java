@@ -10,6 +10,7 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
 
@@ -22,7 +23,7 @@ import static com.design.common.RatioHelper.P6.H;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.diagonals;
 import static com.design.islamic.model.Hex.perimeter;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class TileStar2b {
 
@@ -49,8 +50,8 @@ public class TileStar2b {
     }
 
 
-    private static java.util.List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(B, D, C)
         );
     }
@@ -66,7 +67,7 @@ public class TileStar2b {
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_star_02b_design")
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
                 .addFullPaths(red, getFullPath())
-                .addEquations(asList(
+                .addEquations(sequence(
                         "KD = H / (H + 0.5)"
                 ))
                 .addImportantVertexes(TileStar2b.class)

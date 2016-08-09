@@ -21,11 +21,7 @@ public class Path {
     private final boolean closed;
     private Style style;
 
-    public static Function<PointsPath, Path> fromPath(Style style) {
-        return path -> new Path(style, path);
-    }
-
-    private Path(Style style, PointsPath path) {
+    public Path(Style style, PointsPath path) {
         this(false, style, path);
     }
 

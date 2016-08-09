@@ -10,11 +10,9 @@ import com.design.islamic.model.DesignSupplier;
 import com.design.islamic.model.Hex;
 import com.design.islamic.model.Payload;
 import com.design.islamic.model.TileSupplier;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.List;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -23,8 +21,9 @@ import static com.design.common.RatioHelper.P6.H;
 import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Hex.Vertex.*;
 import static com.design.islamic.model.Hex.*;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
+import static com.googlecode.totallylazy.Sequences.join;
+import static com.googlecode.totallylazy.Sequences.sequence;
+import static com.googlecode.totallylazy.numbers.Integers.range;
 
 //p.
 public class Tile16 {
@@ -82,24 +81,23 @@ public class Tile16 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style red = new Style.Builder(Color.RED, 2).build();
 
-        List<String> equations = asList(
-                "KA = 1 / 9"
-        );
 
         return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "hex_tile_16_design")
-                .addEquations(equations)
+                .addEquations(sequence(
+                        "KA = 1 / 9"
+                ))
                 .addImportantVertexes(Tile16.class)
                 .withGrid(Grid.Configs.HEX_VER.getConfiguration())
                 .withGridRatio(KA)
                 .withGridSize(24)
 
                 .addImportantVertexes(
-                        IntStream.rangeClosed(1, 9).mapToObj(i -> Stream.of(
+                        range(1, 9).flatMap(i -> sequence(
                                 ImportantVertex.of(String.valueOf(i), fpt(pt(i * KA, UR_V))),
                                 ImportantVertex.of(String.valueOf(i), fpt(pt(i * KA, DR_V))),
                                 ImportantVertex.of(String.valueOf(i), fpt(pt(i * KA, DOWN))),
                                 ImportantVertex.of(String.valueOf(i), fpt(pt(i * KA, UP)))
-                        )).flatMap(s -> s)
+                        ))
                 )
                 .addSinglePathsLines(
                         gray,
@@ -112,20 +110,19 @@ public class Tile16 {
 
     }
 
-    private static List<PointsPath> getAllSinglePath() {
-        return Stream.concat(
-                getSinglePath().stream(),
-                getSinglePath().stream().map(p -> p.mirror(mirrorHor))
-        ).collect(toList());
+    private static Sequence<PointsPath> getAllSinglePath() {
+        return join(
+                getSinglePath(),
+                getSinglePath().map(p -> p.mirror(mirrorHor))
+        );
     }
 
-    private static List<PointsPath> getSinglePath() {
-        return asList(
+    private static Sequence<PointsPath> getSinglePath() {
+        return sequence(
                 PointsPath.of(I1, I2, I3, I4, I7, L5, L3, L4, I9, L9, L7, L6, L10),
                 PointsPath.of(I3, I5, I6),
                 PointsPath.of(L2, L1, L3),
                 PointsPath.of(L7, L8, I8)
-
         );
     }
 

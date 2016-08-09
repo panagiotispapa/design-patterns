@@ -6,10 +6,9 @@ import com.design.common.Grid;
 import com.design.common.PointsPath;
 import com.design.common.model.Style;
 import com.design.islamic.model.*;
+import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
@@ -19,7 +18,7 @@ import static com.design.common.RatioHelper.P4.H;
 import static com.design.common.PointTransition.pt;
 import static com.design.islamic.model.Rect.Vertex.*;
 import static com.design.islamic.model.Rect.*;
-import static java.util.Arrays.asList;
+import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile4 {
 
@@ -55,13 +54,11 @@ public class Tile4 {
         Style green = new Style.Builder(Color.GREEN, 1).build();
         Style blue = new Style.Builder(Color.BLUE, 1).build();
 
-        List<String> equations = Arrays.asList(
-                "KB = KA / 5.0"
-        );
-
-        return new DesignHelper(Hex.ALL_VERTEX_INDEXES, "deco_tile_04_design")
+        return new DesignHelper(Rect.ALL_VERTEX_INDEXES, "deco_tile_04_design")
                 .addFullPaths(red, getFullPath())
-                .addEquations(equations)
+                .addEquations(
+                        "KB = KA / 5.0"
+                )
                 .addImportantVertexes(Tile4.class)
                 .addSinglePathsLines(
                         gray,
@@ -75,8 +72,8 @@ public class Tile4 {
 
     }
 
-    private static List<PointsPath> getFullPath() {
-        return asList(
+    private static Sequence<PointsPath> getFullPath() {
+        return sequence(
                 PointsPath.of(E, B2)
         );
     }
