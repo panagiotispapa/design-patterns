@@ -1,7 +1,5 @@
 package com.design.common;
 
-import java.awt.geom.Point2D;
-
 public abstract class Polygon {
 
     public enum Type {
@@ -13,7 +11,15 @@ public abstract class Polygon {
 
         Vertex withOffset(int offset);
 
-        Point2D getPoint();
+        CanvasPoint getCanvasPoint();
+
+        default FinalPointTransition fpt(double r) {
+            return FinalPointTransition.fpt(r, this);
+        }
+
+        default PointTransition pt(double r) {
+            return PointTransition.pt(r, this);
+        }
 
     }
 

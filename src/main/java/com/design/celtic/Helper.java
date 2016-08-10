@@ -2,10 +2,10 @@ package com.design.celtic;
 
 import com.design.common.model.Circle;
 
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.design.common.CanvasPoint.point;
 import static java.util.Arrays.asList;
 
 public class Helper {
@@ -114,8 +114,5 @@ public class Helper {
 
     }
 
-    private static Point2D point(double x, double y) {
-        return new Point2D.Double(x, y);
-    }
 
 }

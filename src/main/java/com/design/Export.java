@@ -1,12 +1,11 @@
 package com.design;
 
+import com.design.arabic.model.DesignSupplier;
+import com.design.arabic.model.Payload;
+import com.design.arabic.model.SvgPayload;
+import com.design.arabic.model.TileSupplier;
+import com.design.common.CanvasPoint;
 import com.design.common.DesignHelper;
-import com.design.common.Grid;
-import com.design.common.InitialConditions;
-import com.design.islamic.model.DesignSupplier;
-import com.design.islamic.model.Payload;
-import com.design.islamic.model.TileSupplier;
-import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.tuple.Pair;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
@@ -16,32 +15,27 @@ import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import static com.design.common.view.SvgFactory.*;
+import static com.design.common.CanvasPoint.point;
+import static com.design.common.view.SvgFactory.buildSvg;
+import static com.design.common.view.SvgFactory.toHtml;
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
 public class Export {
 
     public Export() {
 
     }
-
-    private static Map<Payload.Size, Double> sizeToRNew = ImmutableMap.of(
-            Payload.Size.SMALL, 100.0,
-            Payload.Size.MEDIUM, 150.0,
-            Payload.Size.LARGE, 200.0
-    );
 
     private static Reflections forPackage(String pkg) {
         return new Reflections(new ConfigurationBuilder()
@@ -57,9 +51,26 @@ public class Export {
 
 //        System.out.println(methods.size());
 
-        methods.parallelStream().map(m -> Export.invokeMethod(m, Payload.class))
+        List<SvgPayload> payloads = methods.parallelStream().map(m -> Export.invokeMethod(m, Payload.class)).map(Payload::toSvgPayload).collect(toList());
+        System.out.println("A total of " + payloads.size());
+
+        payloads.parallelStream()
                 .forEach(Export::export);
+
+
+        saveToFile(payloads.stream()
+                .filter(p -> !p.getName().contains("grid"))
+                .filter(p -> !p.getName().contains("deco"))
+                .sorted(SvgPayload::sortByName)
+//                .map(SvgPayload::getPayload)
+                .map(p -> format("<p>%s<p>%s", p.getName(), p.getPayload()))
+                .collect(joining()), "all");
     }
+
+    public static void export(SvgPayload svgPayload) {
+        saveToFile(svgPayload.getPayload(), svgPayload.getName());
+    }
+
 
     private static void exportDesigns() {
         Set<Method> methods = forPackage("com.design")
@@ -69,49 +80,16 @@ public class Export {
                 .forEach(Export::export);
     }
 
-    private static void export(Payload payload) {
 
-        Double R = sizeToRNew.get(payload.getSize());
-        Dimension dim = new Dimension((int) (15 * R), (int) (10 * R));
-        InitialConditions ic = InitialConditions.of(new Point2D.Double(0, 0), R);
-
-        System.out.println(payload.getName());
-        saveToFile(buildSvg(dim, buildBackground(dim) + buildSvgFromPayloadSimple(payload, ic)), payload.getName());
-
-    }
-
-
-    private static String buildSvgFromPayloadSimple(Payload payload, InitialConditions ic) {
-        List<Point2D> gridPoints = Grid.gridFromStart(ic.getCentre(), ic.getR(), payload.getGridConfiguration(), 17);
-
-        return
-                gridPoints.parallelStream().map(p -> InitialConditions.of(p, ic.getR())).map(payload::draw).collect(joining());
-
-    }
-
-    private static String buildBackground(Dimension dim) {
-
-        final String styleBlack = newStyle(BLACK, BLACK, 1, 1, 1);
-        List<Point2D> backGroundRect = asList(
-                new Point2D.Double(0, 0),
-                new Point2D.Double(dim.getWidth(), 0),
-                new Point2D.Double(dim.getWidth(), dim.getHeight()),
-                new Point2D.Double(0, dim.getHeight()));
-
-        return drawPolygon(backGroundRect, styleBlack);
-        //shapes.append();
-
-    }
-
-    private static void export(DesignHelper designHelper) {
+    public static void export(DesignHelper designHelper) {
 
         Dimension dim = new Dimension(1024 + 2 * 128 + 32, 768);
 
-        Point2D centre = new Point2D.Double(dim.getWidth() / 2.0, dim.getHeight() / 2.0);
+        CanvasPoint centre = point(dim.getWidth() / 2.0, dim.getHeight() / 2.0);
 
-        Pair<Point2D, Double> ic = Pair.of(centre, 300.0);
+        Pair<CanvasPoint, Double> ic = Pair.of(centre, 300.0);
 
-        System.out.println(designHelper.getName());
+//        System.out.println(designHelper.getName());
 
         buildSvg(dim, designHelper.build(() -> ic));
 
@@ -133,27 +111,33 @@ public class Export {
     }
 
     private static void saveToFile(String svg, String name) {
-
         try {
             String path = "./";
             Files.write(Paths.get(path, name + ".html"),
-                    Arrays.asList(toHtml(svg))
+                    asList(toHtml(svg))
             );
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
+
 
     public static void main(String[] args) throws InvocationTargetException, IllegalAccessException {
         Export.exportDesigns();
         Export.exportPayloads();
 
-//        Export.export(TileGrid.getPayloadRect1());
-//        Export.export(TileGrid.getPayloadRect2());
-//        Export.export(TileGrid.getPayloadRect3());
-//        Export.export(Tile14.getDesignHelper());
-//        Export.export(Tile14.getPayloadSimple());
+//        https://thumbs.dreamstime.com/z/vector-seamless-pattern-geometric-texture-arabic-islamic-art-48545611.jpg
+//        http://cache1.asset-cache.net/xc/468533522.jpg?v=2&c=IWSAsset&k=2&d=nhiGm00rkVdHlEl67mSGS_tpqJ_23He3KpaItMU-w_WiKBT_FYk-6-Jnwb2LSq900
+//        http://i.istockimg.com/file_thumbview_approve/61420962/3/stock-illustration-61420962-abstract-seamless-geometric-islamic-wallpaper-pattern.jpg
+//        http://www.turkotek.com/misc_00130/kufic_files/jornal-of-the-society-of-arts-1905_2.jpg
+//        https://s-media-cache-ak0.pinimg.com/736x/50/6a/fd/506afd013423012a58283ae8fbabf5aa.jpg
+//        http://thumb101.shutterstock.com/photos/display_pic_with_logo/1118624/276480473.jpg
+//        https://image.yayimages.com/512/photo/vector-seamless-black-and-white-geometric-trianfgle-zigzag-shape-islamic-pattern-150750312.jpg
+//        http://l7.alamy.com/zooms/7fa9b6c7592342009d2e4e5b80bbac1e/vector-seamless-black-and-white-hexagonal-geometric-star-islamic-pattern-fb2pkg.jpg
+//        http://predecessorstopioneers.weebly.com/uploads/4/5/5/8/45580021/7214015_orig.gif
+//        https://s-media-cache-ak0.pinimg.com/736x/12/a1/18/12a11839f121e6d22b036c07d58e7e29.jpg
+//        http://images.patterninislamicart.com/image.php?image=/ia/mah_108b.jpg&width=650&height=600
+//        https://www.davidmus.dk/files/8/9/2100/moenster10.png
 
     }
 }

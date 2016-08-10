@@ -2,14 +2,15 @@ package com.design.celtic;
 
 import com.design.common.model.Arc;
 import com.design.common.model.Circle;
+import com.design.common.model.Style;
 import com.google.common.collect.Sets;
 
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Set;
 
 import static com.design.celtic.Helper.getCircleFromRow;
+import static com.design.common.CanvasPoint.point;
 import static com.design.common.view.SvgFactory.*;
 import static com.google.common.collect.Iterables.concat;
 import static java.util.Arrays.asList;
@@ -23,12 +24,13 @@ public class Patterns {
 
         StringBuilder shapes = new StringBuilder();
 
-        final String styleBackStrong = newStyle(BLACK, 2, 1);
-        final String styleBackLight = newStyle(BLACK, 1, 0.4);
-        final String styleFrontGray = newStyle(GRAY, BLACK, 2, 0.8, 1);
-        final String styleFrontWhite = newStyle(WHITE, BLACK, 2, 1, 1);
 
-        Circle mainCircle = Circle.circle(new Point2D.Double(dim.getWidth() / 2, dim.getHeight() / 2), r);
+        final Style styleBackStrong = new Style.Builder(Color.BLACK, 2).withStrokeOpacity(1.0).build();
+        final Style styleBackLight = new Style.Builder(Color.BLACK, 2).withStrokeOpacity(0.4).build();
+        final Style styleFrontGray = new Style.Builder(Color.BLACK, 2).withFill(Color.GRAY).withFillOpacity(0.8).withStrokeOpacity(1.0).build();
+        final Style styleFrontWhite = new Style.Builder(Color.BLACK, 2).withFill(Color.WHITE).withFillOpacity(1.0).withStrokeOpacity(1.0).build();
+
+        Circle mainCircle = Circle.circle(point(dim.getWidth() / 2, dim.getHeight() / 2), r);
 
         Set<Circle> layer1 = Sets.newHashSet(concat(
                 Helper.putInARow(mainCircle, 18, 0),
@@ -75,7 +77,7 @@ public class Patterns {
         shapes.append(drawCircles(layer1, styleBackLight));
         shapes.append(drawCircles(layer2, styleFrontGray));
         shapes.append(drawArcList(layer3, styleBackStrong));
-        shapes.append(drawCircle(mainCircle, styleBackStrong));
+        shapes.append(mainCircle.draw(styleBackStrong));
 
         return buildSvg(dim, shapes.toString());
 

@@ -3,10 +3,10 @@ package com.design.deco;
 import com.design.common.DesignHelper;
 import com.design.common.FinalPointTransition;
 import com.design.common.Grid;
-import com.design.common.PointsPath;
+import com.design.common.Line;
 import com.design.common.RatioHelper.P4;
 import com.design.common.model.Style;
-import com.design.islamic.model.*;
+import com.design.arabic.model.*;
 import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
@@ -15,9 +15,8 @@ import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
-import static com.design.common.PointTransition.pt;
-import static com.design.islamic.model.Rect.Vertex.*;
-import static com.design.islamic.model.Rect.*;
+import static com.design.arabic.model.Rect.Vertex.*;
+import static com.design.arabic.model.Rect.*;
 import static com.googlecode.totallylazy.Sequences.sequence;
 
 
@@ -28,11 +27,11 @@ public class Tile2 {
     private static final double KB = KA - AB;
     private static final double AC = AB * P4.H;
 
-    public final static FinalPointTransition A = fpt(pt(KA, DR));
-    public final static FinalPointTransition B = fpt(pt(KB, DR));
-    public final static FinalPointTransition C = B.append(pt(AC, RIGHT));
-    public final static FinalPointTransition D = fpt(pt(KA, DL));
-    public final static FinalPointTransition E = D.append(pt(AC, UP));
+    public final static FinalPointTransition A = fpt(KA, DR);
+    public final static FinalPointTransition B = fpt(KB, DR);
+    public final static FinalPointTransition C = B.to(AC, RIGHT);
+    public final static FinalPointTransition D = fpt(KA, DL);
+    public final static FinalPointTransition E = D.to(AC, UP);
 
 
     @TileSupplier
@@ -79,9 +78,9 @@ public class Tile2 {
 
     }
 
-    private static Sequence<PointsPath> getFullPath() {
+    private static Sequence<Line> getFullPath() {
         return sequence(
-                PointsPath.of(E, C)
+                Line.line(E, C)
         );
     }
 

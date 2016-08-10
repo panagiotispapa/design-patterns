@@ -3,9 +3,9 @@ package com.design.deco;
 import com.design.common.DesignHelper;
 import com.design.common.FinalPointTransition;
 import com.design.common.Grid;
-import com.design.common.PointsPath;
+import com.design.common.Line;
 import com.design.common.model.Style;
-import com.design.islamic.model.*;
+import com.design.arabic.model.*;
 import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
@@ -15,9 +15,8 @@ import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.Polygon.Type.HOR;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P4.H;
-import static com.design.common.PointTransition.pt;
-import static com.design.islamic.model.Rect.Vertex.*;
-import static com.design.islamic.model.Rect.*;
+import static com.design.arabic.model.Rect.Vertex.*;
+import static com.design.arabic.model.Rect.*;
 import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile4 {
@@ -28,13 +27,14 @@ public class Tile4 {
     private static final double CD = KB;
     private static final double CE = CD * H;
 
-    public final static FinalPointTransition A = fpt(pt(KA, RIGHT));
-    public final static FinalPointTransition B = fpt(pt(KB, RIGHT));
-    public final static FinalPointTransition B2 = fpt(pt(KB, LEFT));
-    public final static FinalPointTransition C = fpt(pt(KC, DR));
-    public final static FinalPointTransition D = C.append(pt(CD, LEFT));
-    public final static FinalPointTransition E = C.append(pt(CE, DL));
-    @TileSupplier
+    public final static FinalPointTransition A = fpt(KA, RIGHT);
+    public final static FinalPointTransition B = fpt(KB, RIGHT);
+    public final static FinalPointTransition B2 = fpt(KB, LEFT);
+    public final static FinalPointTransition C = fpt(KC, DR);
+    public final static FinalPointTransition D = C.to(CD, LEFT);
+    public final static FinalPointTransition E = C.to(CE, DL);
+
+//    @TileSupplier
     public static Payload getPayloadSimple() {
 
         Style whiteBold = new Style.Builder(Color.WHITE, 2).build();
@@ -47,7 +47,7 @@ public class Tile4 {
                 .build();
     }
 
-    @DesignSupplier
+//    @DesignSupplier
     public static DesignHelper getDesignHelper() {
         Style red = new Style.Builder(Color.RED, 2).build();
         Style gray = new Style.Builder(Color.GRAY, 1).build();
@@ -72,9 +72,9 @@ public class Tile4 {
 
     }
 
-    private static Sequence<PointsPath> getFullPath() {
+    private static Sequence<Line> getFullPath() {
         return sequence(
-                PointsPath.of(E, B2)
+                Line.line(E, B2)
         );
     }
 

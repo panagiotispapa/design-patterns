@@ -2,6 +2,10 @@ package com.design.common.model;
 
 import java.awt.*;
 
+import static com.design.common.view.SvgFactory.toHex;
+import static java.lang.String.format;
+import static java.util.Optional.ofNullable;
+
 public class Style {
     private final Color stroke;
     private final int strokeWidth;
@@ -38,12 +42,26 @@ public class Style {
         return strokeOpcacity;
     }
 
+    public String toSVG() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(format("stroke:%s;", toHex(stroke)));
+        builder.append(format("fill:%s;", toHex(fill)));
+        builder.append(format("stroke-width:%d;", strokeWidth));
+
+        ofNullable(strokeOpcacity).ifPresent(o -> builder.append(format("stroke-opacity:%f;", o)));
+        ofNullable(fillOpacity).ifPresent(o -> builder.append(format("fill-opacity:%f;", o)));
+
+        return builder.toString();
+
+    }
+
+
     public static class Builder {
         private final Color stroke;
         private final int strokeWidth;
         private Color fill;
         private Double fillOpacity;
-        private Double strokeOpcacity;
+        private Double strokeOpacity;
 
         public Builder(Color stroke, int strokeWidth) {
             this.stroke = stroke;
@@ -60,13 +78,13 @@ public class Style {
             return this;
         }
 
-        public Builder withStrokeOpcacity(Double strokeOpcacity) {
-            this.strokeOpcacity = strokeOpcacity;
+        public Builder withStrokeOpacity(Double strokeOpcacity) {
+            this.strokeOpacity = strokeOpcacity;
             return this;
         }
 
         public Style build() {
-            return new Style(stroke, strokeWidth, fill, fillOpacity, strokeOpcacity);
+            return new Style(stroke, strokeWidth, fill, fillOpacity, strokeOpacity);
         }
 
     }

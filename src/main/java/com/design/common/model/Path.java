@@ -1,37 +1,37 @@
 package com.design.common.model;
 
+import com.design.common.CanvasPoint;
 import com.design.common.InitialConditions;
-import com.design.common.PointsPath;
-import com.design.common.view.SvgFactory;
+import com.design.common.Line;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
-import static com.design.common.view.SvgFactory.toSVGString;
+import static com.design.common.model.Path.Instruction.instruction;
 import static java.util.stream.Collectors.joining;
 
 
 public class Path {
 
-    private final PointsPath path;
+    private final Line path;
     private final boolean closed;
     private Style style;
 
-    public Path(Style style, PointsPath path) {
+    public Path(Style style, Line path) {
         this(false, style, path);
     }
 
-    private Path(boolean closed, Style style, PointsPath path) {
+    private Path(boolean closed, Style style, Line path) {
         this.closed = closed;
         this.style = style;
         this.path = path;
     }
 
-    public PointsPath getPath() {
+    public Line getPath() {
         return path;
     }
 
@@ -45,16 +45,13 @@ public class Path {
 
 
     public String draw(InitialConditions ic) {
-        StringBuilder builder = new StringBuilder("<path d=\"");
-        builder.append(fromPath(path.generatePoints(ic)).stream().map(toSvg()).collect(joining(" ")));
-        builder.append(isClosed() ? " z\"" : "\"");
-        builder.append(" style=\"" + toSVGString(getStyle()));
-        builder.append("\"/>");
-        return builder.toString();
-    }
-
-    private static Function<Pair<Point2D, InstructionType>, String> toSvg() {
-        return p -> SvgFactory.toSVG(p.getLeft(), p.getRight()::getSvgInstruction);
+        return Stream.of(
+                "<path d=\"",
+                fromPath(path.generatePoints(ic)).stream().map(Instruction::toSvg).collect(joining(" ")),
+                isClosed() ? " z\"" : "\"",
+                " style=\"" + style.toSVG(),
+                "\"/>"
+        ).collect(joining());
     }
 
     private enum InstructionType {
@@ -73,19 +70,37 @@ public class Path {
     }
 
 
-    private List<Pair<Point2D, InstructionType>> fromPath(List<Point2D> points) {
-        List<Pair<Point2D, InstructionType>> instructions = Lists.newArrayList();
+    private List<Instruction> fromPath(List<CanvasPoint> points) {
+        List<Instruction> instructions = Lists.newArrayList();
         AtomicInteger counter = new AtomicInteger(0);
         points.forEach(p -> {
             if (counter.getAndIncrement() == 0) {
-                instructions.add(Pair.of(p, InstructionType.STARTING_POINT));
+                instructions.add(instruction(p, InstructionType.STARTING_POINT));
             } else {
-                instructions.add(Pair.of(p, InstructionType.LINE));
+                instructions.add(instruction(p, InstructionType.LINE));
             }
         });
         return instructions;
-
     }
 
+
+    public interface Instruction extends Supplier<Pair<CanvasPoint, InstructionType>> {
+
+        static Instruction instruction(CanvasPoint point, InstructionType instructionType) {
+            return () -> Pair.of(point, instructionType);
+        }
+
+        default CanvasPoint getPoint() {
+            return get().getLeft();
+        }
+
+        default InstructionType getInstructionType() {
+            return get().getRight();
+        }
+
+        default String toSvg() {
+            return getPoint().toSVGInstruction(getInstructionType()::getSvgInstruction);
+        }
+    }
 
 }

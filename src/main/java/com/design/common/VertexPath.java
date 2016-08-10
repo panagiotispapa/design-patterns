@@ -17,10 +17,10 @@ public interface VertexPath extends Supplier<Sequence<Polygon.Vertex>> {
         return () -> vertices;
     }
 
-    default PointsPath toPointsPath(FinalPointTransition centre, double ratio) {
-        return PointsPath.of(
+    default Line toPointsPath(FinalPointTransition centre, double ratio) {
+        return Line.line(
                 get().map(v -> pt(ratio, v))
-                        .map(centre::append)
+                        .map(centre::to)
 
         );
     }

@@ -1,27 +1,27 @@
 package com.design.common;
 
-import com.design.common.model.Circle;
 import com.design.common.model.Path;
 import com.design.common.model.Style;
 import com.googlecode.totallylazy.Sequence;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.awt.geom.Point2D;
+import java.awt.*;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import static com.design.common.CanvasPoint.point;
 import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.model.Circle.circle;
-import static com.design.common.view.SvgFactory.*;
+import static com.design.common.view.SvgFactory.drawText;
 import static com.googlecode.totallylazy.Sequences.join;
 import static com.googlecode.totallylazy.Sequences.sequence;
 import static com.googlecode.totallylazy.numbers.Integers.range;
-import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
@@ -31,7 +31,7 @@ public class DesignHelper {
     private int gridSize = 12;
     private Sequence<String> equations = sequence();
     private Sequence<ImportantVertex> importantVertexes = sequence();
-    private List<Pair<List<Pair<FinalPointTransition, Double>>, Style>> circlePolygonsWithRadius = new ArrayList<>();
+    private Sequence<Pair<Sequence<CircleInstruction>, Style>> circlePolygonsWithRadius = sequence();
     private Sequence<Pair<Sequence<Double>, Style>> circlesCentral = sequence();
 
     private Sequence<Path> singlePaths = sequence();
@@ -69,9 +69,8 @@ public class DesignHelper {
         return this;
     }
 
-
-    public DesignHelper addCircleWithRadius(Style style, Pair<FinalPointTransition, Double>... circles) {
-        circlePolygonsWithRadius.add(Pair.of(asList(circles), style));
+    public DesignHelper addCircleWithRadius(Style style, CircleInstruction... circles) {
+        this.circlePolygonsWithRadius = this.circlePolygonsWithRadius.join(sequence(Pair.of(sequence(circles), style)));
         return this;
     }
 
@@ -93,15 +92,9 @@ public class DesignHelper {
         return this;
     }
 
-
-    private Point2D calculationEquationPoint(Integer index) {
+    private CanvasPoint calculationEquationPoint(Integer index) {
         return point(1000, (index + 1) * 40);
     }
-
-    private Point2D point(double x, double y) {
-        return new Point2D.Double(x, y);
-    }
-
 
     public DesignHelper addImportantVertexes(Class klass) {
         addImportantVertexes(sequence(
@@ -138,72 +131,63 @@ public class DesignHelper {
         return this;
     }
 
-    public DesignHelper addSinglePathsLines(Style style, PointsPath... paths) {
+    public DesignHelper addSinglePathsLines(Style style, Line... paths) {
         return addSinglePathsLines(style, sequence(paths));
     }
 
-    public DesignHelper addSinglePathsLines(Style style, Sequence<PointsPath>... lines) {
+    public DesignHelper addSinglePathsLines(Style style, Sequence<Line>... lines) {
         return addSinglePathsLines(style, sequence(lines).flatMap(s -> s));
     }
 
-    public DesignHelper addSinglePathsLines(Style style, Sequence<PointsPath> lines) {
+    public DesignHelper addSinglePathsLines(Style style, Sequence<Line> lines) {
         this.singlePaths = this.singlePaths.join(lines.map(p -> p.toPath(style)));
         return this;
     }
 
-    public DesignHelper addFullPaths(Style style, Sequence<PointsPath>... paths) {
+    public DesignHelper addFullPaths(Style style, Sequence<Line>... paths) {
         return addFullPaths(style, sequence(paths).flatMap(s -> s));
     }
 
-    public DesignHelper addFullPaths(Style style, PointsPath... paths) {
+    public DesignHelper addFullPaths(Style style, Line... paths) {
         return addFullPaths(style, sequence(paths));
     }
 
-    public DesignHelper addFullPaths(Style style, Sequence<PointsPath> line) {
-        addSinglePathsLines(style, allVertexIndexes.flatMap(offset -> line.map(p -> p.withOffset(offset))));
+    public DesignHelper addFullPaths(Style style, Sequence<Line> lines) {
+        addSinglePathsLines(style, allVertexIndexes.flatMap(offset -> lines.map(p -> p.withOffset(offset))));
         return this;
     }
 
 
     public String build(InitialConditions initialConditions) {
 
-        final Point2D startingPoint = initialConditions.get().getLeft();
+        final CanvasPoint centre = initialConditions.get().getLeft();
         final Double realRatio = initialConditions.get().getRight();
 
-        Sequence<Pair<Point2D, String>> importantPoints =
+        Sequence<Pair<CanvasPoint, String>> importantPoints =
                 join(
-                        sequence(Pair.of(startingPoint, "K")),
+                        sequence(Pair.of(centre, "K")),
                         importantVertexes.map(v -> v.toPointWithText(initialConditions)),
                         getEquationsAsPoints()
                 );
 
-
-        List<Point2D> gridPoints = new ArrayList<>();
-        if (gridConfig != null) {
-            gridPoints = Grid.grid(startingPoint, realRatio * gridRatio, gridConfig, gridSize);
-
-        }
-
-        sequence(1, 2).map(d -> circle(startingPoint, d * realRatio)).map(c -> c.draw(new Style(null, 0, null, null, null)));
+        List<CanvasPoint> gridPoints = ofNullable(gridConfig).map(g -> Grid.gridFromMiddle(centre, realRatio * gridRatio, g, gridSize)).orElseGet(Collections::emptyList);
 
         return Stream.of(
-                circlePolygonsWithRadius.stream().map(p ->
-                        p.getLeft().stream().map(Circle.toCircleWithRadius(initialConditions).andThen(c -> c.draw(p.getRight())))
-                ).flatMap(s -> s),
+                circlePolygonsWithRadius.flatMap(p ->
+                        p.getLeft().map(c -> c.toCircle(initialConditions)).map(c -> c.draw(p.getRight()))
+                ).stream(),
                 circlesCentral.flatMap(p ->
-                        p.getLeft().map(d -> circle(startingPoint, d * realRatio)).map(c -> c.draw(p.getRight()))
+                        p.getLeft().map(d -> circle(centre, d * realRatio)).map(c -> c.draw(p.getRight()))
                 ).stream(),
                 singlePaths.map(p -> p.draw(initialConditions)).stream(),
-                Stream.of(highlightPoints("black", 2).apply(gridPoints)),
+                gridPoints.stream().map(p -> p.highlightPoint(Color.BLACK, 2)),
                 importantPoints.stream().map(drawText(fontSize)),
-                importantPoints.stream().map(Pair::getLeft).map(highlightPoint())
-
+                importantPoints.stream().map(Pair::getLeft).map(CanvasPoint::highlightPoint)
 
         ).flatMap(s -> s).collect(joining());
-
     }
 
-    private Sequence<Pair<Point2D, String>> getEquationsAsPoints() {
+    private Sequence<Pair<CanvasPoint, String>> getEquationsAsPoints() {
         return range(0).map(this::calculationEquationPoint).zip(equations).map(p -> Pair.of(p.first(), p.second()));
     }
 
@@ -225,7 +209,7 @@ public class DesignHelper {
             return get().getLeft();
         }
 
-        default Pair<Point2D, String> toPointWithText(InitialConditions ic) {
+        default Pair<CanvasPoint, String> toPointWithText(InitialConditions ic) {
             return Pair.of(getFinalPointTransition().toPoint(ic), getTxt());
         }
 

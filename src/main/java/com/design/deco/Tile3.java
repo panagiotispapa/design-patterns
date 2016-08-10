@@ -3,9 +3,9 @@ package com.design.deco;
 import com.design.common.DesignHelper;
 import com.design.common.FinalPointTransition;
 import com.design.common.Grid;
-import com.design.common.PointsPath;
+import com.design.common.Line;
 import com.design.common.model.Style;
-import com.design.islamic.model.*;
+import com.design.arabic.model.*;
 import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
@@ -13,9 +13,8 @@ import java.awt.*;
 import static com.design.common.FinalPointTransition.K;
 import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.Polygon.Type.HOR;
-import static com.design.common.PointTransition.pt;
-import static com.design.islamic.model.Rect.Vertex.*;
-import static com.design.islamic.model.Rect.*;
+import static com.design.arabic.model.Rect.Vertex.*;
+import static com.design.arabic.model.Rect.*;
 import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class Tile3 {
@@ -24,10 +23,10 @@ public class Tile3 {
     private static final double AB = KA / 4.0;
     private static final double KB = KA - AB;
 
-    public final static FinalPointTransition A = fpt(pt(KA, DR));
-    public final static FinalPointTransition B = fpt(pt(KB, DR));
-    public final static FinalPointTransition C = fpt(pt(KA, UR));
-    public final static FinalPointTransition D = fpt(pt(KB, UR));
+    public final static FinalPointTransition A = fpt(KA, DR);
+    public final static FinalPointTransition B = fpt(KB, DR);
+    public final static FinalPointTransition C = fpt(KA, UR);
+    public final static FinalPointTransition D = fpt(KB, UR);
 
 
     @TileSupplier
@@ -67,9 +66,9 @@ public class Tile3 {
 
     }
 
-    private static Sequence<PointsPath> getFullPath() {
+    private static Sequence<Line> getFullPath() {
         return sequence(
-                PointsPath.of(A, B, D, C)
+                Line.line(A, B, D, C)
         );
     }
 

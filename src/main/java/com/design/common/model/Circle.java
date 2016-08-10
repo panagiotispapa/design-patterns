@@ -1,20 +1,20 @@
 package com.design.common.model;
 
+import com.design.common.CanvasPoint;
 import com.design.common.FinalPointTransition;
 import com.design.common.InitialConditions;
 import com.design.common.view.SvgFactory;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.awt.geom.Point2D;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public interface Circle extends Supplier<Pair<Point2D, Double>> {
-    static Circle circle(Point2D centre, Double r) {
+public interface Circle extends Supplier<Pair<CanvasPoint, Double>> {
+    static Circle circle(CanvasPoint centre, Double r) {
         return () -> Pair.of(centre, r);
     }
 
-    default Point2D getCentre() {
+    default CanvasPoint getCentre() {
         return get().getLeft();
     }
 

@@ -2,7 +2,7 @@ package com.design.deco;
 
 import com.design.common.*;
 import com.design.common.model.Style;
-import com.design.islamic.model.*;
+import com.design.arabic.model.*;
 import com.googlecode.totallylazy.Sequence;
 
 import java.awt.*;
@@ -12,8 +12,8 @@ import static com.design.common.FinalPointTransition.fpt;
 import static com.design.common.Polygon.Type.VER;
 import static com.design.common.RatioHelper.P4.H;
 import static com.design.common.PointTransition.pt;
-import static com.design.islamic.model.Rect.Vertex.*;
-import static com.design.islamic.model.Rect.*;
+import static com.design.arabic.model.Rect.Vertex.*;
+import static com.design.arabic.model.Rect.*;
 import static com.googlecode.totallylazy.Sequences.sequence;
 import static com.googlecode.totallylazy.numbers.Integers.range;
 
@@ -23,9 +23,9 @@ public class Tile5 {
     private static final double Ratio_m = H / 2.0;
     private static final double KC = Ratio_m;
 
-    public final static FinalPointTransition A = fpt(pt(KA, DR));
-    public final static FinalPointTransition B = fpt(pt(H, RIGHT));
-    public final static FinalPointTransition C = fpt(pt(KC, RIGHT));
+    public final static FinalPointTransition A = fpt(KA, DR);
+    public final static FinalPointTransition B = fpt(H, RIGHT);
+    public final static FinalPointTransition C = fpt(KC, RIGHT);
 
 
     private static PointTransition u(int times) {
@@ -86,16 +86,16 @@ public class Tile5 {
                 ;
     }
 
-    private static Sequence<PointsPath> getSinglePath() {
+    private static Sequence<Line> getSinglePath() {
         return sequence(
-                PointsPath.of(K, B, fpt(u(2), r(2))),
-                PointsPath.of(fpt(u(1), l(1)), fpt(u(1), r(2))),
-                PointsPath.of(fpt(u(2), l(1)), fpt(d(1), l(1))),
-                PointsPath.of(fpt(u(1)), fpt(d(2))),
-                PointsPath.of(fpt(r(1)), fpt(d(2), r(1))),
-                PointsPath.of(fpt(d(1)), fpt(d(1), l(2)), fpt(d(2), l(2)), fpt(d(2), l(2)), fpt(d(2), r(1))),
-                PointsPath.of(fpt(d(1), r(1)), fpt(d(1), r(2)), fpt(d(2), r(2))),
-                PointsPath.of(fpt(l(1)), fpt(l(2)), fpt(u(2), l(2)), fpt(u(2), r(1)), fpt(u(1), r(1)))
+                Line.line(K, B, fpt(u(2), r(2))),
+                Line.line(fpt(u(1), l(1)), fpt(u(1), r(2))),
+                Line.line(fpt(u(2), l(1)), fpt(d(1), l(1))),
+                Line.line(fpt(u(1)), fpt(d(2))),
+                Line.line(fpt(r(1)), fpt(d(2), r(1))),
+                Line.line(fpt(d(1)), fpt(d(1), l(2)), fpt(d(2), l(2)), fpt(d(2), l(2)), fpt(d(2), r(1))),
+                Line.line(fpt(d(1), r(1)), fpt(d(1), r(2)), fpt(d(2), r(2))),
+                Line.line(fpt(l(1)), fpt(l(2)), fpt(u(2), l(2)), fpt(u(2), r(1)), fpt(u(1), r(1)))
 
         );
     }

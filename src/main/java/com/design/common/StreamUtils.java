@@ -15,7 +15,6 @@ public class StreamUtils {
 
     public static <T, S> Callable1<? super T, ? extends S> m(Function<T, S> f) {
         return t -> f.apply(t);
-
     }
 
 }

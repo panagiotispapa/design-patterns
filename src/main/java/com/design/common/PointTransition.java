@@ -2,11 +2,14 @@ package com.design.common;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.awt.geom.Point2D;
 import java.util.function.Supplier;
 
 public interface PointTransition extends Supplier<Pair<Double, Polygon.Vertex>> {
     static PointTransition pt(double ratio, Polygon.Vertex vertex) {
+        if(vertex == null) {
+            System.out.println("j");
+        }
+
         return () -> Pair.of(ratio, vertex);
     }
 
@@ -22,8 +25,11 @@ public interface PointTransition extends Supplier<Pair<Double, Polygon.Vertex>> 
         return get().getRight();
     }
 
-    default Point2D forR(Double r) {
-        return Points.scale(r * getRatio()).apply(getVertex().getPoint());
+    default CanvasPoint forR(Double r) {
+        if(getVertex() == null) {
+            System.out.println("j");
+        }
+        return getVertex().getCanvasPoint().scale(r * getRatio());
     }
 }
 
